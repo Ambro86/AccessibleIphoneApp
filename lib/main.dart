@@ -7,6 +7,8 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -38,11 +40,13 @@ class MyApp extends StatelessWidget {
 }
 
 class MainScreen extends StatefulWidget {
+  const MainScreen({super.key});
+
   @override
-  _MainScreenState createState() => _MainScreenState();
+  MainScreenState createState() => MainScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
+class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   late TabController _tabController;
   String _statusMessage = 'Benvenuto nell\'app!';
 
@@ -134,9 +138,9 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
 }
 
 class HomeTab extends StatelessWidget {
-  final Function(String) onStatusUpdate;
+  const HomeTab({super.key, required this.onStatusUpdate});
 
-  HomeTab({required this.onStatusUpdate});
+  final Function(String) onStatusUpdate;
 
   @override
   Widget build(BuildContext context) {
@@ -219,15 +223,15 @@ class HomeTab extends StatelessWidget {
 }
 
 class FavoritesTab extends StatefulWidget {
+  const FavoritesTab({super.key, required this.onStatusUpdate});
+
   final Function(String) onStatusUpdate;
 
-  FavoritesTab({required this.onStatusUpdate});
-
   @override
-  _FavoritesTabState createState() => _FavoritesTabState();
+  FavoritesTabState createState() => FavoritesTabState();
 }
 
-class _FavoritesTabState extends State<FavoritesTab> {
+class FavoritesTabState extends State<FavoritesTab> {
   List<String> favorites = ['Elemento 1', 'Elemento 2', 'Elemento 3'];
 
   @override
@@ -314,15 +318,15 @@ class _FavoritesTabState extends State<FavoritesTab> {
 }
 
 class SettingsTab extends StatefulWidget {
+  const SettingsTab({super.key, required this.onStatusUpdate});
+
   final Function(String) onStatusUpdate;
 
-  SettingsTab({required this.onStatusUpdate});
-
   @override
-  _SettingsTabState createState() => _SettingsTabState();
+  SettingsTabState createState() => SettingsTabState();
 }
 
-class _SettingsTabState extends State<SettingsTab> {
+class SettingsTabState extends State<SettingsTab> {
   bool _notificationsEnabled = true;
   bool _darkMode = false;
   double _fontSize = 16.0;
@@ -436,9 +440,9 @@ class _SettingsTabState extends State<SettingsTab> {
 }
 
 class InfoTab extends StatelessWidget {
-  final Function(String) onStatusUpdate;
+  const InfoTab({super.key, required this.onStatusUpdate});
 
-  InfoTab({required this.onStatusUpdate});
+  final Function(String) onStatusUpdate;
 
   @override
   Widget build(BuildContext context) {
@@ -525,13 +529,13 @@ class AccessibleButton extends StatelessWidget {
   final String semanticsLabel;
 
   const AccessibleButton({
-    Key? key,
+    super.key,
     required this.text,
     required this.icon,
     required this.color,
     required this.onPressed,
     required this.semanticsLabel,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
