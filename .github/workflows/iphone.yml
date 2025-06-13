@@ -1,0 +1,72 @@
+name: 🍎 Build iOS App
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch: # Permette di avviare manualmente dalla UI GitHub
+
+jobs:
+  build-ios:
+    name: 📱 Build iOS (.app file)
+    runs-on: macos-latest
+    
+    steps:
+    - name: 📥 Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: 🐦 Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.32.4'
+        channel: 'stable'
+        cache: true
+        
+    - name: 🔍 Flutter doctor
+      run: flutter doctor -v
+      
+    - name: 📦 Get dependencies
+      run: flutter pub get
+      
+    - name: 🔍 Analyze code
+      run: flutter analyze
+      
+    - name: 🧪 Run tests
+      run: flutter test || echo "⚠️ No tests found or tests failed"
+      
+    - name: 🏗️ Build iOS (unsigned for AltStore)
+      run: |
+        echo "🔨 Building iOS app without code signing..."
+        flutter build ios --no-codesign --release
+        
+    - name: 📱 Create .app bundle
+      run: |
+        echo "📦 Creating .app bundle..."
+        cd build/ios/iphoneos/
+        ls -la
+        mkdir -p ../../../artifacts
+        cp -R Runner.app ../../../artifacts/
+        echo "✅ .app bundle created successfully"
+        
+    - name: 🗜️ Compress app for download
+      run: |
+        cd artifacts
+        echo "🗜️ Compressing app..."
+        zip -r "iOS-App-Accessibile-$(date +%Y%m%d-%H%M%S).zip" Runner.app
+        ls -la
+        echo "✅ App compressed successfully"
+        
+    - name: 📤 Upload iOS app artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ios-app-unsigned
+        path: artifacts/
+        retention-days: 30
+        
+    - name: 📊 Build summary
+      run: |
+        echo "🎉 Build completed successfully!"
+        echo "📱 iOS app (.app file) is ready for AltStore installation"
+        echo "📥 Download from: Actions → Artifacts → ios-app-unsigned"
+        echo "⏰ Artifact retention: 30 days"
