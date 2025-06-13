@@ -9,7 +9,7 @@ on:
 
 jobs:
   build-ios:
-    name: 📱 Build iOS (.app file)
+    name: 📱 Build iOS (.ipa file)
     runs-on: macos-latest
     
     steps:
@@ -62,48 +62,49 @@ jobs:
         
     - name: 📋 Create installation info
       run: |
+        mkdir -p artifacts
         cd artifacts
         echo "📋 Creating installation instructions..."
-        cat > INSTALL_INSTRUCTIONS.txt << EOF
-# 📱 Installazione App iOS Accessibile
+        cat > INSTALL_INSTRUCTIONS.txt << 'INSTALL_EOF'
+        # 📱 Installazione App iOS Accessibile
 
-## 🔧 Requisiti:
-- iPhone/iPad con iOS 14.0+
-- AltStore installato sul dispositivo
-- Computer con AltServer
+        ## 🔧 Requisiti:
+        - iPhone/iPad con iOS 14.0+
+        - AltStore installato sul dispositivo
+        - Computer con AltServer
 
-## 📥 Installazione:
+        ## 📥 Installazione:
 
-### Metodo 1: AltStore (Consigliato)
-1. Scarica il file .ipa
-2. Apri AltStore sul tuo iPhone
-3. Tocca il pulsante "+" in alto a sinistra
-4. Seleziona il file .ipa scaricato
-5. Inserisci Apple ID e password quando richiesto
-6. Attendi l'installazione
+        ### Metodo 1: AltStore (Consigliato)
+        1. Scarica il file .ipa
+        2. Apri AltStore sul tuo iPhone
+        3. Tocca il pulsante "+" in alto a sinistra
+        4. Seleziona il file .ipa scaricato
+        5. Inserisci Apple ID e password quando richiesto
+        6. Attendi l'installazione
 
-### Metodo 2: Sideloadly / 3uTools
-1. Collega iPhone al computer
-2. Apri Sideloadly
-3. Trascina il file .ipa nell'app
-4. Inserisci le credenziali Apple ID
-5. Avvia l'installazione
+        ### Metodo 2: Sideloadly / 3uTools
+        1. Collega iPhone al computer
+        2. Apri Sideloadly
+        3. Trascina il file .ipa nell'app
+        4. Inserisci le credenziali Apple ID
+        5. Avvia l'installazione
 
-## ⚠️ Note Importanti:
-- L'app scadrà dopo 7 giorni (account gratuito)
-- Rinnovare settimanalmente tramite AltStore
-- Autorizzare lo sviluppatore in Impostazioni > Generali > Gestione dispositivi
+        ## ⚠️ Note Importanti:
+        - L'app scadrà dopo 7 giorni (account gratuito)
+        - Rinnovare settimanalmente tramite AltStore
+        - Autorizzare lo sviluppatore in Impostazioni > Generali > Gestione dispositivi
 
-## 🔄 Rinnovo automatico:
-- Tieni AltStore aperto in background
-- Connetti il dispositivo alla stessa rete WiFi del computer con AltServer
+        ## 🔄 Rinnovo automatico:
+        - Tieni AltStore aperto in background
+        - Connetti il dispositivo alla stessa rete WiFi del computer con AltServer
 
-## 📞 Supporto:
-- Problemi di installazione: verifica che AltServer sia in esecuzione
-- App non si apre: autorizza lo sviluppatore nelle impostazioni iOS
+        ## 📞 Supporto:
+        - Problemi di installazione: verifica che AltServer sia in esecuzione
+        - App non si apre: autorizza lo sviluppatore nelle impostazioni iOS
 
-Versione build: $(date +%Y%m%d-%H%M%S)
-EOF
+        Build: $(date +%Y%m%d-%H%M%S)
+        INSTALL_EOF
         
         echo "✅ Installation guide created"
         
