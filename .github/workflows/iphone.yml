@@ -40,33 +40,85 @@ jobs:
         echo "🔨 Building iOS app without code signing..."
         flutter build ios --no-codesign --release
         
-    - name: 📱 Create .app bundle
+    - name: 📱 Create .ipa file (iOS App Package)
       run: |
-        echo "📦 Creating .app bundle..."
+        echo "📦 Creating .ipa file for AltStore..."
         cd build/ios/iphoneos/
-        ls -la
-        mkdir -p ../../../artifacts
-        cp -R Runner.app ../../../artifacts/
-        echo "✅ .app bundle created successfully"
         
-    - name: 🗜️ Compress app for download
+        # Crea la struttura Payload per .ipa
+        mkdir -p Payload
+        cp -R Runner.app Payload/
+        
+        # Crea il file .ipa (è sostanzialmente un file ZIP con estensione .ipa)
+        zip -r "AccessibleIphoneApp-unsigned.ipa" Payload/
+        
+        # Sposta nella cartella artifacts
+        mkdir -p ../../../artifacts
+        mv AccessibleIphoneApp-unsigned.ipa ../../../artifacts/
+        
+        # Verifica che sia stato creato
+        ls -la ../../../artifacts/
+        echo "✅ .ipa file created successfully"
+        
+    - name: 📋 Create installation info
       run: |
         cd artifacts
-        echo "🗜️ Compressing app..."
-        zip -r "iOS-App-Accessibile-$(date +%Y%m%d-%H%M%S).zip" Runner.app
-        ls -la
-        echo "✅ App compressed successfully"
+        echo "📋 Creating installation instructions..."
+        cat > INSTALL_INSTRUCTIONS.txt << EOF
+# 📱 Installazione App iOS Accessibile
+
+## 🔧 Requisiti:
+- iPhone/iPad con iOS 14.0+
+- AltStore installato sul dispositivo
+- Computer con AltServer
+
+## 📥 Installazione:
+
+### Metodo 1: AltStore (Consigliato)
+1. Scarica il file .ipa
+2. Apri AltStore sul tuo iPhone
+3. Tocca il pulsante "+" in alto a sinistra
+4. Seleziona il file .ipa scaricato
+5. Inserisci Apple ID e password quando richiesto
+6. Attendi l'installazione
+
+### Metodo 2: Sideloadly / 3uTools
+1. Collega iPhone al computer
+2. Apri Sideloadly
+3. Trascina il file .ipa nell'app
+4. Inserisci le credenziali Apple ID
+5. Avvia l'installazione
+
+## ⚠️ Note Importanti:
+- L'app scadrà dopo 7 giorni (account gratuito)
+- Rinnovare settimanalmente tramite AltStore
+- Autorizzare lo sviluppatore in Impostazioni > Generali > Gestione dispositivi
+
+## 🔄 Rinnovo automatico:
+- Tieni AltStore aperto in background
+- Connetti il dispositivo alla stessa rete WiFi del computer con AltServer
+
+## 📞 Supporto:
+- Problemi di installazione: verifica che AltServer sia in esecuzione
+- App non si apre: autorizza lo sviluppatore nelle impostazioni iOS
+
+Versione build: $(date +%Y%m%d-%H%M%S)
+EOF
         
-    - name: 📤 Upload iOS app artifact
+        echo "✅ Installation guide created"
+        
+    - name: 📤 Upload iOS .ipa file
       uses: actions/upload-artifact@v4
       with:
-        name: ios-app-unsigned
+        name: ios-ipa-unsigned
         path: artifacts/
         retention-days: 30
         
     - name: 📊 Build summary
       run: |
         echo "🎉 Build completed successfully!"
-        echo "📱 iOS app (.app file) is ready for AltStore installation"
-        echo "📥 Download from: Actions → Artifacts → ios-app-unsigned"
+        echo "📱 iOS .ipa file is ready for AltStore/Sideloadly installation"
+        echo "📥 Download from: Actions → Artifacts → ios-ipa-unsigned"
+        echo "📋 Installation instructions included in download"
         echo "⏰ Artifact retention: 30 days"
+ 
