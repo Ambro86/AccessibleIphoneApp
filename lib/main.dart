@@ -1,575 +1,956 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
+import 'dart:math';
 
 void main() {
-  runApp(MyApp());
+  runApp(const AdventureGameApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class AdventureGameApp extends StatelessWidget {
+  const AdventureGameApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'App Accessibile iOS',
+      title: '🗡️ Dungeon Adventure',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-        // Ottimizzato per iOS con San Francisco font
-        brightness: Brightness.light,
-        fontFamily: '.SF Pro Text', // Font nativo iOS
-        textTheme: TextTheme(
-          bodyLarge: TextStyle(fontSize: 18),
-          bodyMedium: TextStyle(fontSize: 16),
-          titleLarge: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-        ),
-        // Stile iOS per gli elementi dell'interfaccia
-        appBarTheme: AppBarTheme(
-          systemOverlayStyle: SystemUiOverlayStyle.light,
-          elevation: 0,
-          scrolledUnderElevation: 0,
-        ),
-        tabBarTheme: TabBarThemeData(
-          indicatorSize: TabBarIndicatorSize.label,
-          labelStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF8B4513),
+          brightness: Brightness.dark,
         ),
       ),
-      home: MainScreen(),
+      home: const MenuScreen(),
     );
   }
 }
 
-class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
-
-  @override
-  MainScreenState createState() => MainScreenState();
+// Modello di gioco
+class GameData {
+  int playerRow = 0;
+  int playerCol = 0;
+  int playerHp = 100;
+  int maxHp = 100;
+  int level = 1;
+  int exp = 0;
+  int expToNext = 100;
+  int gold = 50;
+  int attack = 10;
+  int defense = 5;
+  List<String> inventory = [];
+  
+  // Oggetti nelle stanze
+  Map<String, String> roomItems = {
+    'cucina': 'torcia',
+    'bagno': 'pettine',
+    'salotto': 'libro',
+    'camera': 'chiave'
+  };
+  
+  // Mostri nelle stanze
+  Map<String, Map<String, int>> monsters = {
+    'cucina': {'hp': 15, 'maxHp': 15, 'attack': 8, 'exp': 20, 'gold': 10},
+    'bagno': {'hp': 30, 'maxHp': 30, 'attack': 12, 'exp': 35, 'gold': 20},
+    'salotto': {'hp': 25, 'maxHp': 25, 'attack': 15, 'exp': 30, 'gold': 15},
+    'camera': {'hp': 50, 'maxHp': 50, 'attack': 20, 'exp': 100, 'gold': 50}
+  };
+  
+  bool gameWon = false;
+  bool gameOver = false;
 }
 
-class MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
-  late TabController _tabController;
-  String _statusMessage = 'Benvenuto nell\'app!';
+class MenuScreen extends StatelessWidget {
+  const MenuScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xFF2C1810), Color(0xFF8B4513), Color(0xFF2C1810)],
+          ),
+        ),
+        child: SafeArea(
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Spacer(),
+                // Logo
+                Container(
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: Colors.black.withValues(alpha: 0.4),
+                  ),
+                  child: const Column(
+                    children: [
+                      Text(
+                        '🗡️',
+                        style: TextStyle(fontSize: 60),
+                      ),
+                      Text(
+                        'DUNGEON\nADVENTURE',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.amber,
+                          height: 1.2,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                
+                const SizedBox(height: 60),
+                
+                // Pulsanti menu
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 40),
+                  child: Column(
+                    children: [
+                      MenuButton(
+                        text: '🆕 Nuovo Gioco',
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => GameScreen(gameData: GameData()),
+                            ),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      MenuButton(
+                        text: '💾 Carica Gioco',
+                        onPressed: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('💾 Funzione in sviluppo')),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      MenuButton(
+                        text: '❓ Come Giocare',
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => const HelpDialog(),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                
+                const Spacer(),
+                const Text(
+                  'Un\'avventura epica ti aspetta...',
+                  style: TextStyle(
+                    color: Colors.amber,
+                    fontSize: 16,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+                const SizedBox(height: 40),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class MenuButton extends StatelessWidget {
+  final String text;
+  final VoidCallback onPressed;
+  
+  const MenuButton({
+    super.key,
+    required this.text,
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      height: 60,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color(0xFF8B4513),
+          foregroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          elevation: 8,
+        ),
+        child: Text(
+          text,
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class HelpDialog extends StatelessWidget {
+  const HelpDialog({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      backgroundColor: const Color(0xFF2C1810),
+      title: const Text(
+        '❓ Come Giocare',
+        style: TextStyle(color: Colors.amber),
+      ),
+      content: const SingleChildScrollView(
+        child: Text(
+          '🎯 OBIETTIVO:\n'
+          'Trova la chiave nella camera da letto!\n\n'
+          '🕹️ CONTROLLI:\n'
+          '• Muoviti con i pulsanti direzionali\n'
+          '• Raccogli oggetti utili\n'
+          '• Combatti mostri per EXP e oro\n'
+          '• Compra nel negozio per potenziarti\n\n'
+          '⚔️ COMBATTIMENTO:\n'
+          '• Attacca per sconfiggere i mostri\n'
+          '• Sali di livello con l\'esperienza\n'
+          '• Usa pozioni per curarti\n\n'
+          '🏪 NEGOZIO:\n'
+          '• Compra armi, armature e pozioni\n'
+          '• Migliora le tue statistiche\n'
+          '• Spendi l\'oro guadagnato\n\n'
+          '💡 SUGGERIMENTO:\n'
+          'Esplora tutto e potenziati prima del boss finale!',
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text(
+            'Capito!',
+            style: TextStyle(color: Colors.amber),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class GameScreen extends StatefulWidget {
+  final GameData gameData;
+  
+  const GameScreen({super.key, required this.gameData});
+
+  @override
+  GameScreenState createState() => GameScreenState();
+}
+
+class GameScreenState extends State<GameScreen> {
+  late GameData game;
+  String statusMessage = '';
+  String combatLog = '';
+  
+  final List<List<String>> gameMap = [
+    ['cucina', 'bagno'],
+    ['salotto', 'camera']
+  ];
+  
+  final Map<String, String> roomNames = {
+    'cucina': '🍳 Cucina',
+    'bagno': '🚿 Bagno', 
+    'salotto': '🛋️ Salotto',
+    'camera': '🛏️ Camera da Letto'
+  };
+  
+  final Map<String, String> roomDescriptions = {
+    'cucina': 'Una cucina medievale con pentole fumanti...',
+    'bagno': 'Un bagno antico con specchi appannati.',
+    'salotto': 'Un salotto buio pieno di mobili polverosi.',
+    'camera': 'Una camera da letto lugubre con un letto a baldacchino.'
+  };
+
+  final Map<String, String> monsterNames = {
+    'cucina': '🐀 Ratto Gigante',
+    'bagno': '🧟 Zombie Putrefatto',
+    'salotto': '💀 Scheletro Guerriero', 
+    'camera': '🧛 Vampiro Antico'
+  };
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
+    game = widget.gameData;
+    statusMessage = 'Benvenuto nel dungeon! Trova la chiave per vincere!';
+  }
+
+  String getCurrentRoom() {
+    return gameMap[game.playerRow][game.playerCol];
+  }
+
+  void movePlayer(String direction) {
+    int newRow = game.playerRow;
+    int newCol = game.playerCol;
+    
+    switch (direction) {
+      case 'nord':
+        if (newRow > 0) {
+          newRow--;
+        } else {
+          setState(() {
+            statusMessage = '🚫 Non puoi andare a nord!';
+          });
+          return;
+        }
+        break;
+      case 'sud':
+        if (newRow < 1) {
+          newRow++;
+        } else {
+          setState(() {
+            statusMessage = '🚫 Non puoi andare a sud!';
+          });
+          return;
+        }
+        break;
+      case 'ovest':
+        if (newCol > 0) {
+          newCol--;
+        } else {
+          setState(() {
+            statusMessage = '🚫 Non puoi andare a ovest!';
+          });
+          return;
+        }
+        break;
+      case 'est':
+        if (newCol < 1) {
+          newCol++;
+        } else {
+          setState(() {
+            statusMessage = '🚫 Non puoi andare a est!';
+          });
+          return;
+        }
+        break;
+    }
+    
+    setState(() {
+      game.playerRow = newRow;
+      game.playerCol = newCol;
+      String room = getCurrentRoom();
+      statusMessage = 'Ti sei spostato in: ${roomNames[room]}';
+      combatLog = '';
+    });
+  }
+
+  void collectItem() {
+    String room = getCurrentRoom();
+    String? item = game.roomItems[room];
+    
+    if (item != null && item.isNotEmpty) {
+      setState(() {
+        game.inventory.add(item);
+        game.roomItems[room] = '';
+        statusMessage = '🎒 Hai raccolto: $item!';
+        
+        if (item == 'chiave') {
+          game.gameWon = true;
+          statusMessage = '🏆 HAI VINTO! Hai trovato la chiave del dungeon!';
+        }
+      });
+    } else {
+      setState(() {
+        statusMessage = '❌ Non c\'è nulla da raccogliere qui.';
+      });
+    }
+  }
+
+  void attackMonster() {
+    String room = getCurrentRoom();
+    Map<String, int>? monster = game.monsters[room];
+    
+    if (monster == null || monster['hp']! <= 0) {
+      setState(() {
+        statusMessage = '👻 Non ci sono mostri da attaccare qui!';
+      });
+      return;
+    }
+    
+    // Attacco del giocatore
+    int damage = game.attack + Random().nextInt(8);
+    monster['hp'] = monster['hp']! - damage;
+    
+    String battleText = '⚔️ Hai inflitto $damage danni al ${monsterNames[room]}!\n';
+    
+    if (monster['hp']! <= 0) {
+      // Mostro sconfitto
+      int expGained = monster['exp']!;
+      int goldGained = monster['gold']!;
+      
+      setState(() {
+        game.exp += expGained;
+        game.gold += goldGained;
+        statusMessage = '🎉 Hai sconfitto il ${monsterNames[room]}!';
+        combatLog = '$battleText💰 +$goldGained oro, ⭐ +$expGained EXP';
+        
+        // Rimuovi mostro
+        game.monsters.remove(room);
+        
+        // Controlla level up
+        checkLevelUp();
+      });
+    } else {
+      // Mostro contrattacca
+      int monsterDamage = (monster['attack']! - game.defense + Random().nextInt(5)).clamp(1, 999);
+      
+      setState(() {
+        game.playerHp -= monsterDamage;
+        combatLog = '$battleText🩸 Il ${monsterNames[room]!} ti infligge $monsterDamage danni!';
+        
+        if (game.playerHp <= 0) {
+          game.gameOver = true;
+          statusMessage = '💀 GAME OVER! Sei stato sconfitto!';
+          game.playerHp = 0;
+        } else {
+          statusMessage = '⚔️ Battaglia in corso! HP: ${game.playerHp}/${game.maxHp}';
+        }
+      });
+    }
+  }
+
+  void checkLevelUp() {
+    if (game.exp >= game.expToNext) {
+      setState(() {
+        game.level++;
+        game.exp -= game.expToNext;
+        game.expToNext = (game.expToNext * 1.5).round();
+        game.maxHp += 20;
+        game.playerHp = game.maxHp; // Guarigione completa
+        game.attack += 3;
+        game.defense += 2;
+        statusMessage = '🎊 LEVEL UP! Ora sei livello ${game.level}!';
+      });
+    }
+  }
+
+  void usePotion() {
+    if (game.inventory.contains('Pozione Vita')) {
+      setState(() {
+        game.inventory.remove('Pozione Vita');
+        game.playerHp = (game.playerHp + 30).clamp(0, game.maxHp);
+        statusMessage = '🧪 Hai usato una Pozione Vita! HP: ${game.playerHp}/${game.maxHp}';
+      });
+    } else {
+      setState(() {
+        statusMessage = '❌ Non hai pozioni da usare!';
+      });
+    }
   }
 
   @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
+  Widget build(BuildContext context) {
+    String currentRoom = getCurrentRoom();
+    Map<String, int>? currentMonster = game.monsters[currentRoom];
+    String? currentItem = game.roomItems[currentRoom];
+    
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('🗡️ Dungeon Adventure'),
+        backgroundColor: const Color(0xFF8B4513),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.shop),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ShopScreen(gameData: game),
+                ),
+              ).then((_) => setState(() {}));
+            },
+          ),
+        ],
+      ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xFF1A1A1A), Color(0xFF2C1810)],
+          ),
+        ),
+        child: Column(
+          children: [
+            // Status del giocatore
+            Container(
+              padding: const EdgeInsets.all(16),
+              color: Colors.black.withValues(alpha: 0.3),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '⚔️ Livello ${game.level} | 💰 ${game.gold} oro',
+                          style: const TextStyle(
+                            color: Colors.amber,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        LinearProgressIndicator(
+                          value: game.playerHp / game.maxHp,
+                          backgroundColor: Colors.red.withValues(alpha: 0.3),
+                          valueColor: const AlwaysStoppedAnimation<Color>(Colors.red),
+                        ),
+                        Text(
+                          '❤️ ${game.playerHp}/${game.maxHp}',
+                          style: const TextStyle(color: Colors.white, fontSize: 12),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '⭐ EXP: ${game.exp}/${game.expToNext}',
+                          style: const TextStyle(
+                            color: Colors.cyan,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        LinearProgressIndicator(
+                          value: game.exp / game.expToNext,
+                          backgroundColor: Colors.cyan.withValues(alpha: 0.3),
+                          valueColor: const AlwaysStoppedAnimation<Color>(Colors.cyan),
+                        ),
+                        Text(
+                          '🗡️ ATK: ${game.attack} | 🛡️ DEF: ${game.defense}',
+                          style: const TextStyle(color: Colors.white, fontSize: 12),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  children: [
+                    // Descrizione stanza
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withValues(alpha: 0.5),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            roomNames[currentRoom]!,
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.amber,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            roomDescriptions[currentRoom]!,
+                            style: const TextStyle(color: Colors.white, fontSize: 16),
+                          ),
+                          if (currentItem != null && currentItem.isNotEmpty) ...[
+                            const SizedBox(height: 8),
+                            Text(
+                              '✨ Vedi: $currentItem',
+                              style: const TextStyle(color: Colors.yellow),
+                            ),
+                          ],
+                          if (currentMonster != null && currentMonster['hp']! > 0) ...[
+                            const SizedBox(height: 8),
+                            Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: Colors.red.withValues(alpha: 0.2),
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(color: Colors.red),
+                              ),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    '${monsterNames[currentRoom]} appare!',
+                                    style: const TextStyle(
+                                      color: Colors.red,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  LinearProgressIndicator(
+                                    value: currentMonster['hp']! / currentMonster['maxHp']!,
+                                    backgroundColor: Colors.red.withValues(alpha: 0.3),
+                                    valueColor: const AlwaysStoppedAnimation<Color>(Colors.red),
+                                  ),
+                                  Text(
+                                    'HP: ${currentMonster['hp']}/${currentMonster['maxHp']}',
+                                    style: const TextStyle(color: Colors.white, fontSize: 12),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                    
+                    const SizedBox(height: 16),
+                    
+                    // Messaggi
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.blue.withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Column(
+                        children: [
+                          Text(
+                            statusMessage,
+                            style: const TextStyle(color: Colors.white, fontSize: 14),
+                          ),
+                          if (combatLog.isNotEmpty) ...[
+                            const SizedBox(height: 8),
+                            Text(
+                              combatLog,
+                              style: const TextStyle(color: Colors.orange, fontSize: 12),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                    
+                    const Spacer(),
+                    
+                    // Controlli movimento
+                    GameButton(
+                      text: '⬆️ Nord',
+                      onPressed: () => movePlayer('nord'),
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: GameButton(
+                            text: '⬅️ Ovest',
+                            onPressed: () => movePlayer('ovest'),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: GameButton(
+                            text: '➡️ Est',
+                            onPressed: () => movePlayer('est'),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    GameButton(
+                      text: '⬇️ Sud',
+                      onPressed: () => movePlayer('sud'),
+                    ),
+                    
+                    const SizedBox(height: 16),
+                    
+                    // Azioni
+                    Row(
+                      children: [
+                        Expanded(
+                          child: GameButton(
+                            text: '🎒 Raccogli',
+                            onPressed: collectItem,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: GameButton(
+                            text: '⚔️ Attacca',
+                            onPressed: attackMonster,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: GameButton(
+                            text: '🧪 Pozione',
+                            onPressed: usePotion,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: GameButton(
+                            text: '👜 Inventario',
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) => InventoryDialog(inventory: game.inventory),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
+}
 
-  void _updateStatus(String message) {
-    setState(() {
-      _statusMessage = message;
-    });
-    // Feedback aptico per iOS
-    HapticFeedback.lightImpact();
+class GameButton extends StatelessWidget {
+  final String text;
+  final VoidCallback onPressed;
+  
+  const GameButton({
+    super.key,
+    required this.text,
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 45,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color(0xFF8B4513),
+          foregroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+        child: Text(
+          text,
+          style: const TextStyle(fontSize: 14),
+        ),
+      ),
+    );
   }
+}
+
+class InventoryDialog extends StatelessWidget {
+  final List<String> inventory;
+  
+  const InventoryDialog({super.key, required this.inventory});
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      backgroundColor: const Color(0xFF2C1810),
+      title: const Text(
+        '🎒 Inventario',
+        style: TextStyle(color: Colors.amber),
+      ),
+      content: SizedBox(
+        width: double.maxFinite,
+        height: 200,
+        child: inventory.isEmpty
+            ? const Center(
+                child: Text(
+                  'Inventario vuoto',
+                  style: TextStyle(color: Colors.white),
+                ),
+              )
+            : ListView.builder(
+                itemCount: inventory.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    leading: const Icon(Icons.inventory, color: Colors.amber),
+                    title: Text(
+                      inventory[index],
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  );
+                },
+              ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text(
+            'Chiudi',
+            style: TextStyle(color: Colors.amber),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class ShopScreen extends StatefulWidget {
+  final GameData gameData;
+  
+  const ShopScreen({super.key, required this.gameData});
+
+  @override
+  ShopScreenState createState() => ShopScreenState();
+}
+
+class ShopScreenState extends State<ShopScreen> {
+  final Map<String, Map<String, dynamic>> shopItems = {
+    'Pozione Vita': {'price': 25, 'type': 'potion', 'effect': 30, 'emoji': '🧪'},
+    'Spada di Ferro': {'price': 100, 'type': 'weapon', 'effect': 5, 'emoji': '⚔️'},
+    'Armatura di Cuoio': {'price': 80, 'type': 'armor', 'effect': 3, 'emoji': '🛡️'},
+    'Anello Magico': {'price': 150, 'type': 'magic', 'effect': 10, 'emoji': '💍'},
+  };
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'App iOS Accessibile',
-          semanticsLabel: 'Titolo applicazione: App iOS Accessibile',
+        title: const Text('🏪 Negozio del Dungeon'),
+        backgroundColor: const Color(0xFF8B4513),
+      ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xFF1A1A1A), Color(0xFF2C1810)],
+          ),
         ),
-        backgroundColor: CupertinoColors.systemBlue,
-        foregroundColor: Colors.white,
-        centerTitle: true, // Stile iOS
-        bottom: TabBar(
-          controller: _tabController,
-          indicatorColor: Colors.white,
-          labelColor: Colors.white,
-          unselectedLabelColor: Colors.white70,
-          indicatorWeight: 3,
-          tabs: [
-            Tab(
-              icon: Icon(CupertinoIcons.home, semanticLabel: 'Scheda Home'),
-              text: 'Home',
-            ),
-            Tab(
-              icon: Icon(CupertinoIcons.heart_fill, semanticLabel: 'Scheda Preferiti'),
-              text: 'Preferiti',
-            ),
-            Tab(
-              icon: Icon(CupertinoIcons.settings, semanticLabel: 'Scheda Impostazioni'),
-              text: 'Impostazioni',
-            ),
-            Tab(
-              icon: Icon(CupertinoIcons.info_circle, semanticLabel: 'Scheda Informazioni'),
-              text: 'Info',
-            ),
-          ],
-        ),
-      ),
-      body: Column(
-        children: [
-          // Barra di stato accessibile
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.all(16),
-            color: Colors.grey[100],
-            child: Text(
-              _statusMessage,
-              style: Theme.of(context).textTheme.bodyMedium,
-              semanticsLabel: 'Messaggio di stato: $_statusMessage',
-            ),
-          ),
-          Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: [
-                HomeTab(onStatusUpdate: _updateStatus),
-                FavoritesTab(onStatusUpdate: _updateStatus),
-                SettingsTab(onStatusUpdate: _updateStatus),
-                InfoTab(onStatusUpdate: _updateStatus),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class HomeTab extends StatelessWidget {
-  const HomeTab({super.key, required this.onStatusUpdate});
-
-  final Function(String) onStatusUpdate;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(
-            'Benvenuto nella Home',
-            style: Theme.of(context).textTheme.titleLarge,
-            textAlign: TextAlign.center,
-            semanticsLabel: 'Titolo sezione: Benvenuto nella Home',
-          ),
-          SizedBox(height: 24),
-          
-          // Pulsanti principali con icone iOS
-          AccessibleButton(
-            text: 'Inizia',
-            icon: CupertinoIcons.play_fill,
-            color: CupertinoColors.systemGreen,
-            onPressed: () => onStatusUpdate('Avvio in corso...'),
-            semanticsLabel: 'Pulsante Inizia - Avvia l\'applicazione',
-          ),
-          SizedBox(height: 12),
-          
-          AccessibleButton(
-            text: 'Carica Dati',
-            icon: CupertinoIcons.cloud_download,
-            color: CupertinoColors.systemBlue,
-            onPressed: () => onStatusUpdate('Caricamento dati...'),
-            semanticsLabel: 'Pulsante Carica Dati - Scarica informazioni dal server',
-          ),
-          SizedBox(height: 12),
-          
-          AccessibleButton(
-            text: 'Sincronizza',
-            icon: CupertinoIcons.arrow_2_circlepath,
-            color: CupertinoColors.systemOrange,
-            onPressed: () => onStatusUpdate('Sincronizzazione in corso...'),
-            semanticsLabel: 'Pulsante Sincronizza - Aggiorna i dati locali',
-          ),
-          SizedBox(height: 24),
-          
-          // Sezione azioni rapide
-          Text(
-            'Azioni Rapide',
-            style: Theme.of(context).textTheme.titleMedium,
-            semanticsLabel: 'Sezione Azioni Rapide',
-          ),
-          SizedBox(height: 16),
-          
-          Row(
-            children: [
-              Expanded(
-                child: AccessibleButton(
-                  text: 'Scan',
-                  icon: CupertinoIcons.qrcode_viewfinder,
-                  color: CupertinoColors.systemPurple,
-                  onPressed: () => onStatusUpdate('Scanner attivato'),
-                  semanticsLabel: 'Pulsante Scan - Attiva scanner QR',
-                ),
-              ),
-              SizedBox(width: 12),
-              Expanded(
-                child: AccessibleButton(
-                  text: 'Foto',
-                  icon: CupertinoIcons.camera_fill,
-                  color: CupertinoColors.systemTeal,
-                  onPressed: () => onStatusUpdate('Fotocamera aperta'),
-                  semanticsLabel: 'Pulsante Foto - Apri fotocamera',
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class FavoritesTab extends StatefulWidget {
-  const FavoritesTab({super.key, required this.onStatusUpdate});
-
-  final Function(String) onStatusUpdate;
-
-  @override
-  FavoritesTabState createState() => FavoritesTabState();
-}
-
-class FavoritesTabState extends State<FavoritesTab> {
-  List<String> favorites = ['Elemento 1', 'Elemento 2', 'Elemento 3'];
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(
-            'I Tuoi Preferiti',
-            style: Theme.of(context).textTheme.titleLarge,
-            textAlign: TextAlign.center,
-            semanticsLabel: 'Titolo sezione: I Tuoi Preferiti',
-          ),
-          SizedBox(height: 24),
-          
-          AccessibleButton(
-            text: 'Aggiungi Preferito',
-            icon: Icons.add,
-            color: Colors.green,
-            onPressed: () {
-              setState(() {
-                favorites.add('Nuovo elemento ${favorites.length + 1}');
-              });
-              widget.onStatusUpdate('Preferito aggiunto');
-            },
-            semanticsLabel: 'Pulsante Aggiungi Preferito - Aggiunge un nuovo elemento ai preferiti',
-          ),
-          SizedBox(height: 16),
-          
-          AccessibleButton(
-            text: 'Ordina Preferiti',
-            icon: Icons.sort,
-            color: Colors.blue,
-            onPressed: () {
-              setState(() {
-                favorites.sort();
-              });
-              widget.onStatusUpdate('Preferiti ordinati');
-            },
-            semanticsLabel: 'Pulsante Ordina Preferiti - Riordina gli elementi in ordine alfabetico',
-          ),
-          SizedBox(height: 24),
-          
-          Text(
-            'Lista Preferiti (${favorites.length} elementi)',
-            style: Theme.of(context).textTheme.titleMedium,
-            semanticsLabel: 'Lista Preferiti con ${favorites.length} elementi',
-          ),
-          SizedBox(height: 16),
-          
-          Expanded(
-            child: ListView.builder(
-              itemCount: favorites.length,
-              itemBuilder: (context, index) {
-                return Card(
-                  margin: EdgeInsets.only(bottom: 8),
-                  child: ListTile(
-                    leading: Icon(Icons.favorite, color: Colors.red),
-                    title: Text(
-                      favorites[index],
-                      semanticsLabel: 'Elemento preferito: ${favorites[index]}',
-                    ),
-                    trailing: IconButton(
-                      icon: Icon(Icons.delete, color: Colors.grey[600]),
-                      onPressed: () {
-                        setState(() {
-                          favorites.removeAt(index);
-                        });
-                        widget.onStatusUpdate('Preferito rimosso');
-                      },
-                      tooltip: 'Rimuovi ${favorites[index]}',
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class SettingsTab extends StatefulWidget {
-  const SettingsTab({super.key, required this.onStatusUpdate});
-
-  final Function(String) onStatusUpdate;
-
-  @override
-  SettingsTabState createState() => SettingsTabState();
-}
-
-class SettingsTabState extends State<SettingsTab> {
-  bool _notificationsEnabled = true;
-  bool _darkMode = false;
-  double _fontSize = 16.0;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(
-            'Impostazioni',
-            style: Theme.of(context).textTheme.titleLarge,
-            textAlign: TextAlign.center,
-            semanticsLabel: 'Titolo sezione: Impostazioni',
-          ),
-          SizedBox(height: 24),
-          
-          // Toggle per notifiche
-          Card(
-            child: SwitchListTile(
-              title: Text('Notifiche'),
-              subtitle: Text('Ricevi notifiche push'),
-              value: _notificationsEnabled,
-              onChanged: (bool value) {
-                setState(() {
-                  _notificationsEnabled = value;
-                });
-                widget.onStatusUpdate(
-                  'Notifiche ${value ? 'attivate' : 'disattivate'}'
-                );
-              },
-              secondary: Icon(Icons.notifications),
-            ),
-          ),
-          SizedBox(height: 12),
-          
-          // Toggle per modalità scura
-          Card(
-            child: SwitchListTile(
-              title: Text('Modalità Scura'),
-              subtitle: Text('Tema scuro per l\'interfaccia'),
-              value: _darkMode,
-              onChanged: (bool value) {
-                setState(() {
-                  _darkMode = value;
-                });
-                widget.onStatusUpdate(
-                  'Modalità scura ${value ? 'attivata' : 'disattivata'}'
-                );
-              },
-              secondary: Icon(Icons.dark_mode),
-            ),
-          ),
-          SizedBox(height: 24),
-          
-          // Slider per dimensione font
-          Text(
-            'Dimensione Testo: ${_fontSize.round()}px',
-            style: Theme.of(context).textTheme.titleMedium,
-            semanticsLabel: 'Dimensione testo impostata a ${_fontSize.round()} pixel',
-          ),
-          Slider(
-            value: _fontSize,
-            min: 12.0,
-            max: 24.0,
-            divisions: 12,
-            label: '${_fontSize.round()}px',
-            onChanged: (double value) {
-              setState(() {
-                _fontSize = value;
-              });
-            },
-            onChangeEnd: (double value) {
-              widget.onStatusUpdate('Dimensione testo: ${value.round()}px');
-            },
-            semanticFormatterCallback: (double value) {
-              return 'Dimensione testo ${value.round()} pixel';
-            },
-          ),
-          SizedBox(height: 24),
-          
-          AccessibleButton(
-            text: 'Salva Impostazioni',
-            icon: Icons.save,
-            color: Colors.green,
-            onPressed: () => widget.onStatusUpdate('Impostazioni salvate'),
-            semanticsLabel: 'Pulsante Salva Impostazioni - Conferma e salva le modifiche',
-          ),
-          SizedBox(height: 12),
-          
-          AccessibleButton(
-            text: 'Ripristina Default',
-            icon: Icons.restore,
-            color: Colors.orange,
-            onPressed: () {
-              setState(() {
-                _notificationsEnabled = true;
-                _darkMode = false;
-                _fontSize = 16.0;
-              });
-              widget.onStatusUpdate('Impostazioni ripristinate');
-            },
-            semanticsLabel: 'Pulsante Ripristina Default - Reimposta tutte le impostazioni ai valori predefiniti',
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class InfoTab extends StatelessWidget {
-  const InfoTab({super.key, required this.onStatusUpdate});
-
-  final Function(String) onStatusUpdate;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(
-            'Informazioni',
-            style: Theme.of(context).textTheme.titleLarge,
-            textAlign: TextAlign.center,
-            semanticsLabel: 'Titolo sezione: Informazioni',
-          ),
-          SizedBox(height: 24),
-          
-          Card(
-            child: Padding(
-              padding: EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+        child: Column(
+          children: [
+            // Status oro
+            Container(
+              padding: const EdgeInsets.all(16),
+              color: Colors.black.withValues(alpha: 0.3),
+              child: Row(
                 children: [
+                  const Icon(Icons.account_balance_wallet, color: Colors.amber),
+                  const SizedBox(width: 8),
                   Text(
-                    'App Flutter Accessibile',
-                    style: Theme.of(context).textTheme.titleMedium,
-                    semanticsLabel: 'Nome applicazione: App Flutter Accessibile',
+                    '💰 ${widget.gameData.gold} oro',
+                    style: const TextStyle(
+                      color: Colors.amber,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                  SizedBox(height: 8),
-                  Text('Versione: 1.0.0'),
-                  Text('Sviluppata con Flutter'),
-                  Text('Ottimizzata per l\'accessibilità'),
                 ],
               ),
             ),
-          ),
-          SizedBox(height: 24),
-          
-          AccessibleButton(
-            text: 'Contatta Supporto',
-            icon: Icons.support_agent,
-            color: Colors.blue,
-            onPressed: () => onStatusUpdate('Apertura supporto...'),
-            semanticsLabel: 'Pulsante Contatta Supporto - Apre il canale di assistenza clienti',
-          ),
-          SizedBox(height: 12),
-          
-          AccessibleButton(
-            text: 'Valuta App',
-            icon: Icons.star_rate,
-            color: Colors.amber,
-            onPressed: () => onStatusUpdate('Apertura store per valutazione...'),
-            semanticsLabel: 'Pulsante Valuta App - Apre lo store per lasciare una recensione',
-          ),
-          SizedBox(height: 12),
-          
-          AccessibleButton(
-            text: 'Condividi App',
-            icon: Icons.share,
-            color: Colors.green,
-            onPressed: () => onStatusUpdate('Apertura menu condivisione...'),
-            semanticsLabel: 'Pulsante Condividi App - Apre le opzioni per condividere l\'applicazione',
-          ),
-          SizedBox(height: 12),
-          
-          AccessibleButton(
-            text: 'Tutorial',
-            icon: Icons.help_outline,
-            color: Colors.purple,
-            onPressed: () => onStatusUpdate('Avvio tutorial...'),
-            semanticsLabel: 'Pulsante Tutorial - Avvia la guida interattiva dell\'applicazione',
-          ),
-        ],
-      ),
-    );
-  }
+            
+            // Lista oggetti
+            Expanded(
+              child: ListView.builder(
+                padding: const EdgeInsets.all(16),
+                itemCount: shopItems.length,
+                itemBuilder: (context, index) {
+                  String itemName = shopItems.keys.elementAt(index);
+                  Map<String, dynamic> item = shopItems[itemName]!;
+                  bool canAfford = widget.gameData.gold >= item['price'];
+                  
+                  return Card(
+                    color: const Color(0xFF3D2817),
+                    margin: const EdgeInsets.only(bottom: 8),
+                    child: ListTile(
+                      leading: Text(
+                        item['emoji'],
+                        style: const TextStyle(fontSize: 24),
+                      ),
+                      title: Text(
+                        itemName,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Text(
+                        'Prezzo: ${item['price']} oro\nEffetto: +${item['effect']}',
+                        style: const TextStyle(color: Colors.grey),
+                      ),
+                      trailing: ElevatedButton(
+                        onPressed: canAfford
+                            ? () {
+                                setState(() {
+                                  widget.gameData.gold -= (item['price'] as int);
+                                  
+                                  switch (item['type']) {
+                                    case 'potion':
+                                      widget.gameData.inventory.add(itemName);
+                                      break;
+                                    case 'weapon':
+widget.gameData.attack += (item['effect'] as int);
+widget.gameData.inventory.add(itemName);
+break;
+case 'armor':
+widget.gameData.defense += (item['effect'] as int);
+widget.gameData.inventory.add(itemName);
+break;
+case 'magic':
+widget.gameData.attack += (item['effect'] as int) ~/ 2;
+widget.gameData.defense += (item['effect'] as int) ~/ 2;
+                                      widget.gameData.inventory.add(itemName);
+                                      break;
+                                  }
+                                });
+                                
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('🛒 Hai comprato: $itemName!'),
+                                  ),
+                                );
+                              }
+                            : null,
+                       style: ElevatedButton.styleFrom(
+                         backgroundColor: canAfford
+                             ? const Color(0xFF8B4513)
+                             : Colors.grey,
+                       ),
+                       child: const Text(
+                         'Compra',
+                         style: TextStyle(color: Colors.white),
+                       ),
+                     ),
+                   ),
+                 );
+               },
+             ),
+           ),
+         ],
+       ),
+     ),
+   );
+ }
 }
-
-// Widget pulsante accessibile personalizzato
-class AccessibleButton extends StatelessWidget {
-  final String text;
-  final IconData icon;
-  final Color color;
-  final VoidCallback onPressed;
-  final String semanticsLabel;
-
-  const AccessibleButton({
-    super.key,
-    required this.text,
-    required this.icon,
-    required this.color,
-    required this.onPressed,
-    required this.semanticsLabel,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Semantics(
-      label: semanticsLabel,
-      button: true,
-      child: ElevatedButton.icon(
-        onPressed: onPressed,
-        icon: Icon(
-          icon,
-          size: 24,
-          semanticLabel: null, // Evita duplicazione del semantic label
-        ),
-        label: Text(
-          text,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: color,
-          foregroundColor: Colors.white,
-          padding: EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          elevation: 2,
-          // Migliora l'area di tocco per l'accessibilità
-          minimumSize: Size(double.infinity, 56),
-        ),
-      ),
-    );
-  }
-}
- 
- 
