@@ -1,4 +1,4 @@
-name: Build iOS App (Advanced Flet)
+name: Build Web PWA (Works on iPhone!)
 
 on:
   push:
@@ -6,8 +6,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-ios:
-    runs-on: macos-latest
+  build-web:
+    runs-on: ubuntu-latest
     
     steps:
     - uses: actions/checkout@v4
@@ -17,21 +17,9 @@ jobs:
       with:
         python-version: '3.11'
     
-    - name: Install Flutter (required for Flet iOS)
-      uses: subosito/flutter-action@v2
-      with:
-        flutter-version: '3.16.0'
-        channel: 'stable'
-    
-    - name: Setup iOS development
+    - name: Install Flet
       run: |
-        sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
-        # Accetta licenze Xcode
-        sudo xcodebuild -license accept || true
-    
-    - name: Install Flet with iOS support
-      run: |
-        pip install flet[mobile]==0.28.3
+        pip install flet==0.28.3
         pip install flet-cli==0.28.3
     
     - name: Setup main file
@@ -46,134 +34,67 @@ jobs:
     
     - name: Prepare assets
       run: |
-        echo "Checking for existing assets..."
         if [ -d "assets" ]; then
-          echo "Assets folder found:"
-          find assets -name "*.wav" -o -name "*.mp3" | sort
-          AUDIO_COUNT=$(find assets -name "*.wav" -o -name "*.mp3" | wc -l)
-          echo "Total audio files: $AUDIO_COUNT"
+          echo "✅ Assets found"
         else
-          echo "No assets folder found, creating minimal structure..."
-          mkdir -p assets
-          # Crea file audio dummy più realistici (1KB ciascuno)
-          for i in {1..18}; do 
-            dd if=/dev/zero of="assets/$i.wav" bs=1024 count=1 2>/dev/null
+          mkdir -p assets/music
+          # Crea file audio placeholder per il web
+          for i in {1..20}; do 
+            echo "Audio placeholder $i" > "assets/music/$i.wav"
           done
-          echo "Created placeholder files 1.wav to 18.wav"
         fi
     
-    - name: Build iOS App with Flet
+    - name: Build Web PWA
       run: |
-        echo "🚀 Building iOS app with Flet..."
+        echo "🌐 Building Web PWA with Flet..."
         
-        # Tenta build iOS nativo
-        if flet build ipa $MAIN_FILE \
+        flet build web $MAIN_FILE \
           --name "AvventuraEpica" \
-          --bundle-id "com.ambro86.avventuraepica" \
-          --org "Ambro86" \
-          --description "Avventura Epica - Gioco Accessibile" \
-          --no-ios-splash \
-          --flutter-build-args "--no-codesign" \
-          --verbose; then
-          
-          echo "✅ Flet iOS build successful!"
-          
-          # Trova l'IPA generato
-          find . -name "*.ipa" -type f | head -1 | xargs -I {} cp {} AvventuraEpica-iOS.ipa
-          
-        else
-          echo "❌ Flet iOS build failed"
-          echo "🔄 Falling back to manual IPA creation..."
-          
-          # Fallback alla creazione manuale
-          mkdir -p Payload/AvventuraEpica.app
-          
-          # Copia tutti i file necessari
-          cp $MAIN_FILE Payload/AvventuraEpica.app/
-          cp -r assets Payload/AvventuraEpica.app/ 2>/dev/null || true
-          
-          # Crea Info.plist per iOS (metodo sicuro)
-          echo '<?xml version="1.0" encoding="UTF-8"?>' > Payload/AvventuraEpica.app/Info.plist
-          echo '<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">' >> Payload/AvventuraEpica.app/Info.plist
-          echo '<plist version="1.0">' >> Payload/AvventuraEpica.app/Info.plist
-          echo '<dict>' >> Payload/AvventuraEpica.app/Info.plist
-          echo '    <key>CFBundleDisplayName</key>' >> Payload/AvventuraEpica.app/Info.plist
-          echo '    <string>Avventura Epica</string>' >> Payload/AvventuraEpica.app/Info.plist
-          echo '    <key>CFBundleExecutable</key>' >> Payload/AvventuraEpica.app/Info.plist
-          echo '    <string>AvventuraEpica</string>' >> Payload/AvventuraEpica.app/Info.plist
-          echo '    <key>CFBundleIdentifier</key>' >> Payload/AvventuraEpica.app/Info.plist
-          echo '    <string>com.ambro86.avventuraepica</string>' >> Payload/AvventuraEpica.app/Info.plist
-          echo '    <key>CFBundleName</key>' >> Payload/AvventuraEpica.app/Info.plist
-          echo '    <string>AvventuraEpica</string>' >> Payload/AvventuraEpica.app/Info.plist
-          echo '    <key>CFBundlePackageType</key>' >> Payload/AvventuraEpica.app/Info.plist
-          echo '    <string>APPL</string>' >> Payload/AvventuraEpica.app/Info.plist
-          echo '    <key>CFBundleShortVersionString</key>' >> Payload/AvventuraEpica.app/Info.plist
-          echo '    <string>1.0</string>' >> Payload/AvventuraEpica.app/Info.plist
-          echo '    <key>CFBundleVersion</key>' >> Payload/AvventuraEpica.app/Info.plist
-          echo '    <string>1</string>' >> Payload/AvventuraEpica.app/Info.plist
-          echo '    <key>LSRequiresIPhoneOS</key>' >> Payload/AvventuraEpica.app/Info.plist
-          echo '    <true/>' >> Payload/AvventuraEpica.app/Info.plist
-          echo '    <key>UILaunchStoryboardName</key>' >> Payload/AvventuraEpica.app/Info.plist
-          echo '    <string>LaunchScreen</string>' >> Payload/AvventuraEpica.app/Info.plist
-          echo '    <key>UIRequiredDeviceCapabilities</key>' >> Payload/AvventuraEpica.app/Info.plist
-          echo '    <array>' >> Payload/AvventuraEpica.app/Info.plist
-          echo '        <string>armv7</string>' >> Payload/AvventuraEpica.app/Info.plist
-          echo '    </array>' >> Payload/AvventuraEpica.app/Info.plist
-          echo '    <key>UISupportedInterfaceOrientations</key>' >> Payload/AvventuraEpica.app/Info.plist
-          echo '    <array>' >> Payload/AvventuraEpica.app/Info.plist
-          echo '        <string>UIInterfaceOrientationPortrait</string>' >> Payload/AvventuraEpica.app/Info.plist
-          echo '        <string>UIInterfaceOrientationLandscapeLeft</string>' >> Payload/AvventuraEpica.app/Info.plist
-          echo '        <string>UIInterfaceOrientationLandscapeRight</string>' >> Payload/AvventuraEpica.app/Info.plist
-          echo '    </array>' >> Payload/AvventuraEpica.app/Info.plist
-          echo '    <key>UIAccessibilityTraits</key>' >> Payload/AvventuraEpica.app/Info.plist
-          echo '    <string>UIAccessibilityTraitPlaysSound</string>' >> Payload/AvventuraEpica.app/Info.plist
-          echo '    <key>UIAccessibilityLanguage</key>' >> Payload/AvventuraEpica.app/Info.plist
-          echo '    <string>it</string>' >> Payload/AvventuraEpica.app/Info.plist
-          echo '    <key>NSMicrophoneUsageDescription</key>' >> Payload/AvventuraEpica.app/Info.plist
-          echo '    <string>Questa app usa laudio per laccessibilita</string>' >> Payload/AvventuraEpica.app/Info.plist
-          echo '</dict>' >> Payload/AvventuraEpica.app/Info.plist
-          echo '</plist>' >> Payload/AvventuraEpica.app/Info.plist
-          
-          # Crea eseguibile placeholder
-          echo '#!/bin/bash' > Payload/AvventuraEpica.app/AvventuraEpica
-          echo 'echo "App placeholder"' >> Payload/AvventuraEpica.app/AvventuraEpica
-          chmod +x Payload/AvventuraEpica.app/AvventuraEpica
-          
-          # Crea IPA
-          zip -r AvventuraEpica-iOS.ipa Payload/
-        fi
+          --description "Avventura Epica - Gioco Accessibile per iPhone/iPad" \
+          --base-url "/AccessibleIphoneApp/" \
+          --web-renderer "canvaskit" \
+          --pwa-background-color "#1976D2" \
+          --pwa-theme-color "#1976D2" \
+          --route-url-strategy "hash"
+        
+        echo "✅ Web build completed!"
+        ls -la build/web/
     
-    - name: Verify IPA
+    - name: Setup GitHub Pages
       run: |
-        echo "🔍 Verifying IPA structure..."
-        if [ -f "AvventuraEpica-iOS.ipa" ]; then
-          ls -lh AvventuraEpica-iOS.ipa
-          unzip -l AvventuraEpica-iOS.ipa | head -20
-          
-          # Verifica componenti essenziali
-          if unzip -l AvventuraEpica-iOS.ipa | grep -q "Info.plist"; then
-            echo "✅ Info.plist found"
-          else
-            echo "❌ Info.plist missing"
-          fi
-          
-          if unzip -l AvventuraEpica-iOS.ipa | grep -q "AvventuraEpica"; then
-            echo "✅ Executable found"
-          else
-            echo "❌ Executable missing"
-          fi
-        else
-          echo "❌ No IPA file created"
+        echo "📱 Configuring for GitHub Pages..."
+        
+        # Copia tutto nella root per GitHub Pages
+        cp -r build/web/* .
+        
+        # Assicurati che ci sia index.html
+        if [ ! -f "index.html" ]; then
+          echo "❌ No index.html found!"
+          exit 1
         fi
+        
+        # Crea .nojekyll per GitHub Pages
+        touch .nojekyll
+        
+        # Verifica files
+        echo "📂 Files ready for GitHub Pages:"
+        ls -la *.html *.js *.css 2>/dev/null || true
+        
+        echo "🎯 PWA ready! Access via: https://ambro86.github.io/AccessibleIphoneApp/"
     
-    - name: Upload iOS App
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./build/web
+        publish_branch: gh-pages
+        force_orphan: true
+    
+    - name: Upload Web Build
       uses: actions/upload-artifact@v4
       with:
-        name: AvventuraEpica-iOS-Advanced
-        path: |
-          AvventuraEpica-iOS.ipa
-          build/
+        name: AvventuraEpica-WebPWA
+        path: build/web/
         retention-days: 30
-        if-no-files-found: warn
  
  
