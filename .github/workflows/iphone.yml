@@ -92,49 +92,47 @@ jobs:
           cp $MAIN_FILE Payload/AvventuraEpica.app/
           cp -r assets Payload/AvventuraEpica.app/ 2>/dev/null || true
           
-          # Crea Info.plist per iOS
-          cat > Payload/AvventuraEpica.app/Info.plist << 'PLIST_EOF'
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>CFBundleDisplayName</key>
-    <string>Avventura Epica</string>
-    <key>CFBundleExecutable</key>
-    <string>AvventuraEpica</string>
-    <key>CFBundleIdentifier</key>
-    <string>com.ambro86.avventuraepica</string>
-    <key>CFBundleName</key>
-    <string>AvventuraEpica</string>
-    <key>CFBundlePackageType</key>
-    <string>APPL</string>
-    <key>CFBundleShortVersionString</key>
-    <string>1.0</string>
-    <key>CFBundleVersion</key>
-    <string>1</string>
-    <key>LSRequiresIPhoneOS</key>
-    <true/>
-    <key>UILaunchStoryboardName</key>
-    <string>LaunchScreen</string>
-    <key>UIRequiredDeviceCapabilities</key>
-    <array>
-        <string>armv7</string>
-    </array>
-    <key>UISupportedInterfaceOrientations</key>
-    <array>
-        <string>UIInterfaceOrientationPortrait</string>
-        <string>UIInterfaceOrientationLandscapeLeft</string>
-        <string>UIInterfaceOrientationLandscapeRight</string>
-    </array>
-    <key>UIAccessibilityTraits</key>
-    <string>UIAccessibilityTraitPlaysSound</string>
-    <key>UIAccessibilityLanguage</key>
-    <string>it</string>
-    <key>NSMicrophoneUsageDescription</key>
-    <string>Questa app usa l'audio per l'accessibilità</string>
-</dict>
-</plist>
-PLIST_EOF
+          # Crea Info.plist per iOS (metodo sicuro)
+          echo '<?xml version="1.0" encoding="UTF-8"?>' > Payload/AvventuraEpica.app/Info.plist
+          echo '<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">' >> Payload/AvventuraEpica.app/Info.plist
+          echo '<plist version="1.0">' >> Payload/AvventuraEpica.app/Info.plist
+          echo '<dict>' >> Payload/AvventuraEpica.app/Info.plist
+          echo '    <key>CFBundleDisplayName</key>' >> Payload/AvventuraEpica.app/Info.plist
+          echo '    <string>Avventura Epica</string>' >> Payload/AvventuraEpica.app/Info.plist
+          echo '    <key>CFBundleExecutable</key>' >> Payload/AvventuraEpica.app/Info.plist
+          echo '    <string>AvventuraEpica</string>' >> Payload/AvventuraEpica.app/Info.plist
+          echo '    <key>CFBundleIdentifier</key>' >> Payload/AvventuraEpica.app/Info.plist
+          echo '    <string>com.ambro86.avventuraepica</string>' >> Payload/AvventuraEpica.app/Info.plist
+          echo '    <key>CFBundleName</key>' >> Payload/AvventuraEpica.app/Info.plist
+          echo '    <string>AvventuraEpica</string>' >> Payload/AvventuraEpica.app/Info.plist
+          echo '    <key>CFBundlePackageType</key>' >> Payload/AvventuraEpica.app/Info.plist
+          echo '    <string>APPL</string>' >> Payload/AvventuraEpica.app/Info.plist
+          echo '    <key>CFBundleShortVersionString</key>' >> Payload/AvventuraEpica.app/Info.plist
+          echo '    <string>1.0</string>' >> Payload/AvventuraEpica.app/Info.plist
+          echo '    <key>CFBundleVersion</key>' >> Payload/AvventuraEpica.app/Info.plist
+          echo '    <string>1</string>' >> Payload/AvventuraEpica.app/Info.plist
+          echo '    <key>LSRequiresIPhoneOS</key>' >> Payload/AvventuraEpica.app/Info.plist
+          echo '    <true/>' >> Payload/AvventuraEpica.app/Info.plist
+          echo '    <key>UILaunchStoryboardName</key>' >> Payload/AvventuraEpica.app/Info.plist
+          echo '    <string>LaunchScreen</string>' >> Payload/AvventuraEpica.app/Info.plist
+          echo '    <key>UIRequiredDeviceCapabilities</key>' >> Payload/AvventuraEpica.app/Info.plist
+          echo '    <array>' >> Payload/AvventuraEpica.app/Info.plist
+          echo '        <string>armv7</string>' >> Payload/AvventuraEpica.app/Info.plist
+          echo '    </array>' >> Payload/AvventuraEpica.app/Info.plist
+          echo '    <key>UISupportedInterfaceOrientations</key>' >> Payload/AvventuraEpica.app/Info.plist
+          echo '    <array>' >> Payload/AvventuraEpica.app/Info.plist
+          echo '        <string>UIInterfaceOrientationPortrait</string>' >> Payload/AvventuraEpica.app/Info.plist
+          echo '        <string>UIInterfaceOrientationLandscapeLeft</string>' >> Payload/AvventuraEpica.app/Info.plist
+          echo '        <string>UIInterfaceOrientationLandscapeRight</string>' >> Payload/AvventuraEpica.app/Info.plist
+          echo '    </array>' >> Payload/AvventuraEpica.app/Info.plist
+          echo '    <key>UIAccessibilityTraits</key>' >> Payload/AvventuraEpica.app/Info.plist
+          echo '    <string>UIAccessibilityTraitPlaysSound</string>' >> Payload/AvventuraEpica.app/Info.plist
+          echo '    <key>UIAccessibilityLanguage</key>' >> Payload/AvventuraEpica.app/Info.plist
+          echo '    <string>it</string>' >> Payload/AvventuraEpica.app/Info.plist
+          echo '    <key>NSMicrophoneUsageDescription</key>' >> Payload/AvventuraEpica.app/Info.plist
+          echo '    <string>Questa app usa laudio per laccessibilita</string>' >> Payload/AvventuraEpica.app/Info.plist
+          echo '</dict>' >> Payload/AvventuraEpica.app/Info.plist
+          echo '</plist>' >> Payload/AvventuraEpica.app/Info.plist
           
           # Crea eseguibile placeholder
           echo '#!/bin/bash' > Payload/AvventuraEpica.app/AvventuraEpica
