@@ -122,43 +122,55 @@ jobs:
       run: |
         echo "Creating IPA package structure..."
         
-        # Trova la directory di build di Flet
-        if [ -d "build" ]; then
-          BUILD_DIR="build"
-        elif [ -d "dist" ]; then
-          BUILD_DIR="dist"
-        else
-          BUILD_DIR="."
-        fi
+        # Debug: vedi cosa ha creato Flet
+        echo "🔍 Checking build directories:"
+        ls -la
+        [ -d "build" ] && echo "Build directory:" && find build -type f -name "*" | head -10
+        [ -d "dist" ] && echo "Dist directory:" && find dist -type f -name "*" | head -10
         
         # Crea struttura IPA
-        mkdir -p Payload
+        mkdir -p Payload/AvventuraEpica.app
         
-        # Trova l'app bundle o creane uno
-        if find $BUILD_DIR -name "*.app" -type d | head -1 | xargs -I {} cp -r {} Payload/; then
-          echo "✅ Found and copied .app bundle"
-        else
-          echo "⚠️ No .app bundle found, creating one manually"
-          mkdir -p Payload/AvventuraEpica.app
-          
-          # Copia files essenziali
-          cp $MAIN_FILE Payload/AvventuraEpica.app/
-          cp -r assets Payload/AvventuraEpica.app/ 2>/dev/null || true
-          cp ios_build/Info.plist Payload/AvventuraEpica.app/
-          
-          # Crea un eseguibile dummy (non funzionerà ma evita errori di struttura)
-          echo '#!/bin/bash\necho "iOS App"' > Payload/AvventuraEpica.app/AvventuraEpica
-          chmod +x Payload/AvventuraEpica.app/AvventuraEpica
+        # Copia sempre manualmente per sicurezza
+        echo "📋 Creating app bundle manually..."
+        
+        # Copia il file Python principale
+        cp $MAIN_FILE Payload/AvventuraEpica.app/
+        
+        # Copia gli assets se esistono
+        if [ -d "assets" ]; then
+          cp -r assets Payload/AvventuraEpica.app/
+          echo "✅ Assets copied"
         fi
         
-        # Assicurati che ci sia Info.plist
-        find Payload -name "*.app" -exec cp ios_build/Info.plist {}/Info.plist \;
+        # Copia il binary di Flet se esiste
+        if [ -f "dist/AvventuraEpica" ]; then
+          cp dist/AvventuraEpica Payload/AvventuraEpica.app/
+          echo "✅ Flet binary copied"
+        elif [ -f "dist/AvventuraEpica.app/Contents/MacOS/AvventuraEpica" ]; then
+          cp "dist/AvventuraEpica.app/Contents/MacOS/AvventuraEpica" Payload/AvventuraEpica.app/
+          echo "✅ macOS app binary copied"
+        else
+          # Crea un eseguibile dummy
+          echo '#!/bin/bash
+python3 gioco.py' > Payload/AvventuraEpica.app/AvventuraEpica
+          chmod +x Payload/AvventuraEpica.app/AvventuraEpica
+          echo "⚠️ Created dummy executable"
+        fi
+        
+        # Copia Info.plist
+        cp ios_build/Info.plist Payload/AvventuraEpica.app/
+        echo "✅ Info.plist copied"
+        
+        # Verifica contenuto prima di zippare
+        echo "📂 App bundle contents:"
+        ls -la Payload/AvventuraEpica.app/
         
         # Crea il file IPA
         zip -r AvventuraEpica-iOS.ipa Payload/
         
         echo "📱 IPA created: AvventuraEpica-iOS.ipa"
-        ls -la AvventuraEpica-iOS.ipa
+        ls -lh AvventuraEpica-iOS.ipa
     
     - name: Verify IPA structure
       run: |
