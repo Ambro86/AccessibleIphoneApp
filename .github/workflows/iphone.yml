@@ -1,7 +1,7 @@
 name: 🏰 Build Avventura Epica iOS
 
 on:
-  push:
+  dispatch:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
