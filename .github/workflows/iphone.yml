@@ -308,3 +308,75 @@ jobs:
 ## 🎯 Obiettivo del Gioco
 
 ### 🏆 Missione Principale
+Raccogliere **👑 Corona Reale** dal Castello e **💰 Tesoro Reale** dal Palazzo per diventare il nuovo Re!
+
+### 🗺️ Strategia Consigliata
+1. 🏘️ Inizia dal Villaggio (sicuro)
+2. 🛍️ Visita il Mercato per equipaggiamento
+3. 🌲 Esplora Bosco e Strada per livellare
+4. ⚔️ Affronta Arena e Caverna per esperienza
+5. 🔥 Vulcano e Ghiacciai per sfide avanzate
+6. 🏰 Castello e Palazzo per oggetti finali
+
+### 💡 Consigli Pro
+- 🧪 **Compra pozioni** prima dei combattimenti difficili
+- ⚔️ **Equipaggia armi** per aumentare il danno
+- 💰 **Raccogli monete** vendendo oggetti rari
+- 📊 **Controlla statistiche** per monitorare progressi
+
+## 📞 Supporto
+
+### 🐛 Bug Reports
+Se trovi bug o problemi, segnalali nel repository GitHub con:
+- 📱 Modello iPhone/iPad
+- 🔢 Versione iOS
+- 📝 Descrizione dettagliata del problema
+- 📸 Screenshot se possibile
+
+### 💡 Feature Requests
+Suggerimenti per nuove funzionalità sono benvenuti! Apri una issue su GitHub.
+
+---
+
+🎉 **Buona avventura, futuro Re!** 🏰⚔️👑
+
+*Build generato automaticamente il $(date +%Y-%m-%d\ %H:%M:%S)*
+EOF
+
+        echo "✅ Comprehensive installation guide created"
+        
+    - name: 📤 Upload iOS Adventure App
+      uses: actions/upload-artifact@v4
+      with:
+        name: avventura-epica-ios-unsigned
+        path: artifacts/
+        retention-days: 30
+        
+    - name: 📊 Build Summary & Success
+      run: |
+        echo "🎉 ====== BUILD COMPLETATO CON SUCCESSO! ======"
+        echo ""
+        echo "📱 **Avventura Epica iOS** è pronta!"
+        echo "🎮 Framework: Flet (Python → iOS nativo)"
+        echo "📏 Dimensione IPA: $IPA_SIZE"
+        echo "🔧 Tipo: Unsigned (.ipa) per AltStore/Sideloadly"
+        echo ""
+        echo "📥 **DOWNLOAD:**"
+        echo "   Actions → Artifacts → avventura-epica-ios-unsigned"
+        echo ""
+        echo "📋 **CONTENUTI SCARICABILI:**"
+        echo "   • AvventuraEpica-iOS-Unsigned.ipa"
+        echo "   • INSTALL_GUIDE_IOS.md (guida completa)"
+        echo ""
+        echo "🎯 **CARATTERISTICHE:**"
+        echo "   ✅ 16 aree RPG da esplorare"
+        echo "   ✅ Sistema combattimento e livelli" 
+        echo "   ✅ Audio dinamico e feedback aptico"
+        echo "   ✅ Negozi, inventario, equipaggiamento"
+        echo "   ✅ Compatible con VoiceOver iOS"
+        echo "   ✅ Salvataggio/caricamento partite"
+        echo ""
+        echo "⏰ **DISPONIBILITÀ:** 30 giorni"
+        echo "📱 **COMPATIBILITÀ:** iOS 14.0+ (iPhone/iPad)"
+        echo ""
+        echo "🏰 La tua avventura epica ti aspetta su iPhone! ⚔️👑"
