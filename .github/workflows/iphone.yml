@@ -93,7 +93,7 @@ jobs:
           cp -r assets Payload/AvventuraEpica.app/ 2>/dev/null || true
           
           # Crea Info.plist per iOS
-          cat > Payload/AvventuraEpica.app/Info.plist << 'EOF'
+          cat > Payload/AvventuraEpica.app/Info.plist << 'PLIST_EOF'
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -134,7 +134,7 @@ jobs:
     <string>Questa app usa l'audio per l'accessibilità</string>
 </dict>
 </plist>
-EOF
+PLIST_EOF
           
           # Crea eseguibile placeholder
           echo '#!/bin/bash' > Payload/AvventuraEpica.app/AvventuraEpica
