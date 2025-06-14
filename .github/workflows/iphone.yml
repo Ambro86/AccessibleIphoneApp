@@ -18,7 +18,7 @@ jobs:
         
     - name: Install Flet
       run: |
-        pip install flet flet-audio
+        pip install flet flet-audio pyinstaller
         
     - name: Find main file
       run: |
@@ -48,7 +48,11 @@ jobs:
     - name: Build iOS
       run: |
         echo "Building iOS app with Flet..."
-        flet pack gioco.py --name AvventuraEpica
+        # Installa dipendenze per iOS se necessarie
+        pip install --upgrade setuptools wheel
+        
+        # Build per iOS - Flet 0.28.3 potrebbe usare sintassi diversa
+        flet pack gioco.py --name AvventuraEpica || flet build ios gioco.py --name AvventuraEpica
         
     - name: Create IPA
       run: |
