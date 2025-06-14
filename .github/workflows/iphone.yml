@@ -67,33 +67,25 @@ jobs:
         mkdir -p artifacts
         cd artifacts
         cat > INSTALL_GUIDE.txt << 'EOF'
-# Avventura Epica iOS - Guida Installazione
+# Avventura Epica iOS
 
 App Info:
 - Nome: Avventura Epica
 - Tipo: RPG Testuale con Audio e Haptic
-- Framework: Flet (Python → iOS nativo)
-- Compatibilita: iOS 14.0+ (iPhone/iPad)
+- Framework: Flet
+- Compatibilita: iOS 14.0+
 
-Installazione con AltStore:
-1. Scarica AvventuraEpica.ipa
-2. Apri AltStore su iPhone
-3. Tocca + e seleziona il file .ipa
-4. Inserisci Apple ID quando richiesto
-5. Attendi installazione
-6. Autorizza in Impostazioni > Gestione dispositivi
+Installazione:
+Usa AltStore per installare il file .ipa su iPhone.
 
-Caratteristiche del Gioco:
+Caratteristiche:
 - 16 aree da esplorare
 - Sistema RPG con livelli
 - Audio dinamico e haptic feedback
-- Negozi e inventario
 - Compatible con VoiceOver
 
 Note:
-- App scade dopo 7 giorni (account gratuito)
-- Rinnovo necessario tramite AltStore
-- Richiede iOS 14.0 o superiore
+App scade dopo 7 giorni con account gratuito.
 
 Buona avventura!
 EOF
