@@ -1,382 +1,105 @@
-name: 🏰 Build Avventura Epica iOS
+name: Build iOS App
 
 on:
-  push:
-    branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
-  workflow_dispatch: # Trigger manuale dalla UI GitHub
+  workflow_dispatch:
 
 jobs:
-  build-ios-adventure:
-    name: 📱 Build Avventura Epica (.ipa unsigned)
+  build:
     runs-on: macos-latest
     
     steps:
-    - name: 📥 Checkout repository
+    - name: Checkout
       uses: actions/checkout@v4
       
-    - name: 🐍 Setup Python 3.11
+    - name: Setup Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.11'
-        cache: 'pip'
         
-    - name: 📦 Install Flet and dependencies
+    - name: Install Flet
       run: |
-        echo "🔧 Installing Flet ecosystem..."
-        pip install --upgrade pip
-        pip install flet
-        pip install flet-audio
+        pip install flet flet-audio
         
-        # Verifica installazioni
-        echo "✅ Checking installations..."
-        flet --version
-        python -c "import flet; print(f'🎮 Flet {flet.__version__} ready!')"
-        python -c "import flet_audio; print('🎵 Flet-audio ready!')"
-        
-    - name: 📁 Verify project structure
+    - name: Find main file
       run: |
-        echo "🔍 Checking project structure..."
-        ls -la
-        
-        # Trova il file Python principale
-        if [ -f "avventura_epica.py" ]; then
-          MAIN_FILE="avventura_epica.py"
-          echo "✅ Found main file: $MAIN_FILE"
-        elif [ -f "gioco.py" ]; then
-          MAIN_FILE="gioco.py"
-          echo "✅ Found main file: $MAIN_FILE"
+        if [ -f "gioco.py" ]; then
+          echo "MAIN_FILE=gioco.py" >> $GITHUB_ENV
         elif [ -f "main.py" ]; then
-          MAIN_FILE="main.py"
-          echo "✅ Found main file: $MAIN_FILE"
+          echo "MAIN_FILE=main.py" >> $GITHUB_ENV
         else
-          echo "❌ No main Python file found!"
-          echo "📋 Expected files: avventura_epica.py, gioco.py, or main.py"
-          exit 1
+          echo "MAIN_FILE=avventura_epica.py" >> $GITHUB_ENV
         fi
-        echo "MAIN_FILE=$MAIN_FILE" >> $GITHUB_ENV
         
-        # Verifica assets
-        echo "🎵 Checking assets folder..."
+    - name: Verify assets
+      run: |
+        echo "Checking for existing assets..."
         if [ -d "assets" ]; then
-          echo "✅ Assets folder found"
-          find assets -name "*.mp3" -o -name "*.wav" | head -10
-          
-          # Conta file audio
-          MUSIC_COUNT=$(find assets -name "*.mp3" -o -name "*.wav" | wc -l)
-          echo "🎵 Found $MUSIC_COUNT audio files"
+          echo "Assets folder found:"
+          find assets -name "*.wav" -o -name "*.mp3" | sort
+          AUDIO_COUNT=$(find assets -name "*.wav" -o -name "*.mp3" | wc -l)
+          echo "Total audio files: $AUDIO_COUNT"
         else
-          echo "⚠️ No assets folder - creating minimal structure"
-          mkdir -p assets/music assets/sounds
-          echo "📝 Created: assets/music and assets/sounds"
+          echo "No assets folder found, creating minimal structure..."
+          mkdir -p assets
+          for i in {1..18}; do touch "assets/$i.wav"; done
+          echo "Created placeholder files 1.wav to 18.wav"
         fi
         
-    - name: 🎵 Setup audio files (if missing)
+    - name: Build iOS
       run: |
-        echo "🎵 Ensuring required audio files exist..."
-        
-        # Se non ci sono file audio, crea dei placeholder
-        if [ ! -f "assets/music/1.mp3" ]; then
-          echo "⚠️ Missing audio files, creating placeholders..."
-          mkdir -p assets/music assets/sounds
-          
-          # Crea file audio vuoti (placeholder)
-          for i in {1..4}; do
-            touch "assets/music/$i.mp3"
-            echo "📝 Created placeholder: assets/music/$i.mp3"
-          done
-          
-          for i in {5..9}; do
-            touch "assets/sounds/$i.mp3"
-            echo "📝 Created placeholder: assets/sounds/$i.mp3"
-          done
-          
-          echo "⚠️ Note: Add real MP3 files to assets/ for full audio experience"
-        else
-          echo "✅ Audio files already present"
-        fi
-        
-    - name: 🏗️ Build iOS app with Flet
-      run: |
-        echo "🚀 Building iOS app with Flet pack..."
-        
-        # Build command con tutti i parametri
+        echo "Building iOS app with Flet..."
         flet pack $MAIN_FILE \
-          --name "AvventuraEpica" \
-          --description "Avventura Testuale RPG con Audio e Haptic" \
-          --author "Epic Adventure Dev" \
-          --version "1.0.0" \
-          --copyright "© 2025 Epic Adventure" \
+          --name AvventuraEpica \
           --platform ios \
           --no-sign \
-          --include-packages flet-audio \
           --add-data "assets:assets" \
-          --icon-file "assets/icon.png" \
-          --verbose \
-          --onefile || echo "⚠️ Build completed with warnings"
-          
-        echo "✅ Flet pack command completed"
+          --include-packages flet-audio
         
-    - name: 📱 Locate and prepare .app bundle
+    - name: Create IPA
       run: |
-        echo "🔍 Finding .app bundle..."
-        
-        # Cerca il file .app
-        APP_BUNDLE=$(find . -name "*.app" -type d | head -1)
-        
-        if [ -z "$APP_BUNDLE" ]; then
-          echo "❌ .app bundle not found! Checking build output..."
-          echo "📂 Directory contents:"
-          find . -type d -name "*Avventura*" -o -name "*Epic*" -o -name "*dist*"
-          
-          # Prova percorsi comuni
-          if [ -d "dist/AvventuraEpica.app" ]; then
-            APP_BUNDLE="dist/AvventuraEpica.app"
-          elif [ -d "dist/main.app" ]; then
-            APP_BUNDLE="dist/main.app"
-          else
-            echo "❌ Could not locate .app bundle"
-            exit 1
-          fi
-        fi
-        
-        echo "✅ Found .app bundle: $APP_BUNDLE"
-        echo "APP_BUNDLE=$APP_BUNDLE" >> $GITHUB_ENV
-        
-        # Verifica contenuti
-        echo "📋 App bundle contents:"
-        ls -la "$APP_BUNDLE"
-        
-    - name: 📦 Create .ipa file for AltStore
-      run: |
-        echo "📦 Creating .ipa file for iOS installation..."
-        
-        # Crea struttura IPA
         mkdir -p build/Payload
+        cp -R dist/*.app build/Payload/ || cp -R *.app build/Payload/
+        cd build && zip -r AvventuraEpica.ipa Payload/
+        mkdir -p ../artifacts && mv AvventuraEpica.ipa ../artifacts/
         
-        # Copia l'app bundle
-        echo "📂 Copying app bundle to Payload..."
-        cp -R "$APP_BUNDLE" build/Payload/
-        
-        # Crea il file .ipa (è un ZIP con estensione .ipa)
-        cd build
-        echo "🗜️ Creating IPA archive..."
-        zip -r "AvventuraEpica-iOS-Unsigned.ipa" Payload/
-        
-        # Sposta in artifacts
-        mkdir -p ../artifacts
-        mv "AvventuraEpica-iOS-Unsigned.ipa" ../artifacts/
-        
-        # Info file
-        cd ../artifacts
-        echo "✅ IPA file created successfully"
-        ls -lh *.ipa
-        
-        # Calcola dimensione
-        IPA_SIZE=$(du -h *.ipa | cut -f1)
-        echo "📏 IPA size: $IPA_SIZE"
-        echo "IPA_SIZE=$IPA_SIZE" >> $GITHUB_ENV
-        
-    - name: 📋 Create comprehensive installation guide
+    - name: Create guide
       run: |
+        mkdir -p artifacts
         cd artifacts
-        echo "📝 Creating detailed installation guide..."
-        
-        cat > INSTALL_GUIDE_IOS.md << 'EOF'
-# 🏰 Avventura Epica iOS - Guida Installazione
+        cat > INSTALL_GUIDE.txt << 'EOF'
+# Avventura Epica iOS - Guida Installazione
 
-## 📱 App Info
-- **Nome:** Avventura Epica
-- **Tipo:** RPG Testuale con Audio e Haptic
-- **Framework:** Flet (Python → iOS nativo)
-- **Dimensione:** $IPA_SIZE
-- **Compatibilità:** iOS 14.0+ (iPhone/iPad)
+App Info:
+- Nome: Avventura Epica
+- Tipo: RPG Testuale con Audio e Haptic
+- Framework: Flet (Python → iOS nativo)
+- Compatibilita: iOS 14.0+ (iPhone/iPad)
 
-## 🔧 Requisiti Pre-installazione
-- iPhone/iPad con iOS 14.0 o superiore
-- AltStore installato sul dispositivo ([altstore.io](https://altstore.io))
-- Computer con AltServer in esecuzione
-- Apple ID (account gratuito OK)
-- WiFi stabile per download e installazione
+Installazione con AltStore:
+1. Scarica AvventuraEpica.ipa
+2. Apri AltStore su iPhone
+3. Tocca + e seleziona il file .ipa
+4. Inserisci Apple ID quando richiesto
+5. Attendi installazione
+6. Autorizza in Impostazioni > Gestione dispositivi
 
-## 📥 Metodo 1: AltStore (RACCOMANDATO) 🏆
+Caratteristiche del Gioco:
+- 16 aree da esplorare
+- Sistema RPG con livelli
+- Audio dinamico e haptic feedback
+- Negozi e inventario
+- Compatible con VoiceOver
 
-### Passo 1: Preparazione
-1. 📲 Assicurati che AltStore sia installato sul tuo iPhone
-2. 💻 Avvia AltServer sul computer
-3. 📶 Connetti iPhone e computer alla stessa rete WiFi
-4. ⬇️ Scarica `AvventuraEpica-iOS-Unsigned.ipa` dal GitHub
+Note:
+- App scade dopo 7 giorni (account gratuito)
+- Rinnovo necessario tramite AltStore
+- Richiede iOS 14.0 o superiore
 
-### Passo 2: Installazione
-1. 📱 Apri AltStore sull'iPhone
-2. ➕ Tocca il pulsante "+" in alto a sinistra
-3. 📂 Naviga e seleziona il file `.ipa` scaricato
-4. 🆔 Inserisci il tuo Apple ID quando richiesto
-5. 🔐 Inserisci la password dell'Apple ID
-6. ⏳ Attendi 2-3 minuti per l'installazione
-7. ✅ L'app apparirà nella home screen
-
-### Passo 3: Autorizzazione
-1. ⚙️ Vai in **Impostazioni > Generali > Gestione dispositivi**
-2. 👤 Trova il tuo Apple ID nella lista
-3. ✅ Tocca "Autorizza [il tuo Apple ID]"
-4. 🎮 Ora puoi avviare Avventura Epica!
-
-## 📥 Metodo 2: Sideloadly (Alternativo)
-
-### Preparazione
-1. 💻 Scarica Sideloadly ([sideloadly.io](https://sideloadly.io))
-2. 🔌 Collega iPhone al computer via USB
-3. 📂 Trascina il file `.ipa` in Sideloadly
-4. 🆔 Inserisci Apple ID e password
-5. ▶️ Clicca "Start" e attendi
-
-## 🎮 Caratteristiche del Gioco
-
-### 🗺️ Esplorazione
-- **16 aree uniche** da esplorare
-- **Mappa 4x4** con ambienti diversi
-- **Musica dinamica** per ogni zona
-- **Descrizioni immersive** per ogni location
-
-### ⚔️ Sistema RPG
-- **Sistema di livelli** con esperienza
-- **Combattimenti tattici** contro 15+ mostri diversi
-- **Equipaggiamento** (armi, armature, accessori)
-- **Inventario** con oggetti speciali
-
-### 🏪 Economia
-- **3 negozi** con oltre 10 oggetti
-- **Sistema monetario** con monete d'oro
-- **Pozioni** per vita e potenziamenti
-- **Mercanti** sparsi per il mondo
-
-### 🎵 Audio & Haptic
-- **Musica di sottofondo** per ogni area
-- **Effetti sonori** per azioni e combattimenti
-- **Feedback aptico** per iPhone (Taptic Engine)
-- **Loop audio** senza interruzioni
-
-### 📱 Accessibilità iOS
-- **VoiceOver** supportato nativamente
-- **Controlli touch** ottimizzati
-- **Text scaling** per diverse dimensioni
-- **Gesture** intuitive per navigazione
-
-## ⚠️ Limitazioni Account Gratuito
-
-### 🕐 Scadenza App
-- L'app **scade dopo 7 giorni** con account Apple gratuito
-- **Rinnovo necessario** ogni settimana tramite AltStore
-- **Account Developer** ($99/anno) rimuove questa limitazione
-
-### 🔄 Rinnovo Automatico
-1. 📡 Tieni AltStore **sempre aperto** in background
-2. 🏠 iPhone e computer sulla **stessa WiFi**
-3. 💻 **AltServer attivo** sul computer
-4. 🔄 AltStore rinnoverà automaticamente l'app
-
-## 🛠️ Troubleshooting
-
-### App non si apre
-- ✅ Verifica autorizzazione in Impostazioni > Gestione dispositivi
-- 🔄 Riavvia iPhone e riprova
-- 📱 Assicurati di avere iOS 14.0+
-
-### Audio non funziona
-- 🔊 Controlla volume device e in-app
-- 🎧 Prova con e senza cuffie
-- ⚙️ Verifica autorizzazioni audio nelle impostazioni
-
-### App si chiude improvvisamente
-- 📱 Libera spazio (minimo 100MB disponibili)
-- 🔄 Forza chiusura app e riapri
-- 📊 Verifica RAM disponibile (chiudi altre app)
-
-### Feedback aptico non funziona
-- ⚙️ Attiva vibrazione in Impostazioni > Suoni e vibrazione
-- 🔋 Controlla che la batteria non sia in modalità risparmio energetico
-- 📳 Testa il toggle in-game per attivare/disattivare
-
-### Problemi di installazione
-- 🆔 Verifica credenziali Apple ID corrette
-- 📶 Connessione WiFi stabile durante installazione
-- 💻 AltServer deve essere attivo sul computer
-- 🔄 Riprova dopo qualche minuto se fallisce
-
-## 🎯 Obiettivo del Gioco
-
-### 🏆 Missione Principale
-Raccogliere **👑 Corona Reale** dal Castello e **💰 Tesoro Reale** dal Palazzo per diventare il nuovo Re!
-
-### 🗺️ Strategia Consigliata
-1. 🏘️ Inizia dal Villaggio (sicuro)
-2. 🛍️ Visita il Mercato per equipaggiamento
-3. 🌲 Esplora Bosco e Strada per livellare
-4. ⚔️ Affronta Arena e Caverna per esperienza
-5. 🔥 Vulcano e Ghiacciai per sfide avanzate
-6. 🏰 Castello e Palazzo per oggetti finali
-
-### 💡 Consigli Pro
-- 🧪 **Compra pozioni** prima dei combattimenti difficili
-- ⚔️ **Equipaggia armi** per aumentare il danno
-- 💰 **Raccogli monete** vendendo oggetti rari
-- 📊 **Controlla statistiche** per monitorare progressi
-
-## 📞 Supporto
-
-### 🐛 Bug Reports
-Se trovi bug o problemi, segnalali nel repository GitHub con:
-- 📱 Modello iPhone/iPad
-- 🔢 Versione iOS
-- 📝 Descrizione dettagliata del problema
-- 📸 Screenshot se possibile
-
-### 💡 Feature Requests
-Suggerimenti per nuove funzionalità sono benvenuti! Apri una issue su GitHub.
-
----
-
-🎉 **Buona avventura, futuro Re!** 🏰⚔️👑
-
-*Build generato automaticamente il $(date +%Y-%m-%d\ %H:%M:%S)*
+Buona avventura!
 EOF
-
-        echo "✅ Comprehensive installation guide created"
         
-    - name: 📤 Upload iOS Adventure App
+    - name: Upload
       uses: actions/upload-artifact@v4
       with:
-        name: avventura-epica-ios-unsigned
+        name: ios-app
         path: artifacts/
-        retention-days: 30
-        
-    - name: 📊 Build Summary & Success
-      run: |
-        echo "🎉 ====== BUILD COMPLETATO CON SUCCESSO! ======"
-        echo ""
-        echo "📱 **Avventura Epica iOS** è pronta!"
-        echo "🎮 Framework: Flet (Python → iOS nativo)"
-        echo "📏 Dimensione IPA: $IPA_SIZE"
-        echo "🔧 Tipo: Unsigned (.ipa) per AltStore/Sideloadly"
-        echo ""
-        echo "📥 **DOWNLOAD:**"
-        echo "   Actions → Artifacts → avventura-epica-ios-unsigned"
-        echo ""
-        echo "📋 **CONTENUTI SCARICABILI:**"
-        echo "   • AvventuraEpica-iOS-Unsigned.ipa"
-        echo "   • INSTALL_GUIDE_IOS.md (guida completa)"
-        echo ""
-        echo "🎯 **CARATTERISTICHE:**"
-        echo "   ✅ 16 aree RPG da esplorare"
-        echo "   ✅ Sistema combattimento e livelli" 
-        echo "   ✅ Audio dinamico e feedback aptico"
-        echo "   ✅ Negozi, inventario, equipaggiamento"
-        echo "   ✅ Compatible con VoiceOver iOS"
-        echo "   ✅ Salvataggio/caricamento partite"
-        echo ""
-        echo "⏰ **DISPONIBILITÀ:** 30 giorni"
-        echo "📱 **COMPATIBILITÀ:** iOS 14.0+ (iPhone/iPad)"
-        echo ""
-        echo "🏰 La tua avventura epica ti aspetta su iPhone! ⚔️👑"
