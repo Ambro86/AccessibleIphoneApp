@@ -152,8 +152,10 @@ jobs:
           echo "✅ macOS app binary copied"
         else
           # Crea un eseguibile dummy
-          echo '#!/bin/bash
-python3 gioco.py' > Payload/AvventuraEpica.app/AvventuraEpica
+          cat > Payload/AvventuraEpica.app/AvventuraEpica << 'EOF'
+#!/bin/bash
+python3 gioco.py
+EOF
           chmod +x Payload/AvventuraEpica.app/AvventuraEpica
           echo "⚠️ Created dummy executable"
         fi
@@ -164,7 +166,12 @@ python3 gioco.py' > Payload/AvventuraEpica.app/AvventuraEpica
         
         # Verifica contenuto prima di zippare
         echo "📂 App bundle contents:"
-        ls -la Payload/AvventuraEpica.app/
+        if [ -d "Payload/AvventuraEpica.app" ]; then
+          ls -la Payload/AvventuraEpica.app/
+        else
+          echo "❌ App bundle directory not found!"
+          ls -la Payload/
+        fi
         
         # Crea il file IPA
         zip -r AvventuraEpica-iOS.ipa Payload/
@@ -192,3 +199,5 @@ python3 gioco.py' > Payload/AvventuraEpica.app/AvventuraEpica
           AvventuraEpica-iOS.ipa
           Payload/
         retention-days: 30
+ 
+ 
