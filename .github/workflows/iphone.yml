@@ -152,10 +152,8 @@ jobs:
           echo "✅ macOS app binary copied"
         else
           # Crea un eseguibile dummy
-          cat > Payload/AvventuraEpica.app/AvventuraEpica << 'EOF'
-#!/bin/bash
-python3 gioco.py
-EOF
+          echo '#!/bin/bash' > Payload/AvventuraEpica.app/AvventuraEpica
+          echo 'python3 gioco.py' >> Payload/AvventuraEpica.app/AvventuraEpica
           chmod +x Payload/AvventuraEpica.app/AvventuraEpica
           echo "⚠️ Created dummy executable"
         fi
