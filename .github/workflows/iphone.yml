@@ -1,7 +1,8 @@
 name: 🏰 Build Avventura Epica iOS
 
 on:
-  dispatch:
+  workflow_dispatch: # Permette l'avvio manuale dalla tab Azioni di GitHub
+
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
