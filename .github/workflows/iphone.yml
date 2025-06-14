@@ -14,7 +14,7 @@ jobs:
     - name: Setup Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.13'
+        python-version: '3.11'
         
     - name: Install Flet
       run: |
@@ -48,12 +48,7 @@ jobs:
     - name: Build iOS
       run: |
         echo "Building iOS app with Flet..."
-        flet pack $MAIN_FILE \
-          --name AvventuraEpica \
-          --platform ios \
-          --no-sign \
-          --add-data "assets:assets" \
-          --include-packages flet-audio
+        flet pack gioco.py --name AvventuraEpica
         
     - name: Create IPA
       run: |
@@ -73,5 +68,3 @@ jobs:
       with:
         name: ios-app
         path: artifacts/
- 
- 
