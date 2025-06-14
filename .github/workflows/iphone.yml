@@ -14,7 +14,7 @@ jobs:
     - name: Setup Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.11'
+        python-version: '3.13'
         
     - name: Install Flet
       run: |
@@ -66,32 +66,12 @@ jobs:
       run: |
         mkdir -p artifacts
         cd artifacts
-        cat > INSTALL_GUIDE.txt << 'EOF'
-# Avventura Epica iOS
-
-App Info:
-- Nome: Avventura Epica
-- Tipo: RPG Testuale con Audio e Haptic
-- Framework: Flet
-- Compatibilita: iOS 14.0+
-
-Installazione:
-Usa AltStore per installare il file .ipa su iPhone.
-
-Caratteristiche:
-- 16 aree da esplorare
-- Sistema RPG con livelli
-- Audio dinamico e haptic feedback
-- Compatible con VoiceOver
-
-Note:
-App scade dopo 7 giorni con account gratuito.
-
-Buona avventura!
-EOF
+        echo "Avventura Epica iOS app ready for installation" > README.txt
         
     - name: Upload
       uses: actions/upload-artifact@v4
       with:
         name: ios-app
         path: artifacts/
+ 
+ 
