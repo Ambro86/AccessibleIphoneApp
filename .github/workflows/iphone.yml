@@ -1,137 +1,74 @@
-name: Build iOS App
+name: Build iOS IPA (Unsigned)
 
 on:
   push:
-    branches: [ master, main ]
-  pull_request:
-    branches: [ master, main ]
+    branches:
+      - master
   workflow_dispatch:
 
 jobs:
   build:
-    runs-on: macos-14
+    runs-on: macos-latest
 
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
-    
-    - name: Install Xcode Command Line Tools
-      run: |
-        sudo xcode-select --install || true
-        sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer || true
-    
-    - name: Install Flet and dependencies
-      run: |
-        pip install flet flet-audio pyinstaller
-        pip install --upgrade setuptools wheel
-    
-    - name: Detect main file
-      run: |
-        if [ -f "gioco.py" ]; then
-          echo "MAIN_FILE=gioco.py" >> $GITHUB_ENV
-        elif [ -f "main.py" ]; then
-          echo "MAIN_FILE=main.py" >> $GITHUB_ENV
-        else
-          echo "MAIN_FILE=avventura_epica.py" >> $GITHUB_ENV
-        fi
-    
-    - name: Check assets
-      run: |
-        echo "Checking for existing assets..."
-        if [ -d "assets" ]; then
-          echo "Assets folder found:"
-          find assets -name "*.wav" -o -name "*.mp3" | sort
-          AUDIO_COUNT=$(find assets -name "*.wav" -o -name "*.mp3" | wc -l)
-          echo "Total audio files: $AUDIO_COUNT"
-        else
-          echo "No assets folder found, creating minimal structure..."
-          mkdir -p assets
-          for i in {1..18}; do touch "assets/$i.wav"; done
-          echo "Created placeholder files 1.wav to 18.wav"
-        fi
-    
-    - name: Create Info.plist
-      run: |
-        mkdir -p ios_build
-        cat > ios_build/Info.plist << 'EOF'
-        <?xml version="1.0" encoding="UTF-8"?>
-        <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-        <plist version="1.0">
-        <dict>
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      - name: Install dependencies
+        run: |
+          pip install flet flet-audio pyinstaller
+
+      - name: Detect main file
+        run: |
+          if [ -f "gioco.py" ]; then
+            echo "MAIN_FILE=gioco.py" >> $GITHUB_ENV
+          elif [ -f "main.py" ]; then
+            echo "MAIN_FILE=main.py" >> $GITHUB_ENV
+          else
+            echo "MAIN_FILE=app.py" >> $GITHUB_ENV
+          fi
+
+      - name: Create Info.plist
+        run: |
+          mkdir -p ios_build/Payload/AvventuraEpica.app
+          cat > ios_build/Payload/AvventuraEpica.app/Info.plist <<EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
             <key>CFBundleDisplayName</key>
-            <string>Avventura Epica</string>
+            <string>AvventuraEpica</string>
             <key>CFBundleExecutable</key>
             <string>AvventuraEpica</string>
             <key>CFBundleIdentifier</key>
             <string>com.ambro86.avventuraepica</string>
             <key>CFBundleName</key>
             <string>AvventuraEpica</string>
-            <key>CFBundlePackageType</key>
-            <string>APPL</string>
-            <key>CFBundleShortVersionString</key>
-            <string>1.0</string>
             <key>CFBundleVersion</key>
-            <string>1</string>
+            <string>1.0</string>
             <key>LSRequiresIPhoneOS</key>
             <true/>
-            <key>UILaunchStoryboardName</key>
-            <string>LaunchScreen</string>
-            <key>UIRequiredDeviceCapabilities</key>
-            <array>
-                <string>armv7</string>
-            </array>
-            <key>UISupportedInterfaceOrientations</key>
-            <array>
-                <string>UIInterfaceOrientationPortrait</string>
-                <string>UIInterfaceOrientationLandscapeLeft</string>
-                <string>UIInterfaceOrientationLandscapeRight</string>
-            </array>
-            <key>UIAccessibilityTraits</key>
-            <string>UIAccessibilityTraitPlaysSound</string>
-            <key>UIAccessibilityLanguage</key>
-            <string>it</string>
-            <key>NSMicrophoneUsageDescription</key>
-            <string>Questa app usa l'audio per l'accessibilità</string>
-        </dict>
-        </plist>
-        EOF
-    
-    - name: Build Flet iOS project (unsigned)
-      run: |
-        echo "Building unsigned iOS app with Flet..."
-        flet pack ios --name AvventuraEpica --bundle-id com.ambro86.avventuraepica
-    
-    - name: Package into IPA
-      run: |
-        echo "Packaging .app into .ipa..."
+          </dict>
+          </plist>
+          EOF
 
-        mkdir -p Payload
-        cp -R dist/ios/*.app Payload/
-        chmod -R +x Payload/AvventuraEpica.app || true
+      - name: Build .app using PyInstaller
+        run: |
+          pyinstaller --noconfirm --noconsole --name AvventuraEpica ${{ env.MAIN_FILE }}
+          cp dist/AvventuraEpica ios_build/Payload/AvventuraEpica.app/
 
-        zip -r AvventuraEpica-iOS.ipa Payload/
-        echo "✅ IPA packaged: AvventuraEpica-iOS.ipa"
+      - name: Create .ipa (unsigned)
+        run: |
+          cd ios_build
+          zip -r AvventuraEpica.ipa Payload
 
-    - name: Verify IPA structure
-      run: |
-        echo "🔍 Verifying IPA structure..."
-        unzip -l AvventuraEpica-iOS.ipa | head -20
-
-        if unzip -l AvventuraEpica-iOS.ipa | grep -q "Info.plist"; then
-          echo "✅ Info.plist found in IPA"
-        else
-          echo "❌ Info.plist missing from IPA"
-        fi
-    
-    - name: Upload IPA
-      uses: actions/upload-artifact@v4
-      with:
-        name: AvventuraEpica-iOS
-        path: |
-          AvventuraEpica-iOS.ipa
-          Payload/
-        retention-days: 30
+      - name: Upload .ipa
+        uses: actions/upload-artifact@v4
+        with:
+          name: AvventuraEpica-unsigned
+          path: ios_build/AvventuraEpica.ipa
