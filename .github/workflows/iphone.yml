@@ -103,7 +103,7 @@ jobs:
     - name: Build Flet iOS project (unsigned)
       run: |
         echo "Building unsigned iOS app with Flet..."
-        flet pack ios ${{ env.MAIN_FILE }} --name AvventuraEpica --bundle-id com.ambro86.avventuraepica --no-codesign
+        flet pack ios --name AvventuraEpica --bundle-id com.ambro86.avventuraepica --no-codesign
     
     - name: Package into IPA
       run: |
