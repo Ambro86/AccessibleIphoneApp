@@ -60,7 +60,7 @@ jobs:
       - name: Build .app using PyInstaller
         run: |
           pyinstaller --noconfirm --noconsole --name AvventuraEpica ${{ env.MAIN_FILE }}
-          cp dist/AvventuraEpica ios_build/Payload/AvventuraEpica.app/
+          rsync -a dist/AvventuraEpica ios_build/Payload/AvventuraEpica.app/
 
       - name: Create .ipa (unsigned)
         run: |
