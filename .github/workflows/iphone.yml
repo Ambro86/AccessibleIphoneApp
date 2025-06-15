@@ -1,28 +1,35 @@
-name: Build Web PWA (Works on iPhone!)
+name: Build iOS App
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
   workflow_dispatch:
 
 jobs:
-  build-web:
-    runs-on: ubuntu-latest
-    
+  build:
+    runs-on: macos-14
+
     steps:
     - uses: actions/checkout@v4
     
-    - name: Setup Python
+    - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.11'
     
-    - name: Install Flet
+    - name: Install Xcode Command Line Tools
       run: |
-        pip install flet==0.28.3
-        pip install flet-cli==0.28.3
+        sudo xcode-select --install || true
+        sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer || true
     
-    - name: Setup main file
+    - name: Install Flet and dependencies
+      run: |
+        pip install flet flet-audio pyinstaller
+        pip install --upgrade setuptools wheel
+    
+    - name: Detect main file
       run: |
         if [ -f "gioco.py" ]; then
           echo "MAIN_FILE=gioco.py" >> $GITHUB_ENV
@@ -32,69 +39,99 @@ jobs:
           echo "MAIN_FILE=avventura_epica.py" >> $GITHUB_ENV
         fi
     
-    - name: Prepare assets
+    - name: Check assets
       run: |
+        echo "Checking for existing assets..."
         if [ -d "assets" ]; then
-          echo "✅ Assets found"
+          echo "Assets folder found:"
+          find assets -name "*.wav" -o -name "*.mp3" | sort
+          AUDIO_COUNT=$(find assets -name "*.wav" -o -name "*.mp3" | wc -l)
+          echo "Total audio files: $AUDIO_COUNT"
         else
-          mkdir -p assets/music
-          # Crea file audio placeholder per il web
-          for i in {1..20}; do 
-            echo "Audio placeholder $i" > "assets/music/$i.wav"
-          done
+          echo "No assets folder found, creating minimal structure..."
+          mkdir -p assets
+          for i in {1..18}; do touch "assets/$i.wav"; done
+          echo "Created placeholder files 1.wav to 18.wav"
         fi
     
-    - name: Build Web PWA
+    - name: Create Info.plist
       run: |
-        echo "🌐 Building Web PWA with Flet..."
-        
-        flet build web $MAIN_FILE \
-          --name "AvventuraEpica" \
-          --description "Avventura Epica - Gioco Accessibile per iPhone/iPad" \
-          --base-url "/AccessibleIphoneApp/" \
-          --web-renderer "canvaskit" \
-          --pwa-background-color "#1976D2" \
-          --pwa-theme-color "#1976D2" \
-          --route-url-strategy "hash"
-        
-        echo "✅ Web build completed!"
-        ls -la build/web/
+        mkdir -p ios_build
+        cat > ios_build/Info.plist << 'EOF'
+        <?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+        <plist version="1.0">
+        <dict>
+            <key>CFBundleDisplayName</key>
+            <string>Avventura Epica</string>
+            <key>CFBundleExecutable</key>
+            <string>AvventuraEpica</string>
+            <key>CFBundleIdentifier</key>
+            <string>com.ambro86.avventuraepica</string>
+            <key>CFBundleName</key>
+            <string>AvventuraEpica</string>
+            <key>CFBundlePackageType</key>
+            <string>APPL</string>
+            <key>CFBundleShortVersionString</key>
+            <string>1.0</string>
+            <key>CFBundleVersion</key>
+            <string>1</string>
+            <key>LSRequiresIPhoneOS</key>
+            <true/>
+            <key>UILaunchStoryboardName</key>
+            <string>LaunchScreen</string>
+            <key>UIRequiredDeviceCapabilities</key>
+            <array>
+                <string>armv7</string>
+            </array>
+            <key>UISupportedInterfaceOrientations</key>
+            <array>
+                <string>UIInterfaceOrientationPortrait</string>
+                <string>UIInterfaceOrientationLandscapeLeft</string>
+                <string>UIInterfaceOrientationLandscapeRight</string>
+            </array>
+            <key>UIAccessibilityTraits</key>
+            <string>UIAccessibilityTraitPlaysSound</string>
+            <key>UIAccessibilityLanguage</key>
+            <string>it</string>
+            <key>NSMicrophoneUsageDescription</key>
+            <string>Questa app usa l'audio per l'accessibilità</string>
+        </dict>
+        </plist>
+        EOF
     
-    - name: Setup GitHub Pages
+    - name: Build Flet iOS project (unsigned)
       run: |
-        echo "📱 Configuring for GitHub Pages..."
-        
-        # Copia tutto nella root per GitHub Pages
-        cp -r build/web/* .
-        
-        # Assicurati che ci sia index.html
-        if [ ! -f "index.html" ]; then
-          echo "❌ No index.html found!"
-          exit 1
+        echo "Building unsigned iOS app with Flet..."
+        flet pack ios ${{ env.MAIN_FILE }} --name AvventuraEpica --bundle-id com.ambro86.avventuraepica --no-codesign
+    
+    - name: Package into IPA
+      run: |
+        echo "Packaging .app into .ipa..."
+
+        mkdir -p Payload
+        cp -R dist/ios/*.app Payload/
+        chmod -R +x Payload/AvventuraEpica.app || true
+
+        zip -r AvventuraEpica-iOS.ipa Payload/
+        echo "✅ IPA packaged: AvventuraEpica-iOS.ipa"
+
+    - name: Verify IPA structure
+      run: |
+        echo "🔍 Verifying IPA structure..."
+        unzip -l AvventuraEpica-iOS.ipa | head -20
+
+        if unzip -l AvventuraEpica-iOS.ipa | grep -q "Info.plist"; then
+          echo "✅ Info.plist found in IPA"
+        else
+          echo "❌ Info.plist missing from IPA"
         fi
-        
-        # Crea .nojekyll per GitHub Pages
-        touch .nojekyll
-        
-        # Verifica files
-        echo "📂 Files ready for GitHub Pages:"
-        ls -la *.html *.js *.css 2>/dev/null || true
-        
-        echo "🎯 PWA ready! Access via: https://ambro86.github.io/AccessibleIphoneApp/"
     
-    - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./build/web
-        publish_branch: gh-pages
-        force_orphan: true
-    
-    - name: Upload Web Build
+    - name: Upload IPA
       uses: actions/upload-artifact@v4
       with:
-        name: AvventuraEpica-WebPWA
-        path: build/web/
+        name: AvventuraEpica-iOS
+        path: |
+          AvventuraEpica-iOS.ipa
+          Payload/
         retention-days: 30
- 
- 
