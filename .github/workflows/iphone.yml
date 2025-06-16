@@ -52,7 +52,7 @@ jobs:
         run: |
           mv "./assets/icon-beta.png" "./assets/icon.png" 2>/dev/null || true
           
-- name: Build IPA with Flet
+      - name: Build IPA with Flet
         run: |
           flet build ipa \
             --build-version "2.5.0" \
