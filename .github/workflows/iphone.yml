@@ -1,9 +1,9 @@
-name: Build iOS IPA (Unsigned)
+name: Build iOS IPA (Lean)
 on:
   push:
-    branches:
-      - master
+    branches: [master]
   workflow_dispatch:
+
 jobs:
   build:
     runs-on: macos-latest
@@ -15,30 +15,16 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.11"
-          
-      - name: Install Ruby dependencies
-        run: |
-          gem install cocoapods
-          gem install bundler
+          python-version: "3.13"
           
       - name: Install Python dependencies
-        run: |
-          pip install -r requirements.txt
+        run: pip install -r requirements.txt
           
       - name: Install Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: "3.22.1"
           
-      - name: Install additional tools
-        run: |
-          brew install ruby
-          brew install graphicsmagick
-          
-      - name: Flutter doctor
-        run: flutter doctor -v
-        
       - name: Setup environment
         run: |
           echo "APP_ENV=prod" > .env
@@ -46,10 +32,6 @@ jobs:
           echo "BUILD=${{ github.run_number }}" >> .env
           echo "is_mobile=1" >> .env
           
-      - name: Replace icon for beta (if not main branch)
-        if: github.ref != 'refs/heads/master'
-        run: |
-          mv "./assets/icon-beta.png" "./assets/icon.png" 2>/dev/null || true
           
       - name: Build IPA with Flet
         run: |
@@ -57,107 +39,20 @@ jobs:
             --build-version "2.5.0" \
             --build-number ${{ github.run_number }} \
             --flutter-build-args=--release \
-            --flutter-build-args=--no-codesign
+            --flutter-build-args=--split-debug-info=debug_info \
+            --flutter-build-args=--obfuscate
             
-      - name: Download iOS platform (like in AppVeyor)
-        run: |
-          xcodebuild -downloadPlatform iOS
-      - name: Create Export Options Plist
-        run: |
-          cat > ExportOptions.plist << EOF
-          <?xml version="1.0" encoding="UTF-8"?>
-          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-          <plist version="1.0">
-          <dict>
-              <key>method</key>
-              <string>ad-hoc</string>
-              <key>signingStyle</key>
-              <string>automatic</string>
-              <key>compileBitcode</key>
-              <false/>
-              <key>signingCertificate</key>
-              <string>-</string>
-              <key>provisioningProfiles</key>
-              <dict/>
-          </dict>
-          </plist>
-          EOF
-            
-      - name: Convert xcarchive to IPA (unsigned)
-        run: |
-          # Metodo alternativo per creare IPA non firmato compatibile con AltStore
-          mkdir -p build/ipa/Payload
-          cp -r build/ipa/Runner.xcarchive/Products/Applications/Runner.app build/ipa/Payload/
-          cd build/ipa
-          zip -r Runner.ipa Payload/
-          rm -rf Payload
-        continue-on-error: false
-      - name: Validate IPA
+      - name: Quick validation
         run: |
           cd build/ipa
-          
-          # Verifica esistenza IPA
           if [ ! -f "Runner.ipa" ]; then
-            echo "❌ IPA file not found"
+            echo "❌ IPA not found"
             exit 1
           fi
+          echo "✅ IPA created: $(ls -lh Runner.ipa | awk '{print $5}')"
           
-          # Estrai per controlli
-          unzip -q Runner.ipa
-          
-          # Verifica struttura
-          if [ ! -d "Payload/Runner.app" ]; then
-            echo "❌ Invalid IPA structure - missing Payload/Runner.app"
-            exit 1
-          fi
-          
-          # Verifica Info.plist
-          if [ ! -f "Payload/Runner.app/Info.plist" ]; then
-            echo "❌ Missing Info.plist"
-            exit 1
-          fi
-          
-          # Verifica eseguibile
-          if [ ! -f "Payload/Runner.app/Runner" ]; then
-            echo "❌ Missing executable"
-            exit 1
-          fi
-          
-          # Controlla architetture supportate
-          echo "📱 Supported architectures:"
-          lipo -info Payload/Runner.app/Runner
-          
-          # Verifica Info.plist è valido
-          echo "📋 Validating Info.plist:"
-          plutil -lint Payload/Runner.app/Info.plist
-          
-          # Mostra Bundle ID e versione
-          echo "📦 Bundle info:"
-          plutil -p Payload/Runner.app/Info.plist | grep -E "(CFBundleIdentifier|CFBundleVersion|CFBundleShortVersionString)"
-          
-          # Verifica code signing status
-          echo "🔏 Code signing status:"
-          codesign -dv Payload/Runner.app 2>&1 || echo "ℹ️  App is unsigned (OK for AltStore)"
-          # ⭐ CONTROLLO SPECIFICO PER ALTSTORE ⭐
-          echo "🍎 AltStore compatibility check:"
-          if codesign -v Payload/Runner.app 2>&1 | grep -q "not signed"; then
-            echo "✅ Perfect for AltStore - App is unsigned and ready for sideloading"
-          else
-            echo "⚠️  App appears to be signed - AltStore might have issues"
-            codesign -dv Payload/Runner.app 2>&1
-          fi
-          
-          # Pulisci
-          rm -rf Payload
-          
-          echo "✅ IPA validation completed successfully"
-          
-      - name: Archive build (like AppVeyor)
-        run: |
-          tar -czvf AvventuraEpica-ios.tar.gz -C build ipa
-          
-      - name: Upload IPA Artifact
+      - name: Upload IPA
         uses: actions/upload-artifact@v4
         with:
-          name: AvventuraEpica-ios
-          path: AvventuraEpica-ios.tar.gz
+          name: AvventuraEpica-ios-lean
+          path: build/ipa/Runner.ipa
