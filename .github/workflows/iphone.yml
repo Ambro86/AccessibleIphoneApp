@@ -60,33 +60,38 @@ jobs:
             --flutter-build-args=--release \
             --flutter-build-args=--no-codesign
             
-      - name: Create export options for development
+      - name: Download iOS platform (like in AppVeyor)
         run: |
-          cat > export_options.plist << EOF
+          xcodebuild -downloadPlatform iOS
+            
+      - name: Convert xcarchive to IPA (unsigned)
+        run: |
+          # Stesso metodo che usa Fastlane internamente
+          xcodebuild -exportArchive \
+            -archivePath build/ipa/Runner.xcarchive \
+            -exportPath build/ipa \
+            -exportOptionsPlist <(cat <<EOF
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
           <plist version="1.0">
           <dict>
               <key>method</key>
               <string>development</string>
+              <key>signingStyle</key>
+              <string>manual</string>
               <key>compileBitcode</key>
               <false/>
-              <key>signingStyle</key>
-              <string>automatic</string>
-              <key>stripSwiftSymbols</key>
-              <true/>
           </dict>
           </plist>
           EOF
+          )
             
-      - name: Export xcarchive to IPA
+      - name: Archive build (like AppVeyor)
         run: |
-          xcodebuild -exportArchive \
-            -archivePath build/ipa/Runner.xcarchive \
-            -exportPath build/ipa/exported \
-            -exportOptionsPlist export_options.plist \
-            -allowProvisioningUpdates
-            
-      - name: Archive build
-        run: |
-          tar -czvf AvventuraEpica-ios.tar.gz -C build/ipa/exported *.ipa
+          tar -czvf AvventuraEpica-ios.tar.gz -C build ipa
+          
+      - name: Upload IPA Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AvventuraEpica-ios
+          path: AvventuraEpica-ios.tar.gz
