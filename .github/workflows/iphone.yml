@@ -1,5 +1,4 @@
 name: Build iOS IPA (Unsigned)
-
 on:
   push:
     branches:
@@ -9,63 +8,64 @@ on:
 jobs:
   build:
     runs-on: macos-latest
-
+    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
+        
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.11"
-
-      - name: Install dependencies
+          
+      - name: Install Ruby dependencies
+        run: |
+          gem install cocoapods
+          gem install bundler
+          
+      - name: Install Python dependencies
         run: |
           pip install -r requirements.txt
-          pip install flet flet-audio
-
+          
       - name: Install Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.22.1"  # versione recente compatibile con Flet
-
-      - name: Run flutter doctor
+          flutter-version: "3.22.1"
+          
+      - name: Install additional tools
+        run: |
+          brew install ruby
+          brew install graphicsmagick
+          
+      - name: Flutter doctor
         run: flutter doctor -v
-
-      - name: Set environment variables
+        
+      - name: Setup environment
         run: |
-          echo "APP_ENV=prod" >> $GITHUB_ENV
+          echo "APP_ENV=prod" > .env
+          echo "VERSION=${{ github.run_number }}" >> .env
+          echo "BUILD=${{ github.run_number }}" >> .env
           echo "is_mobile=1" >> .env
-      - name: 🔍 Debug - Verifica presenza main.py
+          
+      - name: Replace icon for beta (if not main branch)
+        if: github.ref != 'refs/heads/master'
         run: |
-          echo "📂 Directory corrente:"
-          pwd
-          echo "📄 Contenuto:"
-          ls -la
-          echo "🔎 Cerco main.py..."
-          if [ -f main.py ]; then
-            echo "✅ Trovato main.py"
-          else
-            echo "::error ::❌ ERRORE: main.py non trovato!"
-            exit 1
-          fi
-      - name: Build IPA with Flet (Unsigned)
+          mv "./assets/icon-beta.png" "./assets/icon.png" 2>/dev/null || true
+          
+      - name: Build IPA with Flet
         run: |
           flet build ipa \
-            --build-version "1.0.0" \
-            --build-number "1" \
+            --build-version "2.5.0" \
+            --build-number ${{ github.run_number }} \
             --flutter-build-args=--release \
             --flutter-build-args=--no-codesign
-
             
-
-      - name: Archive IPA
+      - name: Archive build
         run: |
-          cd build/ipa
-          zip -r AvventuraEpica-unsigned.ipa *
-
+          tar -czvf AvventuraEpica-ios.tar.gz -C build ipa
+          
       - name: Upload IPA Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: AvventuraEpica-unsigned
-          path: build/ipa/AvventuraEpica-unsigned.ipa
+          name: AvventuraEpica-ios
+          path: AvventuraEpica-ios.tar.gz
