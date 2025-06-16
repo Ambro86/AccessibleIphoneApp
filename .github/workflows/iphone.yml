@@ -62,7 +62,6 @@ jobs:
       - name: Download iOS platform (like in AppVeyor)
         run: |
           xcodebuild -downloadPlatform iOS
-          
       - name: Create Export Options Plist
         run: |
           cat > ExportOptions.plist << EOF
@@ -71,23 +70,28 @@ jobs:
           <plist version="1.0">
           <dict>
               <key>method</key>
-              <string>development</string>
+              <string>ad-hoc</string>
               <key>signingStyle</key>
-              <string>manual</string>
+              <string>automatic</string>
               <key>compileBitcode</key>
               <false/>
+              <key>signingCertificate</key>
+              <string>-</string>
+              <key>provisioningProfiles</key>
+              <dict/>
           </dict>
           </plist>
           EOF
             
       - name: Convert xcarchive to IPA (unsigned)
         run: |
-          # Stesso metodo che usa Fastlane internamente
-          xcodebuild -exportArchive \
-            -archivePath build/ipa/Runner.xcarchive \
-            -exportPath build/ipa \
-            -exportOptionsPlist ExportOptions.plist
-            
+          # Metodo alternativo per creare IPA non firmato compatibile con AltStore
+          mkdir -p build/ipa/Payload
+          cp -r build/ipa/Runner.xcarchive/Products/Applications/Runner.app build/ipa/Payload/
+          cd build/ipa
+          zip -r Runner.ipa Payload/
+          rm -rf Payload
+        continue-on-error: false
       - name: Archive build (like AppVeyor)
         run: |
           tar -czvf AvventuraEpica-ios.tar.gz -C build ipa
