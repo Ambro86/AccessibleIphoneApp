@@ -4,7 +4,6 @@ on:
     branches:
       - master
   workflow_dispatch:
-
 jobs:
   build:
     runs-on: macos-latest
@@ -63,14 +62,10 @@ jobs:
       - name: Download iOS platform (like in AppVeyor)
         run: |
           xcodebuild -downloadPlatform iOS
-            
-      - name: Convert xcarchive to IPA (unsigned)
+          
+      - name: Create Export Options Plist
         run: |
-          # Stesso metodo che usa Fastlane internamente
-          xcodebuild -exportArchive \
-            -archivePath build/ipa/Runner.xcarchive \
-            -exportPath build/ipa \
-            -exportOptionsPlist <(cat <<EOF
+          cat > ExportOptions.plist << EOF
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
           <plist version="1.0">
@@ -84,7 +79,14 @@ jobs:
           </dict>
           </plist>
           EOF
-          )
+            
+      - name: Convert xcarchive to IPA (unsigned)
+        run: |
+          # Stesso metodo che usa Fastlane internamente
+          xcodebuild -exportArchive \
+            -archivePath build/ipa/Runner.xcarchive \
+            -exportPath build/ipa \
+            -exportOptionsPlist ExportOptions.plist
             
       - name: Archive build (like AppVeyor)
         run: |
