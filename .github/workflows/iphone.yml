@@ -52,7 +52,7 @@ jobs:
         run: |
           mv "./assets/icon-beta.png" "./assets/icon.png" 2>/dev/null || true
           
-      - name: Build IPA with Flet
+- name: Build IPA with Flet
         run: |
           flet build ipa \
             --build-version "2.5.0" \
@@ -60,12 +60,33 @@ jobs:
             --flutter-build-args=--release \
             --flutter-build-args=--no-codesign
             
+      - name: Create export options for development
+        run: |
+          cat > export_options.plist << EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+              <key>method</key>
+              <string>development</string>
+              <key>compileBitcode</key>
+              <false/>
+              <key>signingStyle</key>
+              <string>automatic</string>
+              <key>stripSwiftSymbols</key>
+              <true/>
+          </dict>
+          </plist>
+          EOF
+            
+      - name: Export xcarchive to IPA
+        run: |
+          xcodebuild -exportArchive \
+            -archivePath build/ipa/Runner.xcarchive \
+            -exportPath build/ipa/exported \
+            -exportOptionsPlist export_options.plist \
+            -allowProvisioningUpdates
+            
       - name: Archive build
         run: |
-          tar -czvf AvventuraEpica-ios.tar.gz -C build ipa
-          
-      - name: Upload IPA Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: AvventuraEpica-ios
-          path: AvventuraEpica-ios.tar.gz
+          tar -czvf AvventuraEpica-ios.tar.gz -C build/ipa/exported *.ipa
