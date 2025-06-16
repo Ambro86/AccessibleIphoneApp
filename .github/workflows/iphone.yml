@@ -36,13 +36,25 @@ jobs:
         run: |
           echo "APP_ENV=prod" >> $GITHUB_ENV
           echo "is_mobile=1" >> .env
-
+      - name: 🔍 Debug - Verifica presenza main.py
+        run: |
+          echo "📂 Directory corrente:"
+          pwd
+          echo "📄 Contenuto:"
+          ls -la
+          echo "🔎 Cerco main.py..."
+          if [ -f main.py ]; then
+            echo "✅ Trovato main.py"
+          else
+            echo "::error ::❌ ERRORE: main.py non trovato!"
+            exit 1
+          fi
       - name: Build IPA with Flet (Unsigned)
         run: |
           flet build ipa \
             --build-version "1.0.0" \
             --build-number "1" \
-            --module-name gioco \
+
             --flutter-build-args="--release --no-codesign"
 
             
