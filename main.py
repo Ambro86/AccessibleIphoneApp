@@ -138,6 +138,9 @@ class AvventuraEpica:
         self.haptic_abilitato = True
         self.turno = 0
         
+        # Stato dell'interfaccia per VoiceOver
+        self.modalita_menu = "principale"  # principale, gioco, inventario, negozio, statistiche
+        
     def reset_gioco(self):
         """Reset completo con nuove statistiche"""
         self.oggetti = {
@@ -244,29 +247,6 @@ class AvventuraEpica:
         if e.data == "completed" and self.audio_abilitato:
             self.musica_sottofondo.play()
             
-    def on_musica_position_changed(self, e):
-        """Loop con fade per evitare stacchi"""
-        if not self.audio_abilitato:
-            return
-            
-        try:
-            posizione = int(e.data) if e.data else 0
-            durata = self.musica_sottofondo.get_duration()
-            
-            if durata and posizione > 2000:
-                if posizione >= (durata - 500):
-                    fade_factor = (durata - posizione) / 500
-                    new_volume = 0.3 * fade_factor
-                    self.musica_sottofondo.volume = max(0.1, new_volume)
-                    self.musica_sottofondo.update()
-                    
-                if posizione >= (durata - 100):
-                    self.musica_sottofondo.seek(0)
-                    self.musica_sottofondo.volume = 0.3
-                    self.musica_sottofondo.update()
-        except Exception:
-            pass
-            
     def cambia_musica_area(self, area):
         """Cambia musica con sistema robusto"""
         if not self.audio_abilitato or area not in self.musiche_aree:
@@ -289,8 +269,7 @@ class AvventuraEpica:
             volume=0.3,
             balance=0,
             on_state_changed=self.on_musica_state_changed,
-            on_loaded=lambda _: print(f"🎵 Nuovo file: {file_musica}"),
-            on_position_changed=self.on_musica_position_changed
+            on_loaded=lambda _: print(f"🎵 Nuovo file: {file_musica}")
         )
         
         self.page.overlay.append(self.musica_sottofondo)
@@ -384,17 +363,28 @@ class AvventuraEpica:
         return ""
         
     def crea_ui(self):
-        self.page.title = "🏰 Avventura Epica - Audio & Haptic"
+        self.page.title = "🏰 Avventura Epica - Accessibile"
         self.page.scroll = ft.ScrollMode.AUTO
         
-        # Area storia più grande
+        # Area statistiche giocatore
+        self.area_stats = ft.TextField(
+            value="📊 Statistiche Giocatore:\n👤 Livello 1 • ❤️ 100/100 HP • 💰 100 monete\n⚔️ Attacco: 15 • 🛡️ Difesa: 0\n⭐ EXP: 0/100",
+            multiline=True,
+            read_only=True,
+            min_lines=4,
+            max_lines=6,
+            text_size=14,
+            label="📊 Le tue statistiche"
+        )
+        
+        # Area storia/descrizione area
         self.area_storia = ft.TextField(
             value="🎮 Benvenuto nell'Avventura Epica!\n🗺️ Esplora 16 aree diverse\n🛍️ Visita negozi e mercanti\n⚔️ Combatti mostri e sali di livello\n🎵 Audio immersivo e feedback aptico\n\nPremi 'Inizia Avventura' per cominciare!",
             multiline=True,
             read_only=True,
             expand=True,
-            min_lines=15,
-            max_lines=20,
+            min_lines=10,
+            max_lines=15,
             text_size=14,
             label="📜 La tua storia epica"
         )
@@ -421,58 +411,17 @@ class AvventuraEpica:
             on_change=self.cambia_volume
         )
         
-        # Menu principale
-        self.btn_inizia = ft.ElevatedButton(
-            text="🎮 Inizia Avventura",
-            on_click=self.inizia_gioco
-        )
+        # Container per tutti i pulsanti che cambieranno
+        self.container_pulsanti = ft.Column()
         
-        self.btn_carica = ft.ElevatedButton(
-            text="📂 Carica Gioco",
-            on_click=self.carica_gioco
-        )
+        # Crea pulsanti menu principale
+        self.crea_menu_principale()
         
-        # Movimento
-        self.btn_nord = ft.ElevatedButton("⬆️ Nord", on_click=lambda _: self.muovi("nord"), visible=False)
-        self.btn_sud = ft.ElevatedButton("⬇️ Sud", on_click=lambda _: self.muovi("sud"), visible=False)
-        self.btn_est = ft.ElevatedButton("➡️ Est", on_click=lambda _: self.muovi("est"), visible=False)
-        self.btn_ovest = ft.ElevatedButton("⬅️ Ovest", on_click=lambda _: self.muovi("ovest"), visible=False)
-        
-        # Azioni principali
-        self.btn_raccogli = ft.ElevatedButton("🎒 Raccogli", on_click=self.raccogli_oggetto, visible=False)
-        self.btn_inventario = ft.ElevatedButton("📋 Inventario", on_click=self.mostra_inventario, visible=False)
-        self.btn_attacca = ft.ElevatedButton("⚔️ Attacca", on_click=self.attacca_mostro, visible=False)
-        
-        # Azioni avanzate
-        self.btn_negozio = ft.ElevatedButton("🏪 Negozio", on_click=self.apri_negozio, visible=False)
-        self.btn_usa_oggetto = ft.ElevatedButton("🧪 Usa Oggetto", on_click=self.usa_oggetto, visible=False)
-        self.btn_equipaggia = ft.ElevatedButton("⚔️ Equipaggia", on_click=self.equipaggia_oggetto, visible=False)
-        self.btn_statistiche = ft.ElevatedButton("📊 Stats", on_click=self.mostra_statistiche, visible=False)
-        
-        self.btn_salva = ft.ElevatedButton("💾 Salva", on_click=self.salva_gioco, visible=False)
-        
-        # Layout
+        # Layout principale
         controlli = ft.Row([self.toggle_audio, self.toggle_haptic, 
                            ft.Container(content=ft.Column([ft.Text("🎵 Volume"), self.slider_volume]), width=150)],
                           alignment=ft.MainAxisAlignment.CENTER)
         
-        menu = ft.Row([self.btn_inizia, self.btn_carica], alignment=ft.MainAxisAlignment.CENTER)
-        
-        movimento = ft.Column([
-            ft.Row([self.btn_nord], alignment=ft.MainAxisAlignment.CENTER),
-            ft.Row([self.btn_ovest, self.btn_est], alignment=ft.MainAxisAlignment.CENTER),
-            ft.Row([self.btn_sud], alignment=ft.MainAxisAlignment.CENTER)
-        ])
-        
-        azioni = ft.Row([
-            self.btn_raccogli, self.btn_inventario, self.btn_attacca, self.btn_negozio
-        ], alignment=ft.MainAxisAlignment.CENTER, wrap=True)
-        
-        azioni_avanzate = ft.Row([
-            self.btn_usa_oggetto, self.btn_equipaggia, self.btn_statistiche, self.btn_salva
-        ], alignment=ft.MainAxisAlignment.CENTER, wrap=True)
-        
-        # Layout principale
         self.page.add(
             ft.Container(
                 content=ft.Column([
@@ -480,15 +429,146 @@ class AvventuraEpica:
                     ft.Text("🎵 Audio Immersivo • 📳 Feedback Aptico • 🗺️ 16 Aree • 🛍️ Negozi • ⚔️ RPG", 
                             size=14, text_align=ft.TextAlign.CENTER),
                     controlli,
+                    self.area_stats,
                     self.area_storia,
-                    menu,
-                    movimento,
-                    azioni,
-                    azioni_avanzate
+                    self.container_pulsanti
                 ], spacing=15),
                 padding=20
             )
         )
+        
+    def crea_menu_principale(self):
+        """Crea il menu principale con pochi pulsanti"""
+        self.container_pulsanti.controls.clear()
+        
+        pulsanti = ft.Column([
+            ft.ElevatedButton(
+                text="🎮 Inizia Nuova Avventura",
+                on_click=self.inizia_gioco,
+                width=300,
+                height=50
+            ),
+            ft.ElevatedButton(
+                text="📂 Carica Gioco Salvato",
+                on_click=self.carica_gioco,
+                width=300,
+                height=50
+            )
+        ], horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=20)
+        
+        self.container_pulsanti.controls.append(pulsanti)
+        self.modalita_menu = "principale"
+        self.page.update()
+        
+    def crea_menu_gioco(self):
+        """Crea il menu di gioco con solo i pulsanti essenziali"""
+        self.container_pulsanti.controls.clear()
+        
+        # Prima riga: movimento
+        movimento = ft.Row([
+            ft.ElevatedButton("⬆️ Nord", on_click=lambda _: self.muovi("nord"), width=100),
+            ft.ElevatedButton("⬇️ Sud", on_click=lambda _: self.muovi("sud"), width=100),
+            ft.ElevatedButton("⬅️ Ovest", on_click=lambda _: self.muovi("ovest"), width=100),
+            ft.ElevatedButton("➡️ Est", on_click=lambda _: self.muovi("est"), width=100),
+        ], alignment=ft.MainAxisAlignment.CENTER, spacing=10)
+        
+        # Seconda riga: azioni principali
+        azioni_principali = ft.Row([
+            ft.ElevatedButton("🎒 Raccogli", on_click=self.raccogli_oggetto, width=120),
+            ft.ElevatedButton("⚔️ Attacca", on_click=self.attacca_mostro, width=120),
+            ft.ElevatedButton("🏪 Negozio", on_click=self.vai_a_negozio, width=120),
+        ], alignment=ft.MainAxisAlignment.CENTER, spacing=10)
+        
+        # Terza riga: menu
+        menu = ft.Row([
+            ft.ElevatedButton("📋 Inventario", on_click=self.vai_a_inventario, width=140),
+            ft.ElevatedButton("📊 Statistiche", on_click=self.vai_a_statistiche, width=140),
+            ft.ElevatedButton("💾 Salva", on_click=self.salva_gioco, width=140),
+        ], alignment=ft.MainAxisAlignment.CENTER, spacing=10)
+        
+        # Quarta riga: torna al menu
+        torna_menu = ft.Row([
+            ft.ElevatedButton("🚪 Torna al Menu Principale", on_click=self.torna_menu_principale, width=200)
+        ], alignment=ft.MainAxisAlignment.CENTER)
+        
+        self.container_pulsanti.controls.extend([movimento, azioni_principali, menu, torna_menu])
+        self.modalita_menu = "gioco"
+        self.page.update()
+        
+    def crea_menu_inventario(self):
+        """Menu inventario semplificato"""
+        self.container_pulsanti.controls.clear()
+        
+        pulsanti = ft.Column([
+            ft.ElevatedButton("🧪 Usa Oggetto", on_click=self.usa_oggetto, width=200, height=50),
+            ft.ElevatedButton("⚔️ Equipaggia", on_click=self.equipaggia_oggetto, width=200, height=50),
+            ft.ElevatedButton("🔙 Torna al Gioco", on_click=self.torna_al_gioco, width=200, height=50)
+        ], horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=15)
+        
+        self.container_pulsanti.controls.append(pulsanti)
+        self.modalita_menu = "inventario"
+        self.page.update()
+        
+    def crea_menu_negozio(self):
+        """Menu negozio semplificato"""
+        self.container_pulsanti.controls.clear()
+        
+        pulsanti = ft.Column([
+            ft.ElevatedButton("💰 Compra Oggetto", on_click=self.compra_oggetto, width=200, height=50),
+            ft.ElevatedButton("🔙 Torna al Gioco", on_click=self.torna_al_gioco, width=200, height=50)
+        ], horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=15)
+        
+        self.container_pulsanti.controls.append(pulsanti)
+        self.modalita_menu = "negozio"
+        self.page.update()
+        
+    def crea_menu_statistiche(self):
+        """Menu statistiche semplificato"""
+        self.container_pulsanti.controls.clear()
+        
+        pulsanti = ft.Column([
+            ft.ElevatedButton("🔙 Torna al Gioco", on_click=self.torna_al_gioco, width=200, height=50)
+        ], horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=15)
+        
+        self.container_pulsanti.controls.append(pulsanti)
+        self.modalita_menu = "statistiche"
+        self.page.update()
+        
+    def torna_menu_principale(self, e):
+        """Torna al menu principale"""
+        self.gioco_iniziato = False
+        if self.audio_abilitato:
+            self.musica_sottofondo.pause()
+        self.crea_menu_principale()
+        self.aggiorna_storia("🎮 Benvenuto nell'Avventura Epica!\n🗺️ Esplora 16 aree diverse\n🛍️ Visita negozi e mercanti\n⚔️ Combatti mostri e sali di livello\n🎵 Audio immersivo e feedback aptico\n\nPremi 'Inizia Avventura' per cominciare!")
+        
+    def torna_al_gioco(self, e):
+        """Torna al gioco dalla modalità menu"""
+        self.crea_menu_gioco()
+        self.descrivi_situazione_attuale()
+        
+    def vai_a_inventario(self, e):
+        """Vai al menu inventario"""
+        self.crea_menu_inventario()
+        self.mostra_inventario_dettagliato()
+        
+    def vai_a_negozio(self, e):
+        """Vai al menu negozio"""
+        riga, colonna = self.posizione_giocatore
+        stanza_attuale = self.mappa[riga][colonna]
+        
+        if stanza_attuale not in self.negozi:
+            self.aggiorna_storia("❌ Nessun negozio qui!")
+            self.haptic_feedback("error")
+            return
+            
+        self.crea_menu_negozio()
+        self.mostra_negozio_dettagliato()
+        
+    def vai_a_statistiche(self, e):
+        """Vai al menu statistiche"""
+        self.crea_menu_statistiche()
+        self.mostra_statistiche_dettagliate()
         
     def toggle_haptic_callback(self, e):
         """Toggle feedback aptico"""
@@ -527,21 +607,16 @@ class AvventuraEpica:
         self.area_storia.value = testo
         self.page.update()
         
-    def mostra_controlli_gioco(self, visibile):
-        """Mostra/nasconde controlli"""
-        controlli = [self.btn_nord, self.btn_sud, self.btn_est, self.btn_ovest, 
-                    self.btn_raccogli, self.btn_inventario, self.btn_attacca, 
-                    self.btn_negozio, self.btn_usa_oggetto, self.btn_equipaggia, 
-                    self.btn_statistiche, self.btn_salva]
-        for controllo in controlli:
-            controllo.visible = visibile
+    def aggiorna_stats(self, testo):
+        """Aggiorna statistiche giocatore"""
+        self.area_stats.value = testo
         self.page.update()
         
     def inizia_gioco(self, e):
         """Inizia nuova avventura"""
         self.reset_gioco()
         self.gioco_iniziato = True
-        self.mostra_controlli_gioco(True)
+        self.crea_menu_gioco()
         
         if self.audio_abilitato:
             self.cambia_musica_area("🏘️ Villaggio")
@@ -550,15 +625,24 @@ class AvventuraEpica:
         self.descrivi_situazione_attuale()
         
     def descrivi_situazione_attuale(self):
-        """Descrizione completa con tutte le info"""
+        """Descrizione completa con statistiche separate"""
         riga, colonna = self.posizione_giocatore
         stanza_attuale = self.mappa[riga][colonna]
         
-        testo = f"📍 {stanza_attuale}\n"
-        testo += f"👤 Livello {self.livello} • ❤️ {self.hp_giocatore}/{self.hp_max} HP • 💰 {self.monete} monete\n"
-        testo += f"⚔️ Attacco: {self.calcola_attacco_totale()} • 🛡️ Difesa: {self.calcola_difesa_totale()}\n"
-        testo += f"⭐ EXP: {self.esperienza}/{self.esperienza_prossimo_livello}\n\n"
+        # Aggiorna statistiche giocatore
+        stats = f"📊 Statistiche Giocatore:\n"
+        stats += f"👤 Livello {self.livello} • ❤️ {self.hp_giocatore}/{self.hp_max} HP • 💰 {self.monete} monete\n"
+        stats += f"⚔️ Attacco: {self.calcola_attacco_totale()} • 🛡️ Difesa: {self.calcola_difesa_totale()}\n"
+        stats += f"⭐ EXP: {self.esperienza}/{self.esperienza_prossimo_livello}"
         
+        # Effetti attivi nelle stats
+        if self.effetti_temporanei:
+            stats += f"\n✨ Effetti attivi: {', '.join(self.effetti_temporanei.keys())}"
+            
+        self.aggiorna_stats(stats)
+        
+        # Descrizione dell'area
+        testo = f"📍 {stanza_attuale}\n\n"
         testo += f"📖 {self.descrizioni[stanza_attuale]}\n\n"
         
         # Oggetti
@@ -577,10 +661,6 @@ class AvventuraEpica:
                 self.riproduci_effetto("mostro")
         else:
             testo += "😌 Area sicura.\n"
-            
-        # Effetti attivi
-        if self.effetti_temporanei:
-            testo += f"✨ Effetti attivi: {', '.join(self.effetti_temporanei.keys())}\n"
             
         # Vittoria
         if "👑 corona reale" in self.inventario and "💰 tesoro reale" in self.inventario:
@@ -659,17 +739,14 @@ class AvventuraEpica:
             
         self.aggiorna_storia(testo)
         
-    def mostra_inventario(self, e):
-        """Inventario dettagliato"""
-        if not self.gioco_iniziato:
-            return
-            
+    def mostra_inventario_dettagliato(self):
+        """Inventario dettagliato per il menu"""
         testo = "🎒 === INVENTARIO ===\n\n"
         
         if self.inventario:
             testo += "📦 Oggetti:\n"
-            for oggetto in self.inventario:
-                testo += f"• {oggetto}\n"
+            for i, oggetto in enumerate(self.inventario, 1):
+                testo += f"{i}. {oggetto}\n"
         else:
             testo += "📦 Inventario vuoto.\n"
             
@@ -775,11 +852,8 @@ class AvventuraEpica:
         self.haptic_feedback("success")
         self.aggiorna_storia(testo)
         
-    def apri_negozio(self, e):
-        """Sistema negozi avanzato"""
-        if not self.gioco_iniziato:
-            return
-            
+    def mostra_negozio_dettagliato(self):
+        """Mostra dettagli negozio"""
         riga, colonna = self.posizione_giocatore
         stanza_attuale = self.mappa[riga][colonna]
         
@@ -792,6 +866,28 @@ class AvventuraEpica:
         testo = f"🏪 === NEGOZIO {stanza_attuale} ===\n"
         testo += f"💰 Le tue monete: {self.monete}\n\n"
         
+        testo += "📋 OGGETTI DISPONIBILI:\n"
+        for nome, info in negozio.items():
+            disponibile = "✅" if self.monete >= info["prezzo"] else "❌"
+            testo += f"{disponibile} {nome} - {info['prezzo']} monete\n"
+            testo += f"   📝 {info['descrizione']}\n\n"
+            
+        self.aggiorna_storia(testo)
+        
+    def compra_oggetto(self, e):
+        """Sistema acquisti negozio"""
+        if not self.gioco_iniziato:
+            return
+            
+        riga, colonna = self.posizione_giocatore
+        stanza_attuale = self.mappa[riga][colonna]
+        
+        if stanza_attuale not in self.negozi:
+            self.aggiorna_storia("❌ Nessun negozio qui!")
+            return
+            
+        negozio = self.negozi[stanza_attuale]
+        
         # Compra automaticamente l'oggetto più economico che puoi permetterti
         oggetti_acquistabili = []
         for nome, info in negozio.items():
@@ -799,7 +895,7 @@ class AvventuraEpica:
                 oggetti_acquistabili.append((nome, info))
                 
         if not oggetti_acquistabili:
-            testo += "❌ Non hai abbastanza monete per comprare nulla!"
+            testo = "❌ Non hai abbastanza monete per comprare nulla!"
         else:
             # Compra l'oggetto più economico
             nome_oggetto, info = min(oggetti_acquistabili, key=lambda x: x[1]["prezzo"])
@@ -807,7 +903,7 @@ class AvventuraEpica:
             self.monete -= info["prezzo"]
             self.inventario.append(nome_oggetto)
             
-            testo += f"✅ Acquistato: {nome_oggetto}\n"
+            testo = f"✅ Acquistato: {nome_oggetto}\n"
             testo += f"💰 Costo: {info['prezzo']} monete\n"
             testo += f"📝 {info['descrizione']}\n"
             testo += f"💰 Monete rimaste: {self.monete}"
@@ -818,11 +914,8 @@ class AvventuraEpica:
                 
         self.aggiorna_storia(testo)
         
-    def mostra_statistiche(self, e):
+    def mostra_statistiche_dettagliate(self):
         """Statistiche complete del giocatore"""
-        if not self.gioco_iniziato:
-            return
-            
         testo = f"📊 === STATISTICHE GIOCATORE ===\n\n"
         testo += f"👤 Livello: {self.livello}\n"
         testo += f"❤️ HP: {self.hp_giocatore}/{self.hp_max}\n"
@@ -906,7 +999,7 @@ class AvventuraEpica:
                     self.riproduci_effetto("sconfitta")
                     self.musica_sottofondo.pause()
                 self.gioco_iniziato = False
-                self.mostra_controlli_gioco(False)
+                self.crea_menu_principale()
                 
         self.aggiorna_storia(testo)
         
@@ -979,7 +1072,7 @@ class AvventuraEpica:
                 self.toggle_haptic.value = self.haptic_abilitato
             
             self.gioco_iniziato = True
-            self.mostra_controlli_gioco(True)
+            self.crea_menu_gioco()
             
             if self.audio_abilitato:
                 self.riavvia_musica_corrente()

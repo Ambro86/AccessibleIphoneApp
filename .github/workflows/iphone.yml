@@ -92,6 +92,66 @@ jobs:
           zip -r Runner.ipa Payload/
           rm -rf Payload
         continue-on-error: false
+      - name: Validate IPA
+        run: |
+          cd build/ipa
+          
+          # Verifica esistenza IPA
+          if [ ! -f "Runner.ipa" ]; then
+            echo "❌ IPA file not found"
+            exit 1
+          fi
+          
+          # Estrai per controlli
+          unzip -q Runner.ipa
+          
+          # Verifica struttura
+          if [ ! -d "Payload/Runner.app" ]; then
+            echo "❌ Invalid IPA structure - missing Payload/Runner.app"
+            exit 1
+          fi
+          
+          # Verifica Info.plist
+          if [ ! -f "Payload/Runner.app/Info.plist" ]; then
+            echo "❌ Missing Info.plist"
+            exit 1
+          fi
+          
+          # Verifica eseguibile
+          if [ ! -f "Payload/Runner.app/Runner" ]; then
+            echo "❌ Missing executable"
+            exit 1
+          fi
+          
+          # Controlla architetture supportate
+          echo "📱 Supported architectures:"
+          lipo -info Payload/Runner.app/Runner
+          
+          # Verifica Info.plist è valido
+          echo "📋 Validating Info.plist:"
+          plutil -lint Payload/Runner.app/Info.plist
+          
+          # Mostra Bundle ID e versione
+          echo "📦 Bundle info:"
+          plutil -p Payload/Runner.app/Info.plist | grep -E "(CFBundleIdentifier|CFBundleVersion|CFBundleShortVersionString)"
+          
+          # Verifica code signing status
+          echo "🔏 Code signing status:"
+          codesign -dv Payload/Runner.app 2>&1 || echo "ℹ️  App is unsigned (OK for AltStore)"
+          # ⭐ CONTROLLO SPECIFICO PER ALTSTORE ⭐
+          echo "🍎 AltStore compatibility check:"
+          if codesign -v Payload/Runner.app 2>&1 | grep -q "not signed"; then
+            echo "✅ Perfect for AltStore - App is unsigned and ready for sideloading"
+          else
+            echo "⚠️  App appears to be signed - AltStore might have issues"
+            codesign -dv Payload/Runner.app 2>&1
+          fi
+          
+          # Pulisci
+          rm -rf Payload
+          
+          echo "✅ IPA validation completed successfully"
+          
       - name: Archive build (like AppVeyor)
         run: |
           tar -czvf AvventuraEpica-ios.tar.gz -C build ipa
