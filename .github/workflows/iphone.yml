@@ -45,14 +45,24 @@ jobs:
       - name: Quick validation
         run: |
           cd build/ipa
-          if [ ! -f "Runner.ipa" ]; then
-            echo "❌ IPA not found"
+          
+          # Lista tutti i file per debug
+          echo "📁 Files in build/ipa:"
+          ls -la
+          
+          # Cerca file .ipa
+          IPA_FILE=$(find . -name "*.ipa" | head -1)
+          
+          if [ -z "$IPA_FILE" ]; then
+            echo "❌ No IPA file found"
             exit 1
           fi
-          echo "✅ IPA created: $(ls -lh Runner.ipa | awk '{print $5}')"
+          
+          echo "✅ IPA found: $IPA_FILE ($(ls -lh "$IPA_FILE" | awk '{print $5}'))"
           
       - name: Upload IPA
         uses: actions/upload-artifact@v4
         with:
           name: AvventuraEpica-ios-lean
-          path: build/ipa/Runner.ipa
+          path: build/ipa/*.ipa
+ 
