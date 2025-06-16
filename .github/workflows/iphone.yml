@@ -42,23 +42,39 @@ jobs:
             --flutter-build-args=--split-debug-info=debug_info \
             --flutter-build-args=--obfuscate
             
-      - name: Quick validation
+      - name: Convert xcarchive to IPA
+        run: |
+          # Converti xcarchive in IPA non firmato (compatibile con AltStore)
+          mkdir -p build/ipa/Payload
+          cp -r build/ipa/Runner.xcarchive/Products/Applications/Runner.app build/ipa/Payload/
+          cd build/ipa
+          zip -r Runner.ipa Payload/
+          rm -rf Payload
+          
+      - name: Validate IPA (quick check)
         run: |
           cd build/ipa
           
-          # Lista tutti i file per debug
-          echo "📁 Files in build/ipa:"
-          ls -la
-          
-          # Cerca file .ipa
-          IPA_FILE=$(find . -name "*.ipa" | head -1)
-          
-          if [ -z "$IPA_FILE" ]; then
-            echo "❌ No IPA file found"
+          # Verifica esistenza IPA
+          if [ ! -f "Runner.ipa" ]; then
+            echo "❌ IPA file not found"
             exit 1
           fi
           
-          echo "✅ IPA found: $IPA_FILE ($(ls -lh "$IPA_FILE" | awk '{print $5}'))"
+          # Estrai per controlli base
+          unzip -q Runner.ipa
+          
+          # Verifica struttura
+          if [ ! -d "Payload/Runner.app" ]; then
+            echo "❌ Invalid IPA structure"
+            exit 1
+          fi
+          
+          echo "✅ IPA structure valid"
+          echo "📱 App size: $(ls -lh Runner.ipa | awk '{print $5}')"
+          
+          # Pulisci
+          rm -rf Payload
           
       - name: Upload IPA
         uses: actions/upload-artifact@v4
