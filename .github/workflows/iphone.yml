@@ -17,61 +17,42 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: 3.11
+          python-version: "3.11"
 
       - name: Install dependencies
         run: |
-          pip install flet flet-audio pyinstaller
+          pip install -r requirements.txt
+          pip install flet flet-audio
 
-      - name: Detect main file
-        run: |
-          if [ -f "gioco.py" ]; then
-            echo "MAIN_FILE=gioco.py" >> $GITHUB_ENV
-          elif [ -f "main.py" ]; then
-            echo "MAIN_FILE=main.py" >> $GITHUB_ENV
-          else
-            echo "MAIN_FILE=app.py" >> $GITHUB_ENV
-          fi
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.22.1"  # versione recente compatibile con Flet
 
-      - name: Create Info.plist
-        run: |
-          mkdir -p ios_build/Payload/AvventuraEpica.app
-          cat > ios_build/Payload/AvventuraEpica.app/Info.plist <<EOF
-          <?xml version="1.0" encoding="UTF-8"?>
-          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-          <plist version="1.0">
-          <dict>
-            <key>CFBundleDisplayName</key>
-            <string>AvventuraEpica</string>
-            <key>CFBundleExecutable</key>
-            <string>AvventuraEpica</string>
-            <key>CFBundleIdentifier</key>
-            <string>com.ambro86.avventuraepica</string>
-            <key>CFBundleName</key>
-            <string>AvventuraEpica</string>
-            <key>CFBundleVersion</key>
-            <string>1.0</string>
-            <key>LSRequiresIPhoneOS</key>
-            <true/>
-          </dict>
-          </plist>
-          EOF
+      - name: Run flutter doctor
+        run: flutter doctor -v
 
-      - name: Build .app using PyInstaller
+      - name: Set environment variables
         run: |
-          pyinstaller --noconfirm --noconsole --name AvventuraEpica ${{ env.MAIN_FILE }}
-          rsync -a dist/AvventuraEpica/ ios_build/Payload/AvventuraEpica.app/
-          if [ -d "assets" ]; then
-            rsync -a assets/ ios_build/Payload/AvventuraEpica.app/assets/
-          fi
-          
-      - name: Create .ipa (unsigned)
-        run: |
-          cd ios_build
-          zip -r AvventuraEpica.ipa Payload
+          echo "APP_ENV=prod" >> $GITHUB_ENV
+          echo "is_mobile=1" >> .env
 
-      - name: Upload .ipa
+      - name: Build IPA with Flet (Unsigned)
+        run: |
+          flet build ipa \
+            --build-version "1.0.0" \
+            --build-number "1" \
+            --flutter-build-args=--release \
+            --flutter-build-args=--no-codesign \
+            --template https://github.com/kumpeapps/flet-build-template.git
+
+      - name: Archive IPA
+        run: |
+          cd build/ipa
+          zip -r AvventuraEpica-unsigned.ipa *
+
+      - name: Upload IPA Artifact
         uses: actions/upload-artifact@v4
         with:
           name: AvventuraEpica-unsigned
-          path: ios_build/AvventuraEpica.ipa
+          path: build/ipa/AvventuraEpica-unsigned.ipa
