@@ -43,9 +43,9 @@ jobs:
             --build-version "1.0.0" \
             --build-number "1" \
             --module-name gioco \
-            --flutter-build-args=--release \
-            --flutter-build-args=--no-codesign \
-            --template https://github.com/kumpeapps/flet-build-template.git
+            --flutter-build-args="--release --no-codesign"
+
+            
 
       - name: Archive IPA
         run: |
