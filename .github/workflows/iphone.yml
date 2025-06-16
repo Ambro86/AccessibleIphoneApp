@@ -54,7 +54,6 @@ jobs:
           flet build ipa \
             --build-version "1.0.0" \
             --build-number "1" \
-
             --flutter-build-args="--release --no-codesign"
 
             
