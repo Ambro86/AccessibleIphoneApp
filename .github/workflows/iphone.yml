@@ -42,6 +42,7 @@ jobs:
           flet build ipa \
             --build-version "1.0.0" \
             --build-number "1" \
+            --module-name gioco \
             --flutter-build-args=--release \
             --flutter-build-args=--no-codesign \
             --template https://github.com/kumpeapps/flet-build-template.git
