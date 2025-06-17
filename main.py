@@ -457,28 +457,25 @@ class AvventuraEpica:
             text_size=14,
             label="📜 La tua storia epica"
         )
-        
         # Container per tutti i pulsanti che cambieranno
         self.container_pulsanti = ft.Column()
+        
+        # Titoli del gioco (solo per menu principale)
+        self.titolo_principale = ft.Text("🏰⚔️ AVVENTURA EPICA ⚔️🏰", size=28, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER)
+        self.sottotitolo = ft.Text("🎵 Audio Immersivo • 📳 Feedback Aptico • 🗺️ 16 Aree • 🛍️ Negozi • ⚔️ RPG", size=14, text_align=ft.TextAlign.CENTER)
+        # Container principale che cambierà
+        self.container_principale = ft.Column(spacing=15)
         
         # Crea pulsanti menu principale
         self.crea_menu_principale()
         
-        # Layout principale - rimuovo i controlli audio dal layout principale
+        # Layout principale
         self.page.add(
             ft.Container(
-                content=ft.Column([
-                    ft.Text("🏰⚔️ AVVENTURA EPICA ⚔️🏰", size=28, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER),
-                    ft.Text("🎵 Audio Immersivo • 📳 Feedback Aptico • 🗺️ 16 Aree • 🛍️ Negozi • ⚔️ RPG", 
-                            size=14, text_align=ft.TextAlign.CENTER),
-                    self.area_stats,
-                    self.area_storia,
-                    self.container_pulsanti
-                ], spacing=15),
+                content=self.container_principale,
                 padding=20
             )
         )
-        
     def crea_menu_principale(self):
         """Crea il menu principale con pochi pulsanti"""
         self.container_pulsanti.controls.clear()
@@ -511,9 +508,19 @@ class AvventuraEpica:
         ], horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=20)
         
         self.container_pulsanti.controls.append(pulsanti)
+        
+        # Layout per menu principale (CON titoli)
+        self.container_principale.controls.clear()
+        self.container_principale.controls.extend([
+            self.titolo_principale,
+            self.sottotitolo,
+            self.area_storia,
+            self.area_stats,
+            self.container_pulsanti
+        ])
+        
         self.modalita_menu = "principale"
         self.page.update()
-        
     def crea_menu_gioco(self):
         """Crea il menu di gioco con pulsanti dinamici basati sulla situazione"""
         self.container_pulsanti.controls.clear()
@@ -619,9 +626,17 @@ class AvventuraEpica:
         ], alignment=ft.MainAxisAlignment.CENTER)
         
         self.container_pulsanti.controls.append(torna_menu)
+        
+        # Layout per gioco (SENZA titoli, PRIMA area storia, POI statistiche)
+        self.container_principale.controls.clear()
+        self.container_principale.controls.extend([
+            self.area_storia,  # PRIMO controllo VoiceOver
+            self.area_stats,   # SECONDO controllo VoiceOver
+            self.container_pulsanti
+        ])
+        
         self.modalita_menu = "gioco"
         self.page.update()
-        
     def crea_menu_inventario(self):
         """Menu inventario con pulsanti dinamici"""
         self.container_pulsanti.controls.clear()

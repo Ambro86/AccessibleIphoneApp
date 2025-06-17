@@ -1,0 +1,300 @@
+version: '2.5.0({build})'
+# build_cloud: appveyor-workers Docker
+
+environment:
+
+  matrix:
+  - job_name: "build Android- Release"
+    appveyor_build_worker_image: Ubuntu
+    build: Script
+  - job_name: "build Android AAB- Release"
+    appveyor_build_worker_image: Ubuntu
+    build: Script
+  - job_name: "build Android- BETA"
+    appveyor_build_worker_image: Ubuntu
+    build: Script
+  # - job_name: "build macOS"
+  #   appveyor_build_worker_image: macOS-Sonoma
+  #   build: Script
+  # - job_name: "build iOS- BETA"
+  #   appveyor_build_worker_image: macOS-Sonoma
+  #   build: Script
+  # - job_name: "build iOS- Release"
+  #   appveyor_build_worker_image:  macOS-Sonoma
+  #   build: Script
+
+#  skip_branch_with_pr: true
+stack: python 3.11
+
+install:
+- pip install -r requirements.txt
+- flutter doctor -v
+
+before_build:
+- echo "APP_ENV=prod" > .env
+- echo "SERVICE_TOKEN=$SERVICE_TOKEN" >> .env
+- echo "VERSION=$APPVEYOR_BUILD_VERSION" >> .env
+- echo "BUILD=$APPVEYOR_BUILD_NUMBER" >> .env
+- echo "KA_SSO_APIKEY=$KA_SSO_APIKEY" >> .env
+- echo "MYSQL_PASSWORD=$MYSQL_PASSWORD" >> .env
+- echo "API_CLIENT_ID=$API_CLIENT_ID" >> .env
+- echo "API_CLIENT_SECRET=$API_CLIENT_SECRET" >> .env
+- echo "API_URL=$API_URL" >> .env
+
+test: false
+
+# Publish artifacts to GitHub Releases on "tag" builds 
+deploy:
+  provider: GitHub
+  auth_token: $(GITHUB_TOKEN)
+  on:
+    APPVEYOR_REPO_TAG: true
+
+#
+#   Windows package
+#
+for:
+# -
+#   matrix:
+#     only:
+#     - image: Visual Studio 2019
+    
+#   build_script:
+#   - flet build windows --project "kumpe3dkiosk" --product "Kumpe3D Kiosk" --build-version "1.0.0" --copyright "Copyright (c) 2024 KumpeApps LLC" --org com.kumpeapps.flet --company "KumpeApps LLC"
+#   after_build:
+#   - 7z a kumpe3dkiosk-windows.zip %CD%\build\windows\*.exe
+
+#   artifacts:
+#   - path: kumpe3dkiosk-windows.zip
+
+#
+#   macOS package
+#
+-
+  matrix:
+    only:
+    - job_name: "build macOS"
+    - SERVICE_TOKEN: $SERVICE_TOKEN
+    - APPVEYOR_BUILD_VERSION: $APPVEYOR_BUILD_VERSION
+    - APPVEYOR_BUILD_NUMBER: $APPVEYOR_BUILD_NUMBER
+    - APPLE_APP_STORE_API_KEY_ID: $APPLE_APP_STORE_API_KEY_ID
+    - APPLE_APPSTORE_API_ISSUER_ID: $APPLE_APPSTORE_API_ISSUER_ID
+    - APPLE_APP_STORE_API_KEY: $APPLE_APP_STORE_API_KEY
+    - FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: $FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD
+    - FASTLANE_PASSWORD: $FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD
+    - FASTLANE_USER: "jakumpe@justinkumpe.net"
+    - MATCH_PASSWORD: $MATCH_KEYCHAIN_PASSWORD
+    - MATCH_KEYCHAIN_PASSWORD: $MATCH_KEYCHAIN_PASSWORD
+    - MATCH_DEPLOY_KEY: $MATCH_DEPLOY_KEY
+    - APPVEYOR_REPO_TAG_NAME: $APPVEYOR_REPO_TAG_NAME
+    - GITHUB_TOKEN: $(GITHUB_TOKEN)
+  
+  install:
+  - gem install cocoapods
+  - gem install bundler
+  - pip install -r requirements.txt
+  # - flutter upgrade --force
+  - bundle install
+  - bundle update fastlane
+  - sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain AppleWWDRCAG2.cer
+  - git clone https://justinkumpe:${GITHUB_TOKEN}@github.com/kumpeapps/fastlane_certs.git
+  - bundle exec fastlane matchget
+
+  build_script:
+  - echo "is_mobile=0" >> .env
+  - flet build macos --project "kumpe3dkiosk" --product "Kumpe3D Kiosk" --build-version "${APPVEYOR_REPO_TAG_NAME:-"2.5.0"}" --build-number $APPVEYOR_BUILD_NUMBER --copyright "Copyright (c) 2024 KumpeApps LLC" --org com.kumpeapps.flet --company "KumpeApps LLC" --include-packages flet_audio
+
+  after_build:
+  - tar -czvf kumpe3dkiosk-macos.tar.gz -C build/macos "Kumpe3D Kiosk.app"
+
+  artifacts:
+  - path: kumpe3dkiosk-macos.tar.gz
+
+# #
+# #   iOS package- BETA
+# # 
+-
+  branches:
+    except:
+    - main
+  matrix:
+    only:
+    - job_name: "build iOS- BETA"
+    - SERVICE_TOKEN: $SERVICE_TOKEN
+    - APPVEYOR_BUILD_VERSION: $APPVEYOR_BUILD_VERSION
+    - APPVEYOR_BUILD_NUMBER: $APPVEYOR_BUILD_NUMBER
+    - APPLE_APP_STORE_API_KEY_ID: $APPLE_APP_STORE_API_KEY_ID
+    - APPLE_APPSTORE_API_ISSUER_ID: $APPLE_APPSTORE_API_ISSUER_ID
+    - APPLE_APP_STORE_API_KEY: $APPLE_APP_STORE_API_KEY
+    - FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: $FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD
+    - FASTLANE_PASSWORD: $FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD
+    - FASTLANE_USER: "jakumpe@justinkumpe.net"
+    - MATCH_PASSWORD: $MATCH_KEYCHAIN_PASSWORD
+    - MATCH_KEYCHAIN_PASSWORD: $MATCH_KEYCHAIN_PASSWORD
+    - MATCH_DEPLOY_KEY: $MATCH_DEPLOY_KEY
+    - APPVEYOR_REPO_TAG_NAME: $APPVEYOR_REPO_TAG_NAME
+    - GITHUB_TOKEN: $(GITHUB_TOKEN)
+  
+  install:
+  - xcodebuild -downloadPlatform iOS
+  - gem install cocoapods
+  - gem install bundler
+  - pip install -r requirements.txt
+  # - flutter upgrade
+  - flutter doctor -v
+  - brew install ruby
+  - brew install graphicsmagick
+  - bundle install
+  - sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain AppleWWDRCAG2.cer
+  - git clone https://justinkumpe:${GITHUB_TOKEN}@github.com/kumpeapps/fastlane_certs.git
+  - bundle exec fastlane matchget
+
+  build_script:
+  - echo "is_mobile=1" >> .env
+  - mv "./assets/icon-beta.png" "./assets/icon.png" 2>/dev/null
+  # - bundle exec badge --shield "V${APPVEYOR_REPO_TAG_NAME:-"2.5.0"}-${APPVEYOR_BUILD_NUMBER}-blue" --shield_geometry "+0+25%" --shield_scale 0.75 --glob "/assets/icon.png"
+  - flet build ipa --build-version "${APPVEYOR_REPO_TAG_NAME:-"2.5.0"}" --build-number $APPVEYOR_BUILD_NUMBER --flutter-build-args=--release --flutter-build-args=--no-codesign --template https://github.com/kumpeapps/flet-build-template.git
+  # --team 2T42Z3DM34
+  - bundle exec fastlane upload_testflight
+
+  after_build:
+  - tar -czvf kumpe3dkiosk-ios.tar.gz -C build ipa
+  # - xcrun altool --upload-app -t ios -f /build/ipa/kumpe3dkiosk.ipa -u jakumpe@justinkumpe.net -p $FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD
+
+  artifacts:
+  - path: kumpe3dkiosk-ios.tar.gz
+
+# #
+# #   iOS package- BETA
+# # 
+-
+  branches:
+    only:
+    - main
+  matrix:
+    only:
+    - job_name: "build iOS- Release"
+    - SERVICE_TOKEN: $SERVICE_TOKEN
+    - APPVEYOR_BUILD_VERSION: $APPVEYOR_BUILD_VERSION
+    - APPVEYOR_BUILD_NUMBER: $APPVEYOR_BUILD_NUMBER
+    - APPLE_APP_STORE_API_KEY_ID: $APPLE_APP_STORE_API_KEY_ID
+    - APPLE_APPSTORE_API_ISSUER_ID: $APPLE_APPSTORE_API_ISSUER_ID
+    - APPLE_APP_STORE_API_KEY: $APPLE_APP_STORE_API_KEY
+    - FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: $FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD
+    - FASTLANE_PASSWORD: $FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD
+    - FASTLANE_USER: "jakumpe@justinkumpe.net"
+    - MATCH_PASSWORD: $MATCH_KEYCHAIN_PASSWORD
+    - MATCH_KEYCHAIN_PASSWORD: $MATCH_KEYCHAIN_PASSWORD
+    - MATCH_DEPLOY_KEY: $MATCH_DEPLOY_KEY
+    - APPVEYOR_REPO_TAG_NAME: $APPVEYOR_REPO_TAG_NAME
+    - GITHUB_TOKEN: $(GITHUB_TOKEN)
+  
+  install:
+  - xcodebuild -downloadPlatform iOS
+  - gem install cocoapods
+  - gem install bundler
+  - pip install -r requirements.txt
+  # - flutter upgrade
+  - brew install ruby
+  - brew install graphicsmagick
+  - bundle install
+  - sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain AppleWWDRCAG2.cer
+  - git clone https://justinkumpe:${GITHUB_TOKEN}@github.com/kumpeapps/fastlane_certs.git
+  - bundle exec fastlane matchget
+
+  build_script:
+  - echo "is_mobile=1" >> .env
+  # - bundle exec badge --shield "V${APPVEYOR_REPO_TAG_NAME:-"2.5.0"}-${APPVEYOR_BUILD_NUMBER}-blue" --shield_geometry "+0+25%" --shield_scale 0.75 --glob "/assets/icon.png"
+  - flet build ipa --build-version "${APPVEYOR_REPO_TAG_NAME:-"2.5.0"}" --build-number $APPVEYOR_BUILD_NUMBER --flutter-build-args=--release --flutter-build-args=--no-codesign --template https://github.com/kumpeapps/flet-build-template.git
+  # --team 2T42Z3DM34
+  - bundle exec fastlane upload_testflight
+
+  after_build:
+  - tar -czvf kumpe3dkiosk-ios.tar.gz -C build ipa
+  # - xcrun altool --upload-app -t ios -f /build/ipa/kumpe3dkiosk.ipa -u jakumpe@justinkumpe.net -p $FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD
+
+  artifacts:
+  - path: kumpe3dkiosk-ios.tar.gz
+
+#
+#   Android package - BETA
+# 
+-
+  branches:
+    except:
+    - main
+  matrix:
+    only:
+    - job_name: "build Android- BETA"
+    - SERVICE_TOKEN: $SERVICE_TOKEN
+    - APPVEYOR_BUILD_VERSION: $APPVEYOR_BUILD_VERSION
+    - APPVEYOR_BUILD_NUMBER: $APPVEYOR_BUILD_NUMBER
+    - APPVEYOR_REPO_TAG_NAME: $APPVEYOR_REPO_TAG_NAME
+
+  build_script:
+  - echo "is_mobile=1" >> .env
+  - echo "LOG_LEVEL=TRACE" >> .env
+  - mv "./assets/icon-beta.png" "./assets/icon.png" 2>/dev/null
+  - curl https://$MATCH_DEPLOY_KEY@raw.githubusercontent.com/kumpeapps/android_certs/main/kumpe3dkiosk -o /tmp/kumpe3dkiosk
+  - ls /tmp
+  - flet build apk --build-version "${APPVEYOR_REPO_TAG_NAME:-"2.5.0-beta"}" --build-number $APPVEYOR_BUILD_NUMBER --android-signing-key-password $MATCH_KEYCHAIN_PASSWORD --android-signing-key-store-password $MATCH_KEYCHAIN_PASSWORD --android-signing-key-store /tmp/kumpe3dkiosk --android-signing-key-alias upload --flutter-build-args=--debug
+
+  after_build:
+  - tar -czvf kumpe3dkiosk-apk-debug.tar.gz -C build apk
+
+  artifacts:
+  - path: kumpe3dkiosk-apk-debug.tar.gz
+
+#
+#   Android package - Release
+# 
+-
+  branches:
+    only:
+    - main
+    - PreProd
+  matrix:
+    only:
+    - job_name: "build Android- Release"
+    - SERVICE_TOKEN: $SERVICE_TOKEN
+    - APPVEYOR_BUILD_VERSION: $APPVEYOR_BUILD_VERSION
+    - APPVEYOR_BUILD_NUMBER: $APPVEYOR_BUILD_NUMBER
+    - APPVEYOR_REPO_TAG_NAME: $APPVEYOR_REPO_TAG_NAME
+
+  build_script:
+  - echo "is_mobile=1" >> .env
+  - curl https://$MATCH_DEPLOY_KEY@raw.githubusercontent.com/kumpeapps/android_certs/main/kumpe3dkiosk -o /tmp/kumpe3dkiosk
+  - ls /tmp
+  - flet build apk --build-version "${APPVEYOR_REPO_TAG_NAME:-"2.5.0-beta"}" --build-number $APPVEYOR_BUILD_NUMBER
+
+  after_build:
+  - tar -czvf kumpe3dkiosk-apk.tar.gz -C build apk
+
+  artifacts:
+  - path: kumpe3dkiosk-apk.tar.gz
+
+#
+#   Android package AAB
+# 
+-
+  branches:
+    only:
+    - main
+  matrix:
+    only:
+    - job_name: "build Android AAB- Release"
+    - SERVICE_TOKEN: $SERVICE_TOKEN
+    - APPVEYOR_BUILD_VERSION: $APPVEYOR_BUILD_VERSION
+    - APPVEYOR_BUILD_NUMBER: $APPVEYOR_BUILD_NUMBER
+    - APPVEYOR_REPO_TAG_NAME: $APPVEYOR_REPO_TAG_NAME
+
+  build_script:
+  - echo "is_mobile=1" >> .env
+  - curl https://$MATCH_DEPLOY_KEY@raw.githubusercontent.com/kumpeapps/android_certs/main/kumpe3dkiosk -o /tmp/kumpe3dkiosk
+  - flet build aab --build-version "${APPVEYOR_REPO_TAG_NAME:-"2.5.0"}" --build-number $APPVEYOR_BUILD_NUMBER
+
+  after_build:
+  - tar -czvf kumpe3dkiosk-aab.tar.gz -C build aab
+
+  artifacts:
+  - path: kumpe3dkiosk-aab.tar.gz
