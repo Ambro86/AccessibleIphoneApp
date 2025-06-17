@@ -7,6 +7,8 @@ import random
 class AvventuraEpica:
     def __init__(self, page: ft.Page):
         self.page = page
+        self.versione = "1.0.0" 
+        self.autore   = "Ambrogio Riili"
         self.inizializza_gioco()
         self.crea_audio_system()
         self.crea_ui()
@@ -140,8 +142,8 @@ class AvventuraEpica:
         self.volume_effetti = 0.7
         self.turno = 0
         
-        # Stato dell'interfaccia per VoiceOver
-        self.modalita_menu = "principale"  # principale, gioco, inventario, negozio, statistiche, impostazioni
+        # Stato dell'interfaccia
+        self.modalita_menu = "principale"  # principale, gioco, inventario, negozio, statistiche
         
     def reset_gioco(self):
         """Reset completo con nuove statistiche"""
@@ -365,7 +367,7 @@ class AvventuraEpica:
                 return "💍 L'anello magico ti rigenera 2 HP!\n"
         return ""
         
-    # LOGICA PULSANTI DINAMICI - QUESTA È LA PARTE CHIAVE!
+    # LOGICA PULSANTI DINAMICI
     
     def movimenti_possibili(self):
         """Restituisce lista dei movimenti possibili dalla posizione attuale"""
@@ -432,10 +434,12 @@ class AvventuraEpica:
         return False
         
     def crea_ui(self):
+        """Crea l'interfaccia utente principale con tab e colori"""
         self.page.title = "🏰 Avventura Epica - Accessibile"
         self.page.scroll = ft.ScrollMode.AUTO
+        self.page.theme_mode = ft.ThemeMode.DARK  # Tema scuro per un look più immersivo
         
-        # Area statistiche giocatore
+        # Inizializza i componenti principali con colori
         self.area_stats = ft.TextField(
             value="📊 Statistiche Giocatore:\n👤 Livello 1 • ❤️ 100/100 HP • 💰 100 monete\n⚔️ Attacco: 15 • 🛡️ Difesa: 0\n⭐ EXP: 0/100",
             multiline=True,
@@ -443,10 +447,13 @@ class AvventuraEpica:
             min_lines=4,
             max_lines=6,
             text_size=14,
-            label="📊 Le tue statistiche"
+            label="📊 Le tue statistiche",
+            bgcolor=ft.Colors.BLUE_GREY_900,
+            color=ft.Colors.CYAN_100,
+            border_color=ft.Colors.CYAN_400,
+            focused_border_color=ft.Colors.CYAN_300
         )
         
-        # Area storia/descrizione area
         self.area_storia = ft.TextField(
             value="🎮 Benvenuto nell'Avventura Epica!\n🗺️ Esplora 16 aree diverse\n🛍️ Visita negozi e mercanti\n⚔️ Combatti mostri e sali di livello\n🎵 Audio immersivo e feedback aptico\n\nPremi 'Inizia Avventura' per cominciare!",
             multiline=True,
@@ -455,30 +462,231 @@ class AvventuraEpica:
             min_lines=10,
             max_lines=15,
             text_size=14,
-            label="📜 La tua storia epica"
+            label="📜 La tua storia epica",
+            bgcolor=ft.Colors.DEEP_PURPLE_900,
+            color=ft.Colors.AMBER_100,
+            border_color=ft.Colors.AMBER_400,
+            focused_border_color=ft.Colors.AMBER_300
         )
-        # Container per tutti i pulsanti che cambieranno
+        
         self.container_pulsanti = ft.Column()
         
-        # Titoli del gioco (solo per menu principale)
-        self.titolo_principale = ft.Text("🏰⚔️ AVVENTURA EPICA ⚔️🏰", size=28, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER)
-        self.sottotitolo = ft.Text("🎵 Audio Immersivo • 📳 Feedback Aptico • 🗺️ 16 Aree • 🛍️ Negozi • ⚔️ RPG", size=14, text_align=ft.TextAlign.CENTER)
-        # Container principale che cambierà
-        self.container_principale = ft.Column(spacing=15)
-        
-        # Crea pulsanti menu principale
-        self.crea_menu_principale()
-        
-        # Layout principale
-        self.page.add(
-            ft.Container(
-                content=self.container_principale,
-                padding=20
-            )
+        # Contenitore principale per il contenuto della tab Home
+        self.container_principale = ft.Column(
+            scroll=ft.ScrollMode.AUTO,
+            spacing=20,
+            expand=True
         )
-    def crea_menu_principale(self):
-        """Crea il menu principale con pochi pulsanti"""
+        
+        # Imposta il menu principale come vista iniziale per la tab Home
+        self.crea_menu_principale_per_tab()
+        
+        # 🔹 CONTENUTO TAB HOME
+        home_content = ft.Container(
+            content=self.container_principale,
+            bgcolor=ft.Colors.GREY_900,
+            padding=20,
+            border_radius=10
+        )
+        
+        # 🔹 CONTENUTO TAB IMPOSTAZIONI
+        impostazioni_content = ft.Container(
+            content=self.crea_contenuto_impostazioni(),
+            bgcolor=ft.Colors.BLUE_GREY_800,
+            padding=20,
+            border_radius=10
+        )
+        
+        # 🔹 CONTENUTO TAB INFO
+        info_content = ft.Container(
+            content=self.crea_contenuto_info(),
+            bgcolor=ft.Colors.GREEN_900,
+            padding=20,
+            border_radius=10
+        )
+        
+        # Costruzione delle Tab con colori
+        self.tabs = ft.Tabs(
+            selected_index=0,
+            expand=1,
+            indicator_color=ft.Colors.AMBER_400,
+            label_color=ft.Colors.WHITE,
+            unselected_label_color=ft.Colors.GREY_400,
+            tabs=[
+                ft.Tab(
+                    text="🏠 Home", 
+                    content=home_content,
+                    icon=ft.Icons.HOME
+                ),
+                ft.Tab(
+                    text="⚙️ Impostazioni", 
+                    content=impostazioni_content,
+                    icon=ft.Icons.SETTINGS
+                ),
+                ft.Tab(
+                    text="ℹ️ Info", 
+                    content=info_content,
+                    icon=ft.Icons.INFO
+                ),
+            ],
+            on_change=self.on_tab_change
+        )
+        
+        # Aggiungi le tab alla pagina
+        self.page.controls.clear()
+        self.page.add(self.tabs)
+        self.page.update()
+        
+    def on_tab_change(self, e):
+        """Gestisce il cambio di tab"""
+        # Quando si cambia tab, aggiorna le etichette dei volumi se necessario
+        if e.control.selected_index == 1:  # Tab Impostazioni
+            self.aggiorna_labels_volume()
+            
+    def aggiorna_labels_volume(self):
+        """Aggiorna le etichette del volume"""
+        if hasattr(self, 'volume_musica_label_tab'):
+            self.volume_musica_label_tab.value = f"🎵 Volume Musica: {int(self.volume_musica * 100)}%"
+        if hasattr(self, 'volume_effetti_label_tab'):
+            self.volume_effetti_label_tab.value = f"🔊 Volume Effetti: {int(self.volume_effetti * 100)}%"
+        self.page.update()
+    
+    def crea_contenuto_impostazioni(self):
+        """Crea il contenuto della tab impostazioni"""
+        # Toggle audio e haptic
+        toggle_audio = ft.Switch(
+            label="🔊 Audio Attivato",
+            value=self.audio_abilitato,
+            on_change=self.toggle_audio_callback,
+            tooltip="Attiva o disattiva tutti gli effetti audio"
+        )
+        
+        toggle_haptic = ft.Switch(
+            label="📳 Vibrazione Attivata",
+            value=self.haptic_abilitato,
+            on_change=self.toggle_haptic_callback,
+            tooltip="Attiva o disattiva il feedback aptico"
+        )
+        
+        # Slider volume musica per tab
+        self.volume_musica_label_tab = ft.Text(f"🎵 Volume Musica: {int(self.volume_musica * 100)}%")
+        slider_volume_musica = ft.Slider(
+            min=0,
+            max=1,
+            value=self.volume_musica,
+            divisions=10,
+            on_change=self.cambia_volume_musica_tab,
+            tooltip="Regola il volume della musica di sottofondo"
+        )
+        
+        # Slider volume effetti per tab
+        self.volume_effetti_label_tab = ft.Text(f"🔊 Volume Effetti: {int(self.volume_effetti * 100)}%")
+        slider_volume_effetti = ft.Slider(
+            min=0,
+            max=1,
+            value=self.volume_effetti,
+            divisions=10,
+            on_change=self.cambia_volume_effetti_tab,
+            tooltip="Regola il volume degli effetti sonori"
+        )
+        
+        # Pulsante test audio
+        test_audio_btn = ft.ElevatedButton(
+            "🎵 Testa Audio",
+            on_click=self.testa_audio,
+            width=200,
+            tooltip="Riproduci un suono di test"
+        )
+        
+        return ft.Column(
+            [
+                ft.Text("⚙️ IMPOSTAZIONI", size=20, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER),
+                ft.Divider(),
+                
+                ft.Text("🔊 Audio", size=16, weight=ft.FontWeight.BOLD),
+                toggle_audio,
+                ft.Container(height=10),
+                
+                self.volume_musica_label_tab,
+                slider_volume_musica,
+                ft.Container(height=10),
+                
+                self.volume_effetti_label_tab,
+                slider_volume_effetti,
+                ft.Container(height=10),
+                
+                test_audio_btn,
+                ft.Divider(),
+                
+                ft.Text("📳 Feedback", size=16, weight=ft.FontWeight.BOLD),
+                toggle_haptic,
+            ],
+            scroll=ft.ScrollMode.AUTO,
+            spacing=10,
+            expand=True,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER
+        )
+    
+    def crea_contenuto_info(self):
+        """Crea il contenuto della tab info"""
+        return ft.Column(
+            [
+                ft.Text("ℹ️ INFORMAZIONI", size=20, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER),
+                ft.Divider(),
+                
+                ft.Container(height=20),
+                ft.Text("🏰⚔️ AVVENTURA EPICA ⚔️🏰", size=24, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER),
+                ft.Container(height=10),
+                
+                ft.Text(f"📋 Versione: {self.versione}", size=16),
+                ft.Text(f"👨‍💻 Autore: {self.autore}", size=16),
+                ft.Text("📅 Data rilascio: 18 giugno 2025", size=16),
+                ft.Container(height=20),
+                
+                ft.Text("📖 Descrizione:", size=16, weight=ft.FontWeight.BOLD),
+                ft.Text(
+                    "Un emozionante RPG accessibile con audio immersivo e feedback aptico. "
+                    "Esplora 16 aree diverse, combatti mostri, raccogli tesori, visita negozi "
+                    "e diventa il nuovo re!",
+                    size=14,
+                    text_align=ft.TextAlign.CENTER
+                ),
+                ft.Container(height=20),
+                
+                ft.Text("🎮 Caratteristiche:", size=16, weight=ft.FontWeight.BOLD),
+                ft.Text("🗺️ 16 aree uniche da esplorare", size=14),
+                ft.Text("⚔️ Sistema di combattimento con livellamento", size=14),
+                ft.Text("🛍️ Negozi e mercanti", size=14),
+                ft.Text("🎒 Sistema di inventario ed equipaggiamento", size=14),
+                ft.Text("🎵 Audio immersivo per ogni area", size=14),
+                ft.Text("📳 Feedback aptico per un'esperienza tattile", size=14),
+                ft.Text("💾 Salvataggio e caricamento partite", size=14),
+                ft.Text("♿ Completamente accessibile con screen reader", size=14),
+            ],
+            scroll=ft.ScrollMode.AUTO,
+            spacing=8,
+            expand=True,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER
+        )
+
+    def crea_menu_principale_per_tab(self):
+        """Crea il menu principale per la tab Home con colori"""
         self.container_pulsanti.controls.clear()
+        
+        # Titoli con colori
+        titolo_principale = ft.Text(
+            "🏰⚔️ AVVENTURA EPICA ⚔️🏰", 
+            size=28, 
+            weight=ft.FontWeight.BOLD, 
+            text_align=ft.TextAlign.CENTER,
+            color=ft.Colors.AMBER_400
+        )
+        sottotitolo = ft.Text(
+            "🎵 Audio Immersivo • 📳 Feedback Aptico • 🗺️ 16 Aree • 🛍️ Negozi • ⚔️ RPG", 
+            size=14, 
+            text_align=ft.TextAlign.CENTER,
+            color=ft.Colors.CYAN_200
+        )
         
         pulsanti = ft.Column([
             ft.ElevatedButton(
@@ -487,7 +695,12 @@ class AvventuraEpica:
                 width=300,
                 height=50,
                 tooltip="Inizia una nuova partita",
-                data="btn_inizia_gioco"
+                bgcolor=ft.Colors.GREEN_700,
+                color=ft.Colors.WHITE,
+                style=ft.ButtonStyle(
+                    overlay_color=ft.Colors.GREEN_600,
+                    elevation=8
+                )
             ),
             ft.ElevatedButton(
                 text="📂 Carica Gioco Salvato",
@@ -495,25 +708,22 @@ class AvventuraEpica:
                 width=300,
                 height=50,
                 tooltip="Carica una partita precedentemente salvata",
-                data="btn_carica_gioco"
-            ),
-            ft.ElevatedButton(
-                text="⚙️ Impostazioni",
-                on_click=self.vai_a_impostazioni,
-                width=300,
-                height=50,
-                tooltip="Modifica audio, volume e altre impostazioni",
-                data="btn_impostazioni"
+                bgcolor=ft.Colors.BLUE_700,
+                color=ft.Colors.WHITE,
+                style=ft.ButtonStyle(
+                    overlay_color=ft.Colors.BLUE_600,
+                    elevation=8
+                )
             )
         ], horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=20)
         
         self.container_pulsanti.controls.append(pulsanti)
         
-        # Layout per menu principale (CON titoli)
+        # Layout per menu principale nella tab
         self.container_principale.controls.clear()
         self.container_principale.controls.extend([
-            self.titolo_principale,
-            self.sottotitolo,
+            titolo_principale,
+            sottotitolo,
             self.area_storia,
             self.area_stats,
             self.container_pulsanti
@@ -521,8 +731,9 @@ class AvventuraEpica:
         
         self.modalita_menu = "principale"
         self.page.update()
+        
     def crea_menu_gioco(self):
-        """Crea il menu di gioco con pulsanti dinamici basati sulla situazione"""
+        """Crea il menu di gioco con pulsanti dinamici e colori"""
         self.container_pulsanti.controls.clear()
         
         # MOVIMENTO DINAMICO - Solo direzioni possibili
@@ -536,7 +747,12 @@ class AvventuraEpica:
                         on_click=lambda _, d=direzione: self.muovi(d), 
                         width=100, 
                         tooltip=f"Muoviti verso {direzione}",
-                        data=f"btn_{direzione}"
+                        bgcolor=ft.Colors.INDIGO_600,
+                        color=ft.Colors.WHITE,
+                        style=ft.ButtonStyle(
+                            overlay_color=ft.Colors.INDIGO_500,
+                            elevation=4
+                        )
                     )
                 )
             
@@ -552,13 +768,32 @@ class AvventuraEpica:
         if azioni_disponibili:
             pulsanti_azioni = []
             for testo, funzione, tooltip in azioni_disponibili:
+                # Colori diversi per azioni diverse
+                if "Raccogli" in testo:
+                    color = ft.Colors.ORANGE_600
+                    overlay = ft.Colors.ORANGE_500
+                elif "Attacca" in testo:
+                    color = ft.Colors.RED_700
+                    overlay = ft.Colors.RED_600
+                elif "Negozio" in testo:
+                    color = ft.Colors.PURPLE_600
+                    overlay = ft.Colors.PURPLE_500
+                else:
+                    color = ft.Colors.BLUE_600
+                    overlay = ft.Colors.BLUE_500
+                    
                 pulsanti_azioni.append(
                     ft.ElevatedButton(
                         testo,
                         on_click=funzione,
                         width=120,
                         tooltip=tooltip,
-                        data=f"btn_{testo.split()[1].lower()}"
+                        bgcolor=color,
+                        color=ft.Colors.WHITE,
+                        style=ft.ButtonStyle(
+                            overlay_color=overlay,
+                            elevation=6
+                        )
                     )
                 )
             
@@ -580,7 +815,12 @@ class AvventuraEpica:
                     on_click=self.vai_a_inventario, 
                     width=140, 
                     tooltip="Visualizza inventario ed equipaggiamento",
-                    data="btn_inventario"
+                    bgcolor=ft.Colors.BROWN_600,
+                    color=ft.Colors.WHITE,
+                    style=ft.ButtonStyle(
+                        overlay_color=ft.Colors.BROWN_500,
+                        elevation=4
+                    )
                 )
             )
         
@@ -591,7 +831,12 @@ class AvventuraEpica:
                 on_click=self.vai_a_statistiche, 
                 width=140, 
                 tooltip="Visualizza statistiche dettagliate",
-                data="btn_statistiche"
+                bgcolor=ft.Colors.CYAN_600,
+                color=ft.Colors.WHITE,
+                style=ft.ButtonStyle(
+                    overlay_color=ft.Colors.CYAN_500,
+                    elevation=4
+                )
             )
         )
         
@@ -602,7 +847,12 @@ class AvventuraEpica:
                 on_click=self.salva_gioco, 
                 width=140, 
                 tooltip="Salva la partita corrente",
-                data="btn_salva"
+                bgcolor=ft.Colors.GREEN_600,
+                color=ft.Colors.WHITE,
+                style=ft.ButtonStyle(
+                    overlay_color=ft.Colors.GREEN_500,
+                    elevation=4
+                )
             )
         )
         
@@ -621,7 +871,12 @@ class AvventuraEpica:
                 on_click=self.torna_menu_principale, 
                 width=200, 
                 tooltip="Torna al menu principale",
-                data="btn_menu_principale"
+                bgcolor=ft.Colors.GREY_700,
+                color=ft.Colors.WHITE,
+                style=ft.ButtonStyle(
+                    overlay_color=ft.Colors.GREY_600,
+                    elevation=4
+                )
             )
         ], alignment=ft.MainAxisAlignment.CENTER)
         
@@ -630,13 +885,14 @@ class AvventuraEpica:
         # Layout per gioco (SENZA titoli, PRIMA area storia, POI statistiche)
         self.container_principale.controls.clear()
         self.container_principale.controls.extend([
-            self.area_storia,  # PRIMO controllo VoiceOver
-            self.area_stats,   # SECONDO controllo VoiceOver
+            self.area_storia,
+            self.area_stats,
             self.container_pulsanti
         ])
         
         self.modalita_menu = "gioco"
         self.page.update()
+        
     def crea_menu_inventario(self):
         """Menu inventario con pulsanti dinamici"""
         self.container_pulsanti.controls.clear()
@@ -688,6 +944,15 @@ class AvventuraEpica:
         )
         
         self.container_pulsanti.controls.append(pulsanti)
+        
+        # Layout per inventario
+        self.container_principale.controls.clear()
+        self.container_principale.controls.extend([
+            self.area_storia,
+            self.area_stats,
+            self.container_pulsanti
+        ])
+        
         self.modalita_menu = "inventario"
         self.page.update()
         
@@ -729,6 +994,15 @@ class AvventuraEpica:
         )
         
         self.container_pulsanti.controls.append(pulsanti)
+        
+        # Layout per negozio
+        self.container_principale.controls.clear()
+        self.container_principale.controls.extend([
+            self.area_storia,
+            self.area_stats,
+            self.container_pulsanti
+        ])
+        
         self.modalita_menu = "negozio"
         self.page.update()
         
@@ -748,6 +1022,15 @@ class AvventuraEpica:
         ], horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=15)
         
         self.container_pulsanti.controls.append(pulsanti)
+        
+        # Layout per statistiche
+        self.container_principale.controls.clear()
+        self.container_principale.controls.extend([
+            self.area_storia,
+            self.area_stats,
+            self.container_pulsanti
+        ])
+        
         self.modalita_menu = "statistiche"
         self.page.update()
         
@@ -771,7 +1054,7 @@ class AvventuraEpica:
         )
         
         # Slider volume musica
-        volume_musica_label = ft.Text(f"🎵 Volume Musica: {int(self.volume_musica * 100)}%")
+        self.volume_musica_label = ft.Text(f"🎵 Volume Musica: {int(self.volume_musica * 100)}%")
         slider_volume_musica = ft.Slider(
             min=0,
             max=1,
@@ -782,7 +1065,7 @@ class AvventuraEpica:
         )
         
         # Slider volume effetti
-        volume_effetti_label = ft.Text(f"🔊 Volume Effetti: {int(self.volume_effetti * 100)}%")
+        self.volume_effetti_label = ft.Text(f"🔊 Volume Effetti: {int(self.volume_effetti * 100)}%")
         slider_volume_effetti = ft.Slider(
             min=0,
             max=1,
@@ -801,10 +1084,6 @@ class AvventuraEpica:
             data="btn_test_audio"
         )
         
-        # Salva impostazioni nel widget principale per accesso facile
-        self.volume_musica_label = volume_musica_label
-        self.volume_effetti_label = volume_effetti_label
-        
         # Layout impostazioni
         impostazioni_content = ft.Column([
             ft.Text("⚙️ === IMPOSTAZIONI ===", size=20, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER),
@@ -814,11 +1093,11 @@ class AvventuraEpica:
             toggle_audio,
             ft.Container(height=10),
             
-            volume_musica_label,
+            self.volume_musica_label,
             slider_volume_musica,
             ft.Container(height=10),
             
-            volume_effetti_label,
+            self.volume_effetti_label,
             slider_volume_effetti,
             ft.Container(height=10),
             
@@ -840,33 +1119,31 @@ class AvventuraEpica:
         ], horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=10)
         
         self.container_pulsanti.controls.append(impostazioni_content)
-        self.modalita_menu = "impostazioni"
-        self.page.update()
+        
+        # Rimuovo le funzioni non più necessarie per il menu impostazioni separato
+        
+    def crea_menu_impostazioni(self):
+        """Menu impostazioni rimosso - ora è una tab separata"""
+        pass
         
     def vai_a_impostazioni(self, e):
         """Vai al menu impostazioni"""
         self.crea_menu_impostazioni()
-        self.aggiorna_storia("⚙️ === IMPOSTAZIONI ===\n\n🔊 Regola audio e volume\n📳 Configura feedback aptico\n🎵 Testa gli effetti sonori\n\nUsa i controlli qui sotto per personalizzare la tua esperienza di gioco.")
         
     def toggle_audio_callback(self, e):
         """Toggle audio"""
         self.audio_abilitato = e.control.value
         if not self.audio_abilitato:
             self.musica_sottofondo.pause()
-            self.aggiorna_storia("🔇 Audio disabilitato")
         else:
             if self.gioco_iniziato:
                 self.riavvia_musica_corrente()
-            self.aggiorna_storia("🔊 Audio riabilitato")
-            
+                
     def toggle_haptic_callback(self, e):
         """Toggle feedback aptico"""
         self.haptic_abilitato = e.control.value
         if self.haptic_abilitato:
             self.haptic_feedback("light")
-            self.aggiorna_storia("📳 Feedback aptico attivato")
-        else:
-            self.aggiorna_storia("📳 Feedback aptico disattivato")
             
     def cambia_volume_musica(self, e):
         """Cambia volume musica"""
@@ -874,37 +1151,51 @@ class AvventuraEpica:
         self.musica_sottofondo.volume = self.volume_musica
         self.musica_sottofondo.update()
         
-        # Aggiorna label
+        # Aggiorna label se esiste (per compatibilità con vecchi menu)
         if hasattr(self, 'volume_musica_label'):
             self.volume_musica_label.value = f"🎵 Volume Musica: {int(self.volume_musica * 100)}%"
-            self.page.update()
+        
+        # Aggiorna label nella tab se esiste
+        if hasattr(self, 'volume_musica_label_tab'):
+            self.volume_musica_label_tab.value = f"🎵 Volume Musica: {int(self.volume_musica * 100)}%"
+        
+        self.page.update()
             
     def cambia_volume_effetti(self, e):
         """Cambia volume effetti"""
         self.volume_effetti = e.control.value
         self.effetti_sonori.volume = self.volume_effetti
         
-        # Aggiorna label
+        # Aggiorna label se esiste (per compatibilità con vecchi menu)
         if hasattr(self, 'volume_effetti_label'):
             self.volume_effetti_label.value = f"🔊 Volume Effetti: {int(self.volume_effetti * 100)}%"
-            self.page.update()
+        
+        # Aggiorna label nella tab se esiste  
+        if hasattr(self, 'volume_effetti_label_tab'):
+            self.volume_effetti_label_tab.value = f"🔊 Volume Effetti: {int(self.volume_effetti * 100)}%"
+        
+        self.page.update()
+        
+    def cambia_volume_musica_tab(self, e):
+        """Cambia volume musica dalla tab impostazioni (alias per compatibilità)"""
+        self.cambia_volume_musica(e)
+            
+    def cambia_volume_effetti_tab(self, e):
+        """Cambia volume effetti dalla tab impostazioni (alias per compatibilità)"""
+        self.cambia_volume_effetti(e)
             
     def testa_audio(self, e):
         """Testa audio"""
         if self.audio_abilitato:
             self.riproduci_effetto("vittoria")
             self.haptic_feedback("success")
-            self.aggiorna_storia("🎵 Test audio riprodotto! Se non senti nulla, controlla le impostazioni del dispositivo.")
-        else:
-            self.aggiorna_storia("❌ Audio disabilitato! Attiva l'audio per testare i suoni.")
         
     def torna_menu_principale(self, e):
         """Torna al menu principale"""
         self.gioco_iniziato = False
         if self.audio_abilitato:
             self.musica_sottofondo.pause()
-        self.crea_menu_principale()
-        self.aggiorna_storia("🎮 Benvenuto nell'Avventura Epica!\n🗺️ Esplora 16 aree diverse\n🛍️ Visita negozi e mercanti\n⚔️ Combatti mostri e sali di livello\n🎵 Audio immersivo e feedback aptico\n\nPremi 'Inizia Avventura' per cominciare!")
+        self.crea_menu_principale_per_tab()
         
     def torna_al_gioco(self, e):
         """Torna al gioco dalla modalità menu"""
@@ -1467,5 +1758,4 @@ def main(page: ft.Page):
 
 if __name__ == "__main__":
     ft.app(target=main)
-            
  
