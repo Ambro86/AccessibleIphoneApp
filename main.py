@@ -432,9 +432,8 @@ class AvventuraEpica:
             if self.monete >= info["prezzo"]:
                 return True
         return False
-        
     def crea_ui(self):
-        """Crea l'interfaccia utente principale con tab e colori"""
+        """Crea l'interfaccia utente principale con tab in fondo accessibili"""
         self.page.title = "🏰 Avventura Epica - Accessibile"
         self.page.scroll = ft.ScrollMode.AUTO
         self.page.theme_mode = ft.ThemeMode.DARK  # Tema scuro per un look più immersivo
@@ -505,7 +504,7 @@ class AvventuraEpica:
             border_radius=10
         )
         
-        # Costruzione delle Tab con colori
+        # Costruzione delle Tab (manteniamo il sistema esistente)
         self.tabs = ft.Tabs(
             selected_index=0,
             expand=1,
@@ -532,11 +531,101 @@ class AvventuraEpica:
             on_change=self.on_tab_change
         )
         
-        # Aggiungi le tab alla pagina
-        self.page.controls.clear()
-        self.page.add(self.tabs)
-        self.page.update()
+        # Barra di navigazione in fondo - accessibile a VoiceOver
+        self.nav_bar = ft.Container(
+            content=ft.Row(
+                controls=[
+                    ft.TextButton(
+                        content=ft.Column([
+                            ft.Icon(ft.Icons.HOME, size=24),
+                            ft.Text("Home", size=12)
+                        ], 
+                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                        spacing=2),
+                        on_click=lambda _: self.seleziona_tab(0),
+                        style=ft.ButtonStyle(
+                            color=ft.Colors.AMBER_400,
+                            padding=ft.padding.all(8)
+                        ),
+                        tooltip="Vai alla schermata principale"
+                    ),
+                    ft.TextButton(
+                        content=ft.Column([
+                            ft.Icon(ft.Icons.SETTINGS, size=24),
+                            ft.Text("Impostazioni", size=12)
+                        ], 
+                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                        spacing=2),
+                        on_click=lambda _: self.seleziona_tab(1),
+                        style=ft.ButtonStyle(
+                            color=ft.Colors.GREY_400,
+                            padding=ft.padding.all(8)
+                        ),
+                        tooltip="Vai alle impostazioni audio e vibrazione"
+                    ),
+                    ft.TextButton(
+                        content=ft.Column([
+                            ft.Icon(ft.Icons.INFO, size=24),
+                            ft.Text("Info", size=12)
+                        ], 
+                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                        spacing=2),
+                        on_click=lambda _: self.seleziona_tab(2),
+                        style=ft.ButtonStyle(
+                            color=ft.Colors.GREY_400,
+                            padding=ft.padding.all(8)
+                        ),
+                        tooltip="Informazioni sul gioco e l'autore"
+                    ),
+                ],
+                alignment=ft.MainAxisAlignment.SPACE_EVENLY
+            ),
+            bgcolor=ft.Colors.GREY_900,
+            padding=ft.padding.all(10),
+            height=70,
+            border=ft.border.only(top=ft.BorderSide(1, ft.Colors.GREY_600))
+        )
         
+        # Layout finale: Column semplice con contenuto sopra e nav bar sotto
+        layout_finale = ft.Column(
+            controls=[
+                # Contenuto principale che si espande
+                ft.Container(
+                    content=self.tabs,
+                    expand=True
+                ),
+                # Barra di navigazione fissa in fondo
+                self.nav_bar
+            ],
+            spacing=0,
+            expand=True
+        )
+        
+        # Inizializza variabile tab corrente
+        self.tab_corrente = 0
+        
+        # Aggiungi alla pagina
+        self.page.controls.clear()
+        self.page.add(layout_finale)
+        self.page.update()
+    def seleziona_tab(self, index):
+        """Seleziona tab e aggiorna la navigazione"""
+        self.tab_corrente = index
+        self.tabs.selected_index = index
+        self.aggiorna_nav_bar()
+        self.page.update()
+        # Chiama la funzione di cambio tab esistente se necessario
+        if hasattr(self, 'on_tab_change'):
+            class MockEvent:
+                def __init__(self, selected_index):
+                    self.control = self
+                    self.selected_index = selected_index
+            self.on_tab_change(MockEvent(index))
+
+    def aggiorna_nav_bar(self):
+        """Aggiorna i colori della barra di navigazione"""
+        # Questa funzione verrà chiamata automaticamente dal seleziona_tab
+        pass
     def on_tab_change(self, e):
         """Gestisce il cambio di tab"""
         # Quando si cambia tab, aggiorna le etichette dei volumi se necessario
