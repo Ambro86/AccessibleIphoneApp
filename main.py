@@ -99,7 +99,7 @@ class AvventuraEpica:
             "pietra": 0,
             "ferro": 0,
             "energia": 100,
-            "pozioni": 5  # Aggiungiamo pozioni per test
+            "pozioni": 100  # Aggiungiamo pozioni per test
         }
         
         # Sistema di progressione con chiavi e boss
@@ -460,20 +460,20 @@ class AvventuraEpica:
         # 🏪 Negozi e mercanti
         self.negozi = {
             "🏘️ Villaggio": {
-                "🍞 Pane": {"prezzo": 5, "tipo": "cibo", "descrizione": "Ripristina 15 HP"},
-                " Spada": {"prezzo": 50, "tipo": "arma", "descrizione": "+5 danno"},
-                " Armatura": {"prezzo": 80, "tipo": "armatura", "descrizione": "-3 danni ricevuti"}
+                "🍞 Pane": {"prezzo": 60, "tipo": "cibo", "descrizione": "Ripristina 15 HP"},
+                "⚔️ Spada": {"prezzo": 300, "tipo": "arma", "descrizione": "+5 danno"},
+                "🛡️ Armatura": {"prezzo": 400, "tipo": "armatura", "descrizione": "-3 danni ricevuti"}
             },
             "🏪 Mercato": {
-                "🧪 Pozione Vita": {"prezzo": 50, "tipo": "pozione", "descrizione": "Ripristina 50 HP"},
-                " Pozione Forza": {"prezzo": 75, "tipo": "pozione", "descrizione": "+10 danno per 3 turni"},
-                "🏹 Arco Lungo": {"prezzo": 120, "tipo": "arma", "descrizione": "+8 danno"},
-                "💎 Anello Magico": {"prezzo": 200, "tipo": "accessorio", "descrizione": "+2 HP per turno"}
+                "🧪 Pozione Vita": {"prezzo": 300, "tipo": "pozione", "descrizione": "Ripristina 50 HP"},
+                "💪 Pozione Forza": {"prezzo": 450, "tipo": "pozione", "descrizione": "+10 danno per 3 turni"},
+                "🏹 Arco Lungo": {"prezzo": 720, "tipo": "arma", "descrizione": "+8 danno"},
+                "💎 Anello Magico": {"prezzo": 1200, "tipo": "accessorio", "descrizione": "+2 HP per turno"}
             },
             "🛤️ Strada": {
-                "🍎 Mela": {"prezzo": 3, "tipo": "cibo", "descrizione": "Ripristina 10 HP"},
-                "🗡️ Pugnale": {"prezzo": 25, "tipo": "arma", "descrizione": "+3 danno"},
-                " Mappa": {"prezzo": 15, "tipo": "oggetto", "descrizione": "Mostra tutte le aree"}
+                "🍎 Mela": {"prezzo": 330, "tipo": "cibo", "descrizione": "Ripristina 10 HP"},
+                "🗡️ Pugnale": {"prezzo": 390, "tipo": "arma", "descrizione": "+3 danno"},
+                "🗺️ Mappa": {"prezzo": 360, "tipo": "oggetto", "descrizione": "Mostra tutte le aree"}
             }
         }
         
@@ -532,7 +532,7 @@ class AvventuraEpica:
         self.difesa = 0
         self.monete = 100
         self.oro = 100  # Alias per compatibilità
-        self.inventario = []
+        self.inventario = {}
         self.equipaggiamento = {"arma": None, "armatura": None, "accessorio": None}
         self.effetti_temporanei = {}
         self.gioco_iniziato = False
@@ -644,7 +644,7 @@ class AvventuraEpica:
         self.attacco_base = 15
         self.difesa = 0
         self.monete = 100
-        self.inventario = []
+        self.inventario = {}
         self.equipaggiamento = {"arma": None, "armatura": None, "accessorio": None}
         self.effetti_temporanei = {}
         self.turno = 0
@@ -3166,21 +3166,35 @@ class AvventuraEpica:
         self.page.update()
         
     def crea_menu_negozio(self):
-        """Menu negozio con pulsanti dinamici"""
+        """Menu negozio con pulsanti individuali per ogni oggetto"""
         self.container_pulsanti.controls.clear()
         
         pulsanti_negozio = []
         
-        # Compra solo se ci sono oggetti acquistabili
-        if self.oggetti_acquistabili():
+        # Ottieni negozio dell'area corrente
+        negozio = self.negozi.get(self.area_attuale, {})
+        
+        # Crea un pulsante per ogni oggetto nel negozio
+        for nome_oggetto, info in negozio.items():
+            disponibile = self.monete >= info["prezzo"]
+            colore = ft.Colors.GREEN_600 if disponibile else ft.Colors.RED_600
+            testo_prezzo = f"💰 {info['prezzo']}"
+            tooltip_text = f"{info['descrizione']} - Costo: {info['prezzo']} monete"
+            
+            if not disponibile:
+                tooltip_text += " (Non hai abbastanza monete)"
+            
             pulsanti_negozio.append(
                 ft.ElevatedButton(
-                    " Compra Oggetto", 
-                    on_click=self.compra_oggetto, 
-                    width=200, 
-                    height=50, 
-                    tooltip="Compra oggetti dal negozio",
-                    data="btn_compra"
+                    f"Compra {nome_oggetto} - {testo_prezzo}",
+                    on_click=lambda e, oggetto=nome_oggetto, prezzo=info["prezzo"]: self.compra_oggetto_specifico(e, oggetto, prezzo),
+                    width=350,
+                    height=60,
+                    bgcolor=colore,
+                    color=ft.Colors.WHITE,
+                    tooltip=tooltip_text,
+                    disabled=not disponibile,
+                    data=f"compra_{nome_oggetto}"
                 )
             )
         
@@ -3188,7 +3202,7 @@ class AvventuraEpica:
         pulsanti_negozio.append(
             ft.ElevatedButton(
                 "🔙 Torna al Gioco", 
-                on_click=self.torna_al_gioco, 
+                on_click=self.vai_direttamente_al_gioco, 
                 width=200, 
                 height=50, 
                 tooltip="Torna alla schermata di gioco",
@@ -3420,6 +3434,8 @@ class AvventuraEpica:
     def torna_menu_principale(self, e):
         """Torna al menu principale"""
         self.gioco_iniziato = False
+        self.stack_schermate.clear()  # Pulisce lo stack di navigazione
+        self.schermata_corrente = "menu_principale"
         # Non mettere in pausa la musica qui - lasciala continuare
         # if self.audio_abilitato:
         #     self.musica_sottofondo.pause()
@@ -5411,6 +5427,91 @@ class AvventuraEpica:
             
         self.aggiorna_storia(testo)
         
+    def vai_direttamente_al_gioco(self, e=None):
+        """Va direttamente alla schermata di gioco, bypassando lo stack"""
+        if self.gioco_iniziato:
+            self.stack_schermate.clear()  # Pulisce lo stack
+            self.schermata_corrente = "gioco"
+            self.aggiorna_schermata()
+            self.haptic_feedback("light")
+        else:
+            self.schermata_corrente = "menu_principale"
+            self.aggiorna_schermata()
+        
+    def compra_oggetto_specifico(self, e, nome_oggetto, prezzo):
+        """Compra un oggetto specifico dal negozio"""
+        if not self.gioco_iniziato:
+            return
+            
+        if self.monete < prezzo:
+            testo = f"❌ Non hai abbastanza monete per comprare {nome_oggetto}!"
+            testo += f"\n💰 Ti servono {prezzo} monete, ne hai {self.monete}"
+        else:
+            self.monete -= prezzo
+            
+            # Trova l'info dell'oggetto per la descrizione
+            negozio = self.negozi.get(self.area_attuale, {})
+            info = negozio.get(nome_oggetto, {"descrizione": "Oggetto misterioso"})
+            
+            # Auto-equipaggia armi e armature, altrimenti metti in inventario
+            if info["tipo"] == "arma":
+                # Se hai già un'arma, metti quella vecchia nell'inventario
+                if self.equipaggiamento["arma"]:
+                    vecchia_arma = self.equipaggiamento["arma"]
+                    if vecchia_arma in self.inventario:
+                        self.inventario[vecchia_arma] += 1
+                    else:
+                        self.inventario[vecchia_arma] = 1
+                self.equipaggiamento["arma"] = nome_oggetto
+            elif info["tipo"] == "armatura":
+                # Se hai già un'armatura, metti quella vecchia nell'inventario
+                if self.equipaggiamento["armatura"]:
+                    vecchia_armatura = self.equipaggiamento["armatura"]
+                    if vecchia_armatura in self.inventario:
+                        self.inventario[vecchia_armatura] += 1
+                    else:
+                        self.inventario[vecchia_armatura] = 1
+                self.equipaggiamento["armatura"] = nome_oggetto
+            elif info["tipo"] == "accessorio":
+                # Se hai già un accessorio, metti quello vecchio nell'inventario
+                if self.equipaggiamento["accessorio"]:
+                    vecchio_accessorio = self.equipaggiamento["accessorio"]
+                    if vecchio_accessorio in self.inventario:
+                        self.inventario[vecchio_accessorio] += 1
+                    else:
+                        self.inventario[vecchio_accessorio] = 1
+                self.equipaggiamento["accessorio"] = nome_oggetto
+            else:
+                # Per oggetti consumabili (cibo, pozioni), metti in inventario
+                if nome_oggetto in self.inventario:
+                    self.inventario[nome_oggetto] += 1
+                else:
+                    self.inventario[nome_oggetto] = 1
+            
+            testo = f"✅ Acquistato: {nome_oggetto}\n"
+            testo += f"💰 Costo: {prezzo} monete\n"
+            testo += f"📝 {info['descrizione']}\n"
+            
+            # Mostra se equipaggiato automaticamente
+            if info["tipo"] in ["arma", "armatura", "accessorio"]:
+                testo += f"⚡ Equipaggiato automaticamente!\n"
+                testo += f"🗡️ Attacco: {self.calcola_attacco_totale()}\n"
+                testo += f"🛡️ Difesa: {self.calcola_difesa_totale()}\n"
+            
+            testo += f"💰 Monete rimaste: {self.monete}"
+            
+            self.haptic_feedback("success")
+            if self.audio_abilitato:
+                self.riproduci_effetto("monete")
+                
+            # Aggiorna i pulsanti del negozio per riflettere il nuovo stato
+            self.crea_menu_negozio()
+            
+            # Aggiorna anche le statistiche
+            self.aggiorna_stats_incrementali()
+                
+        self.aggiorna_storia(testo)
+        
     def compra_oggetto(self, e):
         """Sistema acquisti negozio"""
         if not self.gioco_iniziato:
@@ -5438,7 +5539,10 @@ class AvventuraEpica:
             nome_oggetto, info = min(oggetti_acquistabili, key=lambda x: x[1]["prezzo"])
             
             self.monete -= info["prezzo"]
-            self.inventario.append(nome_oggetto)
+            if nome_oggetto in self.inventario:
+                self.inventario[nome_oggetto] += 1
+            else:
+                self.inventario[nome_oggetto] = 1
             
             testo = f"✅ Acquistato: {nome_oggetto}\n"
             testo += f" Costo: {info['prezzo']} monete\n"
@@ -6516,7 +6620,7 @@ class AvventuraEpica:
             self.attacco_base = stato_gioco.get("attacco_base", 15)
             self.difesa = stato_gioco.get("difesa", 0)
             self.monete = stato_gioco.get("monete", 100)
-            self.inventario = stato_gioco["inventario"]
+            self.inventario = stato_gioco.get("inventario", {})
             self.equipaggiamento = stato_gioco.get("equipaggiamento", {"arma": None, "armatura": None, "accessorio": None})
             self.effetti_temporanei = stato_gioco.get("effetti_temporanei", {})
             self.oggetti = stato_gioco["oggetti"]

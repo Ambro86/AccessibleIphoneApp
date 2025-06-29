@@ -6,12 +6,12 @@
   "hp_giocatore": 100,
   "hp_max": 100,
   "livello": 1,
-  "esperienza": 53,
+  "esperienza": 8,
   "esperienza_prossimo_livello": 100,
   "attacco_base": 15,
   "difesa": 0,
-  "monete": 250,
-  "inventario": [],
+  "monete": 100,
+  "inventario": {},
   "equipaggiamento": {
     "arma": null,
     "armatura": null,
@@ -147,7 +147,7 @@
   "volume_effetti": 0.7,
   "gatti": {
     "gatto_1": {
-      "nome": "Micio",
+      "nome": "Ambro",
       "emoji": "",
       "livello": 1,
       "attacco": 5,
@@ -155,8 +155,8 @@
       "fame": 100,
       "felicita": 100,
       "sbloccato": true,
-      "affinita": 47,
-      "nome_personalizzato": false,
+      "affinita": 39,
+      "nome_personalizzato": true,
       "aree_non_usato": 0,
       "forma_evoluta": false,
       "dialoghi_sbloccati": [],
@@ -229,19 +229,19 @@
   },
   "gatto_attivo": "gatto_1",
   "risorse": {
-    "cibo": 4,
-    "acqua": 52,
+    "cibo": 46,
+    "acqua": 53,
     "legno": 0,
     "pietra": 0,
     "ferro": 0,
-    "energia": 100
+    "energia": 90
   },
   "aree_sbloccate": [
     "\ud83c\udfd8\ufe0f Villaggio"
   ],
   "area_attuale": "\ud83c\udfd8\ufe0f Villaggio",
   "progressione_area": {
-    "\ud83c\udfd8\ufe0f Villaggio": 5,
+    "\ud83c\udfd8\ufe0f Villaggio": 2,
     "\ud83c\udfe0 Cantina": 0,
     "\ud83d\udeb0 Fogne": 0,
     "\ud83c\udf00 Labirinto Antico": 0,
