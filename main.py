@@ -327,71 +327,71 @@ class AvventuraEpica:
         # Boss per ogni area con meccaniche uniche
         self.boss_aree = {
             "🏘️ Villaggio": {
-                "nome": "🐕 Cane Randagio", "hp": 180, "attacco": 12, "exp": 75,
+                "nome": "🐕 Cane Randagio", "hp": 180, "attacco": 40, "exp": 75,
                 "chiave": "🗝️ Chiave della Cantina", "abilita_speciale": "morso_feroce"
             },
             "🏠 Cantina": {
-                "nome": "🐁 Re Ratto", "hp": 240, "attacco": 15, "exp": 100,
+                "nome": "🐁 Re Ratto", "hp": 240, "attacco": 50, "exp": 100,
                 "chiave": "🗝️ Chiave della Cantina", "abilita_speciale": "richiama_ratti"
             },
             "🚰 Fogne": {
-                "nome": "🐀 Boss Topo delle Fogne", "hp": 360, "attacco": 20, "exp": 150,
+                "nome": "🐀 Boss Topo delle Fogne", "hp": 360, "attacco": 65, "exp": 150,
                 "chiave": "🌀 Chiave del Labirinto", "richiede_partner": True
             },
             "🌀 Labirinto Antico": {
-                "nome": "🏛️ Guardiano del Labirinto", "hp": 420, "attacco": 22, "exp": 175,
+                "nome": "🏛️ Guardiano del Labirinto", "hp": 420, "attacco": 75, "exp": 175,
                 "chiave": "🧊 Chiave del Ghiaccio", "abilita_speciale": "teletrasporto"
             },
             "❄️ Area Innevata": {
-                "nome": "🐺 Lupo Bianco Alfa", "hp": 480, "attacco": 25, "exp": 200,
+                "nome": "🐺 Lupo Bianco Alfa", "hp": 480, "attacco": 85, "exp": 200,
                 "chiave": "🌿 Chiave della Giungla", "abilita_speciale": "bufera"
             },
             "🌿 Giungla Selvaggia": {
-                "nome": "🦖 Rex Primordiale", "hp": 540, "attacco": 28, "exp": 225,
+                "nome": "🦖 Rex Primordiale", "hp": 540, "attacco": 95, "exp": 225,
                 "chiave": "🌲 Chiave della Natura", "abilita_speciale": "ruggito_primitivo"
             },
             "🌲 Bosco Profondo": {
-                "nome": "🐻 Grande Orso delle Radici", "hp": 600, "attacco": 32, "exp": 275,
+                "nome": "🐻 Grande Orso delle Radici", "hp": 600, "attacco": 105, "exp": 275,
                 "chiave": "⚰️ Chiave del Cimitero", "richiede_casa": True
             },
             "⚰️ Cimitero": {
-                "nome": "👹 Demone Custode", "hp": 660, "attacco": 35, "exp": 300,
+                "nome": "👹 Demone Custode", "hp": 660, "attacco": 115, "exp": 300,
                 "chiave": "🏚️ Chiave dell'Orrore", "abilita_speciale": "maledizione"
             },
             "🏚️ Casa degli Orrori": {
-                "nome": "👻 Custode degli Incubi", "hp": 720, "attacco": 37, "exp": 325,
+                "nome": "👻 Custode degli Incubi", "hp": 720, "attacco": 125, "exp": 325,
                 "chiave": "🏭 Chiave della Fabbrica", "abilita_speciale": "terrore_paralizzante"
             },
             "🏭 Fabbrica Abbandonata": {
-                "nome": "🤖 Automa Corrotto", "hp": 750, "attacco": 38, "exp": 350,
+                "nome": "🤖 Automa Corrotto", "hp": 750, "attacco": 130, "exp": 350,
                 "chiave": "⛏️ Chiave della Miniera", "abilita_speciale": "autocorrezione"
             },
             "⛏️ Miniera Profonda": {
-                "nome": "🐲 Drago di Cristallo", "hp": 840, "attacco": 42, "exp": 400,
+                "nome": "🐲 Drago di Cristallo", "hp": 840, "attacco": 140, "exp": 400,
                 "chiave": "🌙 Chiave della Cripta", "abilita_speciale": "soffio_cristallino"
             },
             "🌙 Cripta Maledetta": {
-                "nome": "💀 Lich Antico", "hp": 960, "attacco": 45, "exp": 450,
+                "nome": "💀 Lich Antico", "hp": 960, "attacco": 150, "exp": 450,
                 "chiave": "🌊 Chiave del Mare", "abilita_speciale": "non_morto"
             },
             "🌊 Mare": {
-                "nome": "🦈 Re Squalo", "hp": 1050, "attacco": 48, "exp": 500,
+                "nome": "🦈 Re Squalo", "hp": 1050, "attacco": 160, "exp": 500,
                 "chiave": "🏔️ Chiave della Montagna", "abilita_speciale": "tsunami"
             },
             "🏔️ Montagna Sacra": {
-                "nome": "👼 Angelo Custode", "hp": 1200, "attacco": 52, "exp": 600,
+                "nome": "👼 Angelo Custode", "hp": 1200, "attacco": 170, "exp": 600,
                 "chiave": "🌋 Chiave del Vulcano", "abilita_speciale": "luce_divina"
             },
             "🌋 Vulcano Attivo": {
-                "nome": "Signore del Magma", "hp": 1350, "attacco": 55, "exp": 750,
+                "nome": "Signore del Magma", "hp": 1350, "attacco": 180, "exp": 750,
                 "chiave": "👑 Chiave Finale", "abilita_speciale": "eruzione"
             },
             "👑 Palazzo Finale": {
-                "nome": "👑 Imperatore Oscuro", "hp": 1500, "attacco": 60, "exp": 1000,
+                "nome": "👑 Imperatore Oscuro", "hp": 1500, "attacco": 200, "exp": 1000,
                 "chiave": None, "abilita_speciale": "dominazione"
             },
             "🌌 Regno dei Sogni": {
-                "nome": "🌌 Dream Eternal", "hp": 2500, "attacco": 80, "exp": 2000,
+                "nome": "🌌 Dream Eternal", "hp": 2500, "attacco": 250, "exp": 2000,
                 "chiave": None, "abilita_speciale": "metamorfosi", "richiede_nox": True
             }
         }
@@ -735,6 +735,14 @@ class AvventuraEpica:
             balance=0
         )
         
+        # Canale dedicato per suono delle fusa del gatto
+        self.effetto_fusa = fa.Audio(
+            src="assets/music/effetto_fusa.mp3",
+            autoplay=False,
+            volume=self.volume_effetti,
+            balance=0
+        )
+        
         # Canale dedicato per suoni ambientali delle aree
         self.audio_ambiente = fa.Audio(
             src="assets/music/ambient_villaggio_uccelli.mp3",
@@ -759,6 +767,7 @@ class AvventuraEpica:
             self.effetto_mangiare,
             self.effetto_bere_pozione,
             self.effetto_bere_acqua,
+            self.effetto_fusa,
             self.audio_ambiente
         ])
         
@@ -1078,6 +1087,9 @@ class AvventuraEpica:
         elif effetto == "bere_acqua" or effetto == "acqua" or effetto == "bere":
             print(f"💧 Riproducendo bere acqua su canale dedicato")
             self.effetto_bere_acqua.play()
+        elif effetto == "fusa" or effetto == "gatto_felice" or effetto == "purr":
+            print(f"😻 Riproducendo fusa su canale dedicato")
+            self.effetto_fusa.play()
         else:
             print(f"❌ Effetto non trovato: {effetto}")
     
@@ -1310,7 +1322,7 @@ class AvventuraEpica:
             testo += f"• +{quantita} {risorsa}\n"
             
         # Bonus esperienza
-        exp_guadagnata = 5
+        exp_guadagnata = 1
         self.esperienza += exp_guadagnata
         testo += f"\n +{exp_guadagnata} EXP"
         
@@ -1373,6 +1385,8 @@ class AvventuraEpica:
             testo += f"🍽️ Fame: {gatto['fame']}/100\n"
             testo += f"😊 Felicità: {gatto['felicita']}/100\n"
             testo += f" Bonus: +{exp_bonus} EXP"
+            # Riproduci suono delle fusa quando il gatto è felice
+            self.riproduci_effetto("fusa")
         else:
             testo = f" {self.gatto_attivo} ha mangiato.\n"
             testo += f"🍽️ Fame: {gatto['fame']}/100\n"
@@ -1396,6 +1410,10 @@ class AvventuraEpica:
         self.risorse["energia"] = min(100, self.risorse["energia"] + 40)
         hp_recuperati = min(20, self.hp_max - self.hp_giocatore)
         self.hp_giocatore = min(self.hp_max, self.hp_giocatore + hp_recuperati)
+        
+        # Sincronizza anche vita se esiste per evitare sovrascritture
+        if hasattr(self, 'vita'):
+            self.vita = self.hp_giocatore
         
         testo = f"🍽️ Consumi cibo:\n"
         testo += f" Energia: {self.risorse['energia']}/100\n"
@@ -1489,8 +1507,10 @@ class AvventuraEpica:
         
     def aggiorna_stats_incrementali(self):
         """Aggiorna statistiche per gioco incrementale"""
-        # Sincronizza HP se è ancora in corso un combattimento
-        if hasattr(self, 'vita') and hasattr(self, 'in_combattimento') and not self.in_combattimento:
+        # Sincronizza HP solo se c'è un combattimento appena finito
+        if (hasattr(self, 'vita') and hasattr(self, 'in_combattimento') and 
+            not self.in_combattimento and hasattr(self, 'mostro_attuale') and 
+            self.mostro_attuale is not None):
             # Se il combattimento è finito, usa il valore corretto dell'HP
             self.hp_giocatore = self.vita
         
@@ -1498,18 +1518,24 @@ class AvventuraEpica:
         self.applica_bonus_reliquie_gatti()
         self.aggiorna_contatori_affinita()
         
+        # Gestisci effetti temporanei (decrementali solo durante certe azioni)
+        # Non li decrementiamo automaticamente per non farli scadere troppo velocemente
+        
         stats = f"Statistiche Incrementali:\n"
-        stats += f"Livello {self.livello} • {self.hp_giocatore}/{self.hp_max} HP • {self.monete} monete\n"
-        stats += f"Attacco: {self.calcola_attacco_totale()} • Difesa: {self.calcola_difesa_totale()}\n"
-        stats += f"EXP: {self.esperienza}/{self.esperienza_prossimo_livello}\n"
-        stats += f"Area: {self.area_attuale}\n"
+        stats += f"Livello {self.livello}.\n"
+        stats += f"HP: {self.hp_giocatore}/{self.hp_max}.\n"
+        stats += f"Monete: {self.monete}.\n"
+        stats += f"Attacco: {self.calcola_attacco_totale()}.\n"
+        stats += f"Difesa: {self.calcola_difesa_totale()}.\n"
+        stats += f"EXP: {self.esperienza}/{self.esperienza_prossimo_livello}.\n"
+        stats += f"Area: {self.area_attuale}.\n"
         # Mostra progressione area corrente
         progressione_corrente = self.progressione_area.get(self.area_attuale, 0)
-        stats += f"Progressione: {progressione_corrente}/100 (Boss a 100)\n\n"
+        stats += f"Progressione: {progressione_corrente}/100 (Boss a 100).\n\n"
         
         stats += f"Risorse:\n"
         for risorsa, quantita in self.risorse.items():
-            stats += f"• {risorsa.title()}: {quantita}\n"
+            stats += f"• {risorsa.title()}: {quantita}.\n"
             
         if self.gatto_attivo:
             gatto = self.gatti[self.gatto_attivo]
@@ -1528,10 +1554,10 @@ class AvventuraEpica:
             else:
                 affinita_emoji = ""
                 
-            stats += f"\nGatto attivo: {nome_gatto}\n"
-            stats += f"Affinità: {affinita_emoji} {affinita}/200\n"
-            stats += f"• Livello: {gatto['livello']} • Abilità: {gatto['abilita']}\n"
-            stats += f"• Fame: {gatto['fame']}/100 • Felicità: {gatto['felicita']}/100"
+            stats += f"\nGatto attivo: {nome_gatto}.\n"
+            stats += f"Affinità: {affinita_emoji} {affinita}/200.\n"
+            stats += f"• Livello: {gatto['livello']} • Abilità: {gatto['abilita']}.\n"
+            stats += f"• Fame: {gatto['fame']}/100 • Felicità: {gatto['felicita']}/100."
             
         # Mostra sanità mentale se in Casa degli Orrori o se danneggiata
         if self.area_attuale == "🏚️ Casa degli Orrori" or self.sanita_mentale < 100:
@@ -1550,18 +1576,18 @@ class AvventuraEpica:
             else:
                 sanita_emoji = "💀"
                 sanita_status = "FOLLE"
-            stats += f"\nSanità Mentale: {sanita_emoji} {self.sanita_mentale}/100 ({sanita_status})"
+            stats += f"\nSanità Mentale: {sanita_emoji} {self.sanita_mentale}/100 ({sanita_status})."
             
         # Mostra chiavi raccolte
         if self.chiavi_raccolte:
-            stats += f"\n\nChiavi: {len(self.chiavi_raccolte)}"
+            stats += f"\n\nChiavi: {len(self.chiavi_raccolte)}."
             
         # Mostra pesce se nell'area mare
         if self.area_attuale == "🌊 Mare" and self.pesce_raccolto > 0:
-            stats += f"\nPesce: {self.pesce_raccolto}"
+            stats += f"\nPesce: {self.pesce_raccolto}."
             
         if self.effetti_temporanei:
-            stats += f"\n\nEffetti attivi: {', '.join(self.effetti_temporanei.keys())}"
+            stats += f"\n\nEffetti attivi: {', '.join(self.effetti_temporanei.keys())}."
             
         self.aggiorna_stats(stats)
         
@@ -2326,22 +2352,22 @@ class AvventuraEpica:
         
         # Dati mostri per area
         mostri_area = {
-            "🏘️ Villaggio": {"nome": "Topo Gigante", "hp": 80, "attacco": 3, "verso": "Squeak!"},
-            "🏠 Cantina": {"nome": "Ragno Peloso", "hp": 100, "attacco": 4, "verso": "Hiss!"},
-            "🚰 Fogne": {"nome": "Ratto delle Fogne", "hp": 120, "attacco": 5, "verso": "Screech!"},
-            "🌀 Labirinto Antico": {"nome": "Guardiano di Pietra", "hp": 140, "attacco": 6, "verso": "Rumble!"},
-            "❄️ Area Innevata": {"nome": "Lupo Gelido", "hp": 160, "attacco": 7, "verso": "Howl!"},
-            "🌿 Giungla Selvaggia": {"nome": "Serpente Velenoso", "hp": 180, "attacco": 8, "verso": "Ssss!"},
-            "🌲 Bosco Profondo": {"nome": "Orso Bruno", "hp": 200, "attacco": 9, "verso": "Roar!"},
-            "⚰️ Cimitero": {"nome": "Scheletro Errante", "hp": 220, "attacco": 10, "verso": "Clatter!"},
-            "🏚️ Casa degli Orrori": {"nome": "Fantasma Tormentato", "hp": 240, "attacco": 11, "verso": "Woooo!"},
-            "🏭 Fabbrica Abbandonata": {"nome": "Robot Malfunzionante", "hp": 260, "attacco": 12, "verso": "Beep-Error!"},
-            "⛏️ Miniera Profonda": {"nome": "Golem di Ferro", "hp": 280, "attacco": 13, "verso": "Clang!"},
-            "🌙 Cripta Maledetta": {"nome": "Lich Minore", "hp": 300, "attacco": 14, "verso": "Necro!"},
-            "🌊 Mare": {"nome": "Kraken Giovane", "hp": 320, "attacco": 15, "verso": "Splash!"},
-            "🏔️ Montagna Sacra": {"nome": "Drago di Montagna", "hp": 340, "attacco": 16, "verso": "Roooar!"},
-            "🌋 Vulcano Attivo": {"nome": "Elementale del Fuoco", "hp": 360, "attacco": 17, "verso": "Flame!"},
-            "👑 Palazzo Finale": {"nome": "Guardia Reale", "hp": 380, "attacco": 18, "verso": "En garde!"}
+            "🏘️ Villaggio": {"nome": "Topo Gigante", "hp": 80, "attacco": 10, "verso": "Squeak!"},
+            "🏠 Cantina": {"nome": "Ragno Peloso", "hp": 100, "attacco": 14, "verso": "Hiss!"},
+            "🚰 Fogne": {"nome": "Ratto delle Fogne", "hp": 120, "attacco": 18, "verso": "Screech!"},
+            "🌀 Labirinto Antico": {"nome": "Guardiano di Pietra", "hp": 140, "attacco": 22, "verso": "Rumble!"},
+            "❄️ Area Innevata": {"nome": "Lupo Gelido", "hp": 160, "attacco": 26, "verso": "Howl!"},
+            "🌿 Giungla Selvaggia": {"nome": "Serpente Velenoso", "hp": 180, "attacco": 30, "verso": "Ssss!"},
+            "🌲 Bosco Profondo": {"nome": "Orso Bruno", "hp": 200, "attacco": 34, "verso": "Roar!"},
+            "⚰️ Cimitero": {"nome": "Scheletro Errante", "hp": 220, "attacco": 38, "verso": "Clatter!"},
+            "🏚️ Casa degli Orrori": {"nome": "Fantasma Tormentato", "hp": 240, "attacco": 42, "verso": "Woooo!"},
+            "🏭 Fabbrica Abbandonata": {"nome": "Robot Malfunzionante", "hp": 260, "attacco": 46, "verso": "Beep-Error!"},
+            "⛏️ Miniera Profonda": {"nome": "Golem di Ferro", "hp": 280, "attacco": 50, "verso": "Clang!"},
+            "🌙 Cripta Maledetta": {"nome": "Lich Minore", "hp": 300, "attacco": 54, "verso": "Necro!"},
+            "🌊 Mare": {"nome": "Kraken Giovane", "hp": 320, "attacco": 58, "verso": "Splash!"},
+            "🏔️ Montagna Sacra": {"nome": "Drago di Montagna", "hp": 340, "attacco": 62, "verso": "Roooar!"},
+            "🌋 Vulcano Attivo": {"nome": "Elementale del Fuoco", "hp": 360, "attacco": 66, "verso": "Flame!"},
+            "👑 Palazzo Finale": {"nome": "Guardia Reale", "hp": 380, "attacco": 70, "verso": "En garde!"}
         }
         
         self.mostro_attuale = mostri_area.get(self.area_attuale, {"nome": "Mostro Sconosciuto", "hp": 20, "attacco": 5, "verso": "Grrr!"})

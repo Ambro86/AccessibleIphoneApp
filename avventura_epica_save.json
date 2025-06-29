@@ -3,18 +3,15 @@
     0,
     0
   ],
-  "hp_giocatore": 140,
-  "hp_max": 140,
-  "livello": 3,
-  "esperienza": 179,
-  "esperienza_prossimo_livello": 300,
-  "attacco_base": 21,
+  "hp_giocatore": 100,
+  "hp_max": 100,
+  "livello": 1,
+  "esperienza": 53,
+  "esperienza_prossimo_livello": 100,
+  "attacco_base": 15,
   "difesa": 0,
-  "monete": 390,
-  "inventario": [
-    "\ud83c\udf5e Pane",
-    "\ud83c\udf5e Pane"
-  ],
+  "monete": 250,
+  "inventario": [],
   "equipaggiamento": {
     "arma": null,
     "armatura": null,
@@ -31,15 +28,15 @@
     "\ud83d\udee4\ufe0f Strada": "\ud83e\udd7e stivali da viaggio",
     "\ud83c\udf0a Lago": "\ud83c\udfa3 canna da pesca magica",
     "\u26f0\ufe0f Caverna": "\ud83d\udc8e gemma brillante",
-    "\ud83d\udde1\ufe0f Arena": "\ud83d\udee1\ufe0f scudo del campione",
+    "\ud83d\udde1\ufe0f Arena": " scudo del campione",
     "\ud83c\udfea Mercato": "",
     "\ud83c\udf33 Foresta": "\ud83c\udf3f erba medicinale",
-    "\ud83d\udd25 Vulcano": "\ud83d\udd25 essenza di fuoco",
+    "Vulcano": "essenza di fuoco",
     "\u2744\ufe0f Ghiacciai": "\u2744\ufe0f cristallo di ghiaccio",
     "\ud83c\udfdd\ufe0f Isola": "\ud83c\udff4\u200d\u2620\ufe0f mappa del tesoro",
     "\ud83c\udfdc\ufe0f Deserto": "\ud83c\udffa anfora antica",
     "\ud83c\udf19 Cripta": "\ud83d\udc80 teschio maledetto",
-    "\ud83d\udc51 Palazzo": "\ud83d\udcb0 tesoro reale"
+    "\ud83d\udc51 Palazzo": " tesoro reale"
   },
   "mostri": {
     "\ud83c\udfd8\ufe0f Villaggio": null,
@@ -58,7 +55,7 @@
       "exp": 35
     },
     "\ud83c\udff0 Castello": {
-      "nome": "\ud83d\udee1\ufe0f Guardia Reale",
+      "nome": " Guardia Reale",
       "hp": 40,
       "attacco": 15,
       "livello": 3,
@@ -86,7 +83,7 @@
       "exp": 40
     },
     "\ud83d\udde1\ufe0f Arena": {
-      "nome": "\u2694\ufe0f Gladiatore",
+      "nome": " Gladiatore",
       "hp": 45,
       "attacco": 20,
       "livello": 4,
@@ -100,8 +97,8 @@
       "livello": 3,
       "exp": 45
     },
-    "\ud83d\udd25 Vulcano": {
-      "nome": "\ud83d\udd25 Elementale di Fuoco",
+    "Vulcano": {
+      "nome": "Elementale di Fuoco",
       "hp": 50,
       "attacco": 25,
       "livello": 5,
@@ -151,21 +148,19 @@
   "gatti": {
     "gatto_1": {
       "nome": "Micio",
-      "emoji": "\ud83d\udc31",
+      "emoji": "",
       "livello": 1,
       "attacco": 5,
-      "abilita": "raccolta_suprema",
+      "abilita": "raccolta",
       "fame": 100,
       "felicita": 100,
       "sbloccato": true,
-      "affinita": 174,
+      "affinita": 47,
       "nome_personalizzato": false,
       "aree_non_usato": 0,
       "forma_evoluta": false,
       "dialoghi_sbloccati": [],
-      "scene_viste": [
-        "scena_100"
-      ]
+      "scene_viste": []
     },
     "gatto_2": {
       "nome": "Shadow",
@@ -201,7 +196,7 @@
     },
     "gatto_4": {
       "nome": "Stella",
-      "emoji": "\u2b50",
+      "emoji": "",
       "livello": 0,
       "attacco": 6,
       "abilita": "partner",
@@ -234,19 +229,19 @@
   },
   "gatto_attivo": "gatto_1",
   "risorse": {
-    "cibo": 499,
-    "acqua": 500,
+    "cibo": 4,
+    "acqua": 52,
     "legno": 0,
     "pietra": 0,
     "ferro": 0,
-    "energia": 20
+    "energia": 100
   },
   "aree_sbloccate": [
     "\ud83c\udfd8\ufe0f Villaggio"
   ],
   "area_attuale": "\ud83c\udfd8\ufe0f Villaggio",
   "progressione_area": {
-    "\ud83c\udfd8\ufe0f Villaggio": 85,
+    "\ud83c\udfd8\ufe0f Villaggio": 5,
     "\ud83c\udfe0 Cantina": 0,
     "\ud83d\udeb0 Fogne": 0,
     "\ud83c\udf00 Labirinto Antico": 0,
