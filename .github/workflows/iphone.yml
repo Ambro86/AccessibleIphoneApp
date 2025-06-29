@@ -55,20 +55,29 @@ jobs:
           echo "📁 Contenuto build/ipa/:"
           ls -la build/ipa/
           
-          if [ -d "build/ipa/avventura-epica.xcarchive" ]; then
-            echo "📁 Contenuto xcarchive:"
-            find build/ipa/avventura-epica.xcarchive -type d -maxdepth 3
-            echo "📱 Cercando file .app in tutta la struttura:"
-            find build/ipa/avventura-epica.xcarchive -name "*.app" -type d
+          # Trova dinamicamente l'xcarchive (potrebbe essere Runner.xcarchive o altro)
+          XCARCHIVE_DIR=$(find build/ipa -name "*.xcarchive" -type d | head -1)
+          
+          if [ -z "$XCARCHIVE_DIR" ]; then
+            echo "❌ Nessun file .xcarchive trovato!"
+            echo "📁 Contenuto completo build/ipa/:"
+            ls -la build/ipa/
+            exit 1
           fi
           
-          # Cerca il file .app in tutta la struttura xcarchive
-          APP_FILE=$(find build/ipa/avventura-epica.xcarchive -name "*.app" -type d | head -1)
+          echo "✅ Trovato xcarchive: $XCARCHIVE_DIR"
+          echo "📁 Contenuto xcarchive:"
+          find "$XCARCHIVE_DIR" -type d -maxdepth 3
+          echo "📱 Cercando file .app in tutta la struttura:"
+          find "$XCARCHIVE_DIR" -name "*.app" -type d
+          
+          # Cerca il file .app nell'xcarchive trovato
+          APP_FILE=$(find "$XCARCHIVE_DIR" -name "*.app" -type d | head -1)
           
           if [ -z "$APP_FILE" ]; then
             echo "❌ Nessun file .app trovato nell'xcarchive!"
             echo "📁 Struttura completa xcarchive:"
-            find build/ipa/avventura-epica.xcarchive -type f | head -20
+            find "$XCARCHIVE_DIR" -type f | head -20
             exit 1
           fi
           
