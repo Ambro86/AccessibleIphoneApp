@@ -460,20 +460,20 @@ class AvventuraEpica:
         # 🏪 Negozi e mercanti
         self.negozi = {
             "🏘️ Villaggio": {
-                "🍞 Pane": {"prezzo": 60, "tipo": "cibo", "descrizione": "Ripristina 15 HP"},
-                "⚔️ Spada": {"prezzo": 300, "tipo": "arma", "descrizione": "+5 danno"},
-                "🛡️ Armatura": {"prezzo": 400, "tipo": "armatura", "descrizione": "-3 danni ricevuti"}
+                "Pane": {"prezzo": 60, "tipo": "cibo", "descrizione": "Ripristina 15 HP"},
+                "Spada": {"prezzo": 300, "tipo": "arma", "descrizione": "+5 danno"},
+                "Armatura": {"prezzo": 400, "tipo": "armatura", "descrizione": "-3 danni ricevuti"}
             },
             "🏪 Mercato": {
-                "🧪 Pozione Vita": {"prezzo": 300, "tipo": "pozione", "descrizione": "Ripristina 50 HP"},
-                "💪 Pozione Forza": {"prezzo": 450, "tipo": "pozione", "descrizione": "+10 danno per 3 turni"},
-                "🏹 Arco Lungo": {"prezzo": 720, "tipo": "arma", "descrizione": "+8 danno"},
-                "💎 Anello Magico": {"prezzo": 1200, "tipo": "accessorio", "descrizione": "+2 HP per turno"}
+                "Pozione Vita": {"prezzo": 300, "tipo": "pozione", "descrizione": "Ripristina 50 HP"},
+                "Pozione Forza": {"prezzo": 450, "tipo": "pozione", "descrizione": "+10 danno per 3 turni"},
+                "Arco Lungo": {"prezzo": 720, "tipo": "arma", "descrizione": "+8 danno"},
+                "Anello Magico": {"prezzo": 1200, "tipo": "accessorio", "descrizione": "+2 HP per turno"}
             },
             "🛤️ Strada": {
-                "🍎 Mela": {"prezzo": 330, "tipo": "cibo", "descrizione": "Ripristina 10 HP"},
-                "🗡️ Pugnale": {"prezzo": 390, "tipo": "arma", "descrizione": "+3 danno"},
-                "🗺️ Mappa": {"prezzo": 360, "tipo": "oggetto", "descrizione": "Mostra tutte le aree"}
+                "Mela": {"prezzo": 330, "tipo": "cibo", "descrizione": "Ripristina 10 HP"},
+                "Pugnale": {"prezzo": 390, "tipo": "arma", "descrizione": "+3 danno"},
+                "Mappa": {"prezzo": 360, "tipo": "oggetto", "descrizione": "Mostra tutte le aree"}
             }
         }
         
@@ -2263,13 +2263,14 @@ class AvventuraEpica:
                     data="difendi"
                 ),
                 ft.ElevatedButton(
-                    text="Usa Pozione",
+                    text="Usa Oggetto Curativo",
                     on_click=self.usa_pozione_combattimento,
                     width=200,
                     height=50,
-                    bgcolor=ft.Colors.GREEN_600,
+                    bgcolor=ft.Colors.GREEN_600 if self.conta_oggetti_curativi() > 0 else ft.Colors.GREY_600,
                     color=ft.Colors.WHITE,
-                    tooltip=f"Usa una pozione per curarti. Pozioni: {self.risorse.get('pozioni', 0)}",
+                    tooltip=f"Usa oggetti curativi. Disponibili: {self.conta_oggetti_curativi()}",
+                    disabled=self.conta_oggetti_curativi() <= 0,
                     data="pozione"
                 ),
                 ft.ElevatedButton(
@@ -2529,13 +2530,34 @@ class AvventuraEpica:
         self.aggiorna_info_combattimento()
     
     def usa_pozione_combattimento(self, e):
-        """Usa una pozione durante il combattimento"""
-        if not self.in_combattimento or self.risorse["pozioni"] <= 0:
-            self.aggiorna_log_combattimento("🧪 Non hai pozioni da usare!")
+        """Usa un oggetto curativo durante il combattimento"""
+        if not self.in_combattimento:
             return
+            
+        # Trova il primo oggetto curativo disponibile
+        oggetto_da_usare = None
+        cura = 0
         
-        self.risorse["pozioni"] -= 1
-        cura = 30
+        # Priorità: Pozione Vita > Pane > Mela
+        if "Pozione Vita" in self.inventario and self.inventario["Pozione Vita"] > 0:
+            oggetto_da_usare = "Pozione Vita"
+            cura = 50
+        elif "Pane" in self.inventario and self.inventario["Pane"] > 0:
+            oggetto_da_usare = "Pane"
+            cura = 15
+        elif "Mela" in self.inventario and self.inventario["Mela"] > 0:
+            oggetto_da_usare = "Mela"
+            cura = 10
+            
+        if not oggetto_da_usare:
+            self.aggiorna_log_combattimento("Non hai oggetti curativi da usare!")
+            return
+            
+        # Usa l'oggetto
+        self.inventario[oggetto_da_usare] -= 1
+        if self.inventario[oggetto_da_usare] <= 0:
+            del self.inventario[oggetto_da_usare]
+            
         self.vita = min(self.vita_massima, self.vita + cura)
         self.hp_giocatore = self.vita
         
@@ -2544,7 +2566,7 @@ class AvventuraEpica:
         self.vita -= danno_mostro
         self.hp_giocatore = self.vita
         
-        messaggio = f"Round {self.round_combattimento}:\n🧪 Usi una pozione e recuperi {cura} vita!\n💥 Il {self.mostro_attuale['nome']} ti attacca per {danno_mostro} danni!\n"
+        messaggio = f"Round {self.round_combattimento}:\nUsi {oggetto_da_usare} e recuperi {cura} vita!\n💥 Il {self.mostro_attuale['nome']} ti attacca per {danno_mostro} danni!\n"
         
         if self.vita <= 0:
             self.vita = 1
@@ -3125,7 +3147,7 @@ class AvventuraEpica:
         # Gestione reliquie sempre disponibile
         pulsanti_inventario.append(
             ft.ElevatedButton(
-                "🔮 Reliquie", 
+                "Reliquie", 
                 on_click=self.gestisci_reliquie, 
                 width=200, 
                 height=50, 
@@ -4256,7 +4278,7 @@ class AvventuraEpica:
         self.contenuto_schermata.controls.clear()
         
         titolo = ft.Text(
-            "🔮 Gestione Reliquie 🔮", 
+            "Gestione Reliquie", 
             size=24, 
             weight=ft.FontWeight.BOLD, 
             text_align=ft.TextAlign.CENTER,
@@ -4343,7 +4365,7 @@ class AvventuraEpica:
         
         # Sezione reliquie possedute
         reliquie_title = ft.Text(
-            "🎒 Reliquie Possedute",
+            "Reliquie Possedute",
             size=18,
             weight=ft.FontWeight.BOLD,
             color=ft.Colors.AMBER_400
@@ -4465,7 +4487,7 @@ class AvventuraEpica:
         self.contenuto_schermata.controls.clear()
         
         titolo = ft.Text(
-            "🎒 Inventario 🎒", 
+            "Inventario", 
             size=24, 
             weight=ft.FontWeight.BOLD, 
             text_align=ft.TextAlign.CENTER,
@@ -4475,24 +4497,28 @@ class AvventuraEpica:
         # Pulsante indietro
         pulsante_indietro = self.crea_pulsante_indietro()
         
-        # Sezione oggetti
+        # Sezione oggetti con pulsanti
         oggetti_controls = []
         
         if self.inventario:
             for oggetto, quantita in self.inventario.items():
                 if quantita > 0:
-                    oggetto_card = ft.Container(
-                        content=ft.Column([
-                            ft.Text(f"📦 {oggetto}", size=16, weight=ft.FontWeight.BOLD),
-                            ft.Text(f"Quantità: {quantita}", size=14, color=ft.Colors.GREY_300),
-                        ], spacing=5),
-                        bgcolor=ft.Colors.GREY_900,
-                        padding=10,
-                        border_radius=8,
-                        border=ft.border.all(1, ft.Colors.BROWN_600),
-                        width=380
+                    # Verifica se l'oggetto è equipaggiato
+                    equipaggiato = (oggetto in self.equipaggiamento.values())
+                    
+                    colore_pulsante = ft.Colors.CYAN_600 if equipaggiato else ft.Colors.BLUE_600
+                    stato = " (Equipaggiato)" if equipaggiato else ""
+                    
+                    oggetto_button = ft.ElevatedButton(
+                        f"{oggetto} (x{quantita}){stato}",
+                        on_click=lambda e, obj=oggetto: self.mostra_azioni_oggetto(obj),
+                        width=350,
+                        height=60,
+                        bgcolor=colore_pulsante,
+                        color=ft.Colors.WHITE,
+                        tooltip=f"Gestisci {oggetto}" + (" (Equipaggiato)" if equipaggiato else "")
                     )
-                    oggetti_controls.append(oggetto_card)
+                    oggetti_controls.append(oggetto_button)
                     oggetti_controls.append(ft.Container(height=8))
         
         # Sezione equipaggiamento
@@ -4533,7 +4559,7 @@ class AvventuraEpica:
         if self.oggetti_usabili():
             pulsanti_azioni.append(
                 ft.ElevatedButton(
-                    text="🧪 Usa Oggetto",
+                    text="Usa Oggetto",
                     on_click=self.usa_oggetto,
                     bgcolor=ft.Colors.GREEN_600,
                     color=ft.Colors.WHITE,
@@ -4558,7 +4584,7 @@ class AvventuraEpica:
         # Pulsante reliquie sempre disponibile
         pulsanti_azioni.append(
             ft.ElevatedButton(
-                text="🔮 Reliquie",
+                text="Reliquie",
                 on_click=self.gestisci_reliquie,
                 bgcolor=ft.Colors.DEEP_PURPLE_600,
                 color=ft.Colors.WHITE,
@@ -5427,6 +5453,98 @@ class AvventuraEpica:
             
         self.aggiorna_storia(testo)
         
+    def mostra_azioni_oggetto(self, nome_oggetto):
+        """Mostra finestra popup con azioni per l'oggetto"""
+        def chiudi_popup(e):
+            popup.open = False
+            self.page.update()
+            
+        def equipaggia_oggetto(e):
+            self.equipaggia_oggetto_specifico(nome_oggetto)
+            chiudi_popup(e)
+            
+        def disequipaggia_oggetto(e):
+            self.disequipaggia_oggetto_specifico(nome_oggetto)
+            chiudi_popup(e)
+            
+        def usa_oggetto(e):
+            self.usa_oggetto_specifico(nome_oggetto)
+            chiudi_popup(e)
+            
+        def elimina_oggetto(e):
+            self.elimina_oggetto_specifico(nome_oggetto)
+            chiudi_popup(e)
+        
+        # Determina tipo di oggetto e azioni disponibili
+        equipaggiato = (nome_oggetto in self.equipaggiamento.values())
+        
+        # Trova il tipo dell'oggetto
+        tipo_oggetto = None
+        for negozio in self.negozi.values():
+            if nome_oggetto in negozio:
+                tipo_oggetto = negozio[nome_oggetto]["tipo"]
+                break
+        
+        azioni = []
+        
+        if tipo_oggetto in ["arma", "armatura", "accessorio"]:
+            if equipaggiato:
+                azioni.append(ft.ElevatedButton(
+                    "Disequipaggia",
+                    on_click=disequipaggia_oggetto,
+                    width=200,
+                    bgcolor=ft.Colors.ORANGE_600,
+                    color=ft.Colors.WHITE
+                ))
+            else:
+                azioni.append(ft.ElevatedButton(
+                    "Equipaggia", 
+                    on_click=equipaggia_oggetto,
+                    width=200,
+                    bgcolor=ft.Colors.GREEN_600,
+                    color=ft.Colors.WHITE
+                ))
+        elif tipo_oggetto in ["cibo", "pozione"]:
+            azioni.append(ft.ElevatedButton(
+                "Usa",
+                on_click=usa_oggetto,
+                width=200,
+                bgcolor=ft.Colors.BLUE_600,
+                color=ft.Colors.WHITE
+            ))
+        
+        # Azione elimina sempre disponibile
+        azioni.append(ft.ElevatedButton(
+            "Elimina",
+            on_click=elimina_oggetto,
+            width=200,
+            bgcolor=ft.Colors.RED_600,
+            color=ft.Colors.WHITE
+        ))
+        
+        # Azione chiudi
+        azioni.append(ft.ElevatedButton(
+            "Chiudi",
+            on_click=chiudi_popup,
+            width=200,
+            bgcolor=ft.Colors.GREY_600,
+            color=ft.Colors.WHITE
+        ))
+        
+        popup = ft.AlertDialog(
+            title=ft.Text(f"Gestisci: {nome_oggetto}"),
+            content=ft.Column([
+                ft.Text(f"Cosa vuoi fare con {nome_oggetto}?", size=16),
+                ft.Container(height=10),
+                ft.Column(azioni, spacing=10)
+            ], tight=True),
+            actions_alignment=ft.MainAxisAlignment.CENTER
+        )
+        
+        self.page.dialog = popup
+        popup.open = True
+        self.page.update()
+        
     def vai_direttamente_al_gioco(self, e=None):
         """Va direttamente alla schermata di gioco, bypassando lo stack"""
         if self.gioco_iniziato:
@@ -5437,6 +5555,138 @@ class AvventuraEpica:
         else:
             self.schermata_corrente = "menu_principale"
             self.aggiorna_schermata()
+        
+    def conta_oggetti_curativi(self):
+        """Conta il numero totale di oggetti curativi nell'inventario"""
+        totale = 0
+        oggetti_curativi = ["Pozione Vita", "Pane", "Mela"]
+        
+        for oggetto in oggetti_curativi:
+            if oggetto in self.inventario:
+                totale += self.inventario[oggetto]
+                
+        return totale
+        
+    def equipaggia_oggetto_specifico(self, nome_oggetto):
+        """Equipaggia un oggetto specifico"""
+        if nome_oggetto not in self.inventario or self.inventario[nome_oggetto] <= 0:
+            self.aggiorna_storia(f"❌ Non hai {nome_oggetto} nell'inventario!")
+            return
+            
+        # Trova il tipo dell'oggetto
+        tipo_oggetto = None
+        for negozio in self.negozi.values():
+            if nome_oggetto in negozio:
+                tipo_oggetto = negozio[nome_oggetto]["tipo"]
+                break
+        
+        if tipo_oggetto == "arma":
+            slot = "arma"
+        elif tipo_oggetto == "armatura":
+            slot = "armatura" 
+        elif tipo_oggetto == "accessorio":
+            slot = "accessorio"
+        else:
+            self.aggiorna_storia(f"❌ {nome_oggetto} non può essere equipaggiato!")
+            return
+            
+        # Se hai già qualcosa equipaggiato in quello slot, mettilo nell'inventario
+        if self.equipaggiamento[slot]:
+            vecchio_oggetto = self.equipaggiamento[slot]
+            if vecchio_oggetto in self.inventario:
+                self.inventario[vecchio_oggetto] += 1
+            else:
+                self.inventario[vecchio_oggetto] = 1
+                
+        # Equipaggia il nuovo oggetto
+        self.equipaggiamento[slot] = nome_oggetto
+        self.inventario[nome_oggetto] -= 1
+        
+        if self.inventario[nome_oggetto] <= 0:
+            del self.inventario[nome_oggetto]
+            
+        testo = f"✅ {nome_oggetto} equipaggiato!\n"
+        testo += f"🗡️ Attacco: {self.calcola_attacco_totale()}\n"
+        testo += f"🛡️ Difesa: {self.calcola_difesa_totale()}"
+        
+        self.aggiorna_storia(testo)
+        self.aggiorna_stats_incrementali()
+        self.mostra_schermata_inventario()  # Ricarica l'inventario
+        
+    def disequipaggia_oggetto_specifico(self, nome_oggetto):
+        """Disequipaggia un oggetto specifico"""
+        slot_trovato = None
+        for slot, oggetto in self.equipaggiamento.items():
+            if oggetto == nome_oggetto:
+                slot_trovato = slot
+                break
+                
+        if not slot_trovato:
+            self.aggiorna_storia(f"❌ {nome_oggetto} non è equipaggiato!")
+            return
+            
+        # Metti l'oggetto nell'inventario
+        if nome_oggetto in self.inventario:
+            self.inventario[nome_oggetto] += 1
+        else:
+            self.inventario[nome_oggetto] = 1
+            
+        # Rimuovi dall'equipaggiamento
+        self.equipaggiamento[slot_trovato] = None
+        
+        testo = f"❌ {nome_oggetto} disequipaggiato!\n"
+        testo += f"🗡️ Attacco: {self.calcola_attacco_totale()}\n"
+        testo += f"🛡️ Difesa: {self.calcola_difesa_totale()}"
+        
+        self.aggiorna_storia(testo)
+        self.aggiorna_stats_incrementali()
+        self.mostra_schermata_inventario()  # Ricarica l'inventario
+        
+    def usa_oggetto_specifico(self, nome_oggetto):
+        """Usa un oggetto specifico (cibo/pozione)"""
+        if nome_oggetto not in self.inventario or self.inventario[nome_oggetto] <= 0:
+            self.aggiorna_storia(f"❌ Non hai {nome_oggetto} nell'inventario!")
+            return
+            
+        self.inventario[nome_oggetto] -= 1
+        if self.inventario[nome_oggetto] <= 0:
+            del self.inventario[nome_oggetto]
+            
+        # Effetti dell'oggetto
+        if "Pane" in nome_oggetto:
+            cura = 15
+            self.hp_giocatore = min(self.hp_max, self.hp_giocatore + cura)
+            testo = f"🍞 Hai mangiato {nome_oggetto} e recuperato {cura} HP!"
+        elif "Mela" in nome_oggetto:
+            cura = 10
+            self.hp_giocatore = min(self.hp_max, self.hp_giocatore + cura)
+            testo = f"🍎 Hai mangiato {nome_oggetto} e recuperato {cura} HP!"
+        elif "Pozione Vita" in nome_oggetto:
+            cura = 50
+            self.hp_giocatore = min(self.hp_max, self.hp_giocatore + cura)
+            testo = f"🧪 Hai bevuto {nome_oggetto} e recuperato {cura} HP!"
+        elif "Pozione Forza" in nome_oggetto:
+            self.effetti_temporanei["forza"] = 3
+            testo = f"💪 Hai bevuto {nome_oggetto}! +10 attacco per 3 turni!"
+        else:
+            testo = f"✅ Hai usato {nome_oggetto}!"
+            
+        self.aggiorna_storia(testo)
+        self.aggiorna_stats_incrementali()
+        self.mostra_schermata_inventario()  # Ricarica l'inventario
+        
+    def elimina_oggetto_specifico(self, nome_oggetto):
+        """Elimina un oggetto specifico dall'inventario"""
+        if nome_oggetto not in self.inventario or self.inventario[nome_oggetto] <= 0:
+            self.aggiorna_storia(f"❌ Non hai {nome_oggetto} nell'inventario!")
+            return
+            
+        self.inventario[nome_oggetto] -= 1
+        if self.inventario[nome_oggetto] <= 0:
+            del self.inventario[nome_oggetto]
+            
+        self.aggiorna_storia(f"🗑️ {nome_oggetto} eliminato dall'inventario!")
+        self.mostra_schermata_inventario()  # Ricarica l'inventario
         
     def compra_oggetto_specifico(self, e, nome_oggetto, prezzo):
         """Compra un oggetto specifico dal negozio"""
