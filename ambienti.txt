@@ -1,0 +1,152 @@
+🎵 AMBIENT SOUND REQUIREMENTS FOR EPIC ADVENTURE GAME 🎵
+
+===============================================================================
+GENERAL SPECIFICATIONS:
+- Format: MP3
+- Duration: 2-4 minutes (for seamless looping)
+- Volume: Medium-low intensity (will be played at 30% volume)
+- Quality: 44.1kHz, 128-192 kbps
+- Mood: Immersive and atmospheric, not distracting
+===============================================================================
+
+🏘️ VILLAGE - ambient_villaggio_uccelli.mp3
+Description: Peaceful countryside soundscape with cheerful birds chirping. 
+Should include: Multiple bird species (sparrows, robins, distant crows), gentle 
+wind through trees, occasional distant cow bell or sheep bleating. Very calm 
+and welcoming atmosphere.
+Mood: Safe, homely, peaceful morning in a medieval village.
+
+🏠 CELLAR - ambient_cantina_gocce.mp3
+Description: Underground cellar atmosphere with water dripping echoes.
+Should include: Slow, irregular water drops hitting stone, hollow echo 
+reverberations, subtle air movement through tunnels, occasional distant 
+scurrying sounds (very subtle).
+Mood: Damp, mysterious, slightly claustrophobic but not scary.
+
+🚰 SEWERS - ambient_fogne_topi.mp3
+Description: Urban underground with rat activity and flowing water.
+Should include: Distant rat squeaking and scurrying, water flowing through 
+pipes, dripping sounds, occasional pipe creaking, echo of distant footsteps.
+Mood: Unpleasant but adventurous, urban decay.
+
+🌀 ANCIENT LABYRINTH - ambient_labirinto_vento.mp3
+Description: Mystical ancient ruins with magical wind currents.
+Should include: Wind whistling through stone corridors, mysterious magical 
+hums, distant stone grinding sounds, ethereal whispers (very faint), echo 
+of footsteps on ancient stone.
+Mood: Ancient, mystical, lost in time.
+
+❄️ SNOWY AREA - ambient_neve_vento.mp3
+Description: Arctic wilderness with howling winds and snow.
+Should include: Strong wind gusts, snow particles hitting surfaces, distant 
+wolf howls (very occasional), creaking of frozen trees, subtle footsteps 
+crunching in snow.
+Mood: Cold, harsh, survival atmosphere.
+
+🌿 WILD JUNGLE - ambient_giungla_animali.mp3
+Description: Dense tropical jungle teeming with wildlife.
+Should include: Exotic bird calls, monkey chatter, insect buzzing, leaves 
+rustling, distant roars, water trickling, occasional branch snapping.
+Mood: Wild, dangerous, full of life and mystery.
+
+🌲 DEEP FOREST - ambient_bosco_foglie.mp3
+Description: Enchanted old-growth forest with nocturnal sounds.
+Should include: Owl hooting, leaves rustling in wind, distant wolf howl, 
+branches creaking, small animals scurrying, gentle wind through tall trees.
+Mood: Magical, ancient, slightly eerie but beautiful.
+
+⚰️ CEMETERY - ambient_cimitero_spettri.mp3
+Description: Spooky graveyard with supernatural undertones.
+Should include: Mournful wind, distant chain rattling, gate creaking, 
+ethereal whispers, leaves blowing across stone, distant thunder rumble.
+Mood: Spooky, supernatural, respectfully eerie.
+
+🏚️ HOUSE OF HORRORS - ambient_orrori_porta.mp3
+Description: Haunted house with disturbing supernatural activity.
+Should include: Doors creaking and slamming, floorboards groaning, whispers 
+in walls, distant screams (very faint), wind through broken windows, 
+occasional unexplained knocking.
+Mood: Terrifying, unsettling, psychological horror.
+
+🏭 ABANDONED FACTORY - ambient_fabbrica_macchinari.mp3
+Description: Industrial decay with malfunctioning machinery.
+Should include: Steam hissing, metal clanking, broken machinery stuttering, 
+electrical sparks crackling, ventilation fans wobbling, pipes groaning.
+Mood: Post-apocalyptic, industrial decay, mechanical chaos.
+
+⛏️ DEEP MINE - ambient_miniera_picconate.mp3
+Description: Underground mining operation with distant work sounds.
+Should include: Distant pickaxe strikes on stone, cart wheels on tracks, 
+water dripping in caverns, cave wind, occasional rock fall, miner voices 
+echoing distantly.
+Mood: Claustrophobic, industrial, underground adventure.
+
+🌙 CURSED CRYPT - ambient_cripta_magia.mp3
+Description: Ancient magical tomb with dark sorcery ambience.
+Should include: Dark magical humming, ethereal whispers in unknown language, 
+stone grinding, magical energy crackling, distant chanting echoes, 
+supernatural wind.
+Mood: Dark magic, ancient evil, mystical dread.
+
+🌊 SEA - ambient_mare_onde.mp3
+Description: Coastal ocean environment with maritime sounds.
+Should include: Waves crashing on shore, seagulls crying, wind over water, 
+ship bells in distance, water lapping against dock, occasional splash.
+Mood: Adventurous, open, freedom of the seas.
+
+🏔️ SACRED MOUNTAIN - ambient_montagna_vento.mp3
+Description: High altitude sacred peak with divine atmosphere.
+Should include: Strong mountain winds, distant prayer bells, eagle cries, 
+flag fluttering, snow blowing, echo across valleys, spiritual chimes.
+Mood: Majestic, spiritual, divine presence.
+
+🌋 ACTIVE VOLCANO - ambient_vulcano_lava.mp3
+Description: Volcanic activity with dangerous geological sounds.
+Should include: Lava bubbling and crackling, steam hissing, rock tumbling, 
+distant volcanic rumbles, fire crackling, superheated air movement.
+Mood: Dangerous, primal power, elemental force.
+
+👑 FINAL PALACE - ambient_palazzo_eco.mp3
+Description: Grand royal palace with majestic acoustics.
+Should include: Footsteps echoing in marble halls, distant court activity, 
+royal fanfares (very distant), silk banners rustling, fountain water, 
+grandiose architectural ambience.
+Mood: Royal, majestic, final destination grandeur.
+
+🌌 DREAM REALM - ambient_sogni_magia.mp3
+Description: Surreal dreamscape with reality-bending sounds.
+Should include: Ethereal bell tones, reality warping sounds, dream-like 
+whispers, floating musical notes, time distortion effects, magical sparkles, 
+otherworldly harmonies.
+Mood: Surreal, mystical, reality transcendent.
+
+===============================================================================
+
+🍞 EATING EFFECT - effetto_mangiare.mp3
+Description: Satisfying eating sound for when player consumes food.
+Should include: Crunching, chewing, swallowing sounds. Pleasant and appetizing.
+Not too loud or disgusting, just satisfying "nom nom" sounds.
+Mood: Satisfying, nourishing, energy restoration.
+
+🧪 POTION DRINKING EFFECT - effetto_bere_pozione.mp3
+Description: Magical liquid consumption with mystical undertones.
+Should include: Liquid pouring/gulping, subtle magical sparkle, cork pop,
+glass/bottle clink, magical energy absorption hum (subtle).
+Mood: Magical, healing, mystical power flowing through body.
+
+💧 WATER DRINKING EFFECT - effetto_bere_acqua.mp3
+Description: Refreshing water consumption, natural and clean.
+Should include: Clear water pouring, satisfying gulping, subtle water droplets,
+refreshing "ahh" feeling. Natural and pure, no magical elements.
+Mood: Refreshing, natural, thirst-quenching, revitalizing.
+
+===============================================================================
+TECHNICAL NOTES:
+- Each file should loop seamlessly (fade in/out at beginning/end)
+- Avoid sudden loud noises that could startle players
+- Layer multiple sound elements for rich atmosphere
+- Balance between recognizable and fantastical elements
+- Test for pleasant listening during extended gameplay sessions
+- Eating/drinking effects should be short (1-3 seconds) and non-looping
+- Effects should be satisfying but not overwhelming
+===============================================================================

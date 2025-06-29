@@ -1,0 +1,98 @@
+SOUND EFFECTS DESCRIPTION FOR AVVENTURA EPICA GAME
+===============================================
+
+This document describes the desired sound effects for each MP3 file in the game.
+All effects should be short (0.5-3 seconds), clear, and fitting for a fantasy adventure game.
+
+MUSIC FILES (Background/Ambient):
+================================
+
+villaggio.mp3 - Peaceful village theme with medieval instruments, gentle and welcoming
+cantina.mp3 - Mysterious basement ambiance, slightly echoing, underground feeling
+fogne.mp3 - Dark sewer atmosphere, dripping water, subtle danger
+labirinto.mp3 - Ancient maze music, mystical and puzzling, stone corridors
+area_innevata.mp3 - Cold snowy area, wind sounds, crystalline melodies
+giungla.mp3 - Jungle ambiance, exotic animals, tribal drums, lush vegetation
+bosco.mp3 - Deep forest atmosphere, birds chirping, rustling leaves, magical
+cimitero.mp3 - Spooky graveyard music, haunting melodies, gothic atmosphere
+casa_orrori.mp3 - Horror house theme, creepy, unsettling, psychological tension
+fabbrica.mp3 - Industrial abandoned factory, mechanical sounds, post-apocalyptic
+miniera.mp3 - Deep mine atmosphere, echoing picks, underground caverns
+cripta.mp3 - Ancient crypt music, religious chants, sacred but dark
+mare.mp3 - Ocean waves, seagulls, nautical adventure theme
+montagna_sacra.mp3 - Sacred mountain, ethereal, spiritual, high altitude winds
+vulcano.mp3 - Active volcano, rumbling, heat, danger, molten rock
+palazzo_finale.mp3 - Royal palace, majestic, final boss approaching, orchestral
+regno_sogni.mp3 - Dream realm, surreal, floating, otherworldly, magical
+
+BATTLE MUSIC:
+=============
+
+battaglia.mp3 - Fast-paced combat music, swords clashing, heroic battle theme
+battaglia_boss.mp3 - Epic boss battle, orchestral, dramatic, intense
+battaglia_boss_finale.mp3 - Ultimate final boss music, most epic, climactic, victory approaching
+
+SOUND EFFECTS:
+==============
+
+effetto_raccolta.mp3 - Player collecting items
+> Short, satisfying "pickup" sound like collecting coins or gems
+> Duration: 0.5-1 second
+> Feel: Positive, rewarding, "ding" or "chime" sound
+
+effetto_gatto_raccolta.mp3 - Cat with collection ability helping
+> Similar to regular collection but with a cute cat meow mixed in
+> Duration: 0.8-1.5 seconds  
+> Feel: Adorable, helpful, cat purr + collection sound
+
+effetto_gatto_attacco.mp3 - Combat cat attacking enemies
+> Cat hiss or fierce meow with sword/claw sounds
+> Duration: 0.5-1 second
+> Feel: Fierce but cute, battle cry mixed with cat sounds
+
+effetto_monete.mp3 - Gaining money/coins
+> Classic coin drop/jingle sound, multiple coins falling
+> Duration: 1-2 seconds
+> Feel: Wealth, abundance, metallic coin sounds
+
+effetto_livello_up.mp3 - Player leveling up
+> Triumphant fanfare, magical chime, achievement sound
+> Duration: 2-3 seconds
+> Feel: Accomplishment, power increase, celestial/magical
+
+effetto_vittoria.mp3 - Winning a battle
+> Victory fanfare, heroic theme, celebration
+> Duration: 1.5-2.5 seconds
+> Feel: Triumph, success, heroic achievement
+
+effetto_sconfitta.mp3 - Losing a battle
+> Sad trombone, failure sound, but not too depressing
+> Duration: 1-2 seconds
+> Feel: Disappointment but encouraging to try again
+
+VOLUME GUIDELINES:
+==================
+- All effects should be normalized to similar volume levels
+- Music files can be slightly quieter (will be controlled by music volume slider)
+- Sound effects should be punchy but not jarring
+- Consider the game is played on mobile devices with varying speaker quality
+
+STYLE NOTES:
+============
+- Fantasy/medieval setting with some modern elements
+- Cat-themed game, so cat sounds should be cute and endearing
+- Incremental/idle game feel - sounds should be satisfying for repetitive actions
+- Avoid overly aggressive or scary sounds (family-friendly)
+- MP3 format for maximum compatibility across platforms (Windows, iOS, Android)
+
+TECHNICAL REQUIREMENTS:
+=======================
+- Format: MP3
+- Quality: 128-192 kbps (good quality but reasonable file size)
+- Length: Keep effects under 3 seconds to avoid gameplay interruption
+- No silence at beginning/end of files
+- Mono or stereo both acceptable
+
+This game features an emotional bond system with cats, ancient relics, horror elements, 
+and incremental progression through 16+ different areas, so the audio should support 
+the immersive fantasy adventure experience while remaining pleasant for extended play.

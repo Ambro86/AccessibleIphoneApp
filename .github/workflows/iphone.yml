@@ -36,8 +36,12 @@ jobs:
       - name: Build IPA with Flet
         run: |
           flet build ipa \
+            --project "avventura-epica" \
+            --product "Avventura Epica" \
             --build-version "2.5.0" \
             --build-number ${{ github.run_number }} \
+            --org "com.ambrogio.riili" \
+            --company "Ambrogio Riili" \
             --flutter-build-args=--release \
             --flutter-build-args=--split-debug-info=debug_info \
             --flutter-build-args=--obfuscate
@@ -46,9 +50,9 @@ jobs:
         run: |
           # Converti xcarchive in IPA non firmato (compatibile con AltStore)
           mkdir -p build/ipa/Payload
-          cp -r build/ipa/Runner.xcarchive/Products/Applications/Runner.app build/ipa/Payload/
+          cp -r build/ipa/avventura-epica.xcarchive/Products/Applications/"Avventura Epica.app" build/ipa/Payload/
           cd build/ipa
-          zip -r Runner.ipa Payload/
+          zip -r AvventuraEpica.ipa Payload/
           rm -rf Payload
           
       - name: Validate IPA (quick check)
@@ -56,22 +60,22 @@ jobs:
           cd build/ipa
           
           # Verifica esistenza IPA
-          if [ ! -f "Runner.ipa" ]; then
+          if [ ! -f "AvventuraEpica.ipa" ]; then
             echo "❌ IPA file not found"
             exit 1
           fi
           
           # Estrai per controlli base
-          unzip -q Runner.ipa
+          unzip -q AvventuraEpica.ipa
           
           # Verifica struttura
-          if [ ! -d "Payload/Runner.app" ]; then
+          if [ ! -d "Payload/Avventura Epica.app" ]; then
             echo "❌ Invalid IPA structure"
             exit 1
           fi
           
           echo "✅ IPA structure valid"
-          echo "📱 App size: $(ls -lh Runner.ipa | awk '{print $5}')"
+          echo "📱 App size: $(ls -lh AvventuraEpica.ipa | awk '{print $5}')"
           
           # Pulisci
           rm -rf Payload
