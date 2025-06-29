@@ -51,13 +51,24 @@ jobs:
           # Converti xcarchive in IPA non firmato (compatibile con AltStore)
           mkdir -p build/ipa/Payload
           
-          # Trova dinamicamente il file .app (qualsiasi nome)
-          APP_FILE=$(find build/ipa/avventura-epica.xcarchive/Products/Applications/ -name "*.app" -type d | head -1)
+          echo "🔍 Esplorando struttura xcarchive..."
+          echo "📁 Contenuto build/ipa/:"
+          ls -la build/ipa/
+          
+          if [ -d "build/ipa/avventura-epica.xcarchive" ]; then
+            echo "📁 Contenuto xcarchive:"
+            find build/ipa/avventura-epica.xcarchive -type d -maxdepth 3
+            echo "📱 Cercando file .app in tutta la struttura:"
+            find build/ipa/avventura-epica.xcarchive -name "*.app" -type d
+          fi
+          
+          # Cerca il file .app in tutta la struttura xcarchive
+          APP_FILE=$(find build/ipa/avventura-epica.xcarchive -name "*.app" -type d | head -1)
           
           if [ -z "$APP_FILE" ]; then
-            echo "❌ Nessun file .app trovato!"
-            echo "📁 Contenuto directory Applications:"
-            ls -la build/ipa/avventura-epica.xcarchive/Products/Applications/
+            echo "❌ Nessun file .app trovato nell'xcarchive!"
+            echo "📁 Struttura completa xcarchive:"
+            find build/ipa/avventura-epica.xcarchive -type f | head -20
             exit 1
           fi
           
