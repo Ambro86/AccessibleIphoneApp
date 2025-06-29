@@ -50,7 +50,20 @@ jobs:
         run: |
           # Converti xcarchive in IPA non firmato (compatibile con AltStore)
           mkdir -p build/ipa/Payload
-          cp -r build/ipa/avventura-epica.xcarchive/Products/Applications/"Avventura Epica.app" build/ipa/Payload/
+          
+          # Trova dinamicamente il file .app (qualsiasi nome)
+          APP_FILE=$(find build/ipa/avventura-epica.xcarchive/Products/Applications/ -name "*.app" -type d | head -1)
+          
+          if [ -z "$APP_FILE" ]; then
+            echo "❌ Nessun file .app trovato!"
+            echo "📁 Contenuto directory Applications:"
+            ls -la build/ipa/avventura-epica.xcarchive/Products/Applications/
+            exit 1
+          fi
+          
+          echo "✅ Trovato app file: $APP_FILE"
+          cp -r "$APP_FILE" build/ipa/Payload/
+          
           cd build/ipa
           zip -r AvventuraEpica.ipa Payload/
           rm -rf Payload
@@ -68,11 +81,16 @@ jobs:
           # Estrai per controlli base
           unzip -q AvventuraEpica.ipa
           
-          # Verifica struttura
-          if [ ! -d "Payload/Avventura Epica.app" ]; then
-            echo "❌ Invalid IPA structure"
+          # Verifica struttura (cerca dinamicamente il file .app)
+          APP_IN_PAYLOAD=$(find Payload/ -name "*.app" -type d | head -1)
+          if [ -z "$APP_IN_PAYLOAD" ]; then
+            echo "❌ Invalid IPA structure - no .app found in Payload"
+            echo "📁 Contenuto Payload:"
+            ls -la Payload/
             exit 1
           fi
+          
+          echo "✅ Found app in payload: $APP_IN_PAYLOAD"
           
           echo "✅ IPA structure valid"
           echo "📱 App size: $(ls -lh AvventuraEpica.ipa | awk '{print $5}')"

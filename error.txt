@@ -1,0 +1,1074 @@
+2025-06-29T21:31:49.4344760Z Current runner version: '2.325.0'
+2025-06-29T21:31:49.4359600Z ##[group]Operating System
+2025-06-29T21:31:49.4360030Z macOS
+2025-06-29T21:31:49.4360300Z 14.7.6
+2025-06-29T21:31:49.4360560Z 23H626
+2025-06-29T21:31:49.4360840Z ##[endgroup]
+2025-06-29T21:31:49.4361130Z ##[group]Runner Image
+2025-06-29T21:31:49.4361450Z Image: macos-14-arm64
+2025-06-29T21:31:49.4361760Z Version: 20250623.1617
+2025-06-29T21:31:49.4362390Z Included Software: https://github.com/actions/runner-images/blob/macos-14-arm64/20250623.1617/images/macos/macos-14-arm64-Readme.md
+2025-06-29T21:31:49.4363280Z Image Release: https://github.com/actions/runner-images/releases/tag/macos-14-arm64%2F20250623.1617
+2025-06-29T21:31:49.4363820Z ##[endgroup]
+2025-06-29T21:31:49.4364110Z ##[group]Runner Image Provisioner
+2025-06-29T21:31:49.4364470Z 2.0.437.1+b8a73daf41ec39b19236c1d542c9f2348c5b7c2d
+2025-06-29T21:31:49.4364840Z ##[endgroup]
+2025-06-29T21:31:49.4365440Z ##[group]GITHUB_TOKEN Permissions
+2025-06-29T21:31:49.4366300Z Contents: read
+2025-06-29T21:31:49.4366590Z Metadata: read
+2025-06-29T21:31:49.4366860Z Packages: read
+2025-06-29T21:31:49.4367140Z ##[endgroup]
+2025-06-29T21:31:49.4368250Z Secret source: Actions
+2025-06-29T21:31:49.4368600Z Prepare workflow directory
+2025-06-29T21:31:49.4581460Z Prepare all required actions
+2025-06-29T21:31:49.4609690Z Getting action download info
+2025-06-29T21:31:49.8430150Z ##[group]Download immutable action package 'actions/checkout@v4'
+2025-06-29T21:31:49.8430780Z Version: 4.2.2
+2025-06-29T21:31:49.8431350Z Digest: sha256:ccb2698953eaebd21c7bf6268a94f9c26518a7e38e27e0b83c1fe1ad049819b1
+2025-06-29T21:31:49.8432060Z Source commit SHA: 11bd71901bbe5b1630ceea73d27597364c9af683
+2025-06-29T21:31:49.8432560Z ##[endgroup]
+2025-06-29T21:31:50.1465000Z ##[group]Download immutable action package 'actions/setup-python@v4'
+2025-06-29T21:31:50.1465530Z Version: 4.9.1
+2025-06-29T21:31:50.1466050Z Digest: sha256:f03e505388af670b5a108629e0ba26befc08d5c62b41f46146a45fe29ae509a5
+2025-06-29T21:31:50.1466690Z Source commit SHA: 7f4fc3e22c37d6ff65e88745f38bd3157c663f7c
+2025-06-29T21:31:50.1467140Z ##[endgroup]
+2025-06-29T21:31:50.9265090Z Download action repository 'subosito/flutter-action@v2' (SHA:e938fdf56512cc96ef2f93601a5a40bde3801046)
+2025-06-29T21:31:51.8060780Z ##[group]Download immutable action package 'actions/upload-artifact@v4'
+2025-06-29T21:31:51.8062330Z Version: 4.6.2
+2025-06-29T21:31:51.8063130Z Digest: sha256:290722aa3281d5caf23d0acdc3dbeb3424786a1a01a9cc97e72f147225e37c38
+2025-06-29T21:31:51.8064050Z Source commit SHA: ea165f8d65b6e75b540449e92b4886f43607fa02
+2025-06-29T21:31:51.8064560Z ##[endgroup]
+2025-06-29T21:31:51.9645540Z Getting action download info
+2025-06-29T21:31:52.0828310Z ##[group]Download immutable action package 'actions/cache@v4'
+2025-06-29T21:31:52.0828870Z Version: 4.2.3
+2025-06-29T21:31:52.0829410Z Digest: sha256:c8a3bb963e1f1826d8fcc8d1354f0dd29d8ac1db1d4f6f20247055ae11b81ed9
+2025-06-29T21:31:52.0830070Z Source commit SHA: 5a3ec84eff668545956fd18022155c47e93e2684
+2025-06-29T21:31:52.0830570Z ##[endgroup]
+2025-06-29T21:31:52.1905770Z Complete job name: build
+2025-06-29T21:31:52.2325070Z ##[group]Run actions/checkout@v4
+2025-06-29T21:31:52.2325710Z with:
+2025-06-29T21:31:52.2326050Z   repository: Ambro86/AccessibleIphoneApp
+2025-06-29T21:31:52.2326870Z   token: ***
+2025-06-29T21:31:52.2327140Z   ssh-strict: true
+2025-06-29T21:31:52.2327420Z   ssh-user: git
+2025-06-29T21:31:52.2327690Z   persist-credentials: true
+2025-06-29T21:31:52.2328010Z   clean: true
+2025-06-29T21:31:52.2328290Z   sparse-checkout-cone-mode: true
+2025-06-29T21:31:52.2328630Z   fetch-depth: 1
+2025-06-29T21:31:52.2328910Z   fetch-tags: false
+2025-06-29T21:31:52.2329190Z   show-progress: true
+2025-06-29T21:31:52.2329470Z   lfs: false
+2025-06-29T21:31:52.2329720Z   submodules: false
+2025-06-29T21:31:52.2330010Z   set-safe-directory: true
+2025-06-29T21:31:52.2330430Z ##[endgroup]
+2025-06-29T21:31:52.5417990Z Syncing repository: Ambro86/AccessibleIphoneApp
+2025-06-29T21:31:52.5419690Z ##[group]Getting Git version info
+2025-06-29T21:31:52.5421430Z Working directory is '/Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp'
+2025-06-29T21:31:52.5422830Z [command]/opt/homebrew/bin/git version
+2025-06-29T21:31:52.6228140Z git version 2.50.0
+2025-06-29T21:31:52.6252600Z ##[endgroup]
+2025-06-29T21:31:52.6258740Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/6ba58494-9b11-43c9-90cd-fe85e6dead6f/.gitconfig'
+2025-06-29T21:31:52.6269500Z Temporarily overriding HOME='/Users/runner/work/_temp/6ba58494-9b11-43c9-90cd-fe85e6dead6f' before making global git config changes
+2025-06-29T21:31:52.6272450Z Adding repository directory to the temporary git global config as a safe directory
+2025-06-29T21:31:52.6275130Z [command]/opt/homebrew/bin/git config --global --add safe.directory /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp
+2025-06-29T21:31:52.6357230Z Deleting the contents of '/Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp'
+2025-06-29T21:31:52.6359720Z ##[group]Initializing the repository
+2025-06-29T21:31:52.6375070Z [command]/opt/homebrew/bin/git init /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp
+2025-06-29T21:31:52.6558570Z hint: Using 'master' as the name for the initial branch. This default branch name
+2025-06-29T21:31:52.6560740Z hint: is subject to change. To configure the initial branch name to use in all
+2025-06-29T21:31:52.6562450Z hint: of your new repositories, which will suppress this warning, call:
+2025-06-29T21:31:52.6563750Z hint:
+2025-06-29T21:31:52.6564640Z hint: 	git config --global init.defaultBranch <name>
+2025-06-29T21:31:52.6565650Z hint:
+2025-06-29T21:31:52.6570060Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2025-06-29T21:31:52.6571770Z hint: 'development'. The just-created branch can be renamed via this command:
+2025-06-29T21:31:52.6573130Z hint:
+2025-06-29T21:31:52.6573910Z hint: 	git branch -m <name>
+2025-06-29T21:31:52.6574810Z hint:
+2025-06-29T21:31:52.6575910Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2025-06-29T21:31:52.6578020Z Initialized empty Git repository in /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/.git/
+2025-06-29T21:31:52.6581940Z [command]/opt/homebrew/bin/git remote add origin https://github.com/Ambro86/AccessibleIphoneApp
+2025-06-29T21:31:52.6618160Z ##[endgroup]
+2025-06-29T21:31:52.6619270Z ##[group]Disabling automatic garbage collection
+2025-06-29T21:31:52.6620820Z [command]/opt/homebrew/bin/git config --local gc.auto 0
+2025-06-29T21:31:52.6661060Z ##[endgroup]
+2025-06-29T21:31:52.6662070Z ##[group]Setting up auth
+2025-06-29T21:31:52.6665150Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-06-29T21:31:52.6706110Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-06-29T21:31:52.7258610Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-06-29T21:31:52.7295750Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-06-29T21:31:52.7944720Z [command]/opt/homebrew/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2025-06-29T21:31:52.7994520Z ##[endgroup]
+2025-06-29T21:31:52.7995570Z ##[group]Fetching the repository
+2025-06-29T21:31:52.8000200Z [command]/opt/homebrew/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +79bb58850bfb38f3a904f861a028bf437dd22069:refs/remotes/origin/master
+2025-06-29T21:31:56.6628360Z From https://github.com/Ambro86/AccessibleIphoneApp
+2025-06-29T21:31:56.6629080Z  * [new ref]         79bb58850bfb38f3a904f861a028bf437dd22069 -> origin/master
+2025-06-29T21:31:56.6683530Z ##[endgroup]
+2025-06-29T21:31:56.6683910Z ##[group]Determining the checkout info
+2025-06-29T21:31:56.6684740Z ##[endgroup]
+2025-06-29T21:31:56.6688200Z [command]/opt/homebrew/bin/git sparse-checkout disable
+2025-06-29T21:31:56.6743850Z [command]/opt/homebrew/bin/git config --local --unset-all extensions.worktreeConfig
+2025-06-29T21:31:56.6790560Z ##[group]Checking out the ref
+2025-06-29T21:31:56.6793090Z [command]/opt/homebrew/bin/git checkout --progress --force -B master refs/remotes/origin/master
+2025-06-29T21:31:56.9996710Z Reset branch 'master'
+2025-06-29T21:31:57.0002540Z branch 'master' set up to track 'origin/master'.
+2025-06-29T21:31:57.0006100Z ##[endgroup]
+2025-06-29T21:31:57.0061860Z [command]/opt/homebrew/bin/git log -1 --format=%H
+2025-06-29T21:31:57.0098490Z 79bb58850bfb38f3a904f861a028bf437dd22069
+2025-06-29T21:31:57.0285750Z ##[group]Run actions/setup-python@v4
+2025-06-29T21:31:57.0286010Z with:
+2025-06-29T21:31:57.0286160Z   python-version: 3.13
+2025-06-29T21:31:57.0286380Z   check-latest: false
+2025-06-29T21:31:57.0286640Z   token: ***
+2025-06-29T21:31:57.0286790Z   update-environment: true
+2025-06-29T21:31:57.0286990Z   allow-prereleases: false
+2025-06-29T21:31:57.0287170Z ##[endgroup]
+2025-06-29T21:31:57.1477750Z ##[group]Installed versions
+2025-06-29T21:31:57.1548100Z Successfully set up CPython (3.13.5)
+2025-06-29T21:31:57.1548520Z ##[endgroup]
+2025-06-29T21:31:57.1614680Z ##[group]Run pip install -r requirements.txt
+2025-06-29T21:31:57.1615010Z [36;1mpip install -r requirements.txt[0m
+2025-06-29T21:31:57.1675020Z shell: /bin/bash -e {0}
+2025-06-29T21:31:57.1675230Z env:
+2025-06-29T21:31:57.1675510Z   pythonLocation: /Users/runner/hostedtoolcache/Python/3.13.5/arm64
+2025-06-29T21:31:57.1675940Z   PKG_CONFIG_PATH: /Users/runner/hostedtoolcache/Python/3.13.5/arm64/lib/pkgconfig
+2025-06-29T21:31:57.1676330Z   Python_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.13.5/arm64
+2025-06-29T21:31:57.1676680Z   Python2_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.13.5/arm64
+2025-06-29T21:31:57.1677040Z   Python3_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.13.5/arm64
+2025-06-29T21:31:57.1677350Z ##[endgroup]
+2025-06-29T21:31:58.3870720Z Collecting flet (from -r requirements.txt (line 1))
+2025-06-29T21:31:58.4640980Z   Downloading flet-0.28.3-py3-none-any.whl.metadata (3.6 kB)
+2025-06-29T21:31:58.4938500Z Collecting flet-audio (from -r requirements.txt (line 2))
+2025-06-29T21:31:58.5150350Z   Downloading flet_audio-0.1.0-py3-none-any.whl.metadata (1.1 kB)
+2025-06-29T21:31:58.5443000Z Collecting httpx (from flet->-r requirements.txt (line 1))
+2025-06-29T21:31:58.5600870Z   Downloading httpx-0.28.1-py3-none-any.whl.metadata (7.1 kB)
+2025-06-29T21:31:58.5954450Z Collecting oauthlib<4.0.0,>=3.2.2 (from flet->-r requirements.txt (line 1))
+2025-06-29T21:31:58.6115850Z   Downloading oauthlib-3.3.1-py3-none-any.whl.metadata (7.9 kB)
+2025-06-29T21:31:58.6400340Z Collecting repath<0.10.0,>=0.9.0 (from flet->-r requirements.txt (line 1))
+2025-06-29T21:31:58.6559490Z   Downloading repath-0.9.0-py3-none-any.whl.metadata (899 bytes)
+2025-06-29T21:31:58.6802530Z Collecting six>=1.9.0 (from repath<0.10.0,>=0.9.0->flet->-r requirements.txt (line 1))
+2025-06-29T21:31:58.6970610Z   Downloading six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)
+2025-06-29T21:31:58.7270790Z Collecting anyio (from httpx->flet->-r requirements.txt (line 1))
+2025-06-29T21:31:58.7424180Z   Downloading anyio-4.9.0-py3-none-any.whl.metadata (4.7 kB)
+2025-06-29T21:31:58.7472100Z Requirement already satisfied: certifi in /Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages (from httpx->flet->-r requirements.txt (line 1)) (2025.6.15)
+2025-06-29T21:31:58.7705160Z Collecting httpcore==1.* (from httpx->flet->-r requirements.txt (line 1))
+2025-06-29T21:31:58.7846840Z   Downloading httpcore-1.0.9-py3-none-any.whl.metadata (21 kB)
+2025-06-29T21:31:58.8355910Z Collecting idna (from httpx->flet->-r requirements.txt (line 1))
+2025-06-29T21:31:58.8511280Z   Downloading idna-3.10-py3-none-any.whl.metadata (10 kB)
+2025-06-29T21:31:58.8754670Z Collecting h11>=0.16 (from httpcore==1.*->httpx->flet->-r requirements.txt (line 1))
+2025-06-29T21:31:58.8905610Z   Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+2025-06-29T21:31:58.9165010Z Collecting sniffio>=1.1 (from anyio->httpx->flet->-r requirements.txt (line 1))
+2025-06-29T21:31:58.9310720Z   Downloading sniffio-1.3.1-py3-none-any.whl.metadata (3.9 kB)
+2025-06-29T21:31:58.9600480Z Downloading flet-0.28.3-py3-none-any.whl (463 kB)
+2025-06-29T21:31:59.0362030Z Downloading oauthlib-3.3.1-py3-none-any.whl (160 kB)
+2025-06-29T21:31:59.0689620Z Downloading repath-0.9.0-py3-none-any.whl (4.7 kB)
+2025-06-29T21:31:59.0865170Z Downloading flet_audio-0.1.0-py3-none-any.whl (18 kB)
+2025-06-29T21:31:59.1037440Z Downloading six-1.17.0-py2.py3-none-any.whl (11 kB)
+2025-06-29T21:31:59.1204960Z Downloading httpx-0.28.1-py3-none-any.whl (73 kB)
+2025-06-29T21:31:59.1375680Z Downloading httpcore-1.0.9-py3-none-any.whl (78 kB)
+2025-06-29T21:31:59.1554790Z Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+2025-06-29T21:31:59.1720030Z Downloading anyio-4.9.0-py3-none-any.whl (100 kB)
+2025-06-29T21:31:59.1890040Z Downloading idna-3.10-py3-none-any.whl (70 kB)
+2025-06-29T21:31:59.2064390Z Downloading sniffio-1.3.1-py3-none-any.whl (10 kB)
+2025-06-29T21:31:59.2277950Z Installing collected packages: sniffio, six, oauthlib, idna, h11, repath, httpcore, anyio, httpx, flet, flet-audio
+2025-06-29T21:31:59.7970720Z 
+2025-06-29T21:31:59.7982090Z Successfully installed anyio-4.9.0 flet-0.28.3 flet-audio-0.1.0 h11-0.16.0 httpcore-1.0.9 httpx-0.28.1 idna-3.10 oauthlib-3.3.1 repath-0.9.0 six-1.17.0 sniffio-1.3.1
+2025-06-29T21:31:59.8453030Z ##[group]Run subosito/flutter-action@v2
+2025-06-29T21:31:59.8453360Z with:
+2025-06-29T21:31:59.8453480Z   flutter-version: 3.22.1
+2025-06-29T21:31:59.8453630Z   channel: stable
+2025-06-29T21:31:59.8453770Z   architecture: ARM64
+2025-06-29T21:31:59.8453900Z   cache: false
+2025-06-29T21:31:59.8454030Z   pub-cache-path: default
+2025-06-29T21:31:59.8454160Z   dry-run: false
+2025-06-29T21:31:59.8454340Z   git-source: https://github.com/flutter/flutter.git
+2025-06-29T21:31:59.8454570Z env:
+2025-06-29T21:31:59.8454770Z   pythonLocation: /Users/runner/hostedtoolcache/Python/3.13.5/arm64
+2025-06-29T21:31:59.8455120Z   PKG_CONFIG_PATH: /Users/runner/hostedtoolcache/Python/3.13.5/arm64/lib/pkgconfig
+2025-06-29T21:31:59.8455470Z   Python_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.13.5/arm64
+2025-06-29T21:31:59.8455760Z   Python2_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.13.5/arm64
+2025-06-29T21:31:59.8456070Z   Python3_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.13.5/arm64
+2025-06-29T21:31:59.8456350Z ##[endgroup]
+2025-06-29T21:31:59.8510590Z ##[group]Run chmod +x "$GITHUB_ACTION_PATH/setup.sh"
+2025-06-29T21:31:59.8510880Z [36;1mchmod +x "$GITHUB_ACTION_PATH/setup.sh"[0m
+2025-06-29T21:31:59.8556990Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+2025-06-29T21:31:59.8557220Z env:
+2025-06-29T21:31:59.8557420Z   pythonLocation: /Users/runner/hostedtoolcache/Python/3.13.5/arm64
+2025-06-29T21:31:59.8557770Z   PKG_CONFIG_PATH: /Users/runner/hostedtoolcache/Python/3.13.5/arm64/lib/pkgconfig
+2025-06-29T21:31:59.8558130Z   Python_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.13.5/arm64
+2025-06-29T21:31:59.8558440Z   Python2_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.13.5/arm64
+2025-06-29T21:31:59.8558750Z   Python3_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.13.5/arm64
+2025-06-29T21:31:59.8558970Z ##[endgroup]
+2025-06-29T21:31:59.8855020Z ##[group]Run $GITHUB_ACTION_PATH/setup.sh -p \
+2025-06-29T21:31:59.8855340Z [36;1m$GITHUB_ACTION_PATH/setup.sh -p \[0m
+2025-06-29T21:31:59.8855540Z [36;1m  -n '3.22.1' \[0m
+2025-06-29T21:31:59.8855690Z [36;1m  -f '' \[0m
+2025-06-29T21:31:59.8855810Z [36;1m  -a 'ARM64' \[0m
+2025-06-29T21:31:59.8855960Z [36;1m  -k '' \[0m
+2025-06-29T21:31:59.8856080Z [36;1m  -c '' \[0m
+2025-06-29T21:31:59.8856200Z [36;1m  -l '' \[0m
+2025-06-29T21:31:59.8856350Z [36;1m  -d 'default' \[0m
+2025-06-29T21:31:59.8856600Z [36;1m  -g 'https://github.com/flutter/flutter.git' \[0m
+2025-06-29T21:31:59.8856800Z [36;1m  stable[0m
+2025-06-29T21:31:59.8900360Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+2025-06-29T21:31:59.8900570Z env:
+2025-06-29T21:31:59.8900780Z   pythonLocation: /Users/runner/hostedtoolcache/Python/3.13.5/arm64
+2025-06-29T21:31:59.8901140Z   PKG_CONFIG_PATH: /Users/runner/hostedtoolcache/Python/3.13.5/arm64/lib/pkgconfig
+2025-06-29T21:31:59.8901500Z   Python_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.13.5/arm64
+2025-06-29T21:31:59.8901800Z   Python2_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.13.5/arm64
+2025-06-29T21:31:59.8902120Z   Python3_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.13.5/arm64
+2025-06-29T21:31:59.8902370Z ##[endgroup]
+2025-06-29T21:32:00.4065540Z ##[group]Run $GITHUB_ACTION_PATH/setup.sh \
+2025-06-29T21:32:00.4065760Z [36;1m$GITHUB_ACTION_PATH/setup.sh \[0m
+2025-06-29T21:32:00.4065950Z [36;1m  -n '3.22.1' \[0m
+2025-06-29T21:32:00.4066100Z [36;1m  -a 'arm64' \[0m
+2025-06-29T21:32:00.4066330Z [36;1m  -c '/Users/runner/hostedtoolcache/flutter/stable-3.22.1-arm64' \[0m
+2025-06-29T21:32:00.4066630Z [36;1m  -d '/Users/runner/.pub-cache' \[0m
+2025-06-29T21:32:00.4066810Z [36;1m  stable[0m
+2025-06-29T21:32:00.4110600Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+2025-06-29T21:32:00.4110830Z env:
+2025-06-29T21:32:00.4111030Z   pythonLocation: /Users/runner/hostedtoolcache/Python/3.13.5/arm64
+2025-06-29T21:32:00.4111380Z   PKG_CONFIG_PATH: /Users/runner/hostedtoolcache/Python/3.13.5/arm64/lib/pkgconfig
+2025-06-29T21:32:00.4112030Z   Python_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.13.5/arm64
+2025-06-29T21:32:00.4112340Z   Python2_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.13.5/arm64
+2025-06-29T21:32:00.4112650Z   Python3_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.13.5/arm64
+2025-06-29T21:32:00.4112880Z ##[endgroup]
+2025-06-29T21:32:00.8307460Z   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+2025-06-29T21:32:00.8307970Z                                  Dload  Upload   Total   Spent    Left  Speed
+2025-06-29T21:32:00.8308200Z 
+2025-06-29T21:32:01.1703010Z   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+2025-06-29T21:32:02.1707990Z   0 1150M    0 53335    0     0   153k      0  2:08:00 --:--:--  2:08:00  153k
+2025-06-29T21:32:03.1714720Z   5 1150M    5 68.5M    0     0  51.1M      0  0:00:22  0:00:01  0:00:21 51.1M
+2025-06-29T21:32:04.1702020Z  13 1150M   13  157M    0     0  67.1M      0  0:00:17  0:00:02  0:00:15 67.0M
+2025-06-29T21:32:05.1701540Z  21 1150M   21  245M    0     0  73.5M      0  0:00:15  0:00:03  0:00:12 73.5M
+2025-06-29T21:32:06.1705090Z  29 1150M   29  334M    0     0  77.0M      0  0:00:14  0:00:04  0:00:10 77.0M
+2025-06-29T21:32:07.1703460Z  36 1150M   36  423M    0     0  79.3M      0  0:00:14  0:00:05  0:00:09 84.6M
+2025-06-29T21:32:08.1704700Z  44 1150M   44  507M    0     0  80.0M      0  0:00:14  0:00:06  0:00:08 87.7M
+2025-06-29T21:32:09.1717840Z  50 1150M   50  584M    0     0  79.6M      0  0:00:14  0:00:07  0:00:07 85.5M
+2025-06-29T21:32:10.1704210Z  58 1150M   58  673M    0     0  80.7M      0  0:00:14  0:00:08  0:00:06 85.6M
+2025-06-29T21:32:11.1707800Z  66 1150M   66  761M    0     0  81.5M      0  0:00:14  0:00:09  0:00:05 85.5M
+2025-06-29T21:32:12.1701330Z  73 1150M   73  849M    0     0  82.1M      0  0:00:13  0:00:10  0:00:03 85.2M
+2025-06-29T21:32:13.1700690Z  81 1150M   81  934M    0     0  82.4M      0  0:00:13  0:00:11  0:00:02 85.4M
+2025-06-29T21:32:14.1696970Z  88 1150M   88 1023M    0     0  82.9M      0  0:00:13  0:00:12  0:00:01 87.7M
+2025-06-29T21:32:14.5941370Z  96 1150M   96 1112M    0     0  83.3M      0  0:00:13  0:00:13 --:--:-- 87.7M
+2025-06-29T21:32:14.5941780Z 100 1150M  100 1150M    0     0  83.5M      0  0:00:13  0:00:13 --:--:-- 87.7M
+2025-06-29T21:32:37.4629030Z ##[group]Run echo "APP_ENV=prod" > .env
+2025-06-29T21:32:37.4629480Z [36;1mecho "APP_ENV=prod" > .env[0m
+2025-06-29T21:32:37.4629710Z [36;1mecho "VERSION=86" >> .env[0m
+2025-06-29T21:32:37.4629930Z [36;1mecho "BUILD=86" >> .env[0m
+2025-06-29T21:32:37.4630150Z [36;1mecho "is_mobile=1" >> .env[0m
+2025-06-29T21:32:37.4759820Z shell: /bin/bash -e {0}
+2025-06-29T21:32:37.4760020Z env:
+2025-06-29T21:32:37.4760260Z   pythonLocation: /Users/runner/hostedtoolcache/Python/3.13.5/arm64
+2025-06-29T21:32:37.4760730Z   PKG_CONFIG_PATH: /Users/runner/hostedtoolcache/Python/3.13.5/arm64/lib/pkgconfig
+2025-06-29T21:32:37.4761120Z   Python_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.13.5/arm64
+2025-06-29T21:32:37.4761490Z   Python2_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.13.5/arm64
+2025-06-29T21:32:37.4761840Z   Python3_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.13.5/arm64
+2025-06-29T21:32:37.4762360Z   FLUTTER_ROOT: /Users/runner/hostedtoolcache/flutter/stable-3.22.1-arm64
+2025-06-29T21:32:37.4762690Z   PUB_CACHE: /Users/runner/.pub-cache
+2025-06-29T21:32:37.4762980Z ##[endgroup]
+2025-06-29T21:32:37.5323820Z ##[group]Run flet build ipa \
+2025-06-29T21:32:37.5324110Z [36;1mflet build ipa \[0m
+2025-06-29T21:32:37.5324400Z [36;1m  --project "avventura-epica" \[0m
+2025-06-29T21:32:37.5324680Z [36;1m  --product "Avventura Epica" \[0m
+2025-06-29T21:32:37.5324910Z [36;1m  --build-version "2.5.0" \[0m
+2025-06-29T21:32:37.5325210Z [36;1m  --build-number 86 \[0m
+2025-06-29T21:32:37.5325420Z [36;1m  --org "com.ambrogio.riili" \[0m
+2025-06-29T21:32:37.5325710Z [36;1m  --company "Ambrogio Riili" \[0m
+2025-06-29T21:32:37.5325970Z [36;1m  --flutter-build-args=--release \[0m
+2025-06-29T21:32:37.5326340Z [36;1m  --flutter-build-args=--split-debug-info=debug_info \[0m
+2025-06-29T21:32:37.5326640Z [36;1m  --flutter-build-args=--obfuscate[0m
+2025-06-29T21:32:37.5326890Z [36;1m  [0m
+2025-06-29T21:32:37.5371860Z shell: /bin/bash -e {0}
+2025-06-29T21:32:37.5372150Z env:
+2025-06-29T21:32:37.5372400Z   pythonLocation: /Users/runner/hostedtoolcache/Python/3.13.5/arm64
+2025-06-29T21:32:37.5372910Z   PKG_CONFIG_PATH: /Users/runner/hostedtoolcache/Python/3.13.5/arm64/lib/pkgconfig
+2025-06-29T21:32:37.5373300Z   Python_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.13.5/arm64
+2025-06-29T21:32:37.5373730Z   Python2_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.13.5/arm64
+2025-06-29T21:32:37.5374110Z   Python3_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.13.5/arm64
+2025-06-29T21:32:37.5374480Z   FLUTTER_ROOT: /Users/runner/hostedtoolcache/flutter/stable-3.22.1-arm64
+2025-06-29T21:32:37.5374860Z   PUB_CACHE: /Users/runner/.pub-cache
+2025-06-29T21:32:37.5375070Z ##[endgroup]
+2025-06-29T21:32:42.5703700Z Installing flet-cli 0.28.3 package...OK
+2025-06-29T21:32:42.8422900Z [?25l[32m( ●    )[0m [1;34mInitializing ipa build...[0m
+2025-06-29T21:32:43.1878910Z [2K[32m(    ● )[0m [1;34mInitializing ipa build...[0m
+2025-06-29T21:32:43.1977730Z [2K[32m(  ●   )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:43.5214430Z Downloading... [90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [35m  0%[0m [36m0:56:24[0m
+2025-06-29T21:32:43.5215080Z [2K[1A[2K[32m(  ●   )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:43.8835610Z Downloading... [90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [35m  1%[0m [36m0:00:26[0m
+2025-06-29T21:32:43.8844900Z [2K[1A[2K[32m(   ●  )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:44.1431740Z Downloading... [91m━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [35m  3%[0m [36m0:00:17[0m
+2025-06-29T21:32:44.1449970Z [2K[1A[2K[32m(●     )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:44.4702610Z Downloading... [91m━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [35m  4%[0m [36m0:00:15[0m
+2025-06-29T21:32:44.4703710Z [2K[1A[2K[32m(    ● )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:44.8757320Z Downloading... [91m━━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [35m  6%[0m [36m0:00:15[0m
+2025-06-29T21:32:44.8860530Z [2K[1A[2K[32m( ●    )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:45.1531160Z Downloading... [91m━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [35m  9%[0m [36m0:00:17[0m
+2025-06-29T21:32:45.1535650Z [2K[1A[2K[32m(   ●  )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:45.4821160Z Downloading... [91m━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [35m 10%[0m [36m0:00:20[0m
+2025-06-29T21:32:45.4823730Z [2K[1A[2K[32m(   ●  )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:45.7724250Z Downloading... [91m━━━━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [35m 12%[0m [36m0:00:14[0m
+2025-06-29T21:32:45.7724670Z [2K[1A[2K[32m( ●    )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:46.1494430Z Downloading... [91m━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [35m 14%[0m [36m0:00:16[0m
+2025-06-29T21:32:46.1495600Z [2K[1A[2K[32m(     ●)[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:46.5284110Z Downloading... [91m━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [35m 16%[0m [36m0:00:13[0m
+2025-06-29T21:32:46.5288920Z [2K[1A[2K[32m(●     )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:46.7820620Z Downloading... [91m━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [35m 19%[0m [36m0:00:13[0m
+2025-06-29T21:32:46.7821130Z [2K[1A[2K[32m(   ●  )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:47.0481540Z Downloading... [91m━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [35m 20%[0m [36m0:00:13[0m
+2025-06-29T21:32:47.0481950Z [2K[1A[2K[32m(    ● )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:47.3022640Z Downloading... [91m━━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [35m 22%[0m [36m0:00:12[0m
+2025-06-29T21:32:47.3023060Z [2K[1A[2K[32m(●     )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:47.5653860Z Downloading... [91m━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [35m 23%[0m [36m0:00:12[0m
+2025-06-29T21:32:47.5663150Z [2K[1A[2K[32m(   ●  )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:47.8746320Z Downloading... [91m━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [35m 25%[0m [36m0:00:12[0m
+2025-06-29T21:32:47.8746960Z [2K[1A[2K[32m(   ●  )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:48.2314690Z Downloading... [91m━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [35m 27%[0m [36m0:00:12[0m
+2025-06-29T21:32:48.2315820Z [2K[1A[2K[32m( ●    )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:48.5801570Z Downloading... [91m━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [35m 29%[0m [36m0:00:13[0m
+2025-06-29T21:32:48.5802060Z [2K[1A[2K[32m(    ● )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:48.9269090Z Downloading... [91m━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [35m 31%[0m [36m0:00:11[0m
+2025-06-29T21:32:48.9270090Z [2K[1A[2K[32m(●     )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:49.2781370Z Downloading... [91m━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [35m 34%[0m [36m0:00:10[0m
+2025-06-29T21:32:49.2782280Z [2K[1A[2K[32m(    ● )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:49.5875070Z Downloading... [91m━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━[0m [35m 36%[0m [36m0:00:14[0m
+2025-06-29T21:32:49.5898940Z [2K[1A[2K[32m(  ●   )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:49.8474100Z Downloading... [91m━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━[0m [35m 37%[0m [36m0:00:15[0m
+2025-06-29T21:32:49.8474780Z [2K[1A[2K[32m( ●    )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:50.1007660Z Downloading... [91m━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━[0m [35m 38%[0m [36m0:00:10[0m
+2025-06-29T21:32:50.1008680Z [2K[1A[2K[32m(     ●)[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:50.4058810Z Downloading... [91m━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━[0m [35m 40%[0m [36m0:00:10[0m
+2025-06-29T21:32:50.4059400Z [2K[1A[2K[32m(  ●   )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:50.7358600Z Downloading... [91m━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━━[0m [35m 42%[0m [36m0:00:12[0m
+2025-06-29T21:32:50.7359360Z [2K[1A[2K[32m(   ●  )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:51.0099950Z Downloading... [91m━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━[0m [35m 44%[0m [36m0:00:09[0m
+2025-06-29T21:32:51.0101360Z [2K[1A[2K[32m(    ● )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:51.2568340Z Downloading... [91m━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━[0m [35m 46%[0m [36m0:00:10[0m
+2025-06-29T21:32:51.2719580Z [2K[1A[2K[32m( ●    )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:51.5421080Z Downloading... [91m━━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━[0m [35m 47%[0m [36m0:00:09[0m
+2025-06-29T21:32:51.5421650Z [2K[1A[2K[32m(   ●  )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:51.8175370Z Downloading... [91m━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━[0m [35m 49%[0m [36m0:00:08[0m
+2025-06-29T21:32:51.8177640Z [2K[1A[2K[32m(    ● )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:52.1731130Z Downloading... [91m━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━[0m [35m 51%[0m [36m0:00:08[0m
+2025-06-29T21:32:52.1736320Z [2K[1A[2K[32m( ●    )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:52.5671330Z Downloading... [91m━━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━[0m [35m 53%[0m [36m0:00:08[0m
+2025-06-29T21:32:52.5671970Z [2K[1A[2K[32m(     ●)[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:52.8747160Z Downloading... [91m━━━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━[0m [35m 56%[0m [36m0:00:07[0m
+2025-06-29T21:32:52.9019270Z [2K[1A[2K[32m( ●    )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:53.2422090Z Downloading... [91m━━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━━[0m [35m 57%[0m [36m0:00:08[0m
+2025-06-29T21:32:53.2436940Z [2K[1A[2K[32m(    ● )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:53.5162530Z Downloading... [91m━━━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━[0m [35m 60%[0m [36m0:00:07[0m
+2025-06-29T21:32:53.5162940Z [2K[1A[2K[32m(   ●  )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:53.7781360Z Downloading... [91m━━━━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━[0m [35m 61%[0m [36m0:00:06[0m
+2025-06-29T21:32:53.7781920Z [2K[1A[2K[32m( ●    )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:54.0821220Z Downloading... [91m━━━━━━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━[0m [35m 63%[0m [36m0:00:06[0m
+2025-06-29T21:32:54.0821780Z [2K[1A[2K[32m(    ● )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:54.4013150Z Downloading... [91m━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━[0m [35m 65%[0m [36m0:00:06[0m
+2025-06-29T21:32:54.4013670Z [2K[1A[2K[32m(  ●   )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:54.6828930Z Downloading... [91m━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━━━━[0m [35m 67%[0m [36m0:00:05[0m
+2025-06-29T21:32:54.6930560Z [2K[1A[2K[32m(  ●   )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:54.9556490Z Downloading... [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━━━[0m [35m 69%[0m [36m0:00:05[0m
+2025-06-29T21:32:54.9557200Z [2K[1A[2K[32m(     ●)[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:55.2203490Z Downloading... [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━[0m [35m 71%[0m [36m0:00:05[0m
+2025-06-29T21:32:55.2204410Z [2K[1A[2K[32m( ●    )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:55.5331510Z Downloading... [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━━[0m [35m 72%[0m [36m0:00:05[0m
+2025-06-29T21:32:55.5332010Z [2K[1A[2K[32m(   ●  )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:55.8454600Z Downloading... [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━[0m [35m 74%[0m [36m0:00:05[0m
+2025-06-29T21:32:55.8455200Z [2K[1A[2K[32m(    ● )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:56.2343540Z Downloading... [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━[0m [35m 76%[0m [36m0:00:04[0m
+2025-06-29T21:32:56.2344160Z [2K[1A[2K[32m( ●    )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:56.5723560Z Downloading... [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━[0m [35m 79%[0m [36m0:00:04[0m
+2025-06-29T21:32:56.5724600Z [2K[1A[2K[32m(    ● )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:56.9517200Z Downloading... [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━[0m [35m 81%[0m [36m0:00:03[0m
+2025-06-29T21:32:56.9643060Z [2K[1A[2K[32m(●     )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:57.2621170Z Downloading... [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━[0m [35m 83%[0m [36m0:00:03[0m
+2025-06-29T21:32:57.2622080Z [2K[1A[2K[32m(    ● )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:57.5218040Z Downloading... [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━[0m [35m 85%[0m [36m0:00:03[0m
+2025-06-29T21:32:57.5218560Z [2K[1A[2K[32m(   ●  )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:57.8348910Z Downloading... [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━[0m [35m 87%[0m [36m0:00:03[0m
+2025-06-29T21:32:57.8450580Z [2K[1A[2K[32m( ●    )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:58.1416330Z Downloading... [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━[0m [35m 89%[0m [36m0:00:02[0m
+2025-06-29T21:32:58.1517080Z [2K[1A[2K[32m(     ●)[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:58.5282340Z Downloading... [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━[0m [35m 91%[0m [36m0:00:02[0m
+2025-06-29T21:32:58.5283930Z [2K[1A[2K[32m(●     )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:58.9031250Z Downloading... [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━[0m [35m 92%[0m [36m0:00:03[0m
+2025-06-29T21:32:58.9132320Z [2K[1A[2K[32m(     ●)[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:59.1870990Z Downloading... [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━[0m [35m 95%[0m [36m0:00:01[0m
+2025-06-29T21:32:59.1871680Z [2K[1A[2K[32m(  ●   )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:59.4713990Z Downloading... [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━[0m [35m 96%[0m [36m0:00:01[0m
+2025-06-29T21:32:59.4714460Z [2K[1A[2K[32m(  ●   )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:32:59.8184130Z Downloading... [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m [35m 98%[0m [36m0:00:01[0m
+2025-06-29T21:32:59.8184620Z [2K[1A[2K[32m(    ● )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:33:00.2183760Z Extracting... [90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [35m  0%[0m [36m-:--:--[0m
+2025-06-29T21:33:00.2184730Z [2K[1A[2K[32m( ●    )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:33:00.6159730Z Extracting... [90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [35m  1%[0m [36m0:00:28[0m
+2025-06-29T21:33:00.6160370Z [2K[1A[2K[32m(    ● )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:33:00.8838790Z Extracting... [91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [35m  1%[0m [36m0:01:02[0m
+2025-06-29T21:33:00.8839780Z [2K[1A[2K[32m( ●    )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:33:01.1733670Z Extracting... [91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [35m  1%[0m [36m0:01:03[0m
+2025-06-29T21:33:01.1737340Z [2K[1A[2K[32m(   ●  )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:33:01.4767100Z Extracting... [91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [35m  2%[0m [36m0:01:04[0m
+2025-06-29T21:33:01.4767930Z [2K[1A[2K[32m(   ●  )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:33:01.7679710Z Extracting... [91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [35m  2%[0m [36m0:01:23[0m
+2025-06-29T21:33:01.7680410Z [2K[1A[2K[32m(●     )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:33:02.1532920Z Extracting... [91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [35m  2%[0m [36m0:01:27[0m
+2025-06-29T21:33:02.1533530Z [2K[1A[2K[32m(     ●)[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:33:02.5290510Z Extracting... [91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [35m  2%[0m [36m0:01:28[0m
+2025-06-29T21:33:02.5291150Z [2K[1A[2K[32m(●     )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:33:02.8261780Z Extracting... [91m━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [35m  3%[0m [36m0:01:30[0m
+2025-06-29T21:33:02.8262320Z [2K[1A[2K[32m(    ● )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:33:03.1703640Z Extracting... [91m━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [35m  3%[0m [36m0:01:31[0m
+2025-06-29T21:33:03.1704460Z [2K[1A[2K[32m(  ●   )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:33:03.5290780Z Extracting... [91m━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [35m  3%[0m [36m0:01:29[0m
+2025-06-29T21:33:03.5291290Z [2K[1A[2K[32m(  ●   )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:33:03.9272630Z Extracting... [91m━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [35m  4%[0m [36m0:01:33[0m
+2025-06-29T21:33:03.9273100Z [2K[1A[2K[32m(   ●  )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:33:04.2382930Z Extracting... [91m━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [35m  4%[0m [36m0:01:37[0m
+2025-06-29T21:33:04.2383820Z [2K[1A[2K[32m( ●    )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:33:04.5303290Z Extracting... [91m━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [35m  4%[0m [36m0:01:38[0m
+2025-06-29T21:33:04.5304040Z [2K[1A[2K[32m(     ●)[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:33:04.8431480Z Extracting... [91m━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [35m  4%[0m [36m0:01:38[0m
+2025-06-29T21:33:04.8431970Z [2K[1A[2K[32m( ●    )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:33:05.2418660Z Extracting... [91m━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [35m  4%[0m [36m0:01:38[0m
+2025-06-29T21:33:05.2419490Z [2K[1A[2K[32m(    ● )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:33:05.5908100Z Extracting... [91m━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [35m  6%[0m [36m0:01:33[0m
+2025-06-29T21:33:05.6101800Z [2K[1A[2K[32m(  ●   )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:33:05.9033080Z Extracting... [91m━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [35m  6%[0m [36m0:01:38[0m
+2025-06-29T21:33:05.9033900Z [2K[1A[2K[32m(  ●   )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:33:06.2324150Z Extracting... [91m━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [35m  6%[0m [36m0:01:40[0m
+2025-06-29T21:33:06.2324670Z [2K[1A[2K[32m(    ● )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:33:06.5996140Z Extracting... [91m━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [35m  6%[0m [36m0:01:48[0m
+2025-06-29T21:33:06.6102330Z [2K[1A[2K[32m( ●    )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:33:06.9232530Z Extracting... [91m━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [35m  6%[0m [36m0:01:52[0m
+2025-06-29T21:33:06.9233170Z [2K[1A[2K[32m(     ●)[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:33:07.2371880Z Extracting... [91m━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [35m  8%[0m [36m0:01:24[0m
+2025-06-29T21:33:07.2372390Z [2K[1A[2K[32m( ●    )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:33:07.5139260Z Extracting... [91m━━━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [35m 10%[0m [36m0:00:41[0m
+2025-06-29T21:33:07.5140030Z [2K[1A[2K[32m(  ●   )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:33:07.9077760Z Extracting... [91m━━━━━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [35m 15%[0m [36m0:00:04[0m
+2025-06-29T21:33:07.9078430Z [2K[1A[2K[32m(   ●  )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:33:08.2483220Z Extracting... [91m━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [35m 34%[0m [36m0:00:02[0m
+2025-06-29T21:33:08.2483730Z [2K[1A[2K[32m( ●    )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:33:08.5714570Z Extracting... [91m━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━[0m [35m 41%[0m [36m0:00:03[0m
+2025-06-29T21:33:08.5715240Z [2K[1A[2K[32m(    ● )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:33:08.8248170Z Extracting... [91m━━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━━[0m [35m 57%[0m [36m0:00:01[0m
+2025-06-29T21:33:08.8248890Z [2K[1A[2K[32m( ●    )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:33:09.1251640Z Extracting... [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━[0m [35m 68%[0m [36m0:00:01[0m
+2025-06-29T21:33:09.5249910Z [2K[1A[2K[32m(  ●   )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:33:09.5251730Z Extracting... [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━[0m [35m 68%[0m [36m0:00:01[0m
+2025-06-29T21:33:09.5253180Z [2K[1A[2K[32m(   ●  )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:33:09.7782200Z Extracting... [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━[0m [35m 68%[0m [36m0:00:06[0m
+2025-06-29T21:33:09.7789710Z [2K[1A[2K[32m( ●    )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:33:10.1316190Z Extracting... [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━[0m [35m 77%[0m [36m0:00:01[0m
+2025-06-29T21:33:10.1318000Z [2K[1A[2K[32m(     ●)[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:33:10.4183690Z Extracting... [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━[0m [35m 89%[0m [36m0:00:01[0m
+2025-06-29T21:33:10.4184210Z [2K[1A[2K[32m( ●    )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:33:10.5098540Z Extracting... [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m [35m100%[0m [36m0:00:01[0m
+2025-06-29T21:33:10.5105420Z [2K[1A[2K[2;36m[21:33:10][0m[2;36m [0m[1;32mFlutter [0m[1;36m3.29[0m[1;32m.[0m[1;36m2[0m[1;32m installed ✅                                          [0m
+2025-06-29T21:33:10.5121280Z [32m(●     )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:33:10.5121810Z [2K[1;33m╭──────────────────────────────────────────────────────────────────────────────╮[0m
+2025-06-29T21:33:10.5122490Z [1;33m│[0m[1;33m [0m[1;33mThis build will generate an .xcarchive (Xcode Archive). To produce an .ipa [0m[1;33m [0m[1;33m [0m[1;33m│[0m
+2025-06-29T21:33:10.5123280Z [1;33m│[0m[1;33m [0m[1;33m(iOS App Package), please specify a Provisioning Profile.[0m[1;33m                   [0m[1;33m [0m[1;33m│[0m
+2025-06-29T21:33:10.5123990Z [1;33m╰──────────────────────────────────────────────────────────────────────────────╯[0m
+2025-06-29T21:33:10.7534130Z [32m(●     )[0m [1;34mInstalling Flutter 3.29.2...[0m
+2025-06-29T21:33:10.7534740Z [2K[32m(   ●  )[0m [1;34mCreating Flutter bootstrap project from gh:flet-dev/flet-build-template[0m
+2025-06-29T21:33:11.1530600Z [1;34mwith ref "0.28.3"...[0m
+2025-06-29T21:33:11.4324420Z [2K[1A[2K[32m(  ●   )[0m [1;34mCreating Flutter bootstrap project from gh:flet-dev/flet-build-template[0m
+2025-06-29T21:33:11.4325050Z [1;34mwith ref "0.28.3"...[0m
+2025-06-29T21:33:11.4325600Z [2K[1A[2K[32m( ●    )[0m [1;34mCreating Flutter bootstrap project from gh:flet-dev/flet-build-template[0m
+2025-06-29T21:33:11.8293360Z [1;34mwith ref "0.28.3"...[0m
+2025-06-29T21:33:11.8393540Z [2K[1A[2K[32m(    ● )[0m [1;34mCreating Flutter bootstrap project from gh:flet-dev/flet-build-template[0m
+2025-06-29T21:33:12.0765520Z [1;34mwith ref "0.28.3"...[0m
+2025-06-29T21:33:12.0766200Z [2K[1A[2K[32m( ●    )[0m [1;34mCreating Flutter bootstrap project from gh:flet-dev/flet-build-template[0m
+2025-06-29T21:33:12.2081440Z [1;34mwith ref "0.28.3"...[0m
+2025-06-29T21:33:12.2082040Z [2K[1A[2K[2;36m[21:33:12][0m[2;36m [0m[1;32mCreated Flutter bootstrap project from                               [0m
+2025-06-29T21:33:12.2082760Z [2;36m           [0m[1;32mgh:flet-dev/flet-build-template with ref [0m[32m"0.28.3"[0m[1;32m ✅                 [0m
+2025-06-29T21:33:12.2083980Z [32m( ●    )[0m [1;34mCreating Flutter bootstrap project from gh:flet-dev/flet-build-template[0m
+2025-06-29T21:33:12.3471980Z [1;34mwith ref "0.28.3"...[0m
+2025-06-29T21:33:12.7061760Z [2K[1A[2K[32m(   ●  )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:13.0278680Z [2K[32m(   ●  )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:13.4028210Z [2K[32m( ●    )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:13.7918590Z [2K[32m(    ● )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:14.0483770Z [2K[32m( ●    )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:14.4192690Z [2K[32m(    ● )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:14.7146300Z [2K[32m( ●    )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:15.0007010Z [2K[32m(  ●   )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:15.2984480Z [2K[32m(    ● )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:15.6593310Z [2K[32m(●     )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:15.9573020Z [2K[32m(    ● )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:16.2099110Z [2K[32m(  ●   )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:16.5287690Z [2K[32m( ●    )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:16.9015870Z [2K[32m(     ●)[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:17.2926510Z [2K[32m(●     )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:17.5919780Z [2K[32m(     ●)[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:17.8641210Z [2K[32m(  ●   )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:18.1433820Z [2K[32m(  ●   )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:18.4034730Z [2K[32m(     ●)[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:18.7862130Z [2K[32m(  ●   )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:19.1566160Z [2K[32m(   ●  )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:19.5094010Z [2K[32m(  ●   )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:19.9097970Z [2K[32m(  ●   )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:20.1669420Z [2K[32m(   ●  )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:20.4200680Z [2K[32m(●     )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:20.7784580Z [2K[32m(    ● )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:21.1661780Z [2K[32m(  ●   )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:21.4248930Z [2K[32m(   ●  )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:21.7358070Z [2K[32m(    ● )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:22.0277760Z [2K[32m(●     )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:22.4037770Z [2K[32m(    ● )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:22.7907690Z [2K[32m(  ●   )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:23.1153070Z [2K[32m(   ●  )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:23.4029930Z [2K[32m(   ●  )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:23.7557280Z [2K[32m( ●    )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:24.0440570Z [2K[32m(     ●)[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:24.3546270Z [2K[32m( ●    )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:24.7389360Z [2K[32m(   ●  )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:25.0378050Z [2K[32m(  ●   )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:25.4028720Z [2K[32m( ●    )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:25.7905640Z [2K[32m(    ● )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:26.1455960Z [2K[32m( ●    )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:26.5285230Z [2K[32m(     ●)[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:26.9291730Z [2K[32m(●     )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:27.1886360Z [2K[32m(     ●)[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:27.4907750Z [2K[32m(  ●   )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:27.7777980Z [2K[32m(  ●   )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:28.1364020Z [2K[32m(    ● )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:28.4330450Z [2K[32m(●     )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:28.7470100Z [2K[32m(    ● )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:29.0278550Z [2K[32m(  ●   )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:29.3572360Z [2K[32m( ●    )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:29.7185640Z [2K[32m(     ●)[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:30.0765250Z [2K[32m(●     )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:30.4422600Z [2K[32m(    ● )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:30.8375370Z [2K[32m( ●    )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:31.1746150Z [2K[32m(    ● )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:31.5278000Z [2K[32m(  ●   )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:31.9158650Z [2K[32m(  ●   )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:32.2793650Z [2K[32m(   ●  )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:32.6527690Z [2K[32m(  ●   )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:32.9083870Z [2K[32m(   ●  )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:33.2939630Z [2K[32m(●     )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:33.6420110Z [2K[32m(     ●)[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:34.0306750Z [2K[32m( ●    )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:34.3628080Z [2K[32m(    ● )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:34.6349800Z [2K[32m(  ●   )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:34.9316800Z [2K[32m( ●    )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:35.3085110Z [2K[32m(     ●)[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:35.6282670Z [2K[32m(●     )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:35.9017390Z [2K[32m(    ● )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:36.2834620Z [2K[32m(   ●  )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:36.6098350Z [2K[32m(  ●   )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:36.8958730Z [2K[32m(    ● )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:37.2778500Z [2K[32m(●     )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:37.5364750Z [2K[32m(    ● )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:37.8002200Z [2K[32m(  ●   )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:38.1524360Z [2K[32m( ●    )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:38.5529380Z [2K[32m(     ●)[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:38.8902360Z [2K[32m(●     )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:39.2778130Z [2K[32m(    ● )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:39.5660560Z [2K[32m( ●    )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:39.8526980Z [2K[32m(   ●  )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:39.8884180Z [2K[32m(   ●  )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:39.8888770Z [2K[2;36m[21:33:39][0m[2;36m [0m[1;32mPackaged Python app ✅                                               [0m
+2025-06-29T21:33:39.8889190Z [32m(   ●  )[0m [1;34mPackaging Python app...[0m
+2025-06-29T21:33:39.8889620Z [2K[2;36m          [0m[2;36m [0m[1;32mRegistered Flutter user extensions ✅                                [0m
+2025-06-29T21:33:40.2028490Z [32m(   ●  )[0m [1;34mRegistering Flutter user extensions...[0m
+2025-06-29T21:33:40.5691540Z [2K[32m( ●    )[0m [1;34mRegistering Flutter user extensions...[0m
+2025-06-29T21:33:40.9717640Z [2K[32m(     ●)[0m [1;34mRegistering Flutter user extensions...[0m
+2025-06-29T21:33:41.3025900Z [2K[32m(●     )[0m [1;34mRegistering Flutter user extensions...[0m
+2025-06-29T21:33:41.6537970Z [2K[32m(     ●)[0m [1;34mRegistering Flutter user extensions...[0m
+2025-06-29T21:33:41.9642510Z [2K[32m( ●    )[0m [1;34mGenerating app icons...[0m
+2025-06-29T21:33:42.2197210Z [2K[32m(   ●  )[0m [1;34mGenerating app icons...[0m
+2025-06-29T21:33:42.5567150Z [2K[32m(    ● )[0m [1;34mGenerating app icons...[0m
+2025-06-29T21:33:42.8235210Z [2K[32m(●     )[0m [1;34mGenerating app icons...[0m
+2025-06-29T21:33:43.1772170Z [2K[32m(    ● )[0m [1;34mGenerating app icons...[0m
+2025-06-29T21:33:43.4861400Z [2K[32m(  ●   )[0m [1;34mGenerating app icons...[0m
+2025-06-29T21:33:43.7948740Z [2K[32m(  ●   )[0m [1;34mGenerating app icons...[0m
+2025-06-29T21:33:44.1264050Z [2K[32m(    ● )[0m [1;34mGenerating app icons...[0m
+2025-06-29T21:33:44.3778990Z [2K[32m(●     )[0m [1;34mGenerating app icons...[0m
+2025-06-29T21:33:44.6397490Z [2K[32m(   ●  )[0m [1;34mGenerating app icons...[0m
+2025-06-29T21:33:44.9048800Z [2K[32m(    ● )[0m [1;34mGenerating app icons...[0m
+2025-06-29T21:33:45.2767500Z [2K[32m(●     )[0m [1;34mGenerating app icons...[0m
+2025-06-29T21:33:45.5529420Z [2K[32m(    ● )[0m [1;34mGenerating app icons...[0m
+2025-06-29T21:33:45.8758500Z [2K[32m(  ●   )[0m [1;34mGenerating app icons...[0m
+2025-06-29T21:33:46.2700070Z [2K[32m(  ●   )[0m [1;34mGenerating app icons...[0m
+2025-06-29T21:33:46.6527740Z [2K[32m(   ●  )[0m [1;34mGenerating app icons...[0m
+2025-06-29T21:33:46.7588510Z [2K[32m(  ●   )[0m [1;34mGenerating app icons...[0m
+2025-06-29T21:33:46.7593170Z [2K[2;36m[21:33:46][0m[2;36m [0m[1;32mGenerated app icons ✅                                               [0m
+2025-06-29T21:33:47.0292250Z [32m(   ●  )[0m [1;34mGenerating app icons...[0m
+2025-06-29T21:33:47.4293220Z [2K[32m(    ● )[0m [1;34mGenerating splash screens...[0m
+2025-06-29T21:33:47.8024230Z [2K[32m( ●    )[0m [1;34mGenerating splash screens...[0m
+2025-06-29T21:33:48.0970610Z [2K[32m(    ● )[0m [1;34mGenerating splash screens...[0m
+2025-06-29T21:33:48.3844310Z [2K[32m(●     )[0m [1;34mGenerating splash screens...[0m
+2025-06-29T21:33:48.7794700Z [2K[32m(   ●  )[0m [1;34mGenerating splash screens...[0m
+2025-06-29T21:33:49.1628410Z [2K[32m(  ●   )[0m [1;34mGenerating splash screens...[0m
+2025-06-29T21:33:49.4328580Z [2K[32m(   ●  )[0m [1;34mGenerating splash screens...[0m
+2025-06-29T21:33:49.8030960Z [2K[32m(    ● )[0m [1;34mGenerating splash screens...[0m
+2025-06-29T21:33:50.1535370Z [2K[32m( ●    )[0m [1;34mGenerating splash screens...[0m
+2025-06-29T21:33:50.3760880Z [2K[32m(     ●)[0m [1;34mGenerating splash screens...[0m
+2025-06-29T21:33:50.3766360Z [2K[2;36m[21:33:50][0m[2;36m [0m[1;32mGenerated splash screens ✅                                          [0m
+2025-06-29T21:33:50.4138920Z [32m(  ●   )[0m [1;34mGenerating splash screens...[0m
+2025-06-29T21:33:50.7815890Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:33:51.0357620Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:33:51.4030530Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:33:51.8042300Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:33:52.1852040Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:33:52.5516670Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:33:52.9028920Z [2K[32m(     ●)[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:33:53.2779430Z [2K[32m(●     )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:33:53.6774550Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:33:54.0608660Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:33:54.3357330Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:33:54.7266390Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:33:55.1219610Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:33:55.4118080Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:33:55.7265960Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:33:56.0056050Z [2K[32m(     ●)[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:33:56.4058600Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:33:56.6929710Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:33:56.9585510Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:33:57.3284340Z [2K[32m(●     )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:33:57.6477970Z [2K[32m(     ●)[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:33:58.0869000Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:33:58.4535370Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:33:58.7161260Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:33:59.0257140Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:33:59.2779940Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:33:59.5340610Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:33:59.8134210Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:00.1497420Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:00.5568880Z [2K[32m(●     )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:00.9351150Z [2K[32m(     ●)[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:01.3131040Z [2K[32m(●     )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:01.7081580Z [2K[32m(     ●)[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:02.0333280Z [2K[32m(●     )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:02.4307480Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:02.7702890Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:03.0416210Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:03.4029500Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:03.7266270Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:04.1296620Z [2K[32m(     ●)[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:04.5083540Z [2K[32m(●     )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:04.8767510Z [2K[32m(     ●)[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:05.1623110Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:05.5427070Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:05.8152140Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:06.1570400Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:06.4171100Z [2K[32m(     ●)[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:06.8006030Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:07.1037400Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:07.4116790Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:07.7369920Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:08.0418290Z [2K[32m(     ●)[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:08.3245530Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:08.6659250Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:09.0099250Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:09.2859370Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:09.6649490Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:10.0487540Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:10.3246980Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:10.6452600Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:11.0283230Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:11.3534990Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:11.6681450Z [2K[32m(●     )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:12.0755780Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:12.3303450Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:12.5978200Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:12.8679820Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:13.1712560Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:13.5435670Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:13.8695340Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:14.2630900Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:14.5154140Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:14.7854810Z [2K[32m(●     )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:15.1527530Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:15.4874830Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:15.8361690Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:16.1442390Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:16.4061330Z [2K[32m(●     )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:16.7861550Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:17.1534460Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:17.4083680Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:17.7809520Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:18.1702240Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:18.5565720Z [2K[32m(     ●)[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:18.9278930Z [2K[32m(●     )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:19.2777310Z [2K[32m(     ●)[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:19.6069500Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:19.8718630Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:20.2798700Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:20.6528110Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:20.9790290Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:21.3519230Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:21.6683620Z [2K[32m(     ●)[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:22.0278800Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:22.3545860Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:22.6390920Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:23.0279590Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:23.4270520Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:23.8000360Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:24.1731020Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:24.5576510Z [2K[32m(●     )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:24.8828460Z [2K[32m(     ●)[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:25.1496740Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:25.4819880Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:25.7743500Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:26.1528520Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:26.4401000Z [2K[32m(     ●)[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:26.6922750Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:27.0749870Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:27.3323840Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:27.7052580Z [2K[32m(●     )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:28.0419520Z [2K[32m(     ●)[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:28.4260450Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:28.7875440Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:29.0412970Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:29.3056850Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:29.6170120Z [2K[32m(     ●)[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:29.8918290Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:30.2259850Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:30.6205720Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:30.8812900Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:31.2762070Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:31.6533450Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:31.9266460Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:32.2947180Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:32.6645710Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:32.9229580Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:33.2005670Z [2K[32m(●     )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:33.5892660Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:33.9269950Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:34.2809690Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:34.6733690Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:35.0498730Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:35.4152540Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:35.8004710Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:36.1416900Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:36.4147420Z [2K[32m(●     )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:36.7927990Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:37.1457540Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:37.5465770Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:37.9030160Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:38.2102430Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:38.5575280Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:38.8574170Z [2K[32m(●     )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:39.1526180Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:39.4180230Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:39.8006600Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:40.1727190Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:40.4612720Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:40.8005070Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:41.1964590Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:41.5969720Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:41.9295450Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:42.2734360Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:42.6653080Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:43.0314130Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:43.4174590Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:43.8170750Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:44.1549020Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:44.5428460Z [2K[32m(●     )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:44.9253510Z [2K[32m(     ●)[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:45.1915940Z [2K[32m(●     )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:45.4444500Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:45.7943070Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:46.1905260Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:46.6015340Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:46.8631260Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:47.1249590Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:47.4627070Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:47.8168940Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:48.0729730Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:48.3335830Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:48.7240790Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:49.0496400Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:49.4279010Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:49.7292490Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:50.1298080Z [2K[32m(●     )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:50.4038570Z [2K[32m(     ●)[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:50.7085420Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:51.0285820Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:51.4139930Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:51.7778320Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:52.1676930Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:52.4970180Z [2K[32m(●     )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:52.8070670Z [2K[32m(     ●)[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:53.1856520Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:53.5074650Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:53.8223820Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:54.1458710Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:54.4389150Z [2K[32m(     ●)[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:54.8295210Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:55.1450730Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:55.3945910Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:55.7884440Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:56.1719230Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:56.4535460Z [2K[32m(●     )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:56.8013870Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:57.0756110Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:57.3255500Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:57.7314140Z [2K[32m(     ●)[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:58.1159670Z [2K[32m(●     )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:58.4556170Z [2K[32m(     ●)[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:58.8063490Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:59.1763620Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:59.5500340Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:34:59.8232660Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:00.2165470Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:00.4820300Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:00.8659650Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:01.2591270Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:01.5216440Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:01.8939280Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:02.2814460Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:02.6631570Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:03.0604810Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:03.4158890Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:03.7662730Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:04.1639070Z [2K[32m(     ●)[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:04.4262140Z [2K[32m(●     )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:04.8094740Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:05.1645880Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:05.5364450Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:05.8592980Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:06.2623640Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:06.6455680Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:06.9918340Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:07.3286410Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:07.7274760Z [2K[32m(●     )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:08.1186740Z [2K[32m(     ●)[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:08.4919880Z [2K[32m(●     )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:08.8543550Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:09.1268550Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:09.4505580Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:09.7689920Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:10.1533780Z [2K[32m(●     )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:10.5277000Z [2K[32m(     ●)[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:10.8991670Z [2K[32m(●     )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:11.1561080Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:11.5411120Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:11.9061820Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:12.3174580Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:12.5647240Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:12.8673440Z [2K[32m(     ●)[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:13.1285420Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:13.5277970Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:13.8452190Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:14.2412130Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:14.5720250Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:14.8633720Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:15.1245150Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:15.4132770Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:15.7777880Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:16.1211650Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:16.4250240Z [2K[32m(●     )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:16.7919450Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:17.1631360Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:17.5337130Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:17.8265750Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:18.1315340Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:18.4028020Z [2K[32m(     ●)[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:18.8012080Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:19.1706150Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:19.4417670Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:19.8050430Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:20.1748620Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:20.5426960Z [2K[32m(●     )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:20.9428840Z [2K[32m(     ●)[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:21.2430110Z [2K[32m(●     )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:21.5555160Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:21.9526350Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:22.3040240Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:22.5852840Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:22.8404870Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:23.2241870Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:23.4787890Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:23.7811720Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:24.1528770Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:24.4989990Z [2K[32m(●     )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:24.7780660Z [2K[32m(     ●)[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:25.1243700Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:25.4030140Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:25.7905990Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:26.1550660Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:26.4413620Z [2K[32m(     ●)[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:26.8300130Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:27.1727080Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:27.5360110Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:27.8174340Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:28.1302990Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:28.5277780Z [2K[32m(●     )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:28.9219360Z [2K[32m(     ●)[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:29.1816700Z [2K[32m(●     )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:29.4397360Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:29.8228460Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:30.2224980Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:30.4908150Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:30.7596070Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:31.1571060Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:31.4279310Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:31.7976090Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:32.1740720Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:32.5281220Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:32.9027950Z [2K[32m(     ●)[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:33.2876870Z [2K[32m(●     )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:33.5383950Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:33.9142140Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:34.2208110Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:34.5278330Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:34.9071820Z [2K[32m(●     )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:35.2917620Z [2K[32m(     ●)[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:35.6719010Z [2K[32m(●     )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:35.9869460Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:36.3627320Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:36.7292060Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:36.9704510Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:37.3199010Z [2K[32m(●     )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:37.6999590Z [2K[32m(     ●)[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:38.0053240Z [2K[32m(●     )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:38.2778450Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:38.6527620Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:38.9065250Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:39.2813830Z [2K[32m(     ●)[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:39.5859230Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:39.8783740Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:40.1528300Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:40.4083280Z [2K[32m(●     )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:40.7158230Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:41.0131000Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:41.4054180Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:41.6703560Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:42.0363200Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:42.2767600Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:42.6529270Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:43.0328210Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:43.4174680Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:43.7778180Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:44.1612410Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:44.5378570Z [2K[32m(●     )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:44.9098260Z [2K[32m(     ●)[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:45.3040080Z [2K[32m(●     )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:45.6302170Z [2K[32m(     ●)[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:45.9130980Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:46.3137270Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:46.7141460Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:47.1206850Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:47.4720760Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:47.8765910Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:48.1363900Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:48.5293950Z [2K[32m(●     )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:48.9325450Z [2K[32m(     ●)[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:49.1863620Z [2K[32m(●     )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:49.5868450Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:49.9028150Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:50.2842370Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:50.6664980Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:51.0262300Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:51.4028650Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:51.7715220Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:52.1683520Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:52.5278430Z [2K[32m(●     )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:52.7969340Z [2K[32m(     ●)[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:53.1885260Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:53.5317010Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:53.9032080Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:54.1757760Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:54.5862680Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:54.8450630Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:55.1642800Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:55.5283120Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:55.8191600Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:56.2175310Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:56.5401420Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:56.9355040Z [2K[32m(     ●)[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:57.2772370Z [2K[32m(●     )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:57.5300420Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:57.9215780Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:58.3166520Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:58.6532900Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:58.9123820Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:59.2204950Z [2K[32m(     ●)[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:59.5278520Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:35:59.9029570Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:36:00.2047410Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:36:00.6094040Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:36:00.9029260Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:36:01.1563990Z [2K[32m(●     )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:36:01.4699740Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:36:01.8488670Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:36:02.1045350Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:36:02.4057400Z [2K[32m(     ●)[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:36:02.7780540Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:36:03.0288000Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:36:03.4032760Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:36:03.8008180Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:36:04.0929890Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:36:04.3629330Z [2K[32m(●     )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:36:04.6251640Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:36:04.9230350Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:36:05.2436460Z [2K[32m(●     )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:36:05.6036630Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:36:05.8746280Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:36:06.2214660Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:36:06.4845770Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:36:06.8005800Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:36:07.1535670Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:36:07.4078680Z [2K[32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:36:07.6700730Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:36:08.0436810Z [2K[32m(    ● )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:36:08.4037610Z [2K[32m( ●    )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:36:08.7595240Z [2K[32m(   ●  )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:36:08.7611990Z [2K[2;36m[21:36:08][0m[2;36m [0m[1;32mBuilt [0m[1;36m.ipa bundle for iOS[0m[1;32m ✅                                         [0m
+2025-06-29T21:36:08.8007340Z [32m(  ●   )[0m [1;34mBuilding [0m[1;36m.ipa bundle for iOS[0m[1;34m...[0m
+2025-06-29T21:36:09.1802300Z [2K[32m(  ●   )[0m [1;34mCopying build to [0m[1;36mbuild/ipa[0m[1;34m directory...[0m
+2025-06-29T21:36:09.4715660Z [2K[32m(   ●  )[0m [1;34mCopying build to [0m[1;36mbuild/ipa[0m[1;34m directory...[0m
+2025-06-29T21:36:09.7879580Z [2K[32m(   ●  )[0m [1;34mCopying build to [0m[1;36mbuild/ipa[0m[1;34m directory...[0m
+2025-06-29T21:36:09.9335690Z [2K[32m( ●    )[0m [1;34mCopying build to [0m[1;36mbuild/ipa[0m[1;34m directory...[0m
+2025-06-29T21:36:09.9337150Z [2K[2;36m[21:36:09][0m[2;36m [0m[1;32mCopied build to [0m[1;36mbuild/ipa[0m[1;32m directory ✅                               [0m
+2025-06-29T21:36:09.9340000Z [32m(   ●  )[0m [1;34mCopying build to [0m[1;36mbuild/ipa[0m[1;34m directory...[0m
+2025-06-29T21:36:09.9342090Z [2K╭──────────────────────────────────────────────────────────────────────────────╮
+2025-06-29T21:36:09.9356690Z │ Successfully built your [36m.ipa bundle for iOS[0m! 🥳 Find it in [36mbuild/ipa[0m         │
+2025-06-29T21:36:09.9357760Z │ directory. 📁                                                                │
+2025-06-29T21:36:09.9358650Z ╰──────────────────────────────────────────────────────────────────────────────╯
+2025-06-29T21:36:09.9359510Z [2K[1A[2K[1A[2K[1A[2K╭──────────────────────────────────────────────────────────────────────────────╮
+2025-06-29T21:36:09.9360190Z │ Successfully built your [36m.ipa bundle for iOS[0m! 🥳 Find it in [36mbuild/ipa[0m         │
+2025-06-29T21:36:09.9362950Z │ directory. 📁                                                                │
+2025-06-29T21:36:09.9363410Z ╰──────────────────────────────────────────────────────────────────────────────╯
+2025-06-29T21:36:10.0937960Z [?25h
+2025-06-29T21:36:10.1074790Z ##[group]Run # Converti xcarchive in IPA non firmato (compatibile con AltStore)
+2025-06-29T21:36:10.1075290Z [36;1m# Converti xcarchive in IPA non firmato (compatibile con AltStore)[0m
+2025-06-29T21:36:10.1075680Z [36;1mmkdir -p build/ipa/Payload[0m
+2025-06-29T21:36:10.1076160Z [36;1mcp -r build/ipa/avventura-epica.xcarchive/Products/Applications/"Avventura Epica.app" build/ipa/Payload/[0m
+2025-06-29T21:36:10.1076610Z [36;1mcd build/ipa[0m
+2025-06-29T21:36:10.1076900Z [36;1mzip -r AvventuraEpica.ipa Payload/[0m
+2025-06-29T21:36:10.1077150Z [36;1mrm -rf Payload[0m
+2025-06-29T21:36:10.3158950Z shell: /bin/bash -e {0}
+2025-06-29T21:36:10.3159300Z env:
+2025-06-29T21:36:10.3159560Z   pythonLocation: /Users/runner/hostedtoolcache/Python/3.13.5/arm64
+2025-06-29T21:36:10.3160010Z   PKG_CONFIG_PATH: /Users/runner/hostedtoolcache/Python/3.13.5/arm64/lib/pkgconfig
+2025-06-29T21:36:10.3160420Z   Python_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.13.5/arm64
+2025-06-29T21:36:10.3161020Z   Python2_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.13.5/arm64
+2025-06-29T21:36:10.3161400Z   Python3_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.13.5/arm64
+2025-06-29T21:36:10.3161890Z   FLUTTER_ROOT: /Users/runner/hostedtoolcache/flutter/stable-3.22.1-arm64
+2025-06-29T21:36:10.3162220Z   PUB_CACHE: /Users/runner/.pub-cache
+2025-06-29T21:36:10.3162440Z ##[endgroup]
+2025-06-29T21:36:10.3871270Z cp: build/ipa/avventura-epica.xcarchive/Products/Applications/Avventura Epica.app: No such file or directory
+2025-06-29T21:36:10.3885340Z ##[error]Process completed with exit code 1.
+2025-06-29T21:36:10.4020950Z Post job cleanup.
+2025-06-29T21:36:10.4096840Z Post job cleanup.
+2025-06-29T21:36:10.9351670Z [command]/opt/homebrew/bin/git version
+2025-06-29T21:36:10.9610810Z git version 2.50.0
+2025-06-29T21:36:10.9671210Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/fc5697c5-b44c-4a15-bbc8-69f8f22cd397/.gitconfig'
+2025-06-29T21:36:10.9699450Z Temporarily overriding HOME='/Users/runner/work/_temp/fc5697c5-b44c-4a15-bbc8-69f8f22cd397' before making global git config changes
+2025-06-29T21:36:10.9711390Z Adding repository directory to the temporary git global config as a safe directory
+2025-06-29T21:36:10.9712110Z [command]/opt/homebrew/bin/git config --global --add safe.directory /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp
+2025-06-29T21:36:10.9801170Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-06-29T21:36:11.0004930Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-06-29T21:36:11.1099040Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-06-29T21:36:11.1132130Z http.https://github.com/.extraheader
+2025-06-29T21:36:11.1219450Z [command]/opt/homebrew/bin/git config --local --unset-all http.https://github.com/.extraheader
+2025-06-29T21:36:11.1256560Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-06-29T21:36:11.2436740Z Cleaning up orphan processes
+2025-06-29T21:36:11.3452780Z Terminate orphan process: pid (9087) (ibtoold)
+2025-06-29T21:36:11.8288760Z Terminate orphan process: pid (6214) (ibtoold)
+2025-06-29T21:36:11.8707090Z Terminate orphan process: pid (6194) (ibtoold)
