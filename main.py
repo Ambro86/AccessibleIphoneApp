@@ -3698,6 +3698,15 @@ class AvventuraEpica:
         """Crea il menu di gioco incrementale con pulsanti accessibili"""
         self.container_pulsanti.controls.clear()
         
+        # Titolo gioco
+        titolo_gioco = ft.Text(
+            "AVVENTURA IN CORSO", 
+            size=24, 
+            weight=ft.FontWeight.BOLD, 
+            text_align=ft.TextAlign.CENTER,
+            color=ft.Colors.RED_400
+        )
+        
         # AZIONI INCREMENTALI - Prima riga
         azioni_incrementali = self.azioni_incrementali_possibili()
         if azioni_incrementali:
@@ -3941,9 +3950,10 @@ class AvventuraEpica:
         
         self.container_pulsanti.controls.append(torna_menu)
         
-        # Layout per gioco (SENZA titoli, PRIMA area storia, POI statistiche)
+        # Layout per gioco (CON titolo come primo elemento)
         self.container_principale.controls.clear()
         self.container_principale.controls.extend([
+            titolo_gioco,
             self.area_storia,
             self.area_stats,
             self.container_pulsanti
@@ -3955,6 +3965,15 @@ class AvventuraEpica:
     def crea_menu_inventario(self):
         """Menu inventario con pulsanti dinamici"""
         self.container_pulsanti.controls.clear()
+        
+        # Titolo inventario
+        titolo_inventario = ft.Text(
+            "INVENTARIO", 
+            size=24, 
+            weight=ft.FontWeight.BOLD, 
+            text_align=ft.TextAlign.CENTER,
+            color=ft.Colors.CYAN_400
+        )
         
         pulsanti_inventario = []
         
@@ -4019,6 +4038,7 @@ class AvventuraEpica:
         # Layout per inventario
         self.container_principale.controls.clear()
         self.container_principale.controls.extend([
+            titolo_inventario,
             self.area_storia,
             self.area_stats,
             self.container_pulsanti
@@ -4030,6 +4050,15 @@ class AvventuraEpica:
     def crea_menu_negozio(self):
         """Menu negozio con pulsanti individuali per ogni oggetto"""
         self.container_pulsanti.controls.clear()
+        
+        # Titolo negozio
+        titolo_negozio = ft.Text(
+            "NEGOZIO", 
+            size=24, 
+            weight=ft.FontWeight.BOLD, 
+            text_align=ft.TextAlign.CENTER,
+            color=ft.Colors.AMBER_400
+        )
         
         pulsanti_negozio = []
         
@@ -4085,6 +4114,7 @@ class AvventuraEpica:
         # Layout per negozio
         self.container_principale.controls.clear()
         self.container_principale.controls.extend([
+            titolo_negozio,
             self.area_storia,
             self.area_stats,
             self.container_pulsanti
@@ -4096,6 +4126,15 @@ class AvventuraEpica:
     def crea_menu_statistiche(self):
         """Menu statistiche semplificato"""
         self.container_pulsanti.controls.clear()
+        
+        # Titolo statistiche
+        titolo_statistiche = ft.Text(
+            "STATISTICHE", 
+            size=24, 
+            weight=ft.FontWeight.BOLD, 
+            text_align=ft.TextAlign.CENTER,
+            color=ft.Colors.PURPLE_400
+        )
         
         pulsanti = ft.Column([
             ft.ElevatedButton(
@@ -4113,6 +4152,7 @@ class AvventuraEpica:
         # Layout per statistiche
         self.container_principale.controls.clear()
         self.container_principale.controls.extend([
+            titolo_statistiche,
             self.area_storia,
             self.area_stats,
             self.container_pulsanti
