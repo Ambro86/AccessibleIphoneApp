@@ -1781,7 +1781,6 @@ class AvventuraEpica:
             min_lines=4,
             max_lines=6,
             text_size=14,
-            label=" Le tue statistiche",
             bgcolor=ft.Colors.BLUE_GREY_900,
             color=ft.Colors.CYAN_100,
             border_color=ft.Colors.CYAN_400,
@@ -1796,7 +1795,6 @@ class AvventuraEpica:
             min_lines=10,
             max_lines=15,
             text_size=14,
-            label="La tua storia epica",
             bgcolor=ft.Colors.DEEP_PURPLE_900,
             color=ft.Colors.AMBER_100,
             border_color=ft.Colors.AMBER_400,
@@ -2295,7 +2293,6 @@ class AvventuraEpica:
             min_lines=8,
             max_lines=12,
             text_size=14,
-            label=" Log Combattimento",
             bgcolor=ft.Colors.DEEP_ORANGE_900,
             color=ft.Colors.AMBER_100,
             border_color=ft.Colors.RED_400,
@@ -2806,7 +2803,6 @@ class AvventuraEpica:
             # TextField per nuovo nome
             self.campo_nuovo_nome = ft.TextField(
                 value=gatto_info["nome"],
-                label="Nuovo nome per il gatto",
                 width=300,
                 autofocus=True,
                 on_blur=self.riavvia_musica_dopo_dettatura
@@ -3359,8 +3355,6 @@ class AvventuraEpica:
         
         return ft.Column(
             [
-                ft.Text("IMPOSTAZIONI", size=20, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER),
-                ft.Divider(),
                 
                 ft.Text("Audio", size=16, weight=ft.FontWeight.BOLD),
                 toggle_audio,
@@ -3390,8 +3384,6 @@ class AvventuraEpica:
         """Crea il contenuto della tab info"""
         return ft.Column(
             [
-                ft.Text("INFORMAZIONI", size=20, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER),
-                ft.Divider(),
                 
                 ft.Container(height=20),
                 ft.Text("AVVENTURA EPICA", size=24, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER),
