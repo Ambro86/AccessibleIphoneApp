@@ -6,20 +6,20 @@
   "hp_giocatore": 100,
   "hp_max": 100,
   "livello": 1,
-  "esperienza": 8,
+  "esperienza": 0,
   "esperienza_prossimo_livello": 100,
   "attacco_base": 15,
   "difesa": 0,
-  "monete": 100,
-  "inventario": {},
+  "monete": 0,
+  "inventario": {
+    "Pozione Vita": 2
+  },
   "equipaggiamento": {
     "arma": null,
     "armatura": null,
     "accessorio": null
   },
-  "effetti_temporanei": {
-    "idratazione": 5
-  },
+  "effetti_temporanei": {},
   "oggetti": {
     "Villaggio": "\ud83d\udddd\ufe0f chiave di bronzo",
     "\ud83c\udf32 Bosco": "\ud83c\udff9 arco elfico",
@@ -147,7 +147,7 @@
   "volume_effetti": 0.7,
   "gatti": {
     "gatto_1": {
-      "nome": "Ambro",
+      "nome": "Micio",
       "emoji": "",
       "livello": 1,
       "attacco": 5,
@@ -155,8 +155,8 @@
       "fame": 100,
       "felicita": 100,
       "sbloccato": true,
-      "affinita": 40,
-      "nome_personalizzato": true,
+      "affinita": 31,
+      "nome_personalizzato": false,
       "aree_non_usato": 0,
       "forma_evoluta": false,
       "dialoghi_sbloccati": [],
@@ -229,19 +229,19 @@
   },
   "gatto_attivo": "gatto_1",
   "risorse": {
-    "cibo": 46,
-    "acqua": 53,
+    "cibo": 50,
+    "acqua": 50,
     "legno": 0,
     "pietra": 0,
     "ferro": 0,
-    "energia": 90
+    "energia": 100
   },
   "aree_sbloccate": [
     "Villaggio"
   ],
   "area_attuale": "Villaggio",
   "progressione_area": {
-    "Villaggio": 2,
+    "Villaggio": 0,
     "\ud83c\udfe0 Cantina": 0,
     "\ud83d\udeb0 Fogne": 0,
     "\ud83c\udf00 Labirinto Antico": 0,

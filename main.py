@@ -9,9 +9,12 @@ class AvventuraEpica:
         self.page = page
         self.versione = "1.0.0" 
         self.autore   = "Ambrogio Riili"
+        self.app_inizializzata = False  # Flag per evitare suoni durante init
         self.inizializza_gioco()
         self.crea_audio_system()
         self.crea_ui()
+        self.app_inizializzata = True  # Ora l'app è pronta
+        print("🎵 DEBUG: App completamente inizializzata")
         
     def inizializza_gioco(self):
         # Nuove aree con progressione lineare + area segreta
@@ -651,6 +654,8 @@ class AvventuraEpica:
         
     def crea_audio_system(self):
         """Sistema audio con supporto OGG"""
+        print("🎵 DEBUG: Inizializzazione sistema audio...")
+        
         # Musica di default (villaggio)
         self.musica_sottofondo = fa.Audio(
             src="assets/music/villaggio.ogg",
@@ -1051,6 +1056,11 @@ class AvventuraEpica:
     def riproduci_effetto(self, effetto):
         """Sistema canali dedicati fissi - SEMPLICE E FUNZIONANTE"""
         print(f"🔊 riproduci_effetto chiamato con: {effetto}")
+        
+        # Evita suoni durante l'inizializzazione dell'app
+        if not getattr(self, 'app_inizializzata', False):
+            print("🔇 App in inizializzazione - ignoro effetto sonoro")
+            return
         
         if not self.audio_abilitato:
             print("❌ Audio disabilitato")
@@ -1772,7 +1782,6 @@ class AvventuraEpica:
             max_lines=6,
             text_size=14,
             label=" Le tue statistiche",
-            helper_text="Statistiche giocatore: livello, salute, monete, attacco, difesa ed esperienza",
             bgcolor=ft.Colors.BLUE_GREY_900,
             color=ft.Colors.CYAN_100,
             border_color=ft.Colors.CYAN_400,
@@ -1788,7 +1797,6 @@ class AvventuraEpica:
             max_lines=15,
             text_size=14,
             label="La tua storia epica",
-            helper_text="Area della storia: mostra eventi, descrizioni e progressi dell'avventura",
             bgcolor=ft.Colors.DEEP_PURPLE_900,
             color=ft.Colors.AMBER_100,
             border_color=ft.Colors.AMBER_400,
@@ -1923,12 +1931,11 @@ class AvventuraEpica:
     def crea_vista_menu_principale(self):
         """Crea la vista del menu principale"""
         titolo = ft.Text(
-            "🏰 AVVENTURA EPICA 🏰", 
+            "Avventura Epica", 
             size=28, 
             weight=ft.FontWeight.BOLD, 
             text_align=ft.TextAlign.CENTER,
-            color=ft.Colors.AMBER_400,
-            semantics_label="Avventura Epica - Gioco di Avventura"
+            color=ft.Colors.AMBER_400
         )
         
         pulsanti = [
@@ -2108,12 +2115,11 @@ class AvventuraEpica:
     def crea_vista_impostazioni(self):
         """Crea la vista delle impostazioni"""
         titolo = ft.Text(
-            "⚙️ Impostazioni", 
+            "Impostazioni", 
             size=24, 
             weight=ft.FontWeight.BOLD, 
             text_align=ft.TextAlign.CENTER,
-            color=ft.Colors.PURPLE_400,
-            semantics_label="Sezione Impostazioni del gioco"
+            color=ft.Colors.PURPLE_400
         )
         
         contenuto_impostazioni = self.crea_contenuto_impostazioni()
@@ -2142,12 +2148,11 @@ class AvventuraEpica:
     def crea_vista_info(self):
         """Crea la vista delle informazioni"""
         titolo = ft.Text(
-            "ℹ️ Info Gioco", 
+            "Info Gioco", 
             size=24, 
             weight=ft.FontWeight.BOLD, 
             text_align=ft.TextAlign.CENTER,
-            color=ft.Colors.ORANGE_400,
-            semantics_label="Sezione Informazioni sul gioco"
+            color=ft.Colors.ORANGE_400
         )
         
         contenuto_info = self.crea_contenuto_info()
@@ -2180,8 +2185,7 @@ class AvventuraEpica:
             size=24, 
             weight=ft.FontWeight.BOLD, 
             text_align=ft.TextAlign.CENTER,
-            color=ft.Colors.BLUE_400,
-            semantics_label="Sezione Selezione Area: scegli dove esplorare"
+            color=ft.Colors.BLUE_400
         )
         
         pulsanti_aree = []
@@ -2238,8 +2242,7 @@ class AvventuraEpica:
             size=24, 
             weight=ft.FontWeight.BOLD, 
             text_align=ft.TextAlign.CENTER,
-            color=ft.Colors.RED_400,
-            semantics_label="Sezione Combattimento: affronta i mostri"
+            color=ft.Colors.RED_400
         )
         
         # Info mostro
@@ -2281,7 +2284,6 @@ class AvventuraEpica:
             max_lines=12,
             text_size=14,
             label=" Log Combattimento",
-            helper_text="Registro del combattimento: mostra i risultati e le azioni durante il combattimento",
             bgcolor=ft.Colors.DEEP_ORANGE_900,
             color=ft.Colors.AMBER_100,
             border_color=ft.Colors.RED_400,
@@ -2380,14 +2382,17 @@ class AvventuraEpica:
     
     def crea_vista_negozio(self):
         """Crea la vista del negozio"""
+        print(f"🏪 DEBUG: Creando vista negozio, monete attuali = {self.monete}")
         titolo = ft.Text(
-            "🛒 Negozio 🛒", 
+            "Negozio", 
             size=24, 
             weight=ft.FontWeight.BOLD, 
             text_align=ft.TextAlign.CENTER,
-            color=ft.Colors.ORANGE_400,
-            semantics_label="Sezione Negozio per acquistare oggetti"
+            color=ft.Colors.ORANGE_400
         )
+        
+        # Crea un campo monete che possiamo aggiornare
+        self.testo_monete_negozio = ft.Text(f"💰 Monete disponibili: {self.monete}", size=16, color=ft.Colors.AMBER_400)
         
         # Shop content
         pulsante_indietro = self.crea_pulsante_indietro()
@@ -2403,7 +2408,7 @@ class AvventuraEpica:
         oggetti_controls = []
         for oggetto in oggetti_negozio:
             pulsante_acquista = ft.ElevatedButton(
-                text=f"Acquista - {oggetto['prezzo']} monete",
+                text="Acquista",
                 on_click=lambda e, obj=oggetto: self.acquista_oggetto_negozio(obj),
                 bgcolor=ft.Colors.GREEN_600,
                 color=ft.Colors.WHITE,
@@ -2429,7 +2434,7 @@ class AvventuraEpica:
             ft.Container(height=10),
             titolo,
             ft.Container(height=20),
-            ft.Text(f"💰 Monete disponibili: {self.monete}", size=16, color=ft.Colors.AMBER_400),
+            self.testo_monete_negozio,
             ft.Container(height=20),
             ft.Column(oggetti_controls, spacing=10)
         ], scroll=ft.ScrollMode.AUTO, spacing=20, expand=True)
@@ -2452,21 +2457,39 @@ class AvventuraEpica:
         prezzo = oggetto['prezzo']
         nome = oggetto['nome']
         
+        print(f"🛒 DEBUG: acquista_oggetto_negozio chiamato per {nome}, prezzo={prezzo}")
+        print(f"💰 DEBUG: monete attuali = {self.monete}")
+        print(f"🎮 DEBUG: gioco_iniziato = {self.gioco_iniziato}")
+        
         if self.monete >= prezzo:
+            print(f"✅ DEBUG: Abbastanza monete, procedo con acquisto")
             self.monete -= prezzo
+            print(f"💰 DEBUG: Monete dopo acquisto = {self.monete}")
+            
             # Aggiungi oggetto all'inventario (semplificato)
             if nome not in self.inventario:
                 self.inventario[nome] = 0
             self.inventario[nome] += 1
+            print(f"📦 DEBUG: {nome} aggiunto all'inventario, quantità = {self.inventario[nome]}")
             
             self.aggiorna_storia(f"💰 Hai acquistato {nome} per {prezzo} monete!")
+            print(f"📖 DEBUG: Storia aggiornata")
             self.haptic_feedback("success")
-            
-            # Ricarica la vista negozio per aggiornare le monete
-            self.page.go("/negozio")
+            print(f"📳 DEBUG: Haptic feedback inviato")
+            if self.audio_abilitato:
+                self.riproduci_effetto("monete")
+                print(f"🔊 DEBUG: Effetto monete riprodotto")
+            # Aggiorna il display delle monete dinamicamente
+            if hasattr(self, 'testo_monete_negozio'):
+                self.testo_monete_negozio.value = f"💰 Monete disponibili: {self.monete}"
+                self.testo_monete_negozio.update()
+            print(f"🔄 DEBUG: Monete aggiornate a {self.monete}")
         else:
+            print(f"❌ DEBUG: Non abbastanza monete: {self.monete} < {prezzo}")
             self.aggiorna_storia(f"❌ Non hai abbastanza monete per {nome} (servono {prezzo}, ne hai {self.monete})")
             self.haptic_feedback("error")
+            # Ricarica la vista negozio per aggiornare le monete
+            self.page.go("/negozio")
     
     def crea_vista_gatti(self):
         """Crea la vista di gestione gatti"""
@@ -2477,8 +2500,7 @@ class AvventuraEpica:
             size=24, 
             weight=ft.FontWeight.BOLD, 
             text_align=ft.TextAlign.CENTER,
-            color=ft.Colors.PINK_400,
-            semantics_label="Schermata gestione gatti"
+            color=ft.Colors.PINK_400
         )
         
         sottotitolo = ft.Text(
@@ -2624,7 +2646,7 @@ class AvventuraEpica:
     def crea_vista_inventario(self):
         """Crea la vista dell'inventario"""
         titolo = ft.Text(
-            "📦 Inventario", 
+            "Inventario", 
             size=24, 
             weight=ft.FontWeight.BOLD, 
             text_align=ft.TextAlign.CENTER,
@@ -2727,9 +2749,9 @@ class AvventuraEpica:
             self.campo_nuovo_nome = ft.TextField(
                 value=gatto_info["nome"],
                 label="Nuovo nome per il gatto",
-                helper_text="Inserisci il nuovo nome per il tuo gatto",
                 width=300,
-                autofocus=True
+                autofocus=True,
+                on_blur=self.riavvia_musica_dopo_dettatura
             )
             
             def conferma_rinomina(e):
@@ -2787,6 +2809,24 @@ class AvventuraEpica:
             ],
             bgcolor=ft.Colors.GREY_900
         )
+    
+    def riavvia_musica_dopo_dettatura(self, e):
+        """Riavvia la musica dopo che l'utente ha finito di usare la dettatura vocale"""
+        print("🎵 DEBUG: Campo testo ha perso focus - riavvio musica se necessario")
+        
+        if not self.audio_abilitato:
+            return
+            
+        try:
+            # Riavvia sia musica che suoni ambientali
+            print("🎵 DEBUG: Riavvio musica area dopo dettatura")
+            self.cambia_musica_area(self.area_attuale)
+            
+            print("🌿 DEBUG: Riavvio suoni ambientali dopo dettatura") 
+            self.cambia_suono_ambiente_area(self.area_attuale)
+                
+        except Exception as ex:
+            print(f"🎵 WARNING: Errore riavvio audio dopo dettatura: {ex}")
     
     def crea_vista_gestione_reliquie(self):
         """Crea la vista per gestire le reliquie"""
@@ -2877,8 +2917,7 @@ class AvventuraEpica:
             size=24, 
             weight=ft.FontWeight.BOLD, 
             text_align=ft.TextAlign.CENTER,
-            color=ft.Colors.BLUE_400,
-            semantics_label="Sezione Selezione Area: scegli dove esplorare"
+            color=ft.Colors.BLUE_400
         )
         
         pulsanti_aree = []
@@ -2922,12 +2961,11 @@ class AvventuraEpica:
         self.contenuto_schermata.controls.clear()
         
         titolo = ft.Text(
-            "⚙️ Impostazioni", 
+            "Impostazioni", 
             size=24, 
             weight=ft.FontWeight.BOLD, 
             text_align=ft.TextAlign.CENTER,
-            color=ft.Colors.PURPLE_400,
-            semantics_label="Sezione Impostazioni del gioco"
+            color=ft.Colors.PURPLE_400
         )
         
         contenuto_impostazioni = self.crea_contenuto_impostazioni()
@@ -2945,12 +2983,11 @@ class AvventuraEpica:
         self.contenuto_schermata.controls.clear()
         
         titolo = ft.Text(
-            "ℹ️ Info Gioco", 
+            "Info Gioco", 
             size=24, 
             weight=ft.FontWeight.BOLD, 
             text_align=ft.TextAlign.CENTER,
-            color=ft.Colors.ORANGE_400,
-            semantics_label="Sezione Informazioni sul gioco"
+            color=ft.Colors.ORANGE_400
         )
         
         contenuto_info = self.crea_contenuto_info()
@@ -2975,8 +3012,7 @@ class AvventuraEpica:
             size=24, 
             weight=ft.FontWeight.BOLD, 
             text_align=ft.TextAlign.CENTER,
-            color=ft.Colors.RED_400,
-            semantics_label="Sezione Combattimento: affronta i mostri"
+            color=ft.Colors.RED_400
         )
         
         # Info mostro
@@ -3018,7 +3054,6 @@ class AvventuraEpica:
             max_lines=12,
             text_size=14,
             label=" Log Combattimento",
-            helper_text="Registro del combattimento: mostra i risultati e le azioni durante il combattimento",
             bgcolor=ft.Colors.DEEP_ORANGE_900,
             color=ft.Colors.AMBER_100,
             border_color=ft.Colors.RED_400,
@@ -3105,12 +3140,11 @@ class AvventuraEpica:
         self.contenuto_schermata.controls.clear()
         
         titolo = ft.Text(
-            "🛒 Negozio 🛒", 
+            "Negozio", 
             size=24, 
             weight=ft.FontWeight.BOLD, 
             text_align=ft.TextAlign.CENTER,
-            color=ft.Colors.ORANGE_400,
-            semantics_label="Sezione Negozio per acquistare oggetti"
+            color=ft.Colors.ORANGE_400
         )
         
         # Pulsante indietro
@@ -4002,9 +4036,11 @@ class AvventuraEpica:
             if not disponibile:
                 tooltip_text += " (Non hai abbastanza monete)"
             
+            print(f"🛒 DEBUG: Creando pulsante per {nome_oggetto}, prezzo={info['prezzo']}, disponibile={disponibile}, monete={self.monete}")
+            
             pulsanti_negozio.append(
                 ft.ElevatedButton(
-                    f"Compra {nome_oggetto} - {testo_prezzo}",
+                    f"Compra {nome_oggetto}",
                     on_click=lambda e, oggetto=nome_oggetto, prezzo=info["prezzo"]: self.compra_oggetto_specifico(e, oggetto, prezzo),
                     width=350,
                     height=60,
@@ -4949,8 +4985,7 @@ class AvventuraEpica:
             size=24, 
             weight=ft.FontWeight.BOLD, 
             text_align=ft.TextAlign.CENTER,
-            color=ft.Colors.PINK_400,
-            semantics_label="Schermata gestione gatti"
+            color=ft.Colors.PINK_400
         )
         
         sottotitolo = ft.Text(
@@ -6485,7 +6520,13 @@ class AvventuraEpica:
         
     def compra_oggetto_specifico(self, e, nome_oggetto, prezzo):
         """Compra un oggetto specifico dal negozio"""
+        print(f"🛒 DEBUG: Tentativo acquisto {nome_oggetto} per {prezzo} monete")
+        print(f"🎮 DEBUG: gioco_iniziato = {self.gioco_iniziato}")
+        print(f"💰 DEBUG: monete attuali = {self.monete}")
+        
         if not self.gioco_iniziato:
+            print("❌ DEBUG: Gioco non iniziato!")
+            self.aggiorna_storia("❌ Devi iniziare una partita prima di poter comprare oggetti!")
             return
             
         if self.monete < prezzo:
@@ -6705,11 +6746,89 @@ class AvventuraEpica:
         try:
             with open("avventura_epica_save.json", "w") as file:
                 json.dump(stato_gioco, file, indent=2)
-            self.aggiorna_storia("Avventura salvata con successo!")
+            self.mostra_conferma_salvataggio(True)
             self.haptic_feedback("success")
         except Exception as ex:
-            self.aggiorna_storia(f"❌ Errore salvataggio: {str(ex)}")
+            self.mostra_conferma_salvataggio(False, str(ex))
             
+    def mostra_conferma_salvataggio(self, successo, errore=None):
+        """Mostra una schermata di conferma salvataggio accessibile"""
+        if successo:
+            titolo = "Salvataggio Completato"
+            messaggio = "La tua avventura è stata salvata con successo!"
+            colore_titolo = ft.Colors.GREEN_400
+            icona = "✅"
+        else:
+            titolo = "Errore Salvataggio"
+            messaggio = f"Si è verificato un errore durante il salvataggio:\n{errore}"
+            colore_titolo = ft.Colors.RED_400
+            icona = "❌"
+        
+        # Crea vista accessibile per conferma salvataggio
+        vista_conferma = ft.View(
+            route="/conferma_salvataggio",
+            appbar=ft.AppBar(
+                title=ft.Text("Salvataggio"),
+                bgcolor=ft.Colors.DEEP_PURPLE_900,
+                color=ft.Colors.WHITE
+            ),
+            controls=[
+                ft.Container(
+                    content=ft.Column([
+                        # Titolo accessibile senza emoji
+                        ft.Text(
+                            titolo,
+                            size=24,
+                            weight=ft.FontWeight.BOLD,
+                            text_align=ft.TextAlign.CENTER,
+                            color=colore_titolo
+                        ),
+                        ft.Container(height=20),
+                        # Icona separata per decorazione
+                        ft.Text(
+                            icona,
+                            size=48,
+                            text_align=ft.TextAlign.CENTER
+                        ),
+                        ft.Container(height=20),
+                        # Messaggio principale
+                        ft.Text(
+                            messaggio,
+                            size=16,
+                            text_align=ft.TextAlign.CENTER,
+                            color=ft.Colors.WHITE
+                        ),
+                        ft.Container(height=30),
+                        # Pulsante per tornare al gioco
+                        ft.ElevatedButton(
+                            text="Continua",
+                            on_click=self.torna_al_gioco_da_conferma,
+                            width=200,
+                            height=50,
+                            bgcolor=ft.Colors.PURPLE_600,
+                            color=ft.Colors.WHITE,
+                            tooltip="Torna al gioco"
+                        )
+                    ], 
+                    alignment=ft.MainAxisAlignment.CENTER,
+                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                    spacing=10),
+                    padding=20,
+                    expand=True
+                )
+            ],
+            bgcolor=ft.Colors.DEEP_PURPLE_900
+        )
+        
+        self.page.views.append(vista_conferma)
+        self.page.go("/conferma_salvataggio")
+        
+    def torna_al_gioco_da_conferma(self, e):
+        """Torna al gioco dalla schermata di conferma salvataggio"""
+        if len(self.page.views) > 1:
+            self.page.views.pop()
+            self.page.go(self.page.views[-1].route)
+
     def controlla_sblocco_portale_sogni(self):
         """Controlla se il portale dei sogni può essere sbloccato"""
         # Condizioni: Imperatore sconfitto + tutti i gatti al max livello + pesci magici rari
