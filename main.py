@@ -1935,7 +1935,8 @@ class AvventuraEpica:
             size=28, 
             weight=ft.FontWeight.BOLD, 
             text_align=ft.TextAlign.CENTER,
-            color=ft.Colors.AMBER_400
+            color=ft.Colors.AMBER_400,
+            semantics_label="Avventura Epica, titolo principale"
         )
         
         pulsanti = [
@@ -1949,7 +1950,7 @@ class AvventuraEpica:
                 tooltip="Inizia una nuova avventura o continua"
             ),
             ft.ElevatedButton(
-                text="📂 Carica Gioco",
+                text="Carica Gioco",
                 on_click=self.carica_gioco,
                 width=300,
                 height=60,
@@ -2119,7 +2120,8 @@ class AvventuraEpica:
             size=24, 
             weight=ft.FontWeight.BOLD, 
             text_align=ft.TextAlign.CENTER,
-            color=ft.Colors.PURPLE_400
+            color=ft.Colors.PURPLE_400,
+            semantics_label="Impostazioni"
         )
         
         contenuto_impostazioni = self.crea_contenuto_impostazioni()
@@ -2152,7 +2154,8 @@ class AvventuraEpica:
             size=24, 
             weight=ft.FontWeight.BOLD, 
             text_align=ft.TextAlign.CENTER,
-            color=ft.Colors.ORANGE_400
+            color=ft.Colors.ORANGE_400,
+            semantics_label="Info Gioco"
         )
         
         contenuto_info = self.crea_contenuto_info()
@@ -2242,7 +2245,8 @@ class AvventuraEpica:
             size=24, 
             weight=ft.FontWeight.BOLD, 
             text_align=ft.TextAlign.CENTER,
-            color=ft.Colors.RED_400
+            color=ft.Colors.RED_400,
+            semantics_label="Combattimento"
         )
         
         # Info mostro
@@ -2388,11 +2392,12 @@ class AvventuraEpica:
             size=24, 
             weight=ft.FontWeight.BOLD, 
             text_align=ft.TextAlign.CENTER,
-            color=ft.Colors.ORANGE_400
+            color=ft.Colors.ORANGE_400,
+            semantics_label="Info Gioco"
         )
         
         # Crea un campo monete che possiamo aggiornare
-        self.testo_monete_negozio = ft.Text(f"💰 Monete disponibili: {self.monete}", size=16, color=ft.Colors.AMBER_400)
+        self.testo_monete_negozio = ft.Text(f"Monete disponibili: {self.monete}", size=16, color=ft.Colors.AMBER_400)
         
         # Shop content
         pulsante_indietro = self.crea_pulsante_indietro()
@@ -2481,7 +2486,7 @@ class AvventuraEpica:
                 print(f"🔊 DEBUG: Effetto monete riprodotto")
             # Aggiorna il display delle monete dinamicamente
             if hasattr(self, 'testo_monete_negozio'):
-                self.testo_monete_negozio.value = f"💰 Monete disponibili: {self.monete}"
+                self.testo_monete_negozio.value = f"Monete disponibili: {self.monete}"
                 self.testo_monete_negozio.update()
             print(f"🔄 DEBUG: Monete aggiornate a {self.monete}")
         else:
@@ -2500,7 +2505,8 @@ class AvventuraEpica:
             size=24, 
             weight=ft.FontWeight.BOLD, 
             text_align=ft.TextAlign.CENTER,
-            color=ft.Colors.PINK_400
+            color=ft.Colors.PINK_400,
+            semantics_label="Gestione Gatti"
         )
         
         sottotitolo = ft.Text(
@@ -2727,11 +2733,12 @@ class AvventuraEpica:
     def crea_vista_rinomina_gatto(self):
         """Crea la vista per rinominare il gatto"""
         titolo = ft.Text(
-            "✏️ Rinomina Gatto", 
+            "Rinomina Gatto", 
             size=24, 
             weight=ft.FontWeight.BOLD, 
             text_align=ft.TextAlign.CENTER,
-            color=ft.Colors.PURPLE_400
+            color=ft.Colors.PURPLE_400,
+            semantics_label="Impostazioni"
         )
         
         if not self.gatto_attivo or not self.gatti[self.gatto_attivo].get("sbloccato", False):
@@ -2965,7 +2972,8 @@ class AvventuraEpica:
             size=24, 
             weight=ft.FontWeight.BOLD, 
             text_align=ft.TextAlign.CENTER,
-            color=ft.Colors.PURPLE_400
+            color=ft.Colors.PURPLE_400,
+            semantics_label="Impostazioni"
         )
         
         contenuto_impostazioni = self.crea_contenuto_impostazioni()
@@ -2987,7 +2995,8 @@ class AvventuraEpica:
             size=24, 
             weight=ft.FontWeight.BOLD, 
             text_align=ft.TextAlign.CENTER,
-            color=ft.Colors.ORANGE_400
+            color=ft.Colors.ORANGE_400,
+            semantics_label="Info Gioco"
         )
         
         contenuto_info = self.crea_contenuto_info()
@@ -3144,7 +3153,8 @@ class AvventuraEpica:
             size=24, 
             weight=ft.FontWeight.BOLD, 
             text_align=ft.TextAlign.CENTER,
-            color=ft.Colors.ORANGE_400
+            color=ft.Colors.ORANGE_400,
+            semantics_label="Info Gioco"
         )
         
         # Pulsante indietro
@@ -3498,30 +3508,30 @@ class AvventuraEpica:
     def aggiorna_labels_volume(self):
         """Aggiorna le etichette del volume"""
         if hasattr(self, 'volume_musica_label_tab'):
-            self.volume_musica_label_tab.value = f"🎵 Volume Musica: {int(self.volume_musica * 100)}%"
+            self.volume_musica_label_tab.value = f"Volume Musica: {int(self.volume_musica * 100)}%"
         if hasattr(self, 'volume_effetti_label_tab'):
-            self.volume_effetti_label_tab.value = f"🔊 Volume Effetti: {int(self.volume_effetti * 100)}%"
+            self.volume_effetti_label_tab.value = f"Volume Effetti: {int(self.volume_effetti * 100)}%"
         self.page.update()
     
     def crea_contenuto_impostazioni(self):
         """Crea il contenuto della tab impostazioni"""
         # Toggle audio e haptic
         toggle_audio = ft.Switch(
-            label="🔊 Audio Attivato",
+            label="Audio Attivato",
             value=self.audio_abilitato,
             on_change=self.toggle_audio_callback,
             tooltip="Attiva o disattiva tutti gli effetti audio"
         )
         
         toggle_haptic = ft.Switch(
-            label="📳 Vibrazione Attivata",
+            label="Vibrazione Attivata",
             value=self.haptic_abilitato,
             on_change=self.toggle_haptic_callback,
             tooltip="Attiva o disattiva il feedback aptico"
         )
         
         # Slider volume musica per tab
-        self.volume_musica_label_tab = ft.Text(f"🎵 Volume Musica: {int(self.volume_musica * 100)}%")
+        self.volume_musica_label_tab = ft.Text(f"Volume Musica: {int(self.volume_musica * 100)}%")
         slider_volume_musica = ft.Slider(
             min=0,
             max=1,
@@ -3532,7 +3542,7 @@ class AvventuraEpica:
         )
         
         # Slider volume effetti per tab
-        self.volume_effetti_label_tab = ft.Text(f"🔊 Volume Effetti: {int(self.volume_effetti * 100)}%")
+        self.volume_effetti_label_tab = ft.Text(f"Volume Effetti: {int(self.volume_effetti * 100)}%")
         slider_volume_effetti = ft.Slider(
             min=0,
             max=1,
@@ -3555,7 +3565,7 @@ class AvventuraEpica:
                 ft.Text("IMPOSTAZIONI", size=20, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER),
                 ft.Divider(),
                 
-                ft.Text("🔊 Audio", size=16, weight=ft.FontWeight.BOLD),
+                ft.Text("Audio", size=16, weight=ft.FontWeight.BOLD),
                 toggle_audio,
                 ft.Container(height=10),
                 
@@ -3570,7 +3580,7 @@ class AvventuraEpica:
                 test_audio_btn,
                 ft.Divider(),
                 
-                ft.Text("📳 Feedback", size=16, weight=ft.FontWeight.BOLD),
+                ft.Text("Feedback", size=16, weight=ft.FontWeight.BOLD),
                 toggle_haptic,
             ],
             scroll=ft.ScrollMode.AUTO,
@@ -3591,8 +3601,8 @@ class AvventuraEpica:
                 ft.Container(height=10),
                 
                 ft.Text(f" Versione: {self.versione}", size=16),
-                ft.Text(f"👨‍💻 Autore: {self.autore}", size=16),
-                ft.Text("📅 Data rilascio: 18 giugno 2025", size=16),
+                ft.Text(f"Autore: {self.autore}", size=16),
+                ft.Text("Data rilascio: 18 giugno 2025", size=16),
                 ft.Container(height=20),
                 
                 ft.Text("Descrizione:", size=16, weight=ft.FontWeight.BOLD),
@@ -3605,15 +3615,15 @@ class AvventuraEpica:
                 ),
                 ft.Container(height=20),
                 
-                ft.Text("🎮 Caratteristiche:", size=16, weight=ft.FontWeight.BOLD),
-                ft.Text("🗺️ 16 aree uniche da esplorare", size=14),
+                ft.Text("Caratteristiche:", size=16, weight=ft.FontWeight.BOLD),
+                ft.Text("16 aree uniche da esplorare", size=14),
                 ft.Text("Sistema di combattimento con livellamento", size=14),
-                ft.Text("🛍️ Negozi e mercanti", size=14),
-                ft.Text("🎒 Sistema di inventario ed equipaggiamento", size=14),
-                ft.Text("🎵 Audio immersivo per ogni area", size=14),
-                ft.Text("📳 Feedback aptico per un'esperienza tattile", size=14),
-                ft.Text("💾 Salvataggio e caricamento partite", size=14),
-                ft.Text("♿ Completamente accessibile con screen reader", size=14),
+                ft.Text("Negozi e mercanti", size=14),
+                ft.Text("Sistema di inventario ed equipaggiamento", size=14),
+                ft.Text("Audio immersivo per ogni area", size=14),
+                ft.Text("Feedback aptico per un'esperienza tattile", size=14),
+                ft.Text("Salvataggio e caricamento partite", size=14),
+                ft.Text("Completamente accessibile con screen reader", size=14),
             ],
             scroll=ft.ScrollMode.AUTO,
             spacing=8,
@@ -3655,7 +3665,7 @@ class AvventuraEpica:
                 )
             ),
             ft.ElevatedButton(
-                text="📂 Carica Gioco Salvato",
+                text="Carica Gioco Salvato",
                 on_click=self.carica_gioco,
                 width=300,
                 height=50,
@@ -4117,21 +4127,21 @@ class AvventuraEpica:
         
         # Toggle audio e haptic
         toggle_audio = ft.Switch(
-            label="🔊 Audio Attivato",
+            label="Audio Attivato",
             value=self.audio_abilitato,
             on_change=self.toggle_audio_callback,
             tooltip="Attiva o disattiva tutti gli effetti audio"
         )
         
         toggle_haptic = ft.Switch(
-            label="📳 Vibrazione Attivata",
+            label="Vibrazione Attivata",
             value=self.haptic_abilitato,
             on_change=self.toggle_haptic_callback,
             tooltip="Attiva o disattiva il feedback aptico"
         )
         
         # Slider volume musica
-        self.volume_musica_label = ft.Text(f"🎵 Volume Musica: {int(self.volume_musica * 100)}%")
+        self.volume_musica_label = ft.Text(f"Volume Musica: {int(self.volume_musica * 100)}%")
         slider_volume_musica = ft.Slider(
             min=0,
             max=1,
@@ -4142,7 +4152,7 @@ class AvventuraEpica:
         )
         
         # Slider volume effetti
-        self.volume_effetti_label = ft.Text(f"🔊 Volume Effetti: {int(self.volume_effetti * 100)}%")
+        self.volume_effetti_label = ft.Text(f"Volume Effetti: {int(self.volume_effetti * 100)}%")
         slider_volume_effetti = ft.Slider(
             min=0,
             max=1,
@@ -4240,11 +4250,11 @@ class AvventuraEpica:
         
         # Aggiorna label se esiste (per compatibilità con vecchi menu)
         if hasattr(self, 'volume_musica_label'):
-            self.volume_musica_label.value = f"🎵 Volume Musica: {int(self.volume_musica * 100)}%"
+            self.volume_musica_label.value = f"Volume Musica: {int(self.volume_musica * 100)}%"
         
         # Aggiorna label nella tab se esiste
         if hasattr(self, 'volume_musica_label_tab'):
-            self.volume_musica_label_tab.value = f"🎵 Volume Musica: {int(self.volume_musica * 100)}%"
+            self.volume_musica_label_tab.value = f"Volume Musica: {int(self.volume_musica * 100)}%"
         
         self.page.update()
             
@@ -4263,11 +4273,11 @@ class AvventuraEpica:
         
         # Aggiorna label se esiste (per compatibilità con vecchi menu)
         if hasattr(self, 'volume_effetti_label'):
-            self.volume_effetti_label.value = f"🔊 Volume Effetti: {int(self.volume_effetti * 100)}%"
+            self.volume_effetti_label.value = f"Volume Effetti: {int(self.volume_effetti * 100)}%"
         
         # Aggiorna label nella tab se esiste  
         if hasattr(self, 'volume_effetti_label_tab'):
-            self.volume_effetti_label_tab.value = f"🔊 Volume Effetti: {int(self.volume_effetti * 100)}%"
+            self.volume_effetti_label_tab.value = f"Volume Effetti: {int(self.volume_effetti * 100)}%"
         
         self.page.update()
         
@@ -4878,7 +4888,8 @@ class AvventuraEpica:
             size=24, 
             weight=ft.FontWeight.BOLD, 
             text_align=ft.TextAlign.CENTER,
-            color=ft.Colors.PURPLE_400
+            color=ft.Colors.PURPLE_400,
+            semantics_label="Impostazioni"
         )
         
         sottotitolo = ft.Text(
@@ -4985,7 +4996,8 @@ class AvventuraEpica:
             size=24, 
             weight=ft.FontWeight.BOLD, 
             text_align=ft.TextAlign.CENTER,
-            color=ft.Colors.PINK_400
+            color=ft.Colors.PINK_400,
+            semantics_label="Gestione Gatti"
         )
         
         sottotitolo = ft.Text(
@@ -6531,7 +6543,7 @@ class AvventuraEpica:
             
         if self.monete < prezzo:
             testo = f"❌ Non hai abbastanza monete per comprare {nome_oggetto}!"
-            testo += f"\n💰 Ti servono {prezzo} monete, ne hai {self.monete}"
+            testo += f"\nTi servono {prezzo} monete, ne hai {self.monete}"
         else:
             self.monete -= prezzo
             
