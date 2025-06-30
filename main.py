@@ -2137,7 +2137,7 @@ class AvventuraEpica:
         content = ft.Column([
             titolo,
             ft.Container(height=20),
-            contenuto_impostazioni,
+            *contenuto_impostazioni,
             ft.Container(height=20),
             self.crea_pulsante_indietro()
         ], scroll=ft.ScrollMode.AUTO, spacing=20, expand=True)
@@ -2170,7 +2170,7 @@ class AvventuraEpica:
         content = ft.Column([
             titolo,
             ft.Container(height=20),
-            contenuto_info,
+            *contenuto_info,
             ft.Container(height=20),
             self.crea_pulsante_indietro()
         ], scroll=ft.ScrollMode.AUTO, spacing=20, expand=True)
@@ -3353,66 +3353,51 @@ class AvventuraEpica:
             tooltip="Riproduci un suono di test"
         )
         
-        return ft.Column(
-            [
-                ft.Text("Audio", size=16, weight=ft.FontWeight.BOLD),
-                toggle_audio,
-                ft.Container(height=10),
-                self.volume_musica_label_tab,
-                slider_volume_musica,
-                ft.Container(height=10),
-                self.volume_effetti_label_tab,
-                slider_volume_effetti,
-                ft.Container(height=10),
-                
-                test_audio_btn,
-                ft.Divider(),
-                
-                ft.Text("Feedback", size=16, weight=ft.FontWeight.BOLD),
-                toggle_haptic,
-            ],
-            scroll=ft.ScrollMode.AUTO,
-            spacing=10,
-            expand=True,
-            horizontal_alignment=ft.CrossAxisAlignment.CENTER
-        )
+        return [
+            ft.Text("Audio", size=16, weight=ft.FontWeight.BOLD),
+            toggle_audio,
+            ft.Container(height=10),
+            self.volume_musica_label_tab,
+            slider_volume_musica,
+            ft.Container(height=10),
+            self.volume_effetti_label_tab,
+            slider_volume_effetti,
+            ft.Container(height=10),
+            test_audio_btn,
+            ft.Divider(),
+            ft.Text("Feedback", size=16, weight=ft.FontWeight.BOLD),
+            toggle_haptic,
+        ]
     
     def crea_contenuto_info(self):
         """Crea il contenuto della tab info"""
-        return ft.Column(
-            [
-                ft.Container(height=20),
-                ft.Text("AVVENTURA EPICA", size=24, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER),
-                ft.Container(height=10),
-                ft.Text(f" Versione: {self.versione}", size=16),
-                ft.Text(f"Autore: {self.autore}", size=16),
-                ft.Text("Data rilascio: 18 giugno 2025", size=16),
-                ft.Container(height=20),
-                ft.Text("Descrizione:", size=16, weight=ft.FontWeight.BOLD),
-                ft.Text(
-                    "Un emozionante RPG accessibile con audio immersivo e feedback aptico. "
-                    "Esplora 16 aree diverse, combatti mostri, raccogli tesori, visita negozi "
-                    "e diventa il nuovo re!",
-                    size=14,
-                    text_align=ft.TextAlign.CENTER
-                ),
-                ft.Container(height=20),
-                
-                ft.Text("Caratteristiche:", size=16, weight=ft.FontWeight.BOLD),
-                ft.Text("16 aree uniche da esplorare", size=14),
-                ft.Text("Sistema di combattimento con livellamento", size=14),
-                ft.Text("Negozi e mercanti", size=14),
-                ft.Text("Sistema di inventario ed equipaggiamento", size=14),
-                ft.Text("Audio immersivo per ogni area", size=14),
-                ft.Text("Feedback aptico per un'esperienza tattile", size=14),
-                ft.Text("Salvataggio e caricamento partite", size=14),
-                ft.Text("Completamente accessibile con screen reader", size=14),
-            ],
-            scroll=ft.ScrollMode.AUTO,
-            spacing=8,
-            expand=True,
-            horizontal_alignment=ft.CrossAxisAlignment.CENTER
-        )
+        return [
+            ft.Container(height=20),
+            ft.Text("AVVENTURA EPICA", size=24, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER),
+            ft.Container(height=10),
+            ft.Text(f" Versione: {self.versione}", size=16),
+            ft.Text(f"Autore: {self.autore}", size=16),
+            ft.Text("Data rilascio: 18 giugno 2025", size=16),
+            ft.Container(height=20),
+            ft.Text("Descrizione:", size=16, weight=ft.FontWeight.BOLD),
+            ft.Text(
+                "Un emozionante RPG accessibile con audio immersivo e feedback aptico. "
+                "Esplora 16 aree diverse, combatti mostri, raccogli tesori, visita negozi "
+                "e diventa il nuovo re!",
+                size=14,
+                text_align=ft.TextAlign.CENTER
+            ),
+            ft.Container(height=20),
+            ft.Text("Caratteristiche:", size=16, weight=ft.FontWeight.BOLD),
+            ft.Text("16 aree uniche da esplorare", size=14),
+            ft.Text("Sistema di combattimento con livellamento", size=14),
+            ft.Text("Negozi e mercanti", size=14),
+            ft.Text("Sistema di inventario ed equipaggiamento", size=14),
+            ft.Text("Audio immersivo per ogni area", size=14),
+            ft.Text("Feedback aptico per un'esperienza tattile", size=14),
+            ft.Text("Salvataggio e caricamento partite", size=14),
+            ft.Text("Completamente accessibile con screen reader", size=14),
+        ]
 
     def crea_menu_principale_per_tab(self):
         """Crea il menu principale per la tab Home con colori"""
