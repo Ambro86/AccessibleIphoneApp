@@ -3,14 +3,14 @@
     0,
     0
   ],
-  "hp_giocatore": 100,
+  "hp_giocatore": 50,
   "hp_max": 100,
   "livello": 1,
-  "esperienza": 0,
+  "esperienza": 16,
   "esperienza_prossimo_livello": 100,
   "attacco_base": 15,
   "difesa": 0,
-  "monete": 100,
+  "monete": 150,
   "inventario": {},
   "equipaggiamento": {
     "arma": null,
@@ -153,7 +153,7 @@
       "fame": 100,
       "felicita": 100,
       "sbloccato": true,
-      "affinita": 31,
+      "affinita": 32,
       "nome_personalizzato": false,
       "aree_non_usato": 0,
       "forma_evoluta": false,
@@ -232,14 +232,14 @@
     "legno": 0,
     "pietra": 0,
     "ferro": 0,
-    "energia": 100
+    "energia": 80
   },
   "aree_sbloccate": [
     "Villaggio"
   ],
   "area_attuale": "Villaggio",
   "progressione_area": {
-    "Villaggio": 0,
+    "Villaggio": 1,
     "\ud83c\udfe0 Cantina": 0,
     "\ud83d\udeb0 Fogne": 0,
     "\ud83c\udf00 Labirinto Antico": 0,
