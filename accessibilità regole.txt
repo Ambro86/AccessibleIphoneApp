@@ -1,0 +1,109 @@
+1. ❌ page.update() non attiva VoiceOver → ✅ Usa page.go()
+• 
+Problema: Quando usi page.update(), VoiceOver non fa il suono "trun" e il focus non si riposiziona all'inizio.
+• 
+✅ Soluzione:
+• 
+Usa page.views per creare schermate
+• 
+Naviga con page.go("/nome_rotta")
+• 
+Questo simula un cambio schermata nativo (come in Flutter) → VoiceOver reagisce
+page.views.append(ft.View("/gatti", controls=[...]))
+page.go("/gatti")
+
+Quando modifichi page.views, serve sempre page.update() subito dopo:
+python
+Copia
+Modifica
+if not any(v.route == "/gioco" for v in page.views):
+    page.views.append(
+        ft.View("/gioco", controls=[...])
+    )
+    page.update()  # 💡 Serve solo qui
+page.go("/gioco")  # E questo attiva VoiceOver
+ 
+2. Struttura delle viste
+• 
+✅ Ogni “pagina” o schermata della tua app dev'essere una ft.View
+• 
+✅ Ogni View dovrebbe avere un titolo in alto (ft.AppBar o ft.Text visibile)
+• 
+🔁 Per tornare indietro: usa page.views.pop() e page.go("/precedente")
+ 
+3. Etichette per screen reader
+• 
+✅ Per i campi di testo (TextField):
+• 
+Usa label=, hint_text= o helper_text=
+• 
+✅ Per i bottoni (ElevatedButton, TextButton):
+• 
+Usa tooltip="Descrizione accessibile" (invece di semantics_label)
+• 
+✅ Per testi descrittivi accessibili:
+• 
+Usa Text(semantics_label=..., visible=False) sopra o vicino al controllo
+• 
+❌ Evita semantics_label su Container, Column, TextField, ecc. 
+3. ❌ semantics_label su ft.Container → ✅ Usa ft.Text(..., semantics_label=..., visible=False)
+• 
+Problema: Container non supporta il parametro semantics_label → lancia un errore.
+• 
+✅ Soluzione: Inserisci un Text con semantics_label prima o dentro il container, invisibile ma leggibile da VoiceOver.
+ft.Text(
+    "", 
+    semantics_label="Lista gatti disponibili, scorri per vedere tutti i gatti",
+    visible=False
+),
+ft.Container(
+    content=ft.Column(gatti_controls)
+)
+3. ❌ semantics_label su ElevatedButton → ✅ Usa tooltip
+• 
+Problema: ElevatedButton non accetta semantics_label → genera errore.
+• 
+✅ Soluzione: Usa tooltip="Testo per lettore schermo".
+ft.ElevatedButton(
+    text="Rinomina",
+    tooltip="Rinomina il gatto Micio",
+    on_click=...
+)
+
+4. 🧠 Annunciare contenuti dinamici con VoiceOver
+• 
+✅ Crea un Text invisibile e aggiornalo con .focus() per far leggere un messaggio specifico a VoiceOver.
+annuncio = ft.Text("", visible=False)
+
+def annuncia(msg):
+    annuncio.value = msg
+    annuncio.visible = True
+    page.update()
+    annuncio.focus()
+
+5. ❌ Non aggiornare tutto con page.update() → ✅ Aggiorna solo i controlli
+• 
+Problema: usare page.update() per ogni cambiamento è pesante e poco accessibile.
+• 
+✅ Soluzione:
+• 
+Aggiorna singoli elementi con .update()
+nome_gatto.value = "Micio aggiornato"
+nome_gatto.update()
+ 
+6. ✅ Usa label, hint_text, helper_text nei TextField
+• 
+✅ Questi campi sono letti da VoiceOver come descrizione del campo.
+• 
+❌ Non usare semantics_label su TextField.
+ft.TextField(
+    label="Nome del gatto",
+    hint_text="Scrivi un nuovo nome"
+)
+ 
+7. ✅ Descrizione per gruppi dinamici (es. liste, sezioni)
+• 
+Quando generi liste dinamiche (es. lista gatti), precedile con un Text accessibile:
+ft.Text("", semantics_label="Lista gatti. Scorri per esplorare.", visible=False),
+ft.Column(lista_gatti)
+ 

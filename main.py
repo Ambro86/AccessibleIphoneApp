@@ -16,7 +16,7 @@ class AvventuraEpica:
     def inizializza_gioco(self):
         # Nuove aree con progressione lineare + area segreta
         self.aree_ordinate = [
-            "🏘️ Villaggio",
+            "Villaggio",
             "🏠 Cantina", 
             "🚰 Fogne",
             "🌀 Labirinto Antico",
@@ -39,8 +39,8 @@ class AvventuraEpica:
         self.gatto_da_rinominare = None
         
         #  Sistema incrementale con gatti e risorse
-        self.aree_sbloccate = ["🏘️ Villaggio"]
-        self.area_attuale = "🏘️ Villaggio"
+        self.aree_sbloccate = ["Villaggio"]
+        self.area_attuale = "Villaggio"
         self.progressione_area = {area: 0 for area in self.aree_ordinate}
         
         # Sistema di navigazione a schermate
@@ -326,7 +326,7 @@ class AvventuraEpica:
         
         # Boss per ogni area con meccaniche uniche
         self.boss_aree = {
-            "🏘️ Villaggio": {
+            "Villaggio": {
                 "nome": "🐕 Cane Randagio", "hp": 180, "attacco": 40, "exp": 75,
                 "chiave": "🗝️ Chiave della Cantina", "abilita_speciale": "morso_feroce"
             },
@@ -396,9 +396,9 @@ class AvventuraEpica:
             }
         }
         
-        # 📖 Descrizioni ricche e immersive
+        # Descrizioni ricche e immersive
         self.descrizioni = {
-            "🏘️ Villaggio": "Un tranquillo villaggio con case di pietra. Gli abitanti ti salutano calorosamente. Qui puoi riposare e fare acquisti. Ma si sentono strani rumori dalla cantina...",
+            "Villaggio": "Un tranquillo villaggio con case di pietra. Gli abitanti ti salutano calorosamente. Qui puoi riposare e fare acquisti. Ma si sentono strani rumori dalla cantina...",
             "🏠 Cantina": "Una cantina buia e umida sotto il villaggio. Odore di muffa e formaggio invecchiato. Occhi rossi ti fissano dall'oscurità. I ratti giganti hanno invaso questo posto e il loro Re Ratto custodisce una chiave antica.",
             "🚰 Fogne": "Tunnel sotterranei fetidi con acqua stagnante. Topi di fogna enormi si aggirano nei canali. Il fetore è insopportabile e da solo non riusciresti mai. Serve l'aiuto di un gatto partner per affrontare il Boss Topo delle Fogne.",
             "🌀 Labirinto Antico": "Un intricato labirinto di pietra con pareti che si spostano magicamente. Antiche rune brillano debolmente illuminando corridoi senza fine. Il Guardiano del Labirinto conosce tutti i passaggi segreti e può teletrasportarsi istantaneamente.",
@@ -419,7 +419,7 @@ class AvventuraEpica:
         
         # 🎒 Oggetti speciali distribuiti per il mondo
         self.oggetti = {
-            "🏘️ Villaggio": "🗝️ chiave di bronzo",
+            "Villaggio": "🗝️ chiave di bronzo",
             "🌲 Bosco": "🏹 arco elfico",
             "🏔️ Montagna": "⛏️ piccone di mithril",
             "🏰 Castello": "👑 corona reale",
@@ -439,7 +439,7 @@ class AvventuraEpica:
         
         # 👹 Mostri con livelli e statistiche
         self.mostri = {
-            "🏘️ Villaggio": None,  # Sicuro
+            "Villaggio": None,  # Sicuro
             "🌲 Bosco": {"nome": "🐺 Lupo", "hp": 15, "attacco": 8, "livello": 1, "exp": 20},
             "🏔️ Montagna": {"nome": "🦅 Aquila Gigante", "hp": 25, "attacco": 12, "livello": 2, "exp": 35},
             "🏰 Castello": {"nome": " Guardia Reale", "hp": 40, "attacco": 15, "livello": 3, "exp": 50},
@@ -459,7 +459,7 @@ class AvventuraEpica:
         
         # 🏪 Negozi e mercanti
         self.negozi = {
-            "🏘️ Villaggio": {
+            "Villaggio": {
                 "Pane": {"prezzo": 60, "tipo": "cibo", "descrizione": "Ripristina 15 HP"},
                 "Spada": {"prezzo": 300, "tipo": "arma", "descrizione": "+5 danno"},
                 "Armatura": {"prezzo": 400, "tipo": "armatura", "descrizione": "-3 danni ricevuti"}
@@ -479,7 +479,7 @@ class AvventuraEpica:
         
         # 🎵 Musiche in formato MP3 per compatibilità universale 
         self.musiche_aree = {
-            "🏘️ Villaggio": "assets/music/villaggio.mp3",
+            "Villaggio": "assets/music/villaggio.mp3",
             "🏠 Cantina": "assets/music/cantina.mp3",
             "🚰 Fogne": "assets/music/fogne.mp3",
             "🌀 Labirinto Antico": "assets/music/labirinto.mp3",
@@ -500,7 +500,7 @@ class AvventuraEpica:
         
         # 🌿 Suoni ambientali per ogni area
         self.suoni_ambiente_aree = {
-            "🏘️ Villaggio": "assets/music/ambient_villaggio_uccelli.mp3",
+            "Villaggio": "assets/music/ambient_villaggio_uccelli.mp3",
             "🏠 Cantina": "assets/music/ambient_cantina_gocce.mp3",
             "🚰 Fogne": "assets/music/ambient_fogne_topi.mp3",
             "🌀 Labirinto Antico": "assets/music/ambient_labirinto_vento.mp3",
@@ -574,8 +574,8 @@ class AvventuraEpica:
     def reset_gioco(self):
         """Reset completo per gioco incrementale"""
         # Reset stato incrementale
-        self.aree_sbloccate = ["🏘️ Villaggio"]
-        self.area_attuale = "🏘️ Villaggio"
+        self.aree_sbloccate = ["Villaggio"]
+        self.area_attuale = "Villaggio"
         self.progressione_area = {area: 0 for area in self.aree_ordinate}
         
         # Reset gatti (mantieni affinità e personalizzazioni)
@@ -1305,7 +1305,7 @@ class AvventuraEpica:
             
         # Risorse per area
         risorse_raccolte = {}
-        if area == "🏘️ Villaggio":
+        if area == "Villaggio":
             risorse_raccolte = {"cibo": int(random.randint(5, 15) * bonus_gatto), "acqua": int(random.randint(3, 8) * bonus_gatto)}
         elif area == "🌲 Bosco":
             risorse_raccolte = {"legno": int(random.randint(10, 20) * bonus_gatto), "cibo": int(random.randint(2, 5) * bonus_gatto)}
@@ -1722,7 +1722,7 @@ class AvventuraEpica:
             azioni.append((" Legame Gatti", self.mostra_legame_gatti, "Gestisci il tuo rapporto con i gatti"))
             
         # Negozio se disponibile
-        if area in ["🏘️ Villaggio"]:
+        if area in ["Villaggio"]:
             azioni.append(("🏪 Negozio", self.vai_a_negozio, "Visita il negozio dell'area"))
             
         return azioni
@@ -1755,10 +1755,13 @@ class AvventuraEpica:
                 return True
         return False
     def crea_ui(self):
-        """Crea l'interfaccia utente principale con tab in fondo accessibili"""
+        """Crea l'interfaccia utente principale usando page.views per VoiceOver"""
         self.page.title = "🏰 Avventura Epica - Accessibile"
         self.page.scroll = ft.ScrollMode.AUTO
-        self.page.theme_mode = ft.ThemeMode.DARK  # Tema scuro per un look più immersivo
+        self.page.theme_mode = ft.ThemeMode.DARK
+        
+        # Setup route handler
+        self.page.on_route_change = self.route_change
         
         # Inizializza i componenti principali con colori
         self.area_stats = ft.TextField(
@@ -1769,6 +1772,7 @@ class AvventuraEpica:
             max_lines=6,
             text_size=14,
             label=" Le tue statistiche",
+            helper_text="Statistiche giocatore: livello, salute, monete, attacco, difesa ed esperienza",
             bgcolor=ft.Colors.BLUE_GREY_900,
             color=ft.Colors.CYAN_100,
             border_color=ft.Colors.CYAN_400,
@@ -1783,39 +1787,21 @@ class AvventuraEpica:
             min_lines=10,
             max_lines=15,
             text_size=14,
-            label=" La tua storia epica",
+            label="La tua storia epica",
+            helper_text="Area della storia: mostra eventi, descrizioni e progressi dell'avventura",
             bgcolor=ft.Colors.DEEP_PURPLE_900,
             color=ft.Colors.AMBER_100,
             border_color=ft.Colors.AMBER_400,
             focused_border_color=ft.Colors.AMBER_300
         )
         
-        # Contenitore principale per schermata singola
-        self.contenuto_schermata = ft.Column(
-            scroll=ft.ScrollMode.AUTO,
-            spacing=20,
-            expand=True
-        )
-        
         # Mantieni container_pulsanti per compatibilità con vecchie funzioni
         self.container_pulsanti = ft.Column()
-        self.container_principale = self.contenuto_schermata
         
-        # Inizializza con menu principale
-        self.mostra_menu_principale()
-        
-        # Layout finale: schermata singola
-        layout_finale = ft.Container(
-            content=self.contenuto_schermata,
-            bgcolor=ft.Colors.GREY_900,
-            padding=20,
-            expand=True
-        )
-        
-        # Aggiungi alla pagina
-        self.page.controls.clear()
-        self.page.add(layout_finale)
-        self.page.update()
+        # Inizializza con la vista del menu principale
+        self.page.views.clear()
+        self.page.views.append(self.crea_vista_menu_principale())
+        self.page.go("/")
     
     def inizia_o_continua_gioco(self, e):
         """Inizia nuovo gioco o continua se già iniziato"""
@@ -1824,7 +1810,7 @@ class AvventuraEpica:
             self.inizia_gioco(e)
         else:
             # Continua - vai alla schermata gioco
-            self.naviga_a_schermata("gioco")
+            self.page.go("/gioco")
     
     def sincronizza_variabili_alias(self):
         """Sincronizza le variabili alias per compatibilità"""
@@ -1841,69 +1827,86 @@ class AvventuraEpica:
         if hasattr(self, 'esperienza_prossimo_livello'):
             self.esperienza_necessaria = self.esperienza_prossimo_livello
     
-    def naviga_a_schermata(self, nuova_schermata):
-        """Naviga a una nuova schermata"""
-        # Debug: mostra stato prima della navigazione
-        print(f"🧭 NAVIGAZIONE: Da '{self.schermata_corrente}' a '{nuova_schermata}'")
-        print(f"🧭 Stack prima: {self.stack_schermate}")
+    def route_change(self, route):
+        """Handler per cambiamenti di route"""
+        print(f"🧭 NAVIGAZIONE: Route cambiata a '{route.route}'")
         
-        # Salva schermata corrente nello stack solo se è diversa
-        if self.schermata_corrente != nuova_schermata:
-            self.stack_schermate.append(self.schermata_corrente)
-            print(f"🧭 Aggiunto '{self.schermata_corrente}' allo stack")
+        if route.route == "/":
+            self.page.views.clear()
+            self.page.views.append(self.crea_vista_menu_principale())
+        elif route.route == "/gioco":
+            # Controlla se l'ULTIMA vista è già /gioco per evitare duplicati
+            if len(self.page.views) > 0 and self.page.views[-1].route == "/gioco":
+                print(f"🎮 DEBUG: Vista /gioco già presente come ultima vista, non aggiungo duplicato")
+            else:
+                print(f"🎮 DEBUG: Aggiungendo nuova vista /gioco (stack attuale: {[v.route for v in self.page.views]})")
+                self.page.views.append(self.crea_vista_gioco())
+        elif route.route == "/impostazioni":
+            self.page.views.append(self.crea_vista_impostazioni())
+        elif route.route == "/info":
+            self.page.views.append(self.crea_vista_info())
+        elif route.route == "/negozio":
+            self.page.views.append(self.crea_vista_negozio())
+        elif route.route == "/aree":
+            self.page.views.append(self.crea_vista_aree())
+        elif route.route == "/combattimento":
+            self.page.views.append(self.crea_vista_combattimento())
+        elif route.route == "/gatti":
+            self.page.views.append(self.crea_vista_gatti())
+        elif route.route == "/inventario":
+            self.page.views.append(self.crea_vista_inventario())
+        elif route.route == "/rinomina_gatto":
+            self.page.views.append(self.crea_vista_rinomina_gatto())
+        elif route.route == "/gestione_reliquie":
+            self.page.views.append(self.crea_vista_gestione_reliquie())
         
-        self.schermata_corrente = nuova_schermata
-        print(f"🧭 Stack dopo: {self.stack_schermate}")
-        self.aggiorna_schermata()
+        self.page.update()
         self.haptic_feedback("light")
     
     def torna_indietro(self, e=None):
-        """Torna alla schermata precedente"""
-        print(f"🔙 Torna indietro - Stack: {self.stack_schermate}, Corrente: {self.schermata_corrente}, Gioco iniziato: {self.gioco_iniziato}")
+        """Torna alla vista precedente"""
+        print(f"🔙 Torna indietro - Views: {len(self.page.views)}")
         
-        if self.stack_schermate:
-            self.schermata_corrente = self.stack_schermate.pop()
-            print(f"🔙 Tornando a: {self.schermata_corrente}")
-            self.aggiorna_schermata()
-            self.haptic_feedback("light")
-        else:
-            # Se non c'è storia, vai alla schermata appropriata
-            if self.gioco_iniziato:
-                # Se il gioco è iniziato, torna alla schermata di gioco
-                print("🔙 Stack vuoto, tornando alla schermata gioco")
-                self.schermata_corrente = "gioco"
-                self.aggiorna_schermata()
+        if len(self.page.views) > 1:
+            current_route = self.page.views[-1].route if len(self.page.views) > 0 else "None"
+            self.page.views.pop()
+            # Ottieni il route della vista precedente
+            if len(self.page.views) > 0:
+                previous_view = self.page.views[-1]
+                print(f"🔙 DEBUG: {current_route} → {previous_view.route}")
+                self.page.go(previous_view.route)
             else:
-                # Altrimenti vai al menu principale
-                print("🔙 Stack vuoto, tornando al menu principale")
-                self.schermata_corrente = "menu_principale"
-                self.aggiorna_schermata()
-            self.haptic_feedback("light")
+                print(f"🔙 DEBUG: {current_route} → / (nessuna vista precedente)")
+                self.page.go("/")
+        else:
+            # Se non ci sono viste precedenti, vai al menu principale o alla schermata di gioco
+            if self.gioco_iniziato:
+                self.page.go("/gioco")
+            else:
+                self.page.go("/")
+        
+        self.haptic_feedback("light")
     
-    def aggiorna_schermata(self):
-        """Aggiorna il contenuto della schermata corrente"""
-        if self.schermata_corrente == "menu_principale":
-            self.mostra_menu_principale()
-        elif self.schermata_corrente == "gioco":
-            self.mostra_schermata_gioco()
-        elif self.schermata_corrente == "impostazioni":
-            self.mostra_schermata_impostazioni()
-        elif self.schermata_corrente == "info":
-            self.mostra_schermata_info()
-        elif self.schermata_corrente == "negozio":
-            self.mostra_schermata_negozio()
-        elif self.schermata_corrente == "aree":
-            self.mostra_schermata_aree()
-        elif self.schermata_corrente == "combattimento":
-            self.mostra_schermata_combattimento()
-        elif self.schermata_corrente == "rinomina_gatto":
-            self.mostra_schermata_rinomina_gatto()
-        elif self.schermata_corrente == "gestione_gatti":
-            self.mostra_schermata_gestione_gatti()
-        elif self.schermata_corrente == "gestione_reliquie":
-            self.mostra_schermata_gestione_reliquie()
-        elif self.schermata_corrente == "inventario":
-            self.mostra_schermata_inventario()
+    def naviga_a_schermata(self, nuova_schermata):
+        """Naviga a una nuova schermata usando page.go()"""
+        route_map = {
+            "menu_principale": "/",
+            "gioco": "/gioco",
+            "impostazioni": "/impostazioni",
+            "info": "/info",
+            "negozio": "/negozio",
+            "aree": "/aree",
+            "combattimento": "/combattimento",
+            "gatti": "/gatti",
+            "gestione_gatti": "/gatti",
+            "inventario": "/inventario",
+            "rinomina_gatto": "/rinomina_gatto",
+            "gestione_reliquie": "/gestione_reliquie"
+        }
+        
+        route = route_map.get(nuova_schermata, "/")
+        print(f"🧭 NAVIGAZIONE: Andando a {nuova_schermata} -> {route}")
+        self.page.go(route)
     
     def crea_pulsante_indietro(self):
         """Crea pulsante per tornare indietro"""
@@ -1917,16 +1920,15 @@ class AvventuraEpica:
             tooltip="Torna alla schermata precedente"
         )
     
-    def mostra_menu_principale(self):
-        """Mostra il menu principale semplificato"""
-        self.contenuto_schermata.controls.clear()
-        
+    def crea_vista_menu_principale(self):
+        """Crea la vista del menu principale"""
         titolo = ft.Text(
             "🏰 AVVENTURA EPICA 🏰", 
             size=28, 
             weight=ft.FontWeight.BOLD, 
             text_align=ft.TextAlign.CENTER,
-            color=ft.Colors.AMBER_400
+            color=ft.Colors.AMBER_400,
+            semantics_label="Avventura Epica - Gioco di Avventura"
         )
         
         pulsanti = [
@@ -1950,7 +1952,7 @@ class AvventuraEpica:
             ),
             ft.ElevatedButton(
                 text="Impostazioni",
-                on_click=lambda e: self.naviga_a_schermata("impostazioni"),
+                on_click=lambda e: self.page.go("/impostazioni"),
                 width=300,
                 height=60,
                 bgcolor=ft.Colors.PURPLE_700,
@@ -1959,7 +1961,7 @@ class AvventuraEpica:
             ),
             ft.ElevatedButton(
                 text="Info",
-                on_click=lambda e: self.naviga_a_schermata("info"),
+                on_click=lambda e: self.page.go("/info"),
                 width=300,
                 height=60,
                 bgcolor=ft.Colors.ORANGE_700,
@@ -1968,20 +1970,27 @@ class AvventuraEpica:
             )
         ]
         
-        self.contenuto_schermata.controls.extend([
+        content = ft.Column([
             titolo,
             ft.Container(height=30),
             ft.Column(pulsanti, horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=20)
-        ])
-        self.page.update()
-    
-    def mostra_schermata_gioco(self):
-        """Mostra la schermata principale di gioco"""
-        self.contenuto_schermata.controls.clear()
+        ], scroll=ft.ScrollMode.AUTO, spacing=20, expand=True)
         
-        # Area storia
-        self.contenuto_schermata.controls.append(self.area_storia)
-        self.contenuto_schermata.controls.append(self.area_stats)
+        return ft.View(
+            "/",
+            controls=[
+                ft.Container(
+                    content=content,
+                    bgcolor=ft.Colors.GREY_900,
+                    padding=20,
+                    expand=True
+                )
+            ],
+            bgcolor=ft.Colors.GREY_900
+        )
+    
+    def crea_vista_gioco(self):
+        """Crea la vista principale di gioco"""
         
         # Pulsanti principali del gioco
         pulsanti_gioco = []
@@ -2006,7 +2015,7 @@ class AvventuraEpica:
             pulsanti_gioco.append(
                 ft.ElevatedButton(
                     text="Cambia Area",
-                    on_click=lambda e: self.naviga_a_schermata("aree"),
+                    on_click=lambda e: self.page.go("/aree"),
                     width=280,
                     height=50,
                     bgcolor=ft.Colors.BLUE_600,
@@ -2018,7 +2027,7 @@ class AvventuraEpica:
         pulsanti_gioco.extend([
             ft.ElevatedButton(
                 text="Combattimento",
-                on_click=lambda e: self.naviga_a_schermata("combattimento"),
+                on_click=lambda e: self.page.go("/combattimento"),
                 width=280,
                 height=50,
                 bgcolor=ft.Colors.RED_600,
@@ -2027,7 +2036,7 @@ class AvventuraEpica:
             ),
             ft.ElevatedButton(
                 text="Negozio",
-                on_click=lambda e: self.naviga_a_schermata("negozio"),
+                on_click=lambda e: self.page.go("/negozio"),
                 width=280,
                 height=50,
                 bgcolor=ft.Colors.ORANGE_600,
@@ -2036,7 +2045,7 @@ class AvventuraEpica:
             ),
             ft.ElevatedButton(
                 text="Gatti",
-                on_click=self.vai_a_gesti_gatti,
+                on_click=lambda e: self.page.go("/gatti"),
                 width=280,
                 height=50,
                 bgcolor=ft.Colors.PINK_600,
@@ -2077,10 +2086,787 @@ class AvventuraEpica:
         # Pulsante indietro
         pulsanti_gioco.append(self.crea_pulsante_indietro())
         
-        self.contenuto_schermata.controls.append(
+        content = ft.Column([
+            self.area_storia,
+            self.area_stats,
             ft.Column(pulsanti_gioco, horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=15)
+        ], scroll=ft.ScrollMode.AUTO, spacing=20, expand=True)
+        
+        return ft.View(
+            "/gioco",
+            controls=[
+                ft.Container(
+                    content=content,
+                    bgcolor=ft.Colors.GREY_900,
+                    padding=20,
+                    expand=True
+                )
+            ],
+            bgcolor=ft.Colors.GREY_900
         )
-        self.page.update()
+    
+    def crea_vista_impostazioni(self):
+        """Crea la vista delle impostazioni"""
+        titolo = ft.Text(
+            "⚙️ Impostazioni", 
+            size=24, 
+            weight=ft.FontWeight.BOLD, 
+            text_align=ft.TextAlign.CENTER,
+            color=ft.Colors.PURPLE_400,
+            semantics_label="Sezione Impostazioni del gioco"
+        )
+        
+        contenuto_impostazioni = self.crea_contenuto_impostazioni()
+        
+        content = ft.Column([
+            titolo,
+            ft.Container(height=20),
+            contenuto_impostazioni,
+            ft.Container(height=20),
+            self.crea_pulsante_indietro()
+        ], scroll=ft.ScrollMode.AUTO, spacing=20, expand=True)
+        
+        return ft.View(
+            "/impostazioni",
+            controls=[
+                ft.Container(
+                    content=content,
+                    bgcolor=ft.Colors.GREY_900,
+                    padding=20,
+                    expand=True
+                )
+            ],
+            bgcolor=ft.Colors.GREY_900
+        )
+    
+    def crea_vista_info(self):
+        """Crea la vista delle informazioni"""
+        titolo = ft.Text(
+            "ℹ️ Info Gioco", 
+            size=24, 
+            weight=ft.FontWeight.BOLD, 
+            text_align=ft.TextAlign.CENTER,
+            color=ft.Colors.ORANGE_400,
+            semantics_label="Sezione Informazioni sul gioco"
+        )
+        
+        contenuto_info = self.crea_contenuto_info()
+        
+        content = ft.Column([
+            titolo,
+            ft.Container(height=20),
+            contenuto_info,
+            ft.Container(height=20),
+            self.crea_pulsante_indietro()
+        ], scroll=ft.ScrollMode.AUTO, spacing=20, expand=True)
+        
+        return ft.View(
+            "/info",
+            controls=[
+                ft.Container(
+                    content=content,
+                    bgcolor=ft.Colors.GREY_900,
+                    padding=20,
+                    expand=True
+                )
+            ],
+            bgcolor=ft.Colors.GREY_900
+        )
+    
+    def crea_vista_aree(self):
+        """Crea la vista di selezione aree"""
+        titolo = ft.Text(
+            "Scegli Area", 
+            size=24, 
+            weight=ft.FontWeight.BOLD, 
+            text_align=ft.TextAlign.CENTER,
+            color=ft.Colors.BLUE_400,
+            semantics_label="Sezione Selezione Area: scegli dove esplorare"
+        )
+        
+        pulsanti_aree = []
+        
+        for area in self.aree_sbloccate:
+            if area == self.area_attuale:
+                testo = f"{area} (ATTUALE)"
+                colore = ft.Colors.GREEN_600
+            else:
+                testo = f"{area}"
+                colore = ft.Colors.BLUE_600
+            
+            pulsanti_aree.append(
+                ft.ElevatedButton(
+                    text=testo,
+                    on_click=lambda e, area_target=area: self.seleziona_area_e_torna(e, area_target),
+                    width=280,
+                    height=50,
+                    bgcolor=colore,
+                    color=ft.Colors.WHITE,
+                    tooltip=f"Vai a {area}"
+                )
+            )
+        
+        pulsanti_aree.append(self.crea_pulsante_indietro())
+        
+        content = ft.Column([
+            titolo,
+            ft.Container(height=20),
+            ft.Column(pulsanti_aree, horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=15)
+        ], scroll=ft.ScrollMode.AUTO, spacing=20, expand=True)
+        
+        return ft.View(
+            "/aree",
+            controls=[
+                ft.Container(
+                    content=content,
+                    bgcolor=ft.Colors.GREY_900,
+                    padding=20,
+                    expand=True
+                )
+            ],
+            bgcolor=ft.Colors.GREY_900
+        )
+    
+    def crea_vista_combattimento(self):
+        """Crea la vista del combattimento"""
+        print(f"🎮 DEBUG: Creando vista combattimento - in_combattimento={self.in_combattimento}, mostro={self.mostro_attuale['nome'] if self.mostro_attuale else 'None'}")
+        # Sincronizza le variabili prima di mostrar la vista
+        self.sincronizza_variabili_alias()
+        
+        titolo = ft.Text(
+            "Combattimento", 
+            size=24, 
+            weight=ft.FontWeight.BOLD, 
+            text_align=ft.TextAlign.CENTER,
+            color=ft.Colors.RED_400,
+            semantics_label="Sezione Combattimento: affronta i mostri"
+        )
+        
+        # Info mostro
+        if self.mostro_attuale:
+            info_mostro = ft.Text(
+                f"🧌 {self.mostro_attuale['nome']}\n HP: {self.hp_mostro_attuale}/{self.mostro_attuale['hp']}\n Attacco: {self.mostro_attuale['attacco']}", 
+                size=18, 
+                text_align=ft.TextAlign.CENTER,
+                color=ft.Colors.ORANGE_300
+            )
+        else:
+            info_mostro = ft.Text(
+                "🔍 Nessun mostro in vista\nClicca 'Cerca Mostri' per iniziare una battaglia!", 
+                size=16, 
+                text_align=ft.TextAlign.CENTER,
+                color=ft.Colors.GREY_400
+            )
+        
+        # Info giocatore
+        gatto_info = self.gatti[self.gatto_attivo]
+        info_giocatore = ft.Text(
+            f" {gatto_info['emoji']} {gatto_info['nome']}\n Vita: {self.vita}/{self.vita_massima}\n Attacco: {self.calcola_attacco_totale()}\n Energia: {self.risorse['energia']}", 
+            size=18, 
+            text_align=ft.TextAlign.CENTER,
+            color=ft.Colors.GREEN_300
+        )
+        
+        # Area log combattimento - mantieni il valore esistente se c'è
+        valore_log = "Preparati al combattimento!"
+        if hasattr(self, 'log_combattimento') and self.log_combattimento and self.log_combattimento.value:
+            valore_log = self.log_combattimento.value
+        
+        self.log_combattimento = ft.TextField(
+            value=valore_log,
+            multiline=True,
+            read_only=True,
+            expand=True,
+            min_lines=8,
+            max_lines=12,
+            text_size=14,
+            label=" Log Combattimento",
+            helper_text="Registro del combattimento: mostra i risultati e le azioni durante il combattimento",
+            bgcolor=ft.Colors.DEEP_ORANGE_900,
+            color=ft.Colors.AMBER_100,
+            border_color=ft.Colors.RED_400,
+            focused_border_color=ft.Colors.RED_300
+        )
+        
+        # Pulsanti combattimento
+        pulsanti_combattimento = []
+        
+        if self.in_combattimento:
+            pulsanti_combattimento.extend([
+                ft.ElevatedButton(
+                    text="Attacca",
+                    on_click=self.attacca_mostro,
+                    width=200,
+                    height=50,
+                    bgcolor=ft.Colors.RED_600,
+                    color=ft.Colors.WHITE,
+                    tooltip=f"Attacca il {self.mostro_attuale['nome'] if self.mostro_attuale else 'mostro'}",
+                    data="attacca"
+                ),
+                ft.ElevatedButton(
+                    text="Difendi",
+                    on_click=self.difendi_combattimento,
+                    width=200,
+                    height=50,
+                    bgcolor=ft.Colors.BLUE_600,
+                    color=ft.Colors.WHITE,
+                    tooltip="Riduci il danno subito del 50%",
+                    data="difendi"
+                ),
+                ft.ElevatedButton(
+                    text="Usa Oggetto Curativo",
+                    on_click=self.usa_pozione_combattimento,
+                    width=200,
+                    height=50,
+                    bgcolor=ft.Colors.GREEN_600 if self.conta_oggetti_curativi() > 0 else ft.Colors.GREY_600,
+                    color=ft.Colors.WHITE,
+                    tooltip=f"Usa oggetti curativi. Disponibili: {self.conta_oggetti_curativi()}",
+                    disabled=self.conta_oggetti_curativi() <= 0,
+                    data="pozione"
+                ),
+                ft.ElevatedButton(
+                    text="Fuggi",
+                    on_click=self.fuggi_combattimento,
+                    width=200,
+                    height=50,
+                    bgcolor=ft.Colors.PURPLE_600,
+                    color=ft.Colors.WHITE,
+                    tooltip="Tenta di fuggire dal combattimento. 70% di successo",
+                    data="fuggi"
+                )
+            ])
+        else:
+            pulsanti_combattimento.append(
+                ft.ElevatedButton(
+                    text="Cerca Mostri",
+                    on_click=self.inizia_combattimento,
+                    width=200,
+                    height=50,
+                    bgcolor=ft.Colors.ORANGE_600,
+                    color=ft.Colors.WHITE,
+                    tooltip="Cerca mostri da combattere"
+                )
+            )
+        
+        # Pulsante indietro
+        pulsanti_combattimento.append(self.crea_pulsante_indietro())
+        
+        print(f"🎮 DEBUG: Pulsanti combattimento creati - Numero: {len(pulsanti_combattimento)}, in_combattimento={self.in_combattimento}")
+        
+        content = ft.Column([
+            titolo,
+            ft.Container(height=10),
+            info_mostro,
+            ft.Container(height=10),
+            info_giocatore,
+            ft.Container(height=20),
+            self.log_combattimento,
+            ft.Container(height=20),
+            ft.Column(pulsanti_combattimento, horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=10)
+        ], scroll=ft.ScrollMode.AUTO, spacing=20, expand=True)
+        
+        return ft.View(
+            "/combattimento",
+            controls=[
+                ft.Container(
+                    content=content,
+                    bgcolor=ft.Colors.GREY_900,
+                    padding=20,
+                    expand=True
+                )
+            ],
+            bgcolor=ft.Colors.GREY_900
+        )
+    
+    def crea_vista_negozio(self):
+        """Crea la vista del negozio"""
+        titolo = ft.Text(
+            "🛒 Negozio 🛒", 
+            size=24, 
+            weight=ft.FontWeight.BOLD, 
+            text_align=ft.TextAlign.CENTER,
+            color=ft.Colors.ORANGE_400,
+            semantics_label="Sezione Negozio per acquistare oggetti"
+        )
+        
+        # Shop content
+        pulsante_indietro = self.crea_pulsante_indietro()
+        
+        # Create shop items
+        oggetti_negozio = [
+            {"nome": "Pozione Vita", "prezzo": 50, "descrizione": "Ripristina 30 HP"},
+            {"nome": "Spada di Ferro", "prezzo": 200, "descrizione": "Attacco +10"},
+            {"nome": "Armatura di Cuoio", "prezzo": 150, "descrizione": "Difesa +5"},
+            {"nome": "Anello della Fortuna", "prezzo": 300, "descrizione": "Esperienza +20%"}
+        ]
+        
+        oggetti_controls = []
+        for oggetto in oggetti_negozio:
+            pulsante_acquista = ft.ElevatedButton(
+                text=f"Acquista - {oggetto['prezzo']} monete",
+                on_click=lambda e, obj=oggetto: self.acquista_oggetto_negozio(obj),
+                bgcolor=ft.Colors.GREEN_600,
+                color=ft.Colors.WHITE,
+                tooltip=f"Acquista {oggetto['nome']}: {oggetto['descrizione']}"
+            )
+            
+            oggetto_card = ft.Container(
+                content=ft.Column([
+                    ft.Text(oggetto['nome'], size=18, weight=ft.FontWeight.BOLD),
+                    ft.Text(oggetto['descrizione'], size=14),
+                    ft.Text(f"Prezzo: {oggetto['prezzo']} monete", size=12, color=ft.Colors.AMBER_400),
+                    pulsante_acquista
+                ], spacing=5),
+                bgcolor=ft.Colors.GREY_800,
+                border_radius=10,
+                padding=15,
+                margin=5
+            )
+            oggetti_controls.append(oggetto_card)
+        
+        content = ft.Column([
+            pulsante_indietro,
+            ft.Container(height=10),
+            titolo,
+            ft.Container(height=20),
+            ft.Text(f"💰 Monete disponibili: {self.monete}", size=16, color=ft.Colors.AMBER_400),
+            ft.Container(height=20),
+            ft.Column(oggetti_controls, spacing=10)
+        ], scroll=ft.ScrollMode.AUTO, spacing=20, expand=True)
+        
+        return ft.View(
+            "/negozio",
+            controls=[
+                ft.Container(
+                    content=content,
+                    bgcolor=ft.Colors.GREY_900,
+                    padding=20,
+                    expand=True
+                )
+            ],
+            bgcolor=ft.Colors.GREY_900
+        )
+    
+    def acquista_oggetto_negozio(self, oggetto):
+        """Gestisce l'acquisto di un oggetto dal negozio"""
+        prezzo = oggetto['prezzo']
+        nome = oggetto['nome']
+        
+        if self.monete >= prezzo:
+            self.monete -= prezzo
+            # Aggiungi oggetto all'inventario (semplificato)
+            if nome not in self.inventario:
+                self.inventario[nome] = 0
+            self.inventario[nome] += 1
+            
+            self.aggiorna_storia(f"💰 Hai acquistato {nome} per {prezzo} monete!")
+            self.haptic_feedback("success")
+            
+            # Ricarica la vista negozio per aggiornare le monete
+            self.page.go("/negozio")
+        else:
+            self.aggiorna_storia(f"❌ Non hai abbastanza monete per {nome} (servono {prezzo}, ne hai {self.monete})")
+            self.haptic_feedback("error")
+    
+    def crea_vista_gatti(self):
+        """Crea la vista di gestione gatti"""
+        print("🐱 DEBUG: Creando vista gestione gatti")
+        
+        titolo = ft.Text(
+            "Gestione Gatti", 
+            size=24, 
+            weight=ft.FontWeight.BOLD, 
+            text_align=ft.TextAlign.CENTER,
+            color=ft.Colors.PINK_400,
+            semantics_label="Schermata gestione gatti"
+        )
+        
+        sottotitolo = ft.Text(
+            "Scegli il tuo gatto attivo tra quelli disponibili",
+            size=16,
+            text_align=ft.TextAlign.CENTER,
+            color=ft.Colors.GREY_400,
+            semantics_label="Istruzioni: seleziona quale gatto vuoi come compagno attivo"
+        )
+        
+        # Lista gatti
+        gatti_controls = []
+        
+        for gatto_id, gatto_info in self.gatti.items():
+            if not gatto_info.get("sbloccato", False):
+                continue
+                
+            nome = gatto_info["nome"]
+            emoji = gatto_info["emoji"]
+            livello = gatto_info["livello"]
+            abilita = gatto_info["abilita"]
+            affinita = gatto_info["affinita"]
+            felicita = gatto_info["felicita"]
+            
+            # Indica se è il gatto attivo
+            is_attivo = gatto_id == self.gatto_attivo
+            
+            def crea_handler_gatto(gatto_target):
+                """Crea handler per selezionare il gatto specifico"""
+                return lambda e: self.seleziona_gatto_attivo(gatto_target)
+            
+            # Colore basato sullo stato
+            if is_attivo:
+                colore_sfondo = ft.Colors.GREEN_600
+                testo_stato = "ATTIVO"
+            else:
+                colore_sfondo = ft.Colors.BLUE_600
+                testo_stato = "Seleziona"
+            
+            # Descrizione accessibile del gatto
+            descrizione_accessibile = f"Gatto {nome}, livello {livello}, abilità {abilita}, affinità {affinita}, felicità {felicita}"
+            if is_attivo:
+                descrizione_accessibile += ", attualmente attivo"
+            
+            gatto_card = ft.Container(
+                content=ft.Column([
+                    ft.Text(f"{emoji} {nome}", size=18, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER),
+                    ft.Text(f"Livello: {livello} | Abilità: {abilita}", size=14, text_align=ft.TextAlign.CENTER),
+                    ft.Text(f"Affinità: {affinita}/100 | Felicità: {felicita}/100", size=12, text_align=ft.TextAlign.CENTER),
+                    ft.ElevatedButton(
+                        text=testo_stato,
+                        on_click=crea_handler_gatto(gatto_id),
+                        bgcolor=colore_sfondo,
+                        color=ft.Colors.WHITE,
+                        disabled=is_attivo,
+                        tooltip=f"Seleziona {nome} come gatto attivo"
+                    )
+                ], spacing=5),
+                bgcolor=ft.Colors.GREY_800,
+                border_radius=10,
+                padding=15,
+                margin=5
+            )
+            
+            gatti_controls.append(gatto_card)
+        
+        if not gatti_controls:
+            gatti_controls.append(
+                ft.Text(
+                    "Nessun gatto sbloccato",
+                    size=16,
+                    text_align=ft.TextAlign.CENTER,
+                    color=ft.Colors.GREY_400,
+                    semantics_label="Nessun gatto disponibile al momento. Continua a giocare per sbloccare nuovi gatti compagni."
+                )
+            )
+        
+        # Contenitore scrollabile per i gatti
+        gatti_container = ft.Column([
+            ft.Text(
+                "",
+                semantics_label="Lista gatti disponibili, scorri per vedere tutti i gatti",
+                visible=False
+            ),
+            ft.Container(
+                content=ft.Column(gatti_controls, spacing=10),
+                height=400,
+                bgcolor=ft.Colors.GREY_800,
+                border_radius=10,
+                padding=10
+            )
+        ])
+        
+        # Pulsanti aggiuntivi
+        pulsanti_azioni = []
+        
+        if self.gatto_attivo and self.gatti[self.gatto_attivo].get("sbloccato", False):
+            pulsanti_azioni.extend([
+                ft.ElevatedButton(
+                    text="Rinomina Gatto Attivo",
+                    on_click=lambda e: self.page.go("/rinomina_gatto"),
+                    width=250,
+                    height=50,
+                    bgcolor=ft.Colors.PURPLE_600,
+                    color=ft.Colors.WHITE,
+                    tooltip="Rinomina il gatto attualmente selezionato"
+                ),
+                ft.ElevatedButton(
+                    text="Gestisci Reliquie",
+                    on_click=lambda e: self.page.go("/gestione_reliquie"),
+                    width=250,
+                    height=50,
+                    bgcolor=ft.Colors.AMBER_600,
+                    color=ft.Colors.WHITE,
+                    tooltip="Gestisci le reliquie equipaggiate"
+                )
+            ])
+        
+        content = ft.Column([
+            titolo,
+            sottotitolo,
+            ft.Container(height=20),
+            gatti_container,
+            ft.Container(height=20),
+            ft.Column(pulsanti_azioni, horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=10),
+            ft.Container(height=20),
+            self.crea_pulsante_indietro()
+        ], scroll=ft.ScrollMode.AUTO, spacing=20, expand=True)
+        
+        return ft.View(
+            "/gatti",
+            controls=[
+                ft.Container(
+                    content=content,
+                    bgcolor=ft.Colors.GREY_900,
+                    padding=20,
+                    expand=True
+                )
+            ],
+            bgcolor=ft.Colors.GREY_900
+        )
+    
+    def crea_vista_inventario(self):
+        """Crea la vista dell'inventario"""
+        titolo = ft.Text(
+            "📦 Inventario", 
+            size=24, 
+            weight=ft.FontWeight.BOLD, 
+            text_align=ft.TextAlign.CENTER,
+            color=ft.Colors.CYAN_400
+        )
+        
+        # Lista oggetti inventario
+        oggetti_controls = []
+        
+        if not self.inventario:
+            oggetti_controls.append(
+                ft.Text(
+                    "Inventario vuoto",
+                    size=16,
+                    text_align=ft.TextAlign.CENTER,
+                    color=ft.Colors.GREY_400
+                )
+            )
+        else:
+            for oggetto, quantita in self.inventario.items():
+                oggetti_controls.append(
+                    ft.Container(
+                        content=ft.Row([
+                            ft.Text(f"{oggetto} (x{quantita})", size=16, expand=True),
+                            ft.ElevatedButton(
+                                text="Usa",
+                                on_click=lambda e, obj=oggetto: self.usa_oggetto_inventario(obj),
+                                width=80,
+                                height=40,
+                                bgcolor=ft.Colors.GREEN_600,
+                                color=ft.Colors.WHITE,
+                                tooltip=f"Usa {oggetto}"
+                            ),
+                            ft.ElevatedButton(
+                                text="Equipaggia",
+                                on_click=lambda e, obj=oggetto: self.equipaggia_oggetto_inventario(obj),
+                                width=100,
+                                height=40,
+                                bgcolor=ft.Colors.BLUE_600,
+                                color=ft.Colors.WHITE,
+                                tooltip=f"Equipaggia {oggetto}"
+                            )
+                        ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
+                        bgcolor=ft.Colors.GREY_800,
+                        border_radius=10,
+                        padding=15,
+                        margin=5
+                    )
+                )
+        
+        content = ft.Column([
+            titolo,
+            ft.Container(height=20),
+            ft.Container(
+                content=ft.Column(oggetti_controls, spacing=10),
+                height=400,
+                bgcolor=ft.Colors.GREY_800,
+                border_radius=10,
+                padding=10
+            ),
+            ft.Container(height=20),
+            self.crea_pulsante_indietro()
+        ], scroll=ft.ScrollMode.AUTO, spacing=20, expand=True)
+        
+        return ft.View(
+            "/inventario",
+            controls=[
+                ft.Container(
+                    content=content,
+                    bgcolor=ft.Colors.GREY_900,
+                    padding=20,
+                    expand=True
+                )
+            ],
+            bgcolor=ft.Colors.GREY_900
+        )
+    
+    def crea_vista_rinomina_gatto(self):
+        """Crea la vista per rinominare il gatto"""
+        titolo = ft.Text(
+            "✏️ Rinomina Gatto", 
+            size=24, 
+            weight=ft.FontWeight.BOLD, 
+            text_align=ft.TextAlign.CENTER,
+            color=ft.Colors.PURPLE_400
+        )
+        
+        if not self.gatto_attivo or not self.gatti[self.gatto_attivo].get("sbloccato", False):
+            content = ft.Column([
+                titolo,
+                ft.Container(height=20),
+                ft.Text("Nessun gatto attivo disponibile", size=16, text_align=ft.TextAlign.CENTER),
+                ft.Container(height=20),
+                self.crea_pulsante_indietro()
+            ], scroll=ft.ScrollMode.AUTO, spacing=20, expand=True)
+        else:
+            gatto_info = self.gatti[self.gatto_attivo]
+            
+            # TextField per nuovo nome
+            self.campo_nuovo_nome = ft.TextField(
+                value=gatto_info["nome"],
+                label="Nuovo nome per il gatto",
+                helper_text="Inserisci il nuovo nome per il tuo gatto",
+                width=300,
+                autofocus=True
+            )
+            
+            def conferma_rinomina(e):
+                nuovo_nome = self.campo_nuovo_nome.value.strip()
+                if nuovo_nome and nuovo_nome != gatto_info["nome"]:
+                    self.gatti[self.gatto_attivo]["nome"] = nuovo_nome
+                    self.gatti[self.gatto_attivo]["nome_personalizzato"] = True
+                    self.aggiorna_storia(f"Il tuo gatto si chiama ora {nuovo_nome}! Sembra molto felice del nuovo nome!")
+                    self.haptic_feedback("light")
+                self.torna_indietro()
+            
+            content = ft.Column([
+                titolo,
+                ft.Container(height=20),
+                ft.Text(f"Rinomina: {gatto_info['emoji']} {gatto_info['nome']}", size=18, text_align=ft.TextAlign.CENTER),
+                ft.Container(height=20),
+                self.campo_nuovo_nome,
+                ft.Container(height=20),
+                ft.Row([
+                    ft.ElevatedButton(
+                        text="Conferma Rinomina",
+                        on_click=conferma_rinomina,
+                        width=300,
+                        height=60,
+                        bgcolor=ft.Colors.GREEN_600,
+                        color=ft.Colors.WHITE,
+                        tooltip="Conferma il nuovo nome per il gatto"
+                    )
+                ], alignment=ft.MainAxisAlignment.CENTER),
+                ft.Container(height=10),
+                ft.Row([
+                    ft.ElevatedButton(
+                        text="Annulla",
+                        on_click=lambda e: self.torna_indietro(),
+                        width=200,
+                        height=50,
+                        bgcolor=ft.Colors.RED_600,
+                        color=ft.Colors.WHITE,
+                        tooltip="Annulla la rinomina"
+                    )
+                ], alignment=ft.MainAxisAlignment.CENTER),
+                ft.Container(height=20),
+                self.crea_pulsante_indietro()
+            ], scroll=ft.ScrollMode.AUTO, spacing=20, expand=True, horizontal_alignment=ft.CrossAxisAlignment.CENTER)
+        
+        return ft.View(
+            "/rinomina_gatto",
+            controls=[
+                ft.Container(
+                    content=content,
+                    bgcolor=ft.Colors.GREY_900,
+                    padding=20,
+                    expand=True
+                )
+            ],
+            bgcolor=ft.Colors.GREY_900
+        )
+    
+    def crea_vista_gestione_reliquie(self):
+        """Crea la vista per gestire le reliquie"""
+        titolo = ft.Text(
+            "🔮 Gestione Reliquie", 
+            size=24, 
+            weight=ft.FontWeight.BOLD, 
+            text_align=ft.TextAlign.CENTER,
+            color=ft.Colors.AMBER_400
+        )
+        
+        # Equipaggiamento attuale
+        equipaggiamento_controls = []
+        
+        for slot, oggetto in self.equipaggiamento.items():
+            slot_nome = {
+                "arma": "🗡️ Arma",
+                "armatura": "🛡️ Armatura", 
+                "accessorio": "💍 Accessorio"
+            }.get(slot, slot)
+            
+            if oggetto:
+                equipaggiamento_controls.append(
+                    ft.Container(
+                        content=ft.Row([
+                            ft.Text(f"{slot_nome}: {oggetto}", size=16, expand=True),
+                            ft.ElevatedButton(
+                                text="Rimuovi",
+                                on_click=lambda e, s=slot: self.rimuovi_equipaggiamento(s),
+                                width=100,
+                                height=40,
+                                bgcolor=ft.Colors.RED_600,
+                                color=ft.Colors.WHITE,
+                                tooltip=f"Rimuovi {oggetto}"
+                            )
+                        ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
+                        bgcolor=ft.Colors.GREY_800,
+                        border_radius=10,
+                        padding=15,
+                        margin=5
+                    )
+                )
+            else:
+                equipaggiamento_controls.append(
+                    ft.Container(
+                        content=ft.Text(f"{slot_nome}: Vuoto", size=16, color=ft.Colors.GREY_400),
+                        bgcolor=ft.Colors.GREY_800,
+                        border_radius=10,
+                        padding=15,
+                        margin=5
+                    )
+                )
+        
+        content = ft.Column([
+            titolo,
+            ft.Container(height=20),
+            ft.Text("Equipaggiamento Attuale", size=18, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER),
+            ft.Container(height=10),
+            ft.Container(
+                content=ft.Column(equipaggiamento_controls, spacing=10),
+                bgcolor=ft.Colors.GREY_800,
+                border_radius=10,
+                padding=10
+            ),
+            ft.Container(height=20),
+            self.crea_pulsante_indietro()
+        ], scroll=ft.ScrollMode.AUTO, spacing=20, expand=True)
+        
+        return ft.View(
+            "/gestione_reliquie",
+            controls=[
+                ft.Container(
+                    content=content,
+                    bgcolor=ft.Colors.GREY_900,
+                    padding=20,
+                    expand=True
+                )
+            ],
+            bgcolor=ft.Colors.GREY_900
+        )
     
     def mostra_schermata_aree(self):
         """Mostra schermata di selezione aree"""
@@ -2091,7 +2877,8 @@ class AvventuraEpica:
             size=24, 
             weight=ft.FontWeight.BOLD, 
             text_align=ft.TextAlign.CENTER,
-            color=ft.Colors.BLUE_400
+            color=ft.Colors.BLUE_400,
+            semantics_label="Sezione Selezione Area: scegli dove esplorare"
         )
         
         pulsanti_aree = []
@@ -2123,7 +2910,6 @@ class AvventuraEpica:
             ft.Container(height=20),
             ft.Column(pulsanti_aree, horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=15)
         ])
-        self.page.update()
     
     def seleziona_area_e_torna(self, e, area_scelta):
         """Seleziona area e torna alla schermata di gioco"""
@@ -2140,7 +2926,8 @@ class AvventuraEpica:
             size=24, 
             weight=ft.FontWeight.BOLD, 
             text_align=ft.TextAlign.CENTER,
-            color=ft.Colors.PURPLE_400
+            color=ft.Colors.PURPLE_400,
+            semantics_label="Sezione Impostazioni del gioco"
         )
         
         contenuto_impostazioni = self.crea_contenuto_impostazioni()
@@ -2152,7 +2939,6 @@ class AvventuraEpica:
             ft.Container(height=20),
             self.crea_pulsante_indietro()
         ])
-        self.page.update()
     
     def mostra_schermata_info(self):
         """Mostra schermata informazioni"""
@@ -2163,7 +2949,8 @@ class AvventuraEpica:
             size=24, 
             weight=ft.FontWeight.BOLD, 
             text_align=ft.TextAlign.CENTER,
-            color=ft.Colors.ORANGE_400
+            color=ft.Colors.ORANGE_400,
+            semantics_label="Sezione Informazioni sul gioco"
         )
         
         contenuto_info = self.crea_contenuto_info()
@@ -2175,7 +2962,6 @@ class AvventuraEpica:
             ft.Container(height=20),
             self.crea_pulsante_indietro()
         ])
-        self.page.update()
     
     def mostra_schermata_combattimento(self):
         """Mostra schermata dedicata al combattimento"""
@@ -2189,7 +2975,8 @@ class AvventuraEpica:
             size=24, 
             weight=ft.FontWeight.BOLD, 
             text_align=ft.TextAlign.CENTER,
-            color=ft.Colors.RED_400
+            color=ft.Colors.RED_400,
+            semantics_label="Sezione Combattimento: affronta i mostri"
         )
         
         # Info mostro
@@ -2202,7 +2989,7 @@ class AvventuraEpica:
             )
         else:
             info_mostro = ft.Text(
-                "Nessun mostro in combattimento", 
+                "🔍 Nessun mostro in vista\nClicca 'Cerca Mostri' per iniziare una battaglia!", 
                 size=16, 
                 text_align=ft.TextAlign.CENTER,
                 color=ft.Colors.GREY_400
@@ -2231,6 +3018,7 @@ class AvventuraEpica:
             max_lines=12,
             text_size=14,
             label=" Log Combattimento",
+            helper_text="Registro del combattimento: mostra i risultati e le azioni durante il combattimento",
             bgcolor=ft.Colors.DEEP_ORANGE_900,
             color=ft.Colors.AMBER_100,
             border_color=ft.Colors.RED_400,
@@ -2311,7 +3099,6 @@ class AvventuraEpica:
             ft.Container(height=20),
             ft.Column(pulsanti_combattimento, horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=10)
         ])
-        self.page.update()
     
     def mostra_schermata_negozio(self):
         """Mostra schermata dedicata al negozio"""
@@ -2322,7 +3109,8 @@ class AvventuraEpica:
             size=24, 
             weight=ft.FontWeight.BOLD, 
             text_align=ft.TextAlign.CENTER,
-            color=ft.Colors.ORANGE_400
+            color=ft.Colors.ORANGE_400,
+            semantics_label="Sezione Negozio per acquistare oggetti"
         )
         
         # Pulsante indietro
@@ -2342,7 +3130,6 @@ class AvventuraEpica:
         # Usa le funzioni negozio esistenti per popolare i contenuti
         self.mostra_negozio_dettagliato()
         self.crea_menu_negozio()
-        self.page.update()
     
     def inizia_combattimento(self, e):
         """Inizia un nuovo combattimento"""
@@ -2353,7 +3140,7 @@ class AvventuraEpica:
         
         # Dati mostri per area
         mostri_area = {
-            "🏘️ Villaggio": {"nome": "Topo Gigante", "hp": 80, "attacco": 10, "verso": "Squeak!"},
+            "Villaggio": {"nome": "Topo Gigante", "hp": 80, "attacco": 10, "verso": "Squeak!"},
             "🏠 Cantina": {"nome": "Ragno Peloso", "hp": 100, "attacco": 14, "verso": "Hiss!"},
             "🚰 Fogne": {"nome": "Ratto delle Fogne", "hp": 120, "attacco": 18, "verso": "Screech!"},
             "🌀 Labirinto Antico": {"nome": "Guardiano di Pietra", "hp": 140, "attacco": 22, "verso": "Rumble!"},
@@ -2386,6 +3173,7 @@ class AvventuraEpica:
         self.haptic_feedback("medium")
         
         # Aggiorna solo le info, non ricreare la schermata
+        print(f"🎮 DEBUG: Combattimento iniziato! in_combattimento={self.in_combattimento}, mostro={self.mostro_attuale['nome']}")
         self.aggiorna_info_combattimento()
     
     
@@ -2635,11 +3423,19 @@ class AvventuraEpica:
     
     def aggiorna_info_combattimento(self):
         """Aggiorna le informazioni di combattimento e ricrea i pulsanti se necessario"""
-        if not hasattr(self, 'log_combattimento'):
-            return
+        current_route = self.page.views[-1].route if len(self.page.views) > 0 else "None"
+        print(f"🎮 DEBUG: aggiorna_info_combattimento chiamato - Route attuale: {current_route}")
         
-        # Ricrea sempre la schermata per aggiornare i pulsanti
-        self.mostra_schermata_combattimento()
+        # SOLO se siamo nella vista combattimento, aggiornala
+        if len(self.page.views) > 0 and self.page.views[-1].route == "/combattimento":
+            print(f"🎮 DEBUG: Ricarico vista combattimento")
+            # Forza la ricreazione della vista rimuovendo e riaggiungendo
+            self.page.views.pop()  # Rimuovi vista corrente
+            self.page.views.append(self.crea_vista_combattimento())
+            self.page.update()
+        else:
+            # Se non siamo nella vista combattimento, non fare NULLA
+            print(f"🎮 DEBUG: Non nella vista combattimento ({current_route}), IGNORO completamente")
 
     def seleziona_tab(self, index):
         """Seleziona tab e aggiorna la navigazione"""
@@ -2765,7 +3561,7 @@ class AvventuraEpica:
                 ft.Text("📅 Data rilascio: 18 giugno 2025", size=16),
                 ft.Container(height=20),
                 
-                ft.Text("📖 Descrizione:", size=16, weight=ft.FontWeight.BOLD),
+                ft.Text("Descrizione:", size=16, weight=ft.FontWeight.BOLD),
                 ft.Text(
                     "Un emozionante RPG accessibile con audio immersivo e feedback aptico. "
                     "Esplora 16 aree diverse, combatti mostri, raccogli tesori, visita negozi "
@@ -3331,7 +4127,7 @@ class AvventuraEpica:
         
         # Pulsante debug audio
         debug_audio_btn = ft.ElevatedButton(
-            "🔍 Debug Audio",
+            "Debug Audio",
             on_click=self.test_audio_debug,
             width=200,
             tooltip="Diagnosi completa sistema audio",
@@ -3383,7 +4179,7 @@ class AvventuraEpica:
         
     def vai_a_impostazioni(self, e):
         """Vai al menu impostazioni"""
-        self.crea_menu_impostazioni()
+        self.page.go("/impostazioni")
         
     def toggle_audio_callback(self, e):
         """Toggle audio"""
@@ -3470,7 +4266,7 @@ class AvventuraEpica:
             return
             
         # Naviga correttamente alla schermata di gioco
-        self.naviga_a_schermata("gioco")
+        self.page.go("/gioco")
         self.descrivi_situazione_attuale()
         
         # 🎵 Ripristina musica area se non in battaglia
@@ -3481,7 +4277,7 @@ class AvventuraEpica:
         
     def vai_a_inventario(self, e):
         """Naviga alla schermata inventario"""
-        self.naviga_a_schermata("inventario")
+        self.page.go("/inventario")
         
     def vai_a_negozio(self, e):
         """Vai al menu negozio"""
@@ -3492,8 +4288,7 @@ class AvventuraEpica:
             self.haptic_feedback("error")
             return
             
-        self.crea_menu_negozio()
-        self.mostra_negozio_dettagliato()
+        self.page.go("/negozio")
         
     def vai_a_statistiche(self, e):
         """Vai al menu statistiche"""
@@ -3520,14 +4315,14 @@ class AvventuraEpica:
         self.gioco_iniziato = True
         
         if self.audio_abilitato:
-            self.cambia_musica_area("🏘️ Villaggio")
-            self.cambia_suono_ambiente_area("🏘️ Villaggio")
+            self.cambia_musica_area("Villaggio")
+            self.cambia_suono_ambiente_area("Villaggio")
             
         self.haptic_feedback("success")
         self.descrivi_situazione_attuale()
         
         # Naviga al gioco mantenendo la possibilità di tornare al menu
-        self.naviga_a_schermata("gioco")
+        self.page.go("/gioco")
         
     def descrivi_situazione_attuale(self):
         """Descrizione incrementale dell'area attuale"""
@@ -3538,14 +4333,14 @@ class AvventuraEpica:
         
         # Descrizione dell'area
         testo = f" {area}\n\n"
-        testo += f"📖 {self.descrizioni[area]}\n\n"
+        testo += f"{self.descrizioni[area]}\n\n"
         
         # Progressione area
         progressione = self.progressione_area[area]
         testo += f" Progressione area: {progressione}/20\n"
         
         if progressione < 10:
-            testo += f"🔍 Continua ad esplorare per sbloccare nuove aree!\n"
+            testo += f"Continua ad esplorare per sbloccare nuove aree!\n"
         elif progressione < 20:
             testo += f"🎆 Stai per sbloccare qualcosa di speciale!\n"
         else:
@@ -3568,7 +4363,7 @@ class AvventuraEpica:
             
         # Negozio disponibile
         if area in [
-            "🏘️ Villaggio", "🏪 Mercato", "🛤️ Strada"
+            "Villaggio", "🏪 Mercato", "🛤️ Strada"
         ]:
             testo += f"\n🏪 Negozio disponibile in quest'area!\n"
             
@@ -3600,10 +4395,10 @@ class AvventuraEpica:
         
         # Controlla eventi speciali di reliquie
         if self.genera_mini_dungeon(area):
-            testo = f"🔍 Esplorando {area} scopri un MINI DUNGEON SEGRETO!\n"
+            testo = f"Esplorando {area} scopri un MINI DUNGEON SEGRETO!\n"
             testo += f"🏛️ Antiche rovine nascoste ti aspettano..."
         elif self.incontra_npc_raro(area):
-            testo = f"🔍 Esplorando {area}...\n"
+            testo = f"Esplorando {area}...\n"
         elif possibilita <= 25:  # 25% tesoro normale
             tesori = [" monete d'oro", "💎 gemma preziosa", "🗝️ antica reliquia", "🏺 vaso antico"]
             tesoro = random.choice(tesori)
@@ -3611,7 +4406,7 @@ class AvventuraEpica:
             monete_bonus = random.randint(15, 40)
             self.monete += monete_bonus
             
-            testo = f"🔍 Esplorando {area} trovi:\n"
+            testo = f"Esplorando {area} trovi:\n"
             testo += f"✨ {tesoro}!\n"
             testo += f" +{monete_bonus} monete"
             
@@ -3628,26 +4423,26 @@ class AvventuraEpica:
             if area == "🌲 Bosco":
                 legno_extra = random.randint(15, 25)
                 self.risorse["legno"] += legno_extra
-                testo = f"🔍 Esplorando trovi un deposito di legno:\n+{legno_extra} legno"
+                testo = f"Esplorando trovi un deposito di legno:\n+{legno_extra} legno"
             elif area == "🏔️ Montagna":
                 pietra_extra = random.randint(10, 20)
                 ferro_extra = random.randint(2, 5)
                 self.risorse["pietra"] += pietra_extra
                 self.risorse["ferro"] += ferro_extra
-                testo = f"🔍 Esplorando trovi una vena mineraria:\n+{pietra_extra} pietra, +{ferro_extra} ferro"
+                testo = f"Esplorando trovi una vena mineraria:\n+{pietra_extra} pietra, +{ferro_extra} ferro"
             else:
                 cibo_extra = random.randint(10, 20)
                 acqua_extra = random.randint(5, 15)
                 self.risorse["cibo"] += cibo_extra
                 self.risorse["acqua"] += acqua_extra
-                testo = f"🔍 Esplorando trovi provviste:\n+{cibo_extra} cibo, +{acqua_extra} acqua"
+                testo = f"Esplorando trovi provviste:\n+{cibo_extra} cibo, +{acqua_extra} acqua"
                 
             self.haptic_feedback("success")
             
         else:  # 40% solo esperienza
             exp_guadagnata = random.randint(8, 15)
             self.esperienza += exp_guadagnata
-            testo = f"🔍 Esplori {area} accuratamente\n"
+            testo = f"Esplori {area} accuratamente\n"
             testo += f" +{exp_guadagnata} EXP per l'esplorazione"
             
         # Progressione area (solo se area valida)
@@ -3679,7 +4474,7 @@ class AvventuraEpica:
         """Controlla se il boss dell'area attuale è stato sconfitto"""
         # Mappa aree ai boss (basata sui boss_aree esistenti)
         boss_aree_mappa = {
-            "🏘️ Villaggio": "🐕 Cane Randagio",
+            "Villaggio": "🐕 Cane Randagio",
             "🏠 Cantina": "🕷️ Ragno Gigante", 
             "🚰 Fogne": "🐀 Re dei Ratti",
             "🌀 Labirinto Antico": "🏺 Guardiano Antico",
@@ -3707,7 +4502,7 @@ class AvventuraEpica:
 
     def combatti_mostri(self, e):
         """Reindirizza alla nuova schermata di combattimento"""
-        self.naviga_a_schermata("combattimento")
+        self.page.go("/combattimento")
         
         
     def esegui_battaglia_dettagliata(self, area):
@@ -3719,7 +4514,7 @@ class AvventuraEpica:
             try:
                 # Dati mostri per area
                 mostri_area = {
-                    "🏘️ Villaggio": {"nome": "Topo Gigante", "hp": 80, "attacco": 3, "verso": "Squeak!"},
+                    "Villaggio": {"nome": "Topo Gigante", "hp": 80, "attacco": 3, "verso": "Squeak!"},
                     "🏠 Cantina": {"nome": "Ragno Peloso", "hp": 100, "attacco": 4, "verso": "Hiss!"},
                     "🚰 Fogne": {"nome": "Ratto delle Fogne", "hp": 120, "attacco": 5, "verso": "Screech!"},
                     "🌀 Labirinto Antico": {"nome": "Guardiano di Pietra", "hp": 140, "attacco": 6, "verso": "Rumble!"},
@@ -3968,7 +4763,7 @@ class AvventuraEpica:
         
         # Bottone per annullare
         bottone_annulla = ft.ElevatedButton(
-            text="❌ Annulla",
+            text="Annulla",
             on_click=self.chiudi_menu_area,
             color=ft.Colors.RED,
             width=300
@@ -4013,10 +4808,12 @@ class AvventuraEpica:
     def vai_a_gesti_gatti(self, e):
         """Naviga alla schermata di gestione gatti"""
         if not self.gioco_iniziato:
+            print("🐱 DEBUG: Gioco non iniziato, non posso navigare ai gatti")
             return
         
+        print("🐱 DEBUG: Navigando a gestione gatti...")
         # Naviga alla schermata di gestione gatti
-        self.naviga_a_schermata("gestione_gatti")
+        self.page.go("/gatti")
         
     def rinomina_gatto(self, e):
         """Naviga alla schermata di rinomina gatto"""
@@ -4027,7 +4824,7 @@ class AvventuraEpica:
         self.gatto_da_rinominare = self.gatto_attivo
         
         # Naviga alla schermata di rinomina
-        self.naviga_a_schermata("rinomina_gatto")
+        self.page.go("/rinomina_gatto")
     
     def mostra_schermata_rinomina_gatto(self):
         """Mostra schermata dedicata alla rinomina del gatto"""
@@ -4072,7 +4869,7 @@ class AvventuraEpica:
             nuovo_nome = self.campo_nome_gatto.value.strip()
             if not nuovo_nome:
                 self.campo_nome_gatto.error_text = "Devi inserire un nome valido!"
-                self.page.update()
+                self.campo_nome_gatto.update()
                 return
                 
             # Applica il nuovo nome
@@ -4098,7 +4895,7 @@ class AvventuraEpica:
         pulsante_indietro = self.crea_pulsante_indietro()
         
         pulsante_conferma = ft.ElevatedButton(
-            text="✅ Conferma Rinomina",
+            text="Conferma Rinomina",
             on_click=conferma_rinomina,
             width=300,
             height=60,
@@ -4110,7 +4907,7 @@ class AvventuraEpica:
         )
         
         pulsante_annulla = ft.ElevatedButton(
-            text="❌ Annulla",
+            text="Annulla",
             on_click=self.torna_indietro,
             width=200,
             height=50,
@@ -4141,26 +4938,27 @@ class AvventuraEpica:
                 alignment=ft.alignment.center
             )
         ])
-        
-        self.page.update()
     
     def mostra_schermata_gestione_gatti(self):
         """Mostra schermata dedicata alla gestione dei gatti"""
+        print("🐱 DEBUG: Mostrando schermata gestione gatti")
         self.contenuto_schermata.controls.clear()
         
         titolo = ft.Text(
-            " Gestione Gatti ", 
+            "Gestione Gatti", 
             size=24, 
             weight=ft.FontWeight.BOLD, 
             text_align=ft.TextAlign.CENTER,
-            color=ft.Colors.PINK_400
+            color=ft.Colors.PINK_400,
+            semantics_label="Schermata gestione gatti"
         )
         
         sottotitolo = ft.Text(
-            "Scegli il tuo gatto attivo",
+            "Scegli il tuo gatto attivo tra quelli disponibili",
             size=16,
             text_align=ft.TextAlign.CENTER,
-            color=ft.Colors.GREY_400
+            color=ft.Colors.GREY_400,
+            semantics_label="Istruzioni: seleziona quale gatto vuoi come compagno attivo"
         )
         
         # Pulsante indietro
@@ -4197,46 +4995,41 @@ class AvventuraEpica:
                 border_color = ft.Colors.BLUE_300
                 testo_stato = "Seleziona"
             
-            # Card del gatto
-            gatto_card = ft.Container(
-                content=ft.Column([
-                    ft.Row([
-                        ft.Text(f"{emoji} {nome}", size=20, weight=ft.FontWeight.BOLD),
-                        ft.Text(testo_stato, size=14, color=ft.Colors.WHITE if is_attivo else ft.Colors.BLUE_200)
-                    ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
-                    ft.Text(f"Livello {livello} • Abilità: {abilita}", size=14),
-                    ft.Row([
-                        ft.Text(f" Affinità: {affinita}", size=12),
-                        ft.Text(f"😊 Felicità: {felicita}", size=12)
-                    ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
-                    ft.Container(height=10),
-                    ft.ElevatedButton(
-                        text=testo_stato,
-                        on_click=crea_handler_gatto(gatto_id),
-                        bgcolor=bg_color,
-                        color=ft.Colors.WHITE,
-                        width=200,
-                        disabled=is_attivo
-                    )
-                ], spacing=5),
-                bgcolor=ft.Colors.GREY_900,
-                padding=15,
-                border_radius=10,
-                border=ft.border.all(2, border_color),
-                width=400
+            # Pulsante gatto accessibile
+            testo_pulsante = f"{nome} - Livello {livello}"
+            if is_attivo:
+                testo_pulsante += " (Attualmente attivo)"
+            
+            # Descrizione accessibile dettagliata
+            descrizione_accessibile = f"{nome}, {abilita}, livello {livello}, affinità {affinita}, felicità {felicita}"
+            if is_attivo:
+                descrizione_accessibile += ", attualmente selezionato come gatto attivo"
+            else:
+                descrizione_accessibile += ", tocca per selezionarlo come gatto attivo"
+            
+            gatto_button = ft.ElevatedButton(
+                text=testo_pulsante,
+                on_click=crea_handler_gatto(gatto_id) if not is_attivo else None,
+                bgcolor=bg_color,
+                color=ft.Colors.WHITE,
+                width=350,
+                height=70,
+                disabled=is_attivo,
+                tooltip=descrizione_accessibile
             )
             
-            gatti_controls.append(gatto_card)
-            gatti_controls.append(ft.Container(height=10))
+            gatti_controls.append(gatto_button)
+            gatti_controls.append(ft.Container(height=15))
         
         # Se non ci sono gatti sbloccati
         if not gatti_controls:
             gatti_controls.append(
                 ft.Text(
-                    " Nessun gatto sbloccato!\nProgredisci nel gioco per sbloccare nuovi compagni.",
+                    "Nessun gatto sbloccato. Progredisci nel gioco per sbloccare nuovi compagni felini.",
                     size=16,
                     text_align=ft.TextAlign.CENTER,
-                    color=ft.Colors.GREY_400
+                    color=ft.Colors.GREY_400,
+                    semantics_label="Nessun gatto disponibile al momento. Continua a giocare per sbloccare nuovi gatti compagni."
                 )
             )
         
@@ -4248,16 +5041,21 @@ class AvventuraEpica:
             ft.Container(height=10),
             sottotitolo,
             ft.Container(height=30),
-            ft.Column(
-                controls=gatti_controls,
-                alignment=ft.MainAxisAlignment.CENTER,
-                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                scroll=ft.ScrollMode.AUTO,
-                height=400
-            )
+            ft.Column([
+                ft.Text(
+                    "",
+                    semantics_label="Lista gatti disponibili, scorri per vedere tutti i gatti",
+                    visible=False
+                ),
+                ft.Column(
+                    controls=gatti_controls,
+                    alignment=ft.MainAxisAlignment.CENTER,
+                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                    scroll=ft.ScrollMode.AUTO,
+                    height=400
+                )
+            ])
         ])
-        
-        self.page.update()
     
     def seleziona_gatto_attivo(self, gatto_id):
         """Seleziona un nuovo gatto attivo"""
@@ -4470,7 +5268,7 @@ class AvventuraEpica:
             self.aggiorna_storia(f"✅ {reliquia} equipaggiata in {slot}!")
             self.haptic_feedback("success")
             # Aggiorna la schermata
-            self.mostra_schermata_gestione_reliquie()
+            self.page.go("/gestione_reliquie")
     
     def rimuovi_reliquia_slot(self, slot):
         """Rimuove reliquia da uno slot dalla schermata"""
@@ -4480,7 +5278,7 @@ class AvventuraEpica:
             self.aggiorna_storia(f"❌ {reliquia_rimossa} rimossa da {slot}!")
             self.haptic_feedback("light")
             # Aggiorna la schermata
-            self.mostra_schermata_gestione_reliquie()
+            self.page.go("/gestione_reliquie")
     
     def mostra_schermata_inventario(self):
         """Mostra schermata dedicata all'inventario"""
@@ -4706,7 +5504,7 @@ class AvventuraEpica:
             self.avvia_musica_battaglia("boss")
             
         # Inizia combattimento vero contro il boss - naviga alla schermata combattimento
-        self.naviga_a_schermata("combattimento")
+        self.page.go("/combattimento")
         self.inizia_combattimento_boss(boss_info)
         return  # Esci dalla funzione senza eseguire il vecchio codice
         import threading
@@ -5232,7 +6030,7 @@ class AvventuraEpica:
         
         # Assicurati di essere sulla schermata gioco e aggiorna i pulsanti
         if self.schermata_corrente != "gioco":
-            self.naviga_a_schermata("gioco")
+            self.page.go("/gioco")
         else:
             self.crea_menu_gioco()
         
@@ -5306,7 +6104,7 @@ class AvventuraEpica:
             self.aggiorna_storia(testo)
             # Assicurati di essere sulla schermata gioco e aggiorna i pulsanti
             if self.schermata_corrente != "gioco":
-                self.naviga_a_schermata("gioco")
+                self.page.go("/gioco")
             else:
                 self.crea_menu_gioco()
         else:
@@ -5442,7 +6240,7 @@ class AvventuraEpica:
             
         negozio = self.negozi[stanza_attuale]
         
-        testo = f"🏪 === NEGOZIO {stanza_attuale} ===\n"
+        testo = f"=== NEGOZIO {stanza_attuale} ===\n"
         testo += f" Le tue monete: {self.monete}\n\n"
         
         testo += " OGGETTI DISPONIBILI:\n"
@@ -5548,13 +6346,10 @@ class AvventuraEpica:
     def vai_direttamente_al_gioco(self, e=None):
         """Va direttamente alla schermata di gioco, bypassando lo stack"""
         if self.gioco_iniziato:
-            self.stack_schermate.clear()  # Pulisce lo stack
-            self.schermata_corrente = "gioco"
-            self.aggiorna_schermata()
+            self.page.go("/gioco")
             self.haptic_feedback("light")
         else:
-            self.schermata_corrente = "menu_principale"
-            self.aggiorna_schermata()
+            self.page.go("/")
         
     def conta_oggetti_curativi(self):
         """Conta il numero totale di oggetti curativi nell'inventario"""
@@ -5611,7 +6406,7 @@ class AvventuraEpica:
         
         self.aggiorna_storia(testo)
         self.aggiorna_stats_incrementali()
-        self.mostra_schermata_inventario()  # Ricarica l'inventario
+        self.page.go("/inventario")  # Ricarica l'inventario
         
     def disequipaggia_oggetto_specifico(self, nome_oggetto):
         """Disequipaggia un oggetto specifico"""
@@ -5640,7 +6435,7 @@ class AvventuraEpica:
         
         self.aggiorna_storia(testo)
         self.aggiorna_stats_incrementali()
-        self.mostra_schermata_inventario()  # Ricarica l'inventario
+        self.page.go("/inventario")  # Ricarica l'inventario
         
     def usa_oggetto_specifico(self, nome_oggetto):
         """Usa un oggetto specifico (cibo/pozione)"""
@@ -5673,7 +6468,7 @@ class AvventuraEpica:
             
         self.aggiorna_storia(testo)
         self.aggiorna_stats_incrementali()
-        self.mostra_schermata_inventario()  # Ricarica l'inventario
+        self.page.go("/inventario")  # Ricarica l'inventario
         
     def elimina_oggetto_specifico(self, nome_oggetto):
         """Elimina un oggetto specifico dall'inventario"""
@@ -5686,7 +6481,7 @@ class AvventuraEpica:
             del self.inventario[nome_oggetto]
             
         self.aggiorna_storia(f"🗑️ {nome_oggetto} eliminato dall'inventario!")
-        self.mostra_schermata_inventario()  # Ricarica l'inventario
+        self.page.go("/inventario")  # Ricarica l'inventario
         
     def compra_oggetto_specifico(self, e, nome_oggetto, prezzo):
         """Compra un oggetto specifico dal negozio"""
@@ -5910,7 +6705,7 @@ class AvventuraEpica:
         try:
             with open("avventura_epica_save.json", "w") as file:
                 json.dump(stato_gioco, file, indent=2)
-            self.aggiorna_storia("💾 Avventura salvata con successo!")
+            self.aggiorna_storia("Avventura salvata con successo!")
             self.haptic_feedback("success")
         except Exception as ex:
             self.aggiorna_storia(f"❌ Errore salvataggio: {str(ex)}")
@@ -6154,7 +6949,7 @@ class AvventuraEpica:
             self.npc_rari_incontrati.append(npc_key)
             
             npc_nomi = {
-                "🏘️ Villaggio": "🧙‍♂️ Sage Merlino",
+                "Villaggio": "🧙‍♂️ Sage Merlino",
                 "🌲 Bosco Profondo": "🦌 Spirito del Bosco",
                 "🌊 Mare": "🧜‍♀️ Sirena Antica",
                 "⚰️ Cimitero": "👻 Fantasma Benevolo",
@@ -6180,7 +6975,7 @@ class AvventuraEpica:
     def gestisci_reliquie(self, e):
         """Naviga alla schermata di gestione reliquie"""
         # Naviga alla schermata di gestione reliquie
-        self.naviga_a_schermata("gestione_reliquie")
+        self.page.go("/gestione_reliquie")
         
     def applica_bonus_reliquie_gatti(self):
         """Applica bonus reliquie ai gatti passivamente"""
@@ -6260,7 +7055,7 @@ class AvventuraEpica:
             gatto["scene_viste"].append("scena_100")
             
             self.aggiorna_storia(f"💚 === SCENA SPECIALE: {gatto['nome']} === 💚\n\n"
-                               f"📖 {evoluzione['storia']}\n\n"
+                               f"{evoluzione['storia']}\n\n"
                                f"💭 {gatto['nome']}: '{evoluzione['dialoghi'][0]}'\n"
                                f"Il vostro legame si è rafforzato profondamente...")
                                
@@ -6785,7 +7580,7 @@ class AvventuraEpica:
         
     def test_audio_debug(self, e):
         """Funzione di debug per testare audio"""
-        print("🔍 === DIAGNOSI AUDIO ===")
+        print("=== DIAGNOSI AUDIO ===")
         print(f"Directory corrente: {os.getcwd()}")
         print(f"Audio abilitato: {self.audio_abilitato}")
         print(f"Area attuale: {self.area_attuale}")
@@ -6848,7 +7643,7 @@ class AvventuraEpica:
         else:
             print(f"❌ Area {self.area_attuale} non ha musica associata")
             
-        self.aggiorna_storia("🔍 Diagnosi audio completata - controlla console")
+        self.aggiorna_storia("Diagnosi audio completata - controlla console")
 
     def carica_gioco(self, e):
         """Caricamento completo"""
@@ -6923,7 +7718,7 @@ class AvventuraEpica:
             self.gioco_iniziato = True
             
             # Naviga al gioco mantenendo la possibilità di tornare al menu
-            self.naviga_a_schermata("gioco")
+            self.page.go("/gioco")
             
             if self.audio_abilitato:
                 self.cambia_musica_area(self.area_attuale)
@@ -6986,7 +7781,7 @@ def main(page: ft.Page):
             self.aggiorna_storia(f" BOSS FIGHT!\n{nome_boss} appare davanti a te!\nHP Boss: {self.hp_mostro_attuale}")
         
         # Aggiorna i pulsanti per mostrare le azioni di combattimento
-        self.aggiorna_schermata()
+        self.page.go("/combattimento")
 
     # Aggiungi il metodo alla classe
     AvventuraEpica.calcola_livello_minimo_boss = calcola_livello_minimo_boss

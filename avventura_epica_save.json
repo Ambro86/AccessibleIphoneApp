@@ -21,7 +21,7 @@
     "idratazione": 5
   },
   "oggetti": {
-    "\ud83c\udfd8\ufe0f Villaggio": "\ud83d\udddd\ufe0f chiave di bronzo",
+    "Villaggio": "\ud83d\udddd\ufe0f chiave di bronzo",
     "\ud83c\udf32 Bosco": "\ud83c\udff9 arco elfico",
     "\ud83c\udfd4\ufe0f Montagna": "\u26cf\ufe0f piccone di mithril",
     "\ud83c\udff0 Castello": "\ud83d\udc51 corona reale",
@@ -39,7 +39,7 @@
     "\ud83d\udc51 Palazzo": " tesoro reale"
   },
   "mostri": {
-    "\ud83c\udfd8\ufe0f Villaggio": null,
+    "Villaggio": null,
     "\ud83c\udf32 Bosco": {
       "nome": "\ud83d\udc3a Lupo",
       "hp": 15,
@@ -155,7 +155,7 @@
       "fame": 100,
       "felicita": 100,
       "sbloccato": true,
-      "affinita": 39,
+      "affinita": 40,
       "nome_personalizzato": true,
       "aree_non_usato": 0,
       "forma_evoluta": false,
@@ -237,11 +237,11 @@
     "energia": 90
   },
   "aree_sbloccate": [
-    "\ud83c\udfd8\ufe0f Villaggio"
+    "Villaggio"
   ],
-  "area_attuale": "\ud83c\udfd8\ufe0f Villaggio",
+  "area_attuale": "Villaggio",
   "progressione_area": {
-    "\ud83c\udfd8\ufe0f Villaggio": 2,
+    "Villaggio": 2,
     "\ud83c\udfe0 Cantina": 0,
     "\ud83d\udeb0 Fogne": 0,
     "\ud83c\udf00 Labirinto Antico": 0,
