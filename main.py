@@ -2104,9 +2104,19 @@ class AvventuraEpica:
         
         content = ft.Column([
             titolo_gioco,
-            self.area_storia,
-            self.area_stats,
-            ft.Column(pulsanti_gioco, horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=15)
+            ft.Container(height=20),
+            ft.Container(
+                content=ft.Column([
+                    self.area_storia,
+                    self.area_stats,
+                    ft.Column(pulsanti_gioco, horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=15)
+                ], spacing=10),
+                bgcolor=ft.Colors.GREY_800,
+                border_radius=10,
+                padding=10
+            ),
+            ft.Container(height=20),
+            self.crea_pulsante_indietro()
         ], scroll=ft.ScrollMode.AUTO, spacing=20, expand=True)
         
         return ft.View(
@@ -2132,12 +2142,16 @@ class AvventuraEpica:
             color=ft.Colors.PURPLE_400
         )
         
-        contenuto_impostazioni = self.crea_contenuto_impostazioni()
-        
+        # Crea contenuto direttamente qui (come fa inventario)
         content = ft.Column([
             titolo,
             ft.Container(height=20),
-            *contenuto_impostazioni,
+            ft.Container(
+                content=ft.Column(self.crea_contenuto_impostazioni(), spacing=10),
+                bgcolor=ft.Colors.GREY_800,
+                border_radius=10,
+                padding=10
+            ),
             ft.Container(height=20),
             self.crea_pulsante_indietro()
         ], scroll=ft.ScrollMode.AUTO, spacing=20, expand=True)
@@ -2165,12 +2179,16 @@ class AvventuraEpica:
             color=ft.Colors.ORANGE_400
         )
         
-        contenuto_info = self.crea_contenuto_info()
-        
+        # Crea contenuto direttamente qui (come fa inventario)
         content = ft.Column([
             titolo,
             ft.Container(height=20),
-            *contenuto_info,
+            ft.Container(
+                content=ft.Column(self.crea_contenuto_info(), spacing=10),
+                bgcolor=ft.Colors.GREY_800,
+                border_radius=10,
+                padding=10
+            ),
             ft.Container(height=20),
             self.crea_pulsante_indietro()
         ], scroll=ft.ScrollMode.AUTO, spacing=20, expand=True)
@@ -2366,14 +2384,21 @@ class AvventuraEpica:
         
         content = ft.Column([
             titolo,
-            ft.Container(height=10),
-            info_mostro,
-            ft.Container(height=10),
-            info_giocatore,
             ft.Container(height=20),
-            self.log_combattimento,
-            ft.Container(height=20),
-            ft.Column(pulsanti_combattimento, horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=10)
+            ft.Container(
+                content=ft.Column([
+                    info_mostro,
+                    ft.Container(height=10),
+                    info_giocatore,
+                    ft.Container(height=20),
+                    self.log_combattimento,
+                    ft.Container(height=20),
+                    ft.Column(pulsanti_combattimento, horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=10)
+                ], spacing=10),
+                bgcolor=ft.Colors.GREY_800,
+                border_radius=10,
+                padding=10
+            )
         ], scroll=ft.ScrollMode.AUTO, spacing=20, expand=True)
         
         return ft.View(
@@ -2439,13 +2464,20 @@ class AvventuraEpica:
             oggetti_controls.append(oggetto_card)
         
         content = ft.Column([
-            pulsante_indietro,
-            ft.Container(height=10),
             titolo,
             ft.Container(height=20),
-            self.testo_monete_negozio,
+            ft.Container(
+                content=ft.Column([
+                    self.testo_monete_negozio,
+                    ft.Container(height=20),
+                    ft.Column(oggetti_controls, spacing=10)
+                ], spacing=10),
+                bgcolor=ft.Colors.GREY_800,
+                border_radius=10,
+                padding=10
+            ),
             ft.Container(height=20),
-            ft.Column(oggetti_controls, spacing=10)
+            pulsante_indietro
         ], scroll=ft.ScrollMode.AUTO, spacing=20, expand=True)
         
         return ft.View(
@@ -2630,11 +2662,19 @@ class AvventuraEpica:
         
         content = ft.Column([
             titolo,
-            sottotitolo,
             ft.Container(height=20),
-            gatti_container,
-            ft.Container(height=20),
-            ft.Column(pulsanti_azioni, horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=10),
+            ft.Container(
+                content=ft.Column([
+                    sottotitolo,
+                    ft.Container(height=20),
+                    gatti_container,
+                    ft.Container(height=20),
+                    ft.Column(pulsanti_azioni, horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=10)
+                ], spacing=10),
+                bgcolor=ft.Colors.GREY_800,
+                border_radius=10,
+                padding=10
+            ),
             ft.Container(height=20),
             self.crea_pulsante_indietro()
         ], scroll=ft.ScrollMode.AUTO, spacing=20, expand=True)
@@ -5948,60 +5988,64 @@ class AvventuraEpica:
             colore_titolo = ft.Colors.RED_400
             icona = "❌"
         
-        # Crea vista accessibile per conferma salvataggio
+        # Titolo principale per VoiceOver
+        titolo_principale = ft.Text(
+            titolo,
+            size=24,
+            weight=ft.FontWeight.BOLD,
+            text_align=ft.TextAlign.CENTER,
+            color=colore_titolo
+        )
+        
+        # Crea vista identica a inventario
+        content = ft.Column([
+            titolo_principale,
+            ft.Container(height=20),
+            ft.Container(
+                content=ft.Column([
+                    # Icona separata per decorazione
+                    ft.Text(
+                        icona,
+                        size=48,
+                        text_align=ft.TextAlign.CENTER
+                    ),
+                    ft.Container(height=20),
+                    # Messaggio principale
+                    ft.Text(
+                        messaggio,
+                        size=16,
+                        text_align=ft.TextAlign.CENTER,
+                        color=ft.Colors.WHITE
+                    ),
+                    ft.Container(height=30),
+                    # Pulsante per tornare al gioco
+                    ft.ElevatedButton(
+                        text="Continua",
+                        on_click=self.torna_al_gioco_da_conferma,
+                        width=200,
+                        height=50,
+                        bgcolor=ft.Colors.PURPLE_600,
+                        color=ft.Colors.WHITE,
+                        tooltip="Torna al gioco"
+                    )
+                ], spacing=10),
+                bgcolor=ft.Colors.GREY_800,
+                border_radius=10,
+                padding=10
+            )
+        ], scroll=ft.ScrollMode.AUTO, spacing=20, expand=True)
+        
         vista_conferma = ft.View(
             route="/conferma_salvataggio",
-            appbar=ft.AppBar(
-                title=ft.Text("Salvataggio"),
-                bgcolor=ft.Colors.DEEP_PURPLE_900,
-                color=ft.Colors.WHITE
-            ),
             controls=[
                 ft.Container(
-                    content=ft.Column([
-                        # Titolo accessibile senza emoji
-                        ft.Text(
-                            titolo,
-                            size=24,
-                            weight=ft.FontWeight.BOLD,
-                            text_align=ft.TextAlign.CENTER,
-                            color=colore_titolo
-                        ),
-                        ft.Container(height=20),
-                        # Icona separata per decorazione
-                        ft.Text(
-                            icona,
-                            size=48,
-                            text_align=ft.TextAlign.CENTER
-                        ),
-                        ft.Container(height=20),
-                        # Messaggio principale
-                        ft.Text(
-                            messaggio,
-                            size=16,
-                            text_align=ft.TextAlign.CENTER,
-                            color=ft.Colors.WHITE
-                        ),
-                        ft.Container(height=30),
-                        # Pulsante per tornare al gioco
-                        ft.ElevatedButton(
-                            text="Continua",
-                            on_click=self.torna_al_gioco_da_conferma,
-                            width=200,
-                            height=50,
-                            bgcolor=ft.Colors.PURPLE_600,
-                            color=ft.Colors.WHITE,
-                            tooltip="Torna al gioco"
-                        )
-                    ], 
-                    alignment=ft.MainAxisAlignment.CENTER,
-                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                    spacing=10),
+                    content=content,
+                    bgcolor=ft.Colors.GREY_900,
                     padding=20,
                     expand=True
                 )
             ],
-            bgcolor=ft.Colors.DEEP_PURPLE_900
+            bgcolor=ft.Colors.GREY_900
         )
         
         self.page.views.append(vista_conferma)

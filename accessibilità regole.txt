@@ -1,34 +1,35 @@
-00. ❌ ft.Column dentro ft.Column → ✅ Usare liste e operatore * per spacchettare il contenuto
+00. ❌ Primo elemento vuoto in VoiceOver → ✅ Struttura vista come inventario
 • 
-Problema: Quando inserisci un ft.Column() dentro un altro ft.Column(), VoiceOver legge il primo elemento del Column interno prima del titolo della vista.
+Problema: VoiceOver legge un elemento vuoto come primo elemento invece del titolo della vista.
 • 
-❌ SBAGLIATO:
-def crea_contenuto_impostazioni(self):
-    return ft.Column([  # <- Questo Column viene inserito in un altro Column!
-        ft.Text("Audio"),
-        toggle_audio
-    ])
+✅ SOLUZIONE: Usare ESATTAMENTE la struttura di crea_vista_inventario che funziona:
 
-def crea_vista_impostazioni(self):
-    contenuto = self.crea_contenuto_impostazioni()
-    content = ft.Column([
-        titolo,           # <- VoiceOver NON vede questo come primo elemento
-        contenuto         # <- VoiceOver vede il primo elemento di questo Column!
-    ])
+content = ft.Column([
+    titolo,                    # <- PRIMO elemento = titolo
+    ft.Container(height=20),   # <- Spaziatura
+    ft.Container(              # <- Contenuto principale in Container
+        content=ft.Column([    # <- Column interno per il contenuto
+            elemento1,
+            elemento2,
+            pulsanti
+        ], spacing=10),
+        bgcolor=ft.Colors.GREY_800,
+        border_radius=10,
+        padding=10
+    ),
+    ft.Container(height=20),   # <- Spaziatura finale
+    self.crea_pulsante_indietro()  # <- Pulsante indietro alla fine
+], scroll=ft.ScrollMode.AUTO, spacing=20, expand=True)
 
-✅ CORRETTO:
-def crea_contenuto_impostazioni(self):
-    return [  # <- Restituisce una LISTA, non un ft.Column!
-        ft.Text("Audio"),
-        toggle_audio
-    ]
+❌ NON mettere altri elementi prima del titolo:
+- ❌ self.area_storia direttamente dopo titolo
+- ❌ sottotitolo direttamente dopo titolo  
+- ❌ pulsante_indietro come primo elemento
+- ❌ AppBar (rimuovere se presente)
 
-def crea_vista_impostazioni(self):
-    contenuto = self.crea_contenuto_impostazioni()
-    content = ft.Column([
-        titolo,           # <- Ora VoiceOver vede questo come vero primo elemento
-        *contenuto        # <- Operatore * spacchetta la lista nel Column
-    ])
+✅ Tutto il contenuto va DENTRO il Container principale!
+
+Il trucco era: mettere il contenuto esterno dentro un ft.Container() con un ft.Column() interno
 
 0. ❌ semantics_label nei titoli → ✅ Non usare semantics_label sui titoli delle viste
 • 
