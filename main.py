@@ -1937,8 +1937,7 @@ class AvventuraEpica:
             size=28, 
             weight=ft.FontWeight.BOLD, 
             text_align=ft.TextAlign.CENTER,
-            color=ft.Colors.AMBER_400,
-            semantics_label="Avventura Epica, titolo principale"
+            color=ft.Colors.AMBER_400
         )
         
         pulsanti = [
@@ -2096,7 +2095,17 @@ class AvventuraEpica:
         # Pulsante indietro
         pulsanti_gioco.append(self.crea_pulsante_indietro())
         
+        # Titolo della vista gioco
+        titolo_gioco = ft.Text(
+            "AVVENTURA IN CORSO", 
+            size=24, 
+            weight=ft.FontWeight.BOLD, 
+            text_align=ft.TextAlign.CENTER,
+            color=ft.Colors.AMBER_400
+        )
+        
         content = ft.Column([
+            titolo_gioco,
             self.area_storia,
             self.area_stats,
             ft.Column(pulsanti_gioco, horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=15)
@@ -2122,8 +2131,7 @@ class AvventuraEpica:
             size=24, 
             weight=ft.FontWeight.BOLD, 
             text_align=ft.TextAlign.CENTER,
-            color=ft.Colors.PURPLE_400,
-            semantics_label="Impostazioni"
+            color=ft.Colors.PURPLE_400
         )
         
         contenuto_impostazioni = self.crea_contenuto_impostazioni()
@@ -2156,8 +2164,7 @@ class AvventuraEpica:
             size=24, 
             weight=ft.FontWeight.BOLD, 
             text_align=ft.TextAlign.CENTER,
-            color=ft.Colors.ORANGE_400,
-            semantics_label="Info Gioco"
+            color=ft.Colors.ORANGE_400
         )
         
         contenuto_info = self.crea_contenuto_info()
@@ -2247,8 +2254,7 @@ class AvventuraEpica:
             size=24, 
             weight=ft.FontWeight.BOLD, 
             text_align=ft.TextAlign.CENTER,
-            color=ft.Colors.RED_400,
-            semantics_label="Combattimento"
+            color=ft.Colors.RED_400
         )
         
         # Info mostro
@@ -2394,8 +2400,7 @@ class AvventuraEpica:
             size=24, 
             weight=ft.FontWeight.BOLD, 
             text_align=ft.TextAlign.CENTER,
-            color=ft.Colors.ORANGE_400,
-            semantics_label="Info Gioco"
+            color=ft.Colors.ORANGE_400
         )
         
         # Crea un campo monete che possiamo aggiornare
@@ -2507,8 +2512,7 @@ class AvventuraEpica:
             size=24, 
             weight=ft.FontWeight.BOLD, 
             text_align=ft.TextAlign.CENTER,
-            color=ft.Colors.PINK_400,
-            semantics_label="Gestione Gatti"
+            color=ft.Colors.PINK_400
         )
         
         sottotitolo = ft.Text(
@@ -2785,8 +2789,7 @@ class AvventuraEpica:
             size=24, 
             weight=ft.FontWeight.BOLD, 
             text_align=ft.TextAlign.CENTER,
-            color=ft.Colors.PURPLE_400,
-            semantics_label="Impostazioni"
+            color=ft.Colors.PURPLE_400
         )
         
         if not self.gatto_attivo or not self.gatti[self.gatto_attivo].get("sbloccato", False):
@@ -3634,7 +3637,7 @@ class AvventuraEpica:
         menu_gatti.append(
             ft.ElevatedButton(
                 " Gesti Gatti", 
-                on_click=self.vai_a_gesti_gatti, 
+                on_click=lambda e: self.page.go("/gatti"), 
                 width=140,
                 height=50, 
                 tooltip="Gestisci i tuoi gatti compagni",
@@ -3681,7 +3684,7 @@ class AvventuraEpica:
         menu_gatti.append(
             ft.ElevatedButton(
                 " Statistiche", 
-                on_click=self.vai_a_statistiche, 
+                on_click=lambda e: self.page.go("/statistiche"), 
                 width=140,
                 height=50, 
                 tooltip="Visualizza statistiche dettagliate del giocatore e risorse",

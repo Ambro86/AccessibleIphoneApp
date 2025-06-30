@@ -1,3 +1,17 @@
+0. ❌ semantics_label nei titoli → ✅ Non usare semantics_label sui titoli delle viste
+• 
+Problema: Quando aggiungi semantics_label ai titoli delle viste, VoiceOver non li legge come primo elemento.
+• 
+✅ Soluzione: I titoli devono essere semplici Text senza semantics_label per essere letti correttamente come primo elemento.
+ft.Text(
+    "TITOLO VISTA", 
+    size=24, 
+    weight=ft.FontWeight.BOLD, 
+    text_align=ft.TextAlign.CENTER,
+    color=ft.Colors.BLUE_400
+    # ❌ NON aggiungere semantics_label qui!
+)
+
 1. ❌ page.update() non attiva VoiceOver → ✅ Usa page.go()
 • 
 Problema: Quando usi page.update(), VoiceOver non fa il suono "trun" e il focus non si riposiziona all'inizio.
