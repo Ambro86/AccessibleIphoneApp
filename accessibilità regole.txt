@@ -1,3 +1,34 @@
+00. ❌ Righe vuote in ft.Column → ✅ Non lasciare righe vuote che creano elementi invisibili
+• 
+Problema: Righe vuote all'inizio di ft.Column([]) creano elementi invisibili che VoiceOver legge come primo elemento invece del titolo.
+• 
+❌ SBAGLIATO:
+ft.Column([
+    
+    titolo,  # <- Riga vuota sopra crea elemento invisibile!
+    contenuto
+])
+
+✅ CORRETTO:
+ft.Column([
+    titolo,  # <- Titolo come vero primo elemento
+    contenuto
+])
+
+Anche nelle funzioni crea_contenuto_*():
+❌ SBAGLIATO:
+return ft.Column([
+    
+    ft.Text("Sezione"),  # <- Riga vuota sopra interferisce
+    toggle
+])
+
+✅ CORRETTO:
+return ft.Column([
+    ft.Text("Sezione"),  # <- Nessuna riga vuota
+    toggle
+])
+
 0. ❌ semantics_label nei titoli → ✅ Non usare semantics_label sui titoli delle viste
 • 
 Problema: Quando aggiungi semantics_label ai titoli delle viste, VoiceOver non li legge come primo elemento.

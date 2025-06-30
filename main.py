@@ -3355,15 +3355,12 @@ class AvventuraEpica:
         
         return ft.Column(
             [
-                
                 ft.Text("Audio", size=16, weight=ft.FontWeight.BOLD),
                 toggle_audio,
                 ft.Container(height=10),
-                
                 self.volume_musica_label_tab,
                 slider_volume_musica,
                 ft.Container(height=10),
-                
                 self.volume_effetti_label_tab,
                 slider_volume_effetti,
                 ft.Container(height=10),
@@ -3384,16 +3381,13 @@ class AvventuraEpica:
         """Crea il contenuto della tab info"""
         return ft.Column(
             [
-                
                 ft.Container(height=20),
                 ft.Text("AVVENTURA EPICA", size=24, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER),
                 ft.Container(height=10),
-                
                 ft.Text(f" Versione: {self.versione}", size=16),
                 ft.Text(f"Autore: {self.autore}", size=16),
                 ft.Text("Data rilascio: 18 giugno 2025", size=16),
                 ft.Container(height=20),
-                
                 ft.Text("Descrizione:", size=16, weight=ft.FontWeight.BOLD),
                 ft.Text(
                     "Un emozionante RPG accessibile con audio immersivo e feedback aptico. "
@@ -4013,19 +4007,15 @@ class AvventuraEpica:
         impostazioni_content = ft.Column([
             ft.Text("=== IMPOSTAZIONI ===", size=20, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER),
             ft.Divider(),
-            
             ft.Text("🔊 Audio", size=16, weight=ft.FontWeight.BOLD),
             toggle_audio,
             ft.Container(height=10),
-            
             self.volume_musica_label,
             slider_volume_musica,
             ft.Container(height=10),
-            
             self.volume_effetti_label,
             slider_volume_effetti,
             ft.Container(height=10),
-            
             test_audio_btn,
             debug_audio_btn,
             ft.Divider(),
