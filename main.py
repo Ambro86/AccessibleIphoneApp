@@ -3653,86 +3653,69 @@ class AvventuraEpica:
         self.page.update()
         
     def crea_menu_gioco(self):
-        """Crea il menu di gioco incrementale con pulsanti accessibili"""
+        """Crea il menu di gioco incrementale con controlli locali accessibili"""
+
         self.container_pulsanti.controls.clear()
-        
-        # Titolo gioco
+
+        # Titolo senza semantics_label
         titolo_gioco = ft.Text(
-            "AVVENTURA IN CORSO", 
-            size=24, 
-            weight=ft.FontWeight.BOLD, 
+            "Avventura in corso",
+            size=24,
+            weight=ft.FontWeight.BOLD,
             text_align=ft.TextAlign.CENTER,
-            color=ft.Colors.RED_400,
-            semantics_label="Titolo principale: Avventura in corso"
+            color=ft.Colors.RED_400
         )
-        
-        # AZIONI INCREMENTALI - Prima riga
+
+        # Controlli locali: area storia e stats
+        area_storia_locale = ft.TextField(
+            value=self.area_storia.value if hasattr(self, 'area_storia') else "",
+            multiline=True,
+            read_only=True,
+            expand=True,
+            min_lines=10,
+            max_lines=15,
+            text_size=14,
+            bgcolor=ft.Colors.DEEP_PURPLE_900,
+            color=ft.Colors.AMBER_100,
+            border_color=ft.Colors.AMBER_400,
+            focused_border_color=ft.Colors.AMBER_300,
+            label="Storia dell'avventura"
+        )
+
+        area_stats_locale = ft.TextField(
+            value=self.area_stats.value if hasattr(self, 'area_stats') else "",
+            multiline=True,
+            read_only=True,
+            min_lines=4,
+            max_lines=6,
+            text_size=14,
+            bgcolor=ft.Colors.BLUE_GREY_900,
+            color=ft.Colors.CYAN_100,
+            border_color=ft.Colors.CYAN_400,
+            focused_border_color=ft.Colors.CYAN_300,
+            label="Statistiche giocatore"
+        )
+
+        # Salva riferimenti se servono altrove
+        self.area_storia = area_storia_locale
+        self.area_stats = area_stats_locale
+
+        # Azioni incrementali
         azioni_incrementali = self.azioni_incrementali_possibili()
         if azioni_incrementali:
-            pulsanti_incrementali = []
-            for testo, funzione, tooltip in azioni_incrementali[:3]:  # Massimo 3 per riga
-                # Colori per tipo azione
-                if "Raccogli" in testo:
-                    color = ft.Colors.GREEN_600
-                    overlay = ft.Colors.GREEN_500
-                elif "Consuma" in testo:
-                    color = ft.Colors.ORANGE_600
-                    overlay = ft.Colors.ORANGE_500
-                elif "Bevi" in testo:
-                    color = ft.Colors.BLUE_600
-                    overlay = ft.Colors.BLUE_500
-                elif "Nutri" in testo:
-                    color = ft.Colors.PINK_600
-                    overlay = ft.Colors.PINK_500
-                else:
-                    color = ft.Colors.PURPLE_600
-                    overlay = ft.Colors.PURPLE_500
-                    
-                pulsanti_incrementali.append(
-                    ft.ElevatedButton(
-                        testo,
-                        on_click=funzione,
-                        width=120,
-                        height=50,
-                        tooltip=tooltip,
-                        bgcolor=color,
-                        color=ft.Colors.WHITE,
-                        style=ft.ButtonStyle(
-                            overlay_color=overlay,
-                            elevation=6
-                        )
-                    )
-                )
-            
-            incrementali_row = ft.Row(
-                pulsanti_incrementali,
-                alignment=ft.MainAxisAlignment.CENTER,
-                spacing=10
-            )
-            self.container_pulsanti.controls.append(incrementali_row)
-            
-            # Seconda riga per azioni rimanenti
-            if len(azioni_incrementali) > 3:
-                pulsanti_incrementali_2 = []
-                for testo, funzione, tooltip in azioni_incrementali[3:6]:
-                    if "Costruisci" in testo:
-                        color = ft.Colors.BROWN_600
-                        overlay = ft.Colors.BROWN_500
-                    elif "Cambia" in testo:
-                        color = ft.Colors.INDIGO_600
-                        overlay = ft.Colors.INDIGO_500
-                    else:
-                        color = ft.Colors.TEAL_600
-                        overlay = ft.Colors.TEAL_500
-                        
-                    pulsanti_incrementali_2.append(
+            righe = [azioni_incrementali[i:i+3] for i in range(0, len(azioni_incrementali), 3)]
+            for riga in righe:
+                pulsanti = []
+                for testo, funzione, tooltip in riga:
+                    colore, overlay = self.get_colori_azione(testo)
+                    pulsanti.append(
                         ft.ElevatedButton(
-                            testo,
+                            text=testo,
                             on_click=funzione,
                             width=120,
                             height=50,
                             tooltip=tooltip,
-                            bgcolor=color,
+                            bgcolor=colore,
                             color=ft.Colors.WHITE,
                             style=ft.ButtonStyle(
                                 overlay_color=overlay,
@@ -3740,41 +3723,24 @@ class AvventuraEpica:
                             )
                         )
                     )
-                
-                incrementali_row_2 = ft.Row(
-                    pulsanti_incrementali_2,
-                    alignment=ft.MainAxisAlignment.CENTER,
-                    spacing=10
+                self.container_pulsanti.controls.append(
+                    ft.Row(pulsanti, alignment=ft.MainAxisAlignment.CENTER, spacing=10)
                 )
-                self.container_pulsanti.controls.append(incrementali_row_2)
-        
-        # AZIONI SPECIALI - Terza riga
+
+        # Azioni speciali
         azioni_speciali = self.azioni_speciali_possibili()
         if azioni_speciali:
             pulsanti_speciali = []
             for testo, funzione, tooltip in azioni_speciali:
-                # Colori per azioni speciali
-                if "Esplora" in testo:
-                    color = ft.Colors.AMBER_600
-                    overlay = ft.Colors.AMBER_500
-                elif "Combatti" in testo:
-                    color = ft.Colors.RED_700
-                    overlay = ft.Colors.RED_600
-                elif "Negozio" in testo:
-                    color = ft.Colors.PURPLE_600
-                    overlay = ft.Colors.PURPLE_500
-                else:
-                    color = ft.Colors.BLUE_600
-                    overlay = ft.Colors.BLUE_500
-                    
+                colore, overlay = self.get_colori_azione_speciale(testo)
                 pulsanti_speciali.append(
                     ft.ElevatedButton(
-                        testo,
+                        text=testo,
                         on_click=funzione,
                         width=120,
                         height=50,
                         tooltip=tooltip,
-                        bgcolor=color,
+                        bgcolor=colore,
                         color=ft.Colors.WHITE,
                         style=ft.ButtonStyle(
                             overlay_color=overlay,
@@ -3782,26 +3748,19 @@ class AvventuraEpica:
                         )
                     )
                 )
-            
-            speciali_row = ft.Row(
-                pulsanti_speciali,
-                alignment=ft.MainAxisAlignment.CENTER,
-                spacing=10
+            self.container_pulsanti.controls.append(
+                ft.Row(pulsanti_speciali, alignment=ft.MainAxisAlignment.CENTER, spacing=10)
             )
-            self.container_pulsanti.controls.append(speciali_row)
-        
-        print(f"🔧 DEBUG: Arrivato prima del menu gatti")
-        # MENU GATTI E UTILITY - Quarta riga
-        print(f" DEBUG: Creando menu_gatti...")
+
+        # Menu gatti e utility
         menu_gatti = []
-        
-        # Gestione gatti (sempre disponibile)
+
         menu_gatti.append(
             ft.ElevatedButton(
-                " Gesti Gatti", 
-                on_click=lambda e: self.page.go("/gatti"), 
+                "Gestione Gatti",
+                on_click=lambda e: self.page.go("/gatti"),
                 width=140,
-                height=50, 
+                height=50,
                 tooltip="Gestisci i tuoi gatti compagni",
                 bgcolor=ft.Colors.PINK_600,
                 color=ft.Colors.WHITE,
@@ -3811,26 +3770,14 @@ class AvventuraEpica:
                 )
             )
         )
-        
-        # Rinomina gatto
-        print(f" DEBUG: gatto_attivo = {self.gatto_attivo}")
-        if self.gatto_attivo:
-            print(f" DEBUG: gatto_attivo exists, checking if sbloccato...")
-            if self.gatto_attivo in self.gatti:
-                gatto_info = self.gatti[self.gatto_attivo]
-                print(f" DEBUG: gatto info = sbloccato: {gatto_info.get('sbloccato', False)}, nome: {gatto_info.get('nome', 'NONE')}")
-            else:
-                print(f" DEBUG: gatto_attivo {self.gatto_attivo} NOT FOUND in self.gatti")
-        else:
-            print(f" DEBUG: gatto_attivo is None/False")
-            
-        if self.gatto_attivo:
+
+        if self.gatto_attivo and self.gatto_attivo in self.gatti:
             menu_gatti.append(
                 ft.ElevatedButton(
-                    "🏷️ Rinomina Gatto", 
-                    on_click=self.rinomina_gatto, 
+                    "Rinomina Gatto",
+                    on_click=self.rinomina_gatto,
                     width=140,
-                    height=50, 
+                    height=50,
                     tooltip="Dai un nuovo nome al tuo gatto",
                     bgcolor=ft.Colors.PURPLE_600,
                     color=ft.Colors.WHITE,
@@ -3840,16 +3787,14 @@ class AvventuraEpica:
                     )
                 )
             )
-        
-        
-        # Statistiche sempre disponibili
+
         menu_gatti.append(
             ft.ElevatedButton(
-                " Statistiche", 
-                on_click=lambda e: self.page.go("/statistiche"), 
+                "Statistiche",
+                on_click=lambda e: self.page.go("/statistiche"),
                 width=140,
-                height=50, 
-                tooltip="Visualizza statistiche dettagliate del giocatore e risorse",
+                height=50,
+                tooltip="Visualizza statistiche dettagliate",
                 bgcolor=ft.Colors.CYAN_600,
                 color=ft.Colors.WHITE,
                 style=ft.ButtonStyle(
@@ -3858,69 +3803,59 @@ class AvventuraEpica:
                 )
             )
         )
-        
-        if menu_gatti:
-            menu_gatti_row = ft.Row(
-                menu_gatti,
-                alignment=ft.MainAxisAlignment.CENTER,
-                spacing=10
-            )
-            self.container_pulsanti.controls.append(menu_gatti_row)
-            
-        # MENU FINALE - Quinta riga
-        menu_finale = [
-            ft.ElevatedButton(
-                "💾 Salva Avventura", 
-                on_click=self.salva_gioco, 
-                width=150,
-                height=50, 
-                tooltip="Salva la tua avventura incrementale",
-                bgcolor=ft.Colors.GREEN_600,
-                color=ft.Colors.WHITE,
-                style=ft.ButtonStyle(
-                    overlay_color=ft.Colors.GREEN_500,
-                    elevation=4
-                )
-            )
-        ]
-        
-        menu_finale_row = ft.Row(
-            menu_finale,
-            alignment=ft.MainAxisAlignment.CENTER,
-            spacing=10
+
+        self.container_pulsanti.controls.append(
+            ft.Row(menu_gatti, alignment=ft.MainAxisAlignment.CENTER, spacing=10)
         )
-        self.container_pulsanti.controls.append(menu_finale_row)
-        
-        # Torna al menu sempre disponibile
-        torna_menu = ft.Row([
-            ft.ElevatedButton(
-                "🚪 Torna al Menu Principale", 
-                on_click=self.torna_menu_principale, 
-                width=200, 
-                tooltip="Torna al menu principale",
-                bgcolor=ft.Colors.GREY_700,
-                color=ft.Colors.WHITE,
-                style=ft.ButtonStyle(
-                    overlay_color=ft.Colors.GREY_600,
-                    elevation=4
+
+        # Menu finale
+        self.container_pulsanti.controls.append(
+            ft.Row([
+                ft.ElevatedButton(
+                    "Salva Avventura",
+                    on_click=self.salva_gioco,
+                    width=150,
+                    height=50,
+                    tooltip="Salva la tua avventura",
+                    bgcolor=ft.Colors.GREEN_600,
+                    color=ft.Colors.WHITE,
+                    style=ft.ButtonStyle(
+                        overlay_color=ft.Colors.GREEN_500,
+                        elevation=4
+                    )
                 )
-            )
-        ], alignment=ft.MainAxisAlignment.CENTER)
-        
-        self.container_pulsanti.controls.append(torna_menu)
-        
-        # Layout per gioco (CON titolo come primo elemento)
+            ], alignment=ft.MainAxisAlignment.CENTER)
+        )
+
+        self.container_pulsanti.controls.append(
+            ft.Row([
+                ft.ElevatedButton(
+                    "Torna al Menu",
+                    on_click=self.torna_menu_principale,
+                    width=200,
+                    tooltip="Torna al menu principale",
+                    bgcolor=ft.Colors.GREY_700,
+                    color=ft.Colors.WHITE,
+                    style=ft.ButtonStyle(
+                        overlay_color=ft.Colors.GREY_600,
+                        elevation=4
+                    )
+                )
+            ], alignment=ft.MainAxisAlignment.CENTER)
+        )
+
+        # Layout finale
         self.container_principale.controls.clear()
         self.container_principale.controls.extend([
             titolo_gioco,
-            self.area_storia,
-            self.area_stats,
+            area_storia_locale,
+            area_stats_locale,
             self.container_pulsanti
         ])
-        
+
         self.modalita_menu = "gioco"
         self.page.update()
-        
+
     def crea_menu_inventario(self):
         """Menu inventario con pulsanti dinamici"""
         self.container_pulsanti.controls.clear()
