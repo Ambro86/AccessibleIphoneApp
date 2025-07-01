@@ -2030,39 +2030,41 @@ class AvventuraEpica:
             color=ft.Colors.AMBER_400
         )
         
-        # Crea o ottieni i TextField globali mantenendo funzionalità
+        # Crea controlli locali per VoiceOver accessibility
+        area_storia_locale = ft.TextField(
+            value=self.area_storia.value if hasattr(self, 'area_storia') and self.area_storia else "🎮 Benvenuto nell'Avventura Incrementale!\n Compagni gatti con abilità speciali\n Raccogli risorse e costruisci\n Combatti mostri e sali di livello\n🍽️ Gestisci cibo e acqua per energia\n🎵 Audio immersivo e feedback aptico\n\nPremi 'Inizia Avventura' per cominciare!",
+            multiline=True,
+            read_only=True,
+            expand=True,
+            min_lines=10,
+            max_lines=15,
+            text_size=14,
+            bgcolor=ft.Colors.DEEP_PURPLE_900,
+            color=ft.Colors.AMBER_100,
+            border_color=ft.Colors.AMBER_400,
+            focused_border_color=ft.Colors.AMBER_300,
+            label="Storia dell'avventura"
+        )
+        
+        area_stats_locale = ft.TextField(
+            value=self.area_stats.value if hasattr(self, 'area_stats') and self.area_stats else " Statistiche Giocatore:\n Livello 1 •  100/100 HP •  100 monete\n Attacco: 15 •  Difesa: 0\n EXP: 0/100",
+            multiline=True,
+            read_only=True,
+            min_lines=4,
+            max_lines=6,
+            text_size=14,
+            bgcolor=ft.Colors.BLUE_GREY_900,
+            color=ft.Colors.CYAN_100,
+            border_color=ft.Colors.CYAN_400,
+            focused_border_color=ft.Colors.CYAN_300,
+            label="Statistiche giocatore"
+        )
+        
+        # Sincronizza i TextField globali con quelli locali
         if not hasattr(self, 'area_storia') or not self.area_storia:
-            self.area_storia = ft.TextField(
-                value="🎮 Benvenuto nell'Avventura Incrementale!\n Compagni gatti con abilità speciali\n Raccogli risorse e costruisci\n Combatti mostri e sali di livello\n🍽️ Gestisci cibo e acqua per energia\n🎵 Audio immersivo e feedback aptico\n\nPremi 'Inizia Avventura' per cominciare!",
-                multiline=True,
-                read_only=True,
-                expand=True,
-                min_lines=10,
-                max_lines=15,
-                text_size=14,
-                bgcolor=ft.Colors.DEEP_PURPLE_900,
-                color=ft.Colors.AMBER_100,
-                border_color=ft.Colors.AMBER_400,
-                focused_border_color=ft.Colors.AMBER_300
-            )
-        
+            self.area_storia = area_storia_locale
         if not hasattr(self, 'area_stats') or not self.area_stats:
-            self.area_stats = ft.TextField(
-                value=" Statistiche Giocatore:\n Livello 1 •  100/100 HP •  100 monete\n Attacco: 15 •  Difesa: 0\n EXP: 0/100",
-                multiline=True,
-                read_only=True,
-                min_lines=4,
-                max_lines=6,
-                text_size=14,
-                bgcolor=ft.Colors.BLUE_GREY_900,
-                color=ft.Colors.CYAN_100,
-                border_color=ft.Colors.CYAN_400,
-                focused_border_color=ft.Colors.CYAN_300
-            )
-        
-        # Usa i TextField globali direttamente ma in un layout locale
-        area_storia_locale = self.area_storia
-        area_stats_locale = self.area_stats
+            self.area_stats = area_stats_locale
         
         # Pulsanti principali del gioco
         pulsanti_gioco = []
@@ -2182,7 +2184,15 @@ class AvventuraEpica:
                 expand=True
             ),
             ft.Container(height=20),
-            self.crea_pulsante_indietro()
+            ft.ElevatedButton(
+                text="◀ Torna al Menu",
+                on_click=lambda e: self.page.go("/"),
+                width=200,
+                height=50,
+                bgcolor=ft.Colors.GREY_600,
+                color=ft.Colors.WHITE,
+                tooltip="Torna al menu principale"
+            )
         ], scroll=ft.ScrollMode.AUTO, spacing=20, expand=True)
         
         return ft.View(
@@ -2418,9 +2428,6 @@ class AvventuraEpica:
     
     def crea_vista_combattimento(self):
         """Crea la vista del combattimento"""
-        # Sincronizza le variabili prima di mostrar la vista
-        self.sincronizza_variabili_alias()
-        
         titolo = ft.Text(
             "Combattimento", 
             size=24, 
@@ -2556,7 +2563,15 @@ class AvventuraEpica:
                 expand=True
             ),
             ft.Container(height=20),
-            self.crea_pulsante_indietro()
+            ft.ElevatedButton(
+                text="◀ Torna al Gioco",
+                on_click=lambda e: self.page.go("/gioco"),
+                width=200,
+                height=50,
+                bgcolor=ft.Colors.GREY_600,
+                color=ft.Colors.WHITE,
+                tooltip="Torna alla schermata principale"
+            )
         ], scroll=ft.ScrollMode.AUTO, spacing=20, expand=True)
         
         return ft.View(
