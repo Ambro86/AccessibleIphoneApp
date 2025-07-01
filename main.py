@@ -14,7 +14,6 @@ class AvventuraEpica:
         self.crea_audio_system()
         self.crea_ui()
         self.app_inizializzata = True  # Ora l'app è pronta
-        print("🎵 DEBUG: App completamente inizializzata")
         
     def inizializza_gioco(self):
         # Nuove aree con progressione lineare + area segreta
@@ -654,8 +653,6 @@ class AvventuraEpica:
         
     def crea_audio_system(self):
         """Sistema audio con supporto OGG"""
-        print("🎵 DEBUG: Inizializzazione sistema audio...")
-        
         # Musica di default (villaggio)
         self.musica_sottofondo = fa.Audio(
             src="assets/music/villaggio.ogg",
@@ -748,6 +745,18 @@ class AvventuraEpica:
             balance=0
         )
         
+        # Canale dedicato per suono heartbeat (vita bassa) - in loop
+        self.effetto_heartbeat = fa.Audio(
+            src="assets/music/effetto_heartbeat.mp3",
+            autoplay=False,
+            volume=self.volume_effetti,
+            balance=0,
+            on_state_changed=self.heartbeat_loop_handler
+        )
+        
+        # Flag per tracciare se heartbeat è attivo
+        self.heartbeat_attivo = False
+        
         # Canale dedicato per suoni ambientali delle aree
         self.audio_ambiente = fa.Audio(
             src="assets/music/ambient_villaggio_uccelli.mp3",
@@ -773,6 +782,7 @@ class AvventuraEpica:
             self.effetto_bere_pozione,
             self.effetto_bere_acqua,
             self.effetto_fusa,
+            self.effetto_heartbeat,
             self.audio_ambiente
         ])
         
@@ -1055,53 +1065,70 @@ class AvventuraEpica:
         
     def riproduci_effetto(self, effetto):
         """Sistema canali dedicati fissi - SEMPLICE E FUNZIONANTE"""
-        print(f"🔊 riproduci_effetto chiamato con: {effetto}")
-        
         # Evita suoni durante l'inizializzazione dell'app
         if not getattr(self, 'app_inizializzata', False):
-            print("🔇 App in inizializzazione - ignoro effetto sonoro")
             return
         
         if not self.audio_abilitato:
-            print("❌ Audio disabilitato")
             return
         
         # Usa canali dedicati fissi per ogni effetto
         if effetto == "gatto_attacco" or effetto == "attacco":
-            print(f" Riproducendo gatto su canale dedicato")
             self.effetto_gatto.play()
         elif effetto == "vittoria":
-            print(f"🎉 Riproducendo vittoria su canale dedicato")
             self.effetto_vittoria.play()
         elif effetto == "sconfitta":
-            print(f"💀 Riproducendo sconfitta su canale dedicato")
             self.effetto_sconfitta.play()
         elif effetto == "livello":
-            print(f" Riproducendo livello su canale dedicato")
             self.effetto_livello.play()
         elif effetto == "raccogli":
-            print(f"🌾 Riproducendo raccolta su canale dedicato")
             self.effetto_raccolta.play()
         elif effetto == "gatto_raccolta":
-            print(f"🌾 Riproducendo gatto raccolta su canale dedicato")
             self.effetto_gatto_raccolta.play()
         elif effetto == "monete":
-            print(f" Riproducendo monete su canale dedicato")
             self.effetto_monete.play()
         elif effetto == "mangiare" or effetto == "mangia" or effetto == "cibo":
-            print(f"🍞 Riproducendo mangiare su canale dedicato")
             self.effetto_mangiare.play()
         elif effetto == "bere_pozione" or effetto == "pozione":
-            print(f"🧪 Riproducendo bere pozione su canale dedicato")
             self.effetto_bere_pozione.play()
         elif effetto == "bere_acqua" or effetto == "acqua" or effetto == "bere":
-            print(f"💧 Riproducendo bere acqua su canale dedicato")
             self.effetto_bere_acqua.play()
         elif effetto == "fusa" or effetto == "gatto_felice" or effetto == "purr":
-            print(f"😻 Riproducendo fusa su canale dedicato")
             self.effetto_fusa.play()
+        elif effetto == "heartbeat" or effetto == "vita_bassa" or effetto == "battito":
+            self.effetto_heartbeat.play()
+    
+    def heartbeat_loop_handler(self, e):
+        """Gestisce il loop del heartbeat quando finisce"""
+        if e.data == "completed" and self.heartbeat_attivo:
+            # Se heartbeat deve continuare, riavvialo
+            percentuale_vita = (self.vita / self.vita_massima) * 100
+            if percentuale_vita <= 20 and self.vita > 0:
+                self.effetto_heartbeat.play()
+    
+    def controlla_vita_bassa(self):
+        """Controlla se la vita è sotto il 20% e gestisce il loop heartbeat"""
+        if not self.audio_abilitato:
+            return
+            
+        percentuale_vita = (self.vita / self.vita_massima) * 100
+        
+        # Se la vita è sotto o uguale al 20%, avvia heartbeat loop
+        if percentuale_vita <= 20 and self.vita > 0:
+            if not self.heartbeat_attivo:
+                self.heartbeat_attivo = True
+                self.effetto_heartbeat.play()
         else:
-            print(f"❌ Effetto non trovato: {effetto}")
+            # Se la vita è sopra il 20%, ferma heartbeat
+            if self.heartbeat_attivo:
+                self.heartbeat_attivo = False
+                self.effetto_heartbeat.pause()
+    
+    def ferma_heartbeat(self):
+        """Ferma il loop del heartbeat"""
+        if self.heartbeat_attivo:
+            self.heartbeat_attivo = False
+            self.effetto_heartbeat.pause()
     
     def avvia_musica_battaglia(self, tipo_battaglia="normale"):
         """Avvia musica di battaglia specifica"""
@@ -1517,11 +1544,8 @@ class AvventuraEpica:
         
     def aggiorna_stats_incrementali(self):
         """Aggiorna statistiche per gioco incrementale"""
-        # Sincronizza HP solo se c'è un combattimento appena finito
-        if (hasattr(self, 'vita') and hasattr(self, 'in_combattimento') and 
-            not self.in_combattimento and hasattr(self, 'mostro_attuale') and 
-            self.mostro_attuale is not None):
-            # Se il combattimento è finito, usa il valore corretto dell'HP
+        # Sincronizza sempre HP con vita per assicurare coerenza
+        if hasattr(self, 'vita'):
             self.hp_giocatore = self.vita
         
         # Applica bonus reliquie passive e aggiorna affinità
@@ -1998,13 +2022,54 @@ class AvventuraEpica:
     
     def crea_vista_gioco(self):
         """Crea la vista principale di gioco"""
+        titolo = ft.Text(
+            "AVVENTURA IN CORSO", 
+            size=24, 
+            weight=ft.FontWeight.BOLD, 
+            text_align=ft.TextAlign.CENTER,
+            color=ft.Colors.AMBER_400
+        )
+        
+        # Crea o ottieni i TextField globali mantenendo funzionalità
+        if not hasattr(self, 'area_storia') or not self.area_storia:
+            self.area_storia = ft.TextField(
+                value="🎮 Benvenuto nell'Avventura Incrementale!\n Compagni gatti con abilità speciali\n Raccogli risorse e costruisci\n Combatti mostri e sali di livello\n🍽️ Gestisci cibo e acqua per energia\n🎵 Audio immersivo e feedback aptico\n\nPremi 'Inizia Avventura' per cominciare!",
+                multiline=True,
+                read_only=True,
+                expand=True,
+                min_lines=10,
+                max_lines=15,
+                text_size=14,
+                bgcolor=ft.Colors.DEEP_PURPLE_900,
+                color=ft.Colors.AMBER_100,
+                border_color=ft.Colors.AMBER_400,
+                focused_border_color=ft.Colors.AMBER_300
+            )
+        
+        if not hasattr(self, 'area_stats') or not self.area_stats:
+            self.area_stats = ft.TextField(
+                value=" Statistiche Giocatore:\n Livello 1 •  100/100 HP •  100 monete\n Attacco: 15 •  Difesa: 0\n EXP: 0/100",
+                multiline=True,
+                read_only=True,
+                min_lines=4,
+                max_lines=6,
+                text_size=14,
+                bgcolor=ft.Colors.BLUE_GREY_900,
+                color=ft.Colors.CYAN_100,
+                border_color=ft.Colors.CYAN_400,
+                focused_border_color=ft.Colors.CYAN_300
+            )
+        
+        # Usa i TextField globali direttamente ma in un layout locale
+        area_storia_locale = self.area_storia
+        area_stats_locale = self.area_stats
         
         # Pulsanti principali del gioco
         pulsanti_gioco = []
         
         # Azioni incrementali
         azioni_incrementali = self.azioni_incrementali_possibili()
-        for testo, funzione, tooltip in azioni_incrementali:  # Mostra tutte le azioni
+        for testo, funzione, tooltip in azioni_incrementali:
             pulsanti_gioco.append(
                 ft.ElevatedButton(
                     text=testo,
@@ -2058,10 +2123,19 @@ class AvventuraEpica:
                 bgcolor=ft.Colors.PINK_600,
                 color=ft.Colors.WHITE,
                 tooltip="Gestisci i tuoi gatti"
+            ),
+            ft.ElevatedButton(
+                text="Inventario",
+                on_click=lambda e: self.page.go("/inventario"),
+                width=280,
+                height=50,
+                bgcolor=ft.Colors.CYAN_600,
+                color=ft.Colors.WHITE,
+                tooltip="Gestisci inventario"
             )
         ])
         
-        # Aggiungi pulsante boss se disponibile nell'area corrente E progressione >= 100
+        # Aggiungi pulsante boss se disponibile
         if (self.area_attuale in self.boss_aree and 
             self.boss_aree[self.area_attuale]["nome"] not in self.boss_sconfitti and
             self.progressione_area.get(self.area_attuale, 0) >= 100):
@@ -2090,55 +2164,7 @@ class AvventuraEpica:
             )
         )
         
-        # Pulsante indietro
-        pulsanti_gioco.append(self.crea_pulsante_indietro())
-        
-        # Titolo della vista gioco
-        titolo_gioco = ft.Text(
-            "AVVENTURA IN CORSO", 
-            size=24, 
-            weight=ft.FontWeight.BOLD, 
-            text_align=ft.TextAlign.CENTER,
-            color=ft.Colors.AMBER_400
-        )
-        
-        # MANTIENI i TextField globali per la funzionalità ma con struttura accessibile
-        # Aggiorna i valori se esistono già
-        if hasattr(self, 'area_storia') and self.area_storia:
-            area_storia_locale = self.area_storia
-        else:
-            self.area_storia = ft.TextField(
-                value="🎮 Benvenuto nell'Avventura Incrementale!\n Compagni gatti con abilità speciali\n Raccogli risorse e costruisci\n Combatti mostri e sali di livello\n🍽️ Gestisci cibo e acqua per energia\n🎵 Audio immersivo e feedback aptico\n\nPremi 'Inizia Avventura' per cominciare!",
-                multiline=True,
-                read_only=True,
-                expand=True,
-                min_lines=10,
-                max_lines=15,
-                text_size=14,
-                bgcolor=ft.Colors.DEEP_PURPLE_900,
-                color=ft.Colors.AMBER_100,
-                border_color=ft.Colors.AMBER_400,
-                focused_border_color=ft.Colors.AMBER_300
-            )
-            area_storia_locale = self.area_storia
-        
-        if hasattr(self, 'area_stats') and self.area_stats:
-            area_stats_locale = self.area_stats
-        else:
-            self.area_stats = ft.TextField(
-                value=" Statistiche Giocatore:\n Livello 1 •  100/100 HP •  100 monete\n Attacco: 15 •  Difesa: 0\n EXP: 0/100",
-                multiline=True,
-                read_only=True,
-                min_lines=4,
-                max_lines=6,
-                text_size=14,
-                bgcolor=ft.Colors.BLUE_GREY_900,
-                color=ft.Colors.CYAN_100,
-                border_color=ft.Colors.CYAN_400,
-                focused_border_color=ft.Colors.CYAN_300
-            )
-            area_stats_locale = self.area_stats
-        
+        # Crea i controlli locali
         gioco_controls = [
             area_storia_locale,
             area_stats_locale,
@@ -2146,7 +2172,7 @@ class AvventuraEpica:
         ]
         
         content = ft.Column([
-            titolo_gioco,
+            titolo,
             ft.Container(height=20),
             ft.Container(
                 content=ft.Column(gioco_controls, spacing=10),
@@ -2392,7 +2418,6 @@ class AvventuraEpica:
     
     def crea_vista_combattimento(self):
         """Crea la vista del combattimento"""
-        print(f"🎮 DEBUG: Creando vista combattimento - in_combattimento={self.in_combattimento}, mostro={self.mostro_attuale['nome'] if self.mostro_attuale else 'None'}")
         # Sincronizza le variabili prima di mostrar la vista
         self.sincronizza_variabili_alias()
         
@@ -2449,6 +2474,8 @@ class AvventuraEpica:
         # Pulsanti combattimento
         pulsanti_combattimento = []
         
+        oggetti_curativi_disponibili = self.conta_oggetti_curativi()
+        
         if self.in_combattimento:
             pulsanti_combattimento.extend([
                 ft.ElevatedButton(
@@ -2472,14 +2499,14 @@ class AvventuraEpica:
                     data="difendi"
                 ),
                 ft.ElevatedButton(
-                    text="Usa Oggetto Curativo",
+                    text=f"Usa Oggetto Curativo ({oggetti_curativi_disponibili})",
                     on_click=self.usa_pozione_combattimento,
                     width=200,
                     height=50,
-                    bgcolor=ft.Colors.GREEN_600 if self.conta_oggetti_curativi() > 0 else ft.Colors.GREY_600,
+                    bgcolor=ft.Colors.GREEN_600 if oggetti_curativi_disponibili > 0 else ft.Colors.GREY_600,
                     color=ft.Colors.WHITE,
-                    tooltip=f"Usa oggetti curativi. Disponibili: {self.conta_oggetti_curativi()}",
-                    disabled=self.conta_oggetti_curativi() <= 0,
+                    tooltip=f"Usa oggetti curativi. Disponibili: {oggetti_curativi_disponibili}",
+                    disabled=oggetti_curativi_disponibili <= 0,
                     data="pozione"
                 ),
                 ft.ElevatedButton(
@@ -2494,22 +2521,21 @@ class AvventuraEpica:
                 )
             ])
         else:
-            pulsanti_combattimento.append(
-                ft.ElevatedButton(
-                    text="Cerca Mostri",
-                    on_click=self.inizia_combattimento,
-                    width=200,
-                    height=50,
-                    bgcolor=ft.Colors.ORANGE_600,
-                    color=ft.Colors.WHITE,
-                    tooltip="Cerca mostri da combattere"
+            # Mostra "Cerca Mostri" solo se NON siamo in battaglia E NON in combattimento
+            # E non abbiamo un mostro attuale attivo
+            if not self.in_battaglia and not self.in_combattimento and self.mostro_attuale is None:
+                pulsanti_combattimento.append(
+                    ft.ElevatedButton(
+                        text="Cerca Mostri",
+                        on_click=self.inizia_combattimento,
+                        width=200,
+                        height=50,
+                        bgcolor=ft.Colors.ORANGE_600,
+                        color=ft.Colors.WHITE,
+                        tooltip="Cerca mostri da combattere"
+                    )
                 )
-            )
         
-        # Pulsante indietro
-        pulsanti_combattimento.append(self.crea_pulsante_indietro())
-        
-        print(f"🎮 DEBUG: Pulsanti combattimento creati - Numero: {len(pulsanti_combattimento)}, in_combattimento={self.in_combattimento}")
         
         content = ft.Column([
             titolo,
@@ -2524,11 +2550,13 @@ class AvventuraEpica:
                     ft.Container(height=20),
                     ft.Column(pulsanti_combattimento, horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=10)
                 ], spacing=10),
-                height=400,
                 bgcolor=ft.Colors.GREY_800,
                 border_radius=10,
-                padding=10
-            )
+                padding=10,
+                expand=True
+            ),
+            ft.Container(height=20),
+            self.crea_pulsante_indietro()
         ], scroll=ft.ScrollMode.AUTO, spacing=20, expand=True)
         
         return ft.View(
@@ -2546,7 +2574,6 @@ class AvventuraEpica:
     
     def crea_vista_negozio(self):
         """Crea la vista del negozio"""
-        print(f"🏪 DEBUG: Creando vista negozio, monete attuali = {self.monete}")
         titolo = ft.Text(
             "Negozio", 
             size=24, 
@@ -2628,32 +2655,21 @@ class AvventuraEpica:
         prezzo = oggetto['prezzo']
         nome = oggetto['nome']
         
-        print(f"🛒 DEBUG: acquista_oggetto_negozio chiamato per {nome}, prezzo={prezzo}")
-        print(f"💰 DEBUG: monete attuali = {self.monete}")
-        print(f"🎮 DEBUG: gioco_iniziato = {self.gioco_iniziato}")
-        
         if self.monete >= prezzo:
-            print(f"✅ DEBUG: Abbastanza monete, procedo con acquisto")
             self.monete -= prezzo
-            print(f"💰 DEBUG: Monete dopo acquisto = {self.monete}")
             
             # Aggiungi oggetto all'inventario (semplificato)
             if nome not in self.inventario:
                 self.inventario[nome] = 0
             self.inventario[nome] += 1
-            print(f"📦 DEBUG: {nome} aggiunto all'inventario, quantità = {self.inventario[nome]}")
             
             self.aggiorna_storia(f"💰 Hai acquistato {nome} per {prezzo} monete!")
-            print(f"📖 DEBUG: Storia aggiornata")
             self.haptic_feedback("success")
-            print(f"📳 DEBUG: Haptic feedback inviato")
             if self.audio_abilitato:
                 self.riproduci_effetto("monete")
-                print(f"🔊 DEBUG: Effetto monete riprodotto")
-            # Rimosso: aggiornamento testo_monete_negozio (ora locale)
-            print(f"🔄 DEBUG: Monete aggiornate a {self.monete}")
+            # Ricarica la vista negozio per aggiornare le monete
+            self.page.go("/negozio")
         else:
-            print(f"❌ DEBUG: Non abbastanza monete: {self.monete} < {prezzo}")
             self.aggiorna_storia(f"❌ Non hai abbastanza monete per {nome} (servono {prezzo}, ne hai {self.monete})")
             self.haptic_feedback("error")
             # Ricarica la vista negozio per aggiornare le monete
@@ -2661,8 +2677,6 @@ class AvventuraEpica:
     
     def crea_vista_gatti(self):
         """Crea la vista di gestione gatti"""
-        print("🐱 DEBUG: Creando vista gestione gatti")
-        
         titolo = ft.Text(
             "Gestione Gatti", 
             size=24, 
@@ -3146,8 +3160,13 @@ class AvventuraEpica:
     def inizia_combattimento(self, e):
         """Inizia un nuovo combattimento"""
         if self.risorse["energia"] < 20:
-            # Rimosso: self.aggiorna_log_combattimento(" Non hai abbastanza energia per combattere!")
             self.haptic_feedback("warning")
+            self.aggiorna_storia("❌ Non hai abbastanza energia per combattere! (servono 20)")
+            return
+            
+        if self.vita <= 10:
+            self.haptic_feedback("warning")
+            self.aggiorna_storia("❌ La tua vita è troppo bassa per combattere! Riposa o usa pozioni.")
             return
         
         # Dati mostri per area
@@ -3181,11 +3200,12 @@ class AvventuraEpica:
             self.avvia_musica_battaglia("normale")
         
         messaggio_log = f"Incontri un {self.mostro_attuale['nome']}!\n{self.mostro_attuale['verso']}\n\nIl combattimento inizia!"
-        # Rimosso: self.aggiorna_log_combattimento(messaggio_log)
         self.haptic_feedback("medium")
         
+        # Controlla se la vita è già bassa all'inizio del combattimento
+        self.controlla_vita_bassa()
+        
         # Aggiorna solo le info, non ricreare la schermata
-        print(f"🎮 DEBUG: Combattimento iniziato! in_combattimento={self.in_combattimento}, mostro={self.mostro_attuale['nome']}")
         self.aggiorna_info_combattimento()
     
     
@@ -3222,6 +3242,7 @@ class AvventuraEpica:
         if self.hp_mostro_attuale <= 0:
             # Mostro sconfitto
             self.in_combattimento = False
+            self.ferma_heartbeat()  # Ferma heartbeat quando vinci
             messaggio += f"🎉 Hai sconfitto il {self.mostro_attuale['nome']}!\n"
             
             # Ricompense
@@ -3262,6 +3283,9 @@ class AvventuraEpica:
             
             self.haptic_feedback("success")
             
+            # Reset mostro dopo vittoria
+            self.mostro_attuale = None
+            
             # Sincronizza HP dopo vittoria
             self.hp_giocatore = self.vita
             
@@ -3281,21 +3305,33 @@ class AvventuraEpica:
             messaggio += f" La tua vita: {self.vita}/{self.vita_massima}"
             
             if self.vita <= 0:
-                self.vita = 1
-                self.hp_giocatore = 1
+                # Player defeated - end combat immediately
                 self.in_combattimento = False
-                messaggio += "\n💀 Sei stato sconfitto!"
+                self.ferma_heartbeat()  # Ferma heartbeat quando perdi
+                messaggio += "\n💀 Sei stato sconfitto! Torni in città."
                 
                 if self.audio_abilitato:
                     self.riproduci_effetto("sconfitta")
                     self.termina_musica_battaglia()
                 
+                # Reset mostro dopo sconfitta
+                self.mostro_attuale = None
+                self.vita = 1  # Ripristina vita a 1 per continuare il gioco
+                self.hp_giocatore = 1
+                
                 self.haptic_feedback("heavy")
+                
+                # Exit combat and return to main game
+                self.aggiorna_storia(messaggio)
+                self.aggiorna_stats_incrementali()
+                self.page.go("/gioco")
+                return
             else:
+                self.controlla_vita_bassa()
+                self.aggiorna_stats_incrementali()  # Aggiorna statistiche dopo danno
                 self.haptic_feedback("light")
         
         self.round_combattimento += 1
-        # Rimosso: self.aggiorna_log_combattimento(messaggio)
         self.aggiorna_info_combattimento()
     
     def difendi_combattimento(self, e):
@@ -3311,21 +3347,33 @@ class AvventuraEpica:
         messaggio = f"Round {self.round_combattimento}:\n Ti difendi!\n💥 Il {self.mostro_attuale['nome']} ti attacca per {danno_mostro} danni ridotti!\n"
         
         if self.vita <= 0:
-            self.vita = 1
-            self.hp_giocatore = self.vita
+            # Player defeated - end combat immediately
             self.in_combattimento = False
+            self.ferma_heartbeat()  # Ferma heartbeat quando perdi
             messaggio += "💀 Sei stato sconfitto! Torni in città."
             
             if self.audio_abilitato:
                 self.riproduci_effetto("sconfitta")
                 self.termina_musica_battaglia()
             
+            # Reset mostro dopo sconfitta
+            self.mostro_attuale = None
+            self.vita = 1  # Ripristina vita a 1 per continuare il gioco
+            self.hp_giocatore = 1
+            
             self.haptic_feedback("heavy")
+            
+            # Exit combat and return to main game
+            self.aggiorna_storia(messaggio)
+            self.aggiorna_stats_incrementali()
+            self.page.go("/gioco")
+            return
         else:
+            self.controlla_vita_bassa()
+            self.aggiorna_stats_incrementali()  # Aggiorna statistiche dopo difesa
             self.haptic_feedback("light")
         
         self.round_combattimento += 1
-        # Rimosso: self.aggiorna_log_combattimento(messaggio)
         # Non ricreare l'intera schermata, solo aggiornare le info
         self.aggiorna_info_combattimento()
     
@@ -3350,7 +3398,6 @@ class AvventuraEpica:
             cura = 10
             
         if not oggetto_da_usare:
-            # Rimosso: self.aggiorna_log_combattimento("Non hai oggetti curativi da usare!")
             return
             
         # Usa l'oggetto
@@ -3360,6 +3407,12 @@ class AvventuraEpica:
             
         self.vita = min(self.vita_massima, self.vita + cura)
         self.hp_giocatore = self.vita
+        self.controlla_vita_bassa()  # Controlla se fermare heartbeat dopo guarigione
+        self.aggiorna_stats_incrementali()  # Aggiorna statistiche dopo guarigione
+        
+        # Riproduci effetto sonoro
+        if self.audio_abilitato:
+            self.riproduci_effetto("bere_pozione")
         
         # Mostro attacca comunque
         danno_mostro = max(1, self.mostro_attuale["attacco"] - self.calcola_difesa_totale())
@@ -3369,21 +3422,33 @@ class AvventuraEpica:
         messaggio = f"Round {self.round_combattimento}:\nUsi {oggetto_da_usare} e recuperi {cura} vita!\n💥 Il {self.mostro_attuale['nome']} ti attacca per {danno_mostro} danni!\n"
         
         if self.vita <= 0:
-            self.vita = 1
-            self.hp_giocatore = self.vita
+            # Player defeated - end combat immediately
             self.in_combattimento = False
+            self.ferma_heartbeat()  # Ferma heartbeat quando perdi
             messaggio += "💀 Sei stato sconfitto! Torni in città."
             
             if self.audio_abilitato:
                 self.riproduci_effetto("sconfitta")
                 self.termina_musica_battaglia()
             
+            # Reset mostro dopo sconfitta
+            self.mostro_attuale = None
+            self.vita = 1  # Ripristina vita a 1 per continuare il gioco
+            self.hp_giocatore = 1
+            
             self.haptic_feedback("heavy")
+            
+            # Exit combat and return to main game
+            self.aggiorna_storia(messaggio)
+            self.aggiorna_stats_incrementali()
+            self.page.go("/gioco")
+            return
         else:
+            self.controlla_vita_bassa()
+            self.aggiorna_stats_incrementali()  # Aggiorna statistiche dopo attacco post-pozione
             self.haptic_feedback("light")
         
         self.round_combattimento += 1
-        # Rimosso: self.aggiorna_log_combattimento(messaggio)
         # Non ricreare l'intera schermata, solo aggiornare le info
         self.aggiorna_info_combattimento()
     
@@ -3395,10 +3460,14 @@ class AvventuraEpica:
         import random
         if random.randint(1, 10) <= 7:  # 70% di successo
             self.in_combattimento = False
+            self.ferma_heartbeat()  # Ferma heartbeat quando fuggi
             messaggio = f"🏃 Sei riuscito a fuggire dal {self.mostro_attuale['nome']}!"
             
             if self.audio_abilitato:
                 self.termina_musica_battaglia()
+            
+            # Reset mostro dopo fuga
+            self.mostro_attuale = None
             
             self.haptic_feedback("light")
         else:
@@ -3409,32 +3478,40 @@ class AvventuraEpica:
             messaggio = f"❌ Non riesci a fuggire!\n💥 Il {self.mostro_attuale['nome']} ti attacca per {danno_mostro} danni!\n"
             
             if self.vita <= 0:
-                self.vita = 1
-                self.hp_giocatore = self.vita
+                # Player defeated - end combat immediately
                 self.in_combattimento = False
+                self.ferma_heartbeat()  # Ferma heartbeat quando perdi
                 messaggio += "💀 Sei stato sconfitto! Torni in città."
                 
                 if self.audio_abilitato:
                     self.riproduci_effetto("sconfitta")
                     self.termina_musica_battaglia()
                 
+                # Reset mostro dopo sconfitta
+                self.mostro_attuale = None
+                self.vita = 1  # Ripristina vita a 1 per continuare il gioco
+                self.hp_giocatore = 1
+                
                 self.haptic_feedback("heavy")
+                
+                # Exit combat and return to main game
+                self.aggiorna_storia(messaggio)
+                self.aggiorna_stats_incrementali()
+                self.page.go("/gioco")
+                return
             else:
+                self.controlla_vita_bassa()
+                self.aggiorna_stats_incrementali()  # Aggiorna statistiche dopo fuga fallita
                 self.haptic_feedback("medium")
         
         self.round_combattimento += 1
-        # Rimosso: self.aggiorna_log_combattimento(messaggio)
         # Non ricreare l'intera schermata, solo aggiornare le info
         self.aggiorna_info_combattimento()
     
     def aggiorna_info_combattimento(self):
         """Aggiorna le informazioni di combattimento e ricrea i pulsanti se necessario"""
-        current_route = self.page.views[-1].route if len(self.page.views) > 0 else "None"
-        print(f"🎮 DEBUG: aggiorna_info_combattimento chiamato - Route attuale: {current_route}")
-        
         # SOLO se siamo nella vista combattimento, aggiornala
         if len(self.page.views) > 0 and self.page.views[-1].route == "/combattimento":
-            print(f"🎮 DEBUG: Ricarico vista combattimento")
             # Forza la ricreazione della vista rimuovendo e riaggiungendo
             self.page.views.pop()  # Rimuovi vista corrente
             self.page.views.append(self.crea_vista_combattimento())
@@ -3475,98 +3552,7 @@ class AvventuraEpica:
             self.volume_effetti_label_tab.value = f"Volume Effetti: {int(self.volume_effetti * 100)}%"
         self.page.update()
     
-    def crea_contenuto_impostazioni(self):
-        """Crea il contenuto della tab impostazioni"""
-        # Toggle audio e haptic
-        toggle_audio = ft.Switch(
-            label="Audio Attivato",
-            value=self.audio_abilitato,
-            on_change=self.toggle_audio_callback,
-            tooltip="Attiva o disattiva tutti gli effetti audio"
-        )
-        
-        toggle_haptic = ft.Switch(
-            label="Vibrazione Attivata",
-            value=self.haptic_abilitato,
-            on_change=self.toggle_haptic_callback,
-            tooltip="Attiva o disattiva il feedback aptico"
-        )
-        
-        # Slider volume musica per tab
-        self.volume_musica_label_tab = ft.Text(f"Volume Musica: {int(self.volume_musica * 100)}%")
-        slider_volume_musica = ft.Slider(
-            min=0,
-            max=1,
-            value=self.volume_musica,
-            divisions=10,
-            on_change=self.cambia_volume_musica_tab,
-            tooltip="Regola il volume della musica di sottofondo"
-        )
-        
-        # Slider volume effetti per tab
-        self.volume_effetti_label_tab = ft.Text(f"Volume Effetti: {int(self.volume_effetti * 100)}%")
-        slider_volume_effetti = ft.Slider(
-            min=0,
-            max=1,
-            value=self.volume_effetti,
-            divisions=10,
-            on_change=self.cambia_volume_effetti_tab,
-            tooltip="Regola il volume degli effetti sonori"
-        )
-        
-        # Pulsante test audio
-        test_audio_btn = ft.ElevatedButton(
-            "Testa Audio",
-            on_click=self.testa_audio,
-            width=200,
-            tooltip="Riproduci un suono di test"
-        )
-        
-        return [
-            ft.Text("Audio", size=16, weight=ft.FontWeight.BOLD),
-            toggle_audio,
-            ft.Container(height=10),
-            self.volume_musica_label_tab,
-            slider_volume_musica,
-            ft.Container(height=10),
-            self.volume_effetti_label_tab,
-            slider_volume_effetti,
-            ft.Container(height=10),
-            test_audio_btn,
-            ft.Divider(),
-            ft.Text("Feedback", size=16, weight=ft.FontWeight.BOLD),
-            toggle_haptic,
-        ]
-    
-    def crea_contenuto_info(self):
-        """Crea il contenuto della tab info"""
-        return [
-            ft.Container(height=20),
-            ft.Text("AVVENTURA EPICA", size=24, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER),
-            ft.Container(height=10),
-            ft.Text(f" Versione: {self.versione}", size=16),
-            ft.Text(f"Autore: {self.autore}", size=16),
-            ft.Text("Data rilascio: 18 giugno 2025", size=16),
-            ft.Container(height=20),
-            ft.Text("Descrizione:", size=16, weight=ft.FontWeight.BOLD),
-            ft.Text(
-                "Un emozionante RPG accessibile con audio immersivo e feedback aptico. "
-                "Esplora 16 aree diverse, combatti mostri, raccogli tesori, visita negozi "
-                "e diventa il nuovo re!",
-                size=14,
-                text_align=ft.TextAlign.CENTER
-            ),
-            ft.Container(height=20),
-            ft.Text("Caratteristiche:", size=16, weight=ft.FontWeight.BOLD),
-            ft.Text("16 aree uniche da esplorare", size=14),
-            ft.Text("Sistema di combattimento con livellamento", size=14),
-            ft.Text("Negozi e mercanti", size=14),
-            ft.Text("Sistema di inventario ed equipaggiamento", size=14),
-            ft.Text("Audio immersivo per ogni area", size=14),
-            ft.Text("Feedback aptico per un'esperienza tattile", size=14),
-            ft.Text("Salvataggio e caricamento partite", size=14),
-            ft.Text("Completamente accessibile con screen reader", size=14),
-        ]
+# Funzioni crea_contenuto_* rimosse - contenuto ora creato localmente nelle viste
 
     def crea_menu_principale_per_tab(self):
         """Crea il menu principale per la tab Home con colori"""
@@ -7259,6 +7245,9 @@ def main(page: ft.Page):
             self.aggiorna_storia(f" BOSS FIGHT!\n{nome_boss} appare davanti a te!\n⚠️ Il boss è molto più forte del previsto! (Livello richiesto: {livello_minimo})\nHP Boss: {self.hp_mostro_attuale}")
         else:
             self.aggiorna_storia(f" BOSS FIGHT!\n{nome_boss} appare davanti a te!\nHP Boss: {self.hp_mostro_attuale}")
+        
+        # Controlla se la vita è già bassa all'inizio del combattimento boss
+        self.controlla_vita_bassa()
         
         # Aggiorna i pulsanti per mostrare le azioni di combattimento
         self.page.go("/combattimento")
