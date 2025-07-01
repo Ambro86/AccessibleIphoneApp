@@ -2022,6 +2022,7 @@ class AvventuraEpica:
     
     def crea_vista_gioco(self):
         """Crea la vista principale di gioco"""
+        # Crea tutte le variabili locali per evitare il problema dell'elemento vuoto in VoiceOver
         titolo = ft.Text(
             "AVVENTURA IN CORSO", 
             size=24, 
@@ -2030,9 +2031,18 @@ class AvventuraEpica:
             color=ft.Colors.AMBER_400
         )
         
+        # Ottieni i valori attuali dalle variabili globali se esistono
+        valore_storia = "🎮 Benvenuto nell'Avventura Incrementale!\n Compagni gatti con abilità speciali\n Raccogli risorse e costruisci\n Combatti mostri e sali di livello\n🍽️ Gestisci cibo e acqua per energia\n🎵 Audio immersivo e feedback aptico\n\nPremi 'Inizia Avventura' per cominciare!"
+        if hasattr(self, 'area_storia') and self.area_storia and hasattr(self.area_storia, 'value'):
+            valore_storia = self.area_storia.value
+        
+        valore_stats = f" Statistiche Giocatore:\n Livello {self.livello} •  {self.vita}/{self.vita_massima} HP •  {self.monete} monete\n Attacco: {self.calcola_attacco_totale()} •  Difesa: {self.calcola_difesa_totale()}\n EXP: {self.esperienza}/{self.esperienza_necessaria}"
+        if hasattr(self, 'area_stats') and self.area_stats and hasattr(self.area_stats, 'value'):
+            valore_stats = self.area_stats.value
+        
         # Crea controlli locali per VoiceOver accessibility
         area_storia_locale = ft.TextField(
-            value=self.area_storia.value if hasattr(self, 'area_storia') and self.area_storia else "🎮 Benvenuto nell'Avventura Incrementale!\n Compagni gatti con abilità speciali\n Raccogli risorse e costruisci\n Combatti mostri e sali di livello\n🍽️ Gestisci cibo e acqua per energia\n🎵 Audio immersivo e feedback aptico\n\nPremi 'Inizia Avventura' per cominciare!",
+            value=valore_storia,
             multiline=True,
             read_only=True,
             expand=True,
@@ -2047,7 +2057,7 @@ class AvventuraEpica:
         )
         
         area_stats_locale = ft.TextField(
-            value=self.area_stats.value if hasattr(self, 'area_stats') and self.area_stats else " Statistiche Giocatore:\n Livello 1 •  100/100 HP •  100 monete\n Attacco: 15 •  Difesa: 0\n EXP: 0/100",
+            value=valore_stats,
             multiline=True,
             read_only=True,
             min_lines=4,
@@ -2060,119 +2070,132 @@ class AvventuraEpica:
             label="Statistiche giocatore"
         )
         
-        # Sincronizza i TextField globali con quelli locali
-        if not hasattr(self, 'area_storia') or not self.area_storia:
-            self.area_storia = area_storia_locale
-        if not hasattr(self, 'area_stats') or not self.area_stats:
-            self.area_stats = area_stats_locale
+        # Aggiorna i riferimenti globali per mantenere la sincronizzazione
+        self.area_storia = area_storia_locale
+        self.area_stats = area_stats_locale
         
-        # Pulsanti principali del gioco
+        # Crea pulsanti locali per evitare problemi VoiceOver
         pulsanti_gioco = []
         
-        # Azioni incrementali
+        # Azioni incrementali - variabili locali
         azioni_incrementali = self.azioni_incrementali_possibili()
         for testo, funzione, tooltip in azioni_incrementali:
-            pulsanti_gioco.append(
-                ft.ElevatedButton(
-                    text=testo,
-                    on_click=funzione,
-                    width=280,
-                    height=50,
-                    bgcolor=ft.Colors.GREEN_600,
-                    color=ft.Colors.WHITE,
-                    tooltip=tooltip
-                )
+            pulsante_incrementale = ft.ElevatedButton(
+                text=testo,
+                on_click=funzione,
+                width=280,
+                height=50,
+                bgcolor=ft.Colors.GREEN_600,
+                color=ft.Colors.WHITE,
+                tooltip=tooltip
             )
+            pulsanti_gioco.append(pulsante_incrementale)
         
-        # Pulsanti di navigazione
+        # Pulsante cambio area - variabile locale
         if len(self.aree_sbloccate) > 1:
-            pulsanti_gioco.append(
-                ft.ElevatedButton(
-                    text="Cambia Area",
-                    on_click=lambda e: self.page.go("/aree"),
-                    width=280,
-                    height=50,
-                    bgcolor=ft.Colors.BLUE_600,
-                    color=ft.Colors.WHITE,
-                    tooltip="Scegli area da esplorare"
-                )
+            pulsante_aree = ft.ElevatedButton(
+                text="Cambia Area",
+                on_click=lambda e: self.page.go("/aree"),
+                width=280,
+                height=50,
+                bgcolor=ft.Colors.BLUE_600,
+                color=ft.Colors.WHITE,
+                tooltip="Scegli area da esplorare"
             )
+            pulsanti_gioco.append(pulsante_aree)
         
-        pulsanti_gioco.extend([
-            ft.ElevatedButton(
-                text="Combattimento",
-                on_click=lambda e: self.page.go("/combattimento"),
-                width=280,
-                height=50,
-                bgcolor=ft.Colors.RED_600,
-                color=ft.Colors.WHITE,
-                tooltip="Combatti contro i mostri"
-            ),
-            ft.ElevatedButton(
-                text="Negozio",
-                on_click=lambda e: self.page.go("/negozio"),
-                width=280,
-                height=50,
-                bgcolor=ft.Colors.ORANGE_600,
-                color=ft.Colors.WHITE,
-                tooltip="Visita il negozio"
-            ),
-            ft.ElevatedButton(
-                text="Gatti",
-                on_click=lambda e: self.page.go("/gatti"),
-                width=280,
-                height=50,
-                bgcolor=ft.Colors.PINK_600,
-                color=ft.Colors.WHITE,
-                tooltip="Gestisci i tuoi gatti"
-            ),
-            ft.ElevatedButton(
-                text="Inventario",
-                on_click=lambda e: self.page.go("/inventario"),
-                width=280,
-                height=50,
-                bgcolor=ft.Colors.CYAN_600,
-                color=ft.Colors.WHITE,
-                tooltip="Gestisci inventario"
-            )
-        ])
+        # Pulsanti di navigazione - variabili locali
+        pulsante_combattimento = ft.ElevatedButton(
+            text="Combattimento",
+            on_click=lambda e: self.page.go("/combattimento"),
+            width=280,
+            height=50,
+            bgcolor=ft.Colors.RED_600,
+            color=ft.Colors.WHITE,
+            tooltip="Combatti contro i mostri"
+        )
         
-        # Aggiungi pulsante boss se disponibile
+        pulsante_negozio = ft.ElevatedButton(
+            text="Negozio",
+            on_click=lambda e: self.page.go("/negozio"),
+            width=280,
+            height=50,
+            bgcolor=ft.Colors.ORANGE_600,
+            color=ft.Colors.WHITE,
+            tooltip="Visita il negozio"
+        )
+        
+        pulsante_gatti = ft.ElevatedButton(
+            text="Gatti",
+            on_click=lambda e: self.page.go("/gatti"),
+            width=280,
+            height=50,
+            bgcolor=ft.Colors.PINK_600,
+            color=ft.Colors.WHITE,
+            tooltip="Gestisci i tuoi gatti"
+        )
+        
+        pulsante_inventario = ft.ElevatedButton(
+            text="Inventario",
+            on_click=lambda e: self.page.go("/inventario"),
+            width=280,
+            height=50,
+            bgcolor=ft.Colors.CYAN_600,
+            color=ft.Colors.WHITE,
+            tooltip="Gestisci inventario"
+        )
+        
+        pulsanti_gioco.extend([pulsante_combattimento, pulsante_negozio, pulsante_gatti, pulsante_inventario])
+        
+        # Pulsante boss - variabile locale
         if (self.area_attuale in self.boss_aree and 
             self.boss_aree[self.area_attuale]["nome"] not in self.boss_sconfitti and
             self.progressione_area.get(self.area_attuale, 0) >= 100):
-            pulsanti_gioco.append(
-                ft.ElevatedButton(
-                    text="Combatti Boss dell'Area!",
-                    on_click=self.combatti_boss,
-                    width=280,
-                    height=50,
-                    bgcolor=ft.Colors.DEEP_PURPLE_600,
-                    color=ft.Colors.WHITE,
-                    tooltip=f"Affronta il boss: {self.boss_aree[self.area_attuale]['nome']}"
-                )
-            )
-        
-        # Pulsante Salva Partita
-        pulsanti_gioco.append(
-            ft.ElevatedButton(
-                text="Salva Partita",
-                on_click=self.salva_gioco,
+            pulsante_boss = ft.ElevatedButton(
+                text="Combatti Boss dell'Area!",
+                on_click=self.combatti_boss,
                 width=280,
                 height=50,
-                bgcolor=ft.Colors.PURPLE_600,
+                bgcolor=ft.Colors.DEEP_PURPLE_600,
                 color=ft.Colors.WHITE,
-                tooltip="Salva il tuo progresso"
+                tooltip=f"Affronta il boss: {self.boss_aree[self.area_attuale]['nome']}"
             )
-        )
+            pulsanti_gioco.append(pulsante_boss)
         
-        # Crea i controlli locali
+        # Pulsante salva - variabile locale
+        pulsante_salva = ft.ElevatedButton(
+            text="Salva Partita",
+            on_click=self.salva_gioco,
+            width=280,
+            height=50,
+            bgcolor=ft.Colors.PURPLE_600,
+            color=ft.Colors.WHITE,
+            tooltip="Salva il tuo progresso"
+        )
+        pulsanti_gioco.append(pulsante_salva)
+        
+        # Colonna pulsanti - variabile locale
+        colonna_pulsanti = ft.Column(pulsanti_gioco, horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=15)
+        
+        # Controlli di gioco - variabile locale
         gioco_controls = [
             area_storia_locale,
             area_stats_locale,
-            ft.Column(pulsanti_gioco, horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=15)
+            colonna_pulsanti
         ]
         
+        # Pulsante menu - variabile locale
+        pulsante_menu = ft.ElevatedButton(
+            text="Torna al Menu",
+            on_click=lambda e: self.page.go("/"),
+            width=200,
+            height=50,
+            bgcolor=ft.Colors.GREY_600,
+            color=ft.Colors.WHITE,
+            tooltip="Torna al menu principale"
+        )
+        
+        # Content principale - variabile locale
         content = ft.Column([
             titolo,
             ft.Container(height=20),
@@ -2184,15 +2207,7 @@ class AvventuraEpica:
                 expand=True
             ),
             ft.Container(height=20),
-            ft.ElevatedButton(
-                text="Torna al Menu",
-                on_click=lambda e: self.page.go("/"),
-                width=200,
-                height=50,
-                bgcolor=ft.Colors.GREY_600,
-                color=ft.Colors.WHITE,
-                tooltip="Torna al menu principale"
-            )
+            pulsante_menu
         ], scroll=ft.ScrollMode.AUTO, spacing=20, expand=True)
         
         return ft.View(
@@ -2428,6 +2443,7 @@ class AvventuraEpica:
     
     def crea_vista_combattimento(self):
         """Crea la vista del combattimento"""
+        # Crea tutte le variabili locali per evitare il problema dell'elemento vuoto in VoiceOver
         titolo = ft.Text(
             "Combattimento", 
             size=24, 
@@ -2436,7 +2452,7 @@ class AvventuraEpica:
             color=ft.Colors.RED_400
         )
         
-        # Info mostro
+        # Info mostro - variabile locale
         if self.mostro_attuale:
             info_mostro = ft.Text(
                 f"{self.mostro_attuale['nome']}\n HP: {self.hp_mostro_attuale}/{self.mostro_attuale['hp']}\n Attacco: {self.mostro_attuale['attacco']}", 
@@ -2454,7 +2470,7 @@ class AvventuraEpica:
                 semantics_label="Nessun nemico presente. Cerca mostri per iniziare una battaglia"
             )
         
-        # Info giocatore
+        # Info giocatore - variabile locale
         gatto_info = self.gatti[self.gatto_attivo]
         info_giocatore = ft.Text(
             f"{gatto_info['nome']}\n Vita: {self.vita}/{self.vita_massima}\n Attacco: {self.calcola_attacco_totale()}\n Energia: {self.risorse['energia']}", 
@@ -2464,9 +2480,8 @@ class AvventuraEpica:
             semantics_label=f"Giocatore: {gatto_info['nome']}, Vita {self.vita} su {self.vita_massima}, Attacco {self.calcola_attacco_totale()}, Energia {self.risorse['energia']}"
         )
         
-        # Crea log combattimento locale (invece di self.log_combattimento)
+        # Log combattimento - sempre variabile locale
         valore_log = "Preparati al combattimento!"
-        
         log_combattimento_locale = ft.TextField(
             value=valore_log,
             multiline=True,
@@ -2483,9 +2498,8 @@ class AvventuraEpica:
             hint_text="Cronologia delle azioni di combattimento"
         )
         
-        # Pulsanti combattimento
+        # Pulsanti combattimento - array locale
         pulsanti_combattimento = []
-        
         oggetti_curativi_disponibili = self.conta_oggetti_curativi()
         
         if self.in_combattimento:
@@ -2533,8 +2547,6 @@ class AvventuraEpica:
                 )
             ])
         else:
-            # Mostra "Cerca Mostri" solo se NON siamo in battaglia E NON in combattimento
-            # E non abbiamo un mostro attuale attivo
             if not self.in_battaglia and not self.in_combattimento and self.mostro_attuale is None:
                 pulsanti_combattimento.append(
                     ft.ElevatedButton(
@@ -2548,7 +2560,18 @@ class AvventuraEpica:
                     )
                 )
         
+        # Pulsante indietro - variabile locale
+        pulsante_indietro = ft.ElevatedButton(
+            text="Torna al Gioco",
+            on_click=lambda e: self.page.go("/gioco"),
+            width=200,
+            height=50,
+            bgcolor=ft.Colors.GREY_600,
+            color=ft.Colors.WHITE,
+            tooltip="Torna alla schermata principale"
+        )
         
+        # Content principale - variabile locale
         content = ft.Column([
             titolo,
             ft.Container(height=20),
@@ -2568,15 +2591,7 @@ class AvventuraEpica:
                 expand=True
             ),
             ft.Container(height=20),
-            ft.ElevatedButton(
-                text="Torna al Gioco",
-                on_click=lambda e: self.page.go("/gioco"),
-                width=200,
-                height=50,
-                bgcolor=ft.Colors.GREY_600,
-                color=ft.Colors.WHITE,
-                tooltip="Torna alla schermata principale"
-            )
+            pulsante_indietro
         ], scroll=ft.ScrollMode.AUTO, spacing=20, expand=True)
         
         return ft.View(
