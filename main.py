@@ -1371,25 +1371,22 @@ class AvventuraEpica:
         # Controlla sblocco gatti
         self.controlla_sblocco_gatti()
             
-        # Progressione area (assicurati che l'area esista)
-        if area not in self.progressione_area:
-            self.progressione_area[area] = 0
-            print(f"⚠️ Aggiunta area mancante in progressione_area: {area}")
-        
-        self.progressione_area[area] += 1
-        print(f" Progressione {area}: {self.progressione_area[area]}")
-        
-        # Controlla se il boss dell'area è stato sbloccato per la prima volta
-        if (self.progressione_area[area] >= 100 and 
-            area not in self.boss_notifications_mostrate):
-            boss_sconfitto = self.controlla_boss_sconfitto(area)
-            if boss_sconfitto and self.sblocca_prossima_area():
-                testo += f"\n🎆 Hai sbloccato una nuova area!"
-            elif not boss_sconfitto:
-                # Mostra notifica sblocco boss solo una volta
-                self.boss_notifications_mostrate.add(area)
-                self.mostra_notifica_boss_sbloccato(area)
-                testo += f"\n Devi prima sconfiggere il boss di quest'area per procedere!"
+        # Progressione area (solo se area valida)
+        if area in self.progressione_area:
+            self.progressione_area[area] += 1
+            print(f" Progressione {area}: {self.progressione_area[area]}")
+            
+            # Controlla se il boss dell'area è stato sbloccato per la prima volta
+            if (self.progressione_area[area] >= 100 and 
+                area not in self.boss_notifications_mostrate):
+                boss_sconfitto = self.controlla_boss_sconfitto(area)
+                if boss_sconfitto and self.sblocca_prossima_area():
+                    testo += f"\n🎆 Hai sbloccato una nuova area!"
+                elif not boss_sconfitto:
+                    # Mostra notifica sblocco boss solo una volta
+                    self.boss_notifications_mostrate.add(area)
+                    self.mostra_notifica_boss_sbloccato(area)
+                    testo += f"\n Devi prima sconfiggere il boss di quest'area per procedere!"
         else:
             print(f"⚠️ Area non trovata in progressione_area: {area}")
             
@@ -1957,20 +1954,12 @@ class AvventuraEpica:
     
     def crea_vista_menu_principale(self):
         """Crea la vista del menu principale"""
-        titolo_text = ft.Text(
+        titolo = ft.Text(
             "Avventura Epica", 
             size=28, 
             weight=ft.FontWeight.BOLD, 
             text_align=ft.TextAlign.CENTER,
             color=ft.Colors.AMBER_400
-        )
-        
-        # Wrap il titolo in Semantics con heading level 1
-        titolo = ft.Semantics(
-            content=titolo_text,
-            header=True,
-            heading_level=1,
-            label="Titolo principale: Avventura Epica"
         )
         
         pulsanti = [
@@ -2034,7 +2023,7 @@ class AvventuraEpica:
     def crea_vista_gioco(self):
         """Crea la vista principale di gioco"""
         # Crea tutte le variabili locali per evitare il problema dell'elemento vuoto in VoiceOver
-        titolo_text = ft.Text(
+        titolo = ft.Text(
             "AVVENTURA IN CORSO", 
             size=24, 
             weight=ft.FontWeight.BOLD, 
@@ -2042,57 +2031,16 @@ class AvventuraEpica:
             color=ft.Colors.AMBER_400
         )
         
-        # Wrap il titolo in Semantics con heading level 1
-        titolo = ft.Semantics(
-            content=titolo_text,
-            header=True,
-            heading_level=1,
-            label="Titolo principale: Avventura in corso"
-        )
+        # Ottieni i valori attuali dalle variabili globali se esistono
+        valore_storia = "🎮 Benvenuto nell'Avventura Incrementale!\n Compagni gatti con abilità speciali\n Raccogli risorse e costruisci\n Combatti mostri e sali di livello\n🍽️ Gestisci cibo e acqua per energia\n🎵 Audio immersivo e feedback aptico\n\nPremi 'Inizia Avventura' per cominciare!"
+        if hasattr(self, 'area_storia') and self.area_storia and hasattr(self.area_storia, 'value'):
+            valore_storia = self.area_storia.value
         
-        # Usa l'ultimo testo storia se disponibile, altrimenti il testo di default
-        if hasattr(self, 'ultimo_testo_storia') and self.ultimo_testo_storia:
-            valore_storia = self.ultimo_testo_storia
-        else:
-            valore_storia = "Benvenuto nell'Avventura Incrementale!\nCompagni gatti con abilità speciali\nRaccogli risorse e costruisci\nCombatti mostri e sali di livello\nGestisci cibo e acqua per energia\nAudio immersivo e feedback aptico\n\nPremi 'Inizia Avventura' per cominciare!"
-        
-        # Ottieni i dati essenziali per il fallback e i pulsanti
-        livello = self.livello
-        vita = self.vita
-        vita_massima = self.vita_massima
-        monete = self.monete
-        attacco = self.calcola_attacco_totale()
-        difesa = self.calcola_difesa_totale()
-        esperienza = self.esperienza
-        esperienza_necessaria = self.esperienza_necessaria
-        
-        # Dati per i pulsanti condizionali
-        area_attuale = self.area_attuale
-        aree_sbloccate = self.aree_sbloccate.copy() if self.aree_sbloccate else []
-        boss_aree = self.boss_aree.copy() if self.boss_aree else {}
-        boss_sconfitti = self.boss_sconfitti.copy() if self.boss_sconfitti else []
-        progressione_area = self.progressione_area.copy() if self.progressione_area else {}
-        
-        # Usa le statistiche salvate se disponibili, altrimenti calcola
-        if hasattr(self, 'ultimo_testo_stats') and self.ultimo_testo_stats:
-            valore_stats = self.ultimo_testo_stats
-        else:
-            valore_stats = f"Statistiche Giocatore:\nLivello: {livello}\nVita: {vita}/{vita_massima}\nMonete: {monete}\nAttacco: {attacco}\nDifesa: {difesa}\nEXP: {esperienza}/{esperienza_necessaria}"
+        valore_stats = f" Statistiche Giocatore:\n Livello {self.livello} •  {self.vita}/{self.vita_massima} HP •  {self.monete} monete\n Attacco: {self.calcola_attacco_totale()} •  Difesa: {self.calcola_difesa_totale()}\n EXP: {self.esperienza}/{self.esperienza_necessaria}"
+        if hasattr(self, 'area_stats') and self.area_stats and hasattr(self.area_stats, 'value'):
+            valore_stats = self.area_stats.value
         
         # Crea controlli locali per VoiceOver accessibility
-        # Heading per Storia dell'avventura
-        storia_heading = ft.Semantics(
-            content=ft.Text(
-                "Storia dell'avventura",
-                size=20,
-                weight=ft.FontWeight.BOLD,
-                color=ft.Colors.AMBER_400
-            ),
-            header=True,
-            heading_level=1,
-            label="Storia dell'avventura"
-        )
-        
         area_storia_locale = ft.TextField(
             value=valore_storia,
             multiline=True,
@@ -2104,7 +2052,8 @@ class AvventuraEpica:
             bgcolor=ft.Colors.DEEP_PURPLE_900,
             color=ft.Colors.AMBER_100,
             border_color=ft.Colors.AMBER_400,
-            focused_border_color=ft.Colors.AMBER_300
+            focused_border_color=ft.Colors.AMBER_300,
+            label="Storia dell'avventura"
         )
         
         area_stats_locale = ft.TextField(
@@ -2121,75 +2070,29 @@ class AvventuraEpica:
             label="Statistiche giocatore"
         )
         
-        # Assegna i controlli alle variabili globali per gli aggiornamenti dinamici
+        # Aggiorna i riferimenti globali per mantenere la sincronizzazione
         self.area_storia = area_storia_locale
         self.area_stats = area_stats_locale
         
         # Crea pulsanti locali per evitare problemi VoiceOver
         pulsanti_gioco = []
         
-        # Crea azioni incrementali localmente per evitare riferimenti globali
-        risorse = self.risorse.copy() if self.risorse else {}
-        energia = risorse.get("energia", 0)
-        cibo = risorse.get("cibo", 0)
-        acqua = risorse.get("acqua", 0)
-        gatto_attivo = self.gatto_attivo
-        
-        # Raccolta risorse sempre disponibile
-        if energia >= 10:
-            pulsante_raccogli = ft.ElevatedButton(
-                text="Raccogli Risorse",
-                on_click=self.raccogli_risorse,
+        # Azioni incrementali - variabili locali
+        azioni_incrementali = self.azioni_incrementali_possibili()
+        for testo, funzione, tooltip in azioni_incrementali:
+            pulsante_incrementale = ft.ElevatedButton(
+                text=testo,
+                on_click=funzione,
                 width=280,
                 height=50,
                 bgcolor=ft.Colors.GREEN_600,
                 color=ft.Colors.WHITE,
-                tooltip="Raccogli risorse nell'area attuale"
+                tooltip=tooltip
             )
-            pulsanti_gioco.append(pulsante_raccogli)
-        
-        # Azioni cibo e acqua
-        if cibo >= 10:
-            pulsante_cibo = ft.ElevatedButton(
-                text="Consuma Cibo",
-                on_click=self.consuma_cibo,
-                width=280,
-                height=50,
-                bgcolor=ft.Colors.GREEN_600,
-                color=ft.Colors.WHITE,
-                tooltip="Mangia per recuperare energia e HP"
-            )
-            pulsanti_gioco.append(pulsante_cibo)
-            
-        if acqua >= 5:
-            pulsante_acqua = ft.ElevatedButton(
-                text="Bevi Acqua",
-                on_click=self.bevi_acqua,
-                width=280,
-                height=50,
-                bgcolor=ft.Colors.GREEN_600,
-                color=ft.Colors.WHITE,
-                tooltip="Bevi per bonus temporanei"
-            )
-            pulsanti_gioco.append(pulsante_acqua)
-            
-        # Azioni gatto
-        if gatto_attivo and cibo >= 5:
-            pulsante_nutri = ft.ElevatedButton(
-                text="Nutri Gatto",
-                on_click=self.nutri_gatto,
-                width=280,
-                height=50,
-                bgcolor=ft.Colors.GREEN_600,
-                color=ft.Colors.WHITE,
-                tooltip="Nutri il tuo gatto compagno"
-            )
-            pulsanti_gioco.append(pulsante_nutri)
-        
-        # I dati per i pulsanti sono già stati definiti sopra
+            pulsanti_gioco.append(pulsante_incrementale)
         
         # Pulsante cambio area - variabile locale
-        if len(aree_sbloccate) > 1:
+        if len(self.aree_sbloccate) > 1:
             pulsante_aree = ft.ElevatedButton(
                 text="Cambia Area",
                 on_click=lambda e: self.page.go("/aree"),
@@ -2245,9 +2148,9 @@ class AvventuraEpica:
         pulsanti_gioco.extend([pulsante_combattimento, pulsante_negozio, pulsante_gatti, pulsante_inventario])
         
         # Pulsante boss - variabile locale
-        if (area_attuale in boss_aree and 
-            boss_aree[area_attuale]["nome"] not in boss_sconfitti and
-            progressione_area.get(area_attuale, 0) >= 100):
+        if (self.area_attuale in self.boss_aree and 
+            self.boss_aree[self.area_attuale]["nome"] not in self.boss_sconfitti and
+            self.progressione_area.get(self.area_attuale, 0) >= 100):
             pulsante_boss = ft.ElevatedButton(
                 text="Combatti Boss dell'Area!",
                 on_click=self.combatti_boss,
@@ -2255,7 +2158,7 @@ class AvventuraEpica:
                 height=50,
                 bgcolor=ft.Colors.DEEP_PURPLE_600,
                 color=ft.Colors.WHITE,
-                tooltip=f"Affronta il boss: {boss_aree[area_attuale]['nome']}"
+                tooltip=f"Affronta il boss: {self.boss_aree[self.area_attuale]['nome']}"
             )
             pulsanti_gioco.append(pulsante_boss)
         
@@ -2276,7 +2179,6 @@ class AvventuraEpica:
         
         # Controlli di gioco - variabile locale
         gioco_controls = [
-            storia_heading,
             area_storia_locale,
             area_stats_locale,
             colonna_pulsanti
@@ -2550,40 +2452,14 @@ class AvventuraEpica:
             color=ft.Colors.RED_400
         )
         
-        # Ottieni tutti i dati prima di creare gli elementi UI
-        mostro_attuale = self.mostro_attuale
-        hp_mostro_attuale = self.hp_mostro_attuale
-        gatti = self.gatti
-        gatto_attivo = self.gatto_attivo
-        gatto_info = gatti[gatto_attivo]
-        vita_corrente = self.vita
-        vita_massima = self.vita_massima
-        
-        # Calcola attacco totale localmente
-        attacco_base = self.attacco_base
-        equipaggiamento = self.equipaggiamento.copy() if self.equipaggiamento else {}
-        attacco_totale = attacco_base
-        if equipaggiamento.get("arma"):
-            if "Spada" in equipaggiamento["arma"]:
-                attacco_totale += 5
-            elif "Arco" in equipaggiamento["arma"]:
-                attacco_totale += 8
-            elif "Pugnale" in equipaggiamento["arma"]:
-                attacco_totale += 3
-                
-        risorse = self.risorse
-        energia = risorse['energia']
-        in_combattimento = self.in_combattimento
-        in_battaglia = self.in_battaglia
-        
         # Info mostro - variabile locale
-        if mostro_attuale:
+        if self.mostro_attuale:
             info_mostro = ft.Text(
-                f"{mostro_attuale['nome']}\n HP: {hp_mostro_attuale}/{mostro_attuale['hp']}\n Attacco: {mostro_attuale['attacco']}", 
+                f"{self.mostro_attuale['nome']}\n HP: {self.hp_mostro_attuale}/{self.mostro_attuale['hp']}\n Attacco: {self.mostro_attuale['attacco']}", 
                 size=18, 
                 text_align=ft.TextAlign.CENTER,
                 color=ft.Colors.ORANGE_300,
-                semantics_label=f"Nemico: {mostro_attuale['nome']}, Punti vita {hp_mostro_attuale} su {mostro_attuale['hp']}, Attacco {mostro_attuale['attacco']}"
+                semantics_label=f"Nemico: {self.mostro_attuale['nome']}, Punti vita {self.hp_mostro_attuale} su {self.mostro_attuale['hp']}, Attacco {self.mostro_attuale['attacco']}"
             )
         else:
             info_mostro = ft.Text(
@@ -2595,12 +2471,13 @@ class AvventuraEpica:
             )
         
         # Info giocatore - variabile locale
+        gatto_info = self.gatti[self.gatto_attivo]
         info_giocatore = ft.Text(
-            f"{gatto_info['nome']}\n Vita: {vita_corrente}/{vita_massima}\n Attacco: {attacco_totale}\n Energia: {energia}", 
+            f"{gatto_info['nome']}\n Vita: {self.vita}/{self.vita_massima}\n Attacco: {self.calcola_attacco_totale()}\n Energia: {self.risorse['energia']}", 
             size=18, 
             text_align=ft.TextAlign.CENTER,
             color=ft.Colors.GREEN_300,
-            semantics_label=f"Giocatore: {gatto_info['nome']}, Vita {vita_corrente} su {vita_massima}, Attacco {attacco_totale}, Energia {energia}"
+            semantics_label=f"Giocatore: {gatto_info['nome']}, Vita {self.vita} su {self.vita_massima}, Attacco {self.calcola_attacco_totale()}, Energia {self.risorse['energia']}"
         )
         
         # Log combattimento - sempre variabile locale
@@ -2621,80 +2498,67 @@ class AvventuraEpica:
             hint_text="Cronologia delle azioni di combattimento"
         )
         
-        # Conta oggetti curativi localmente invece di chiamare self.conta_oggetti_curativi()
-        inventario = self.inventario.copy() if self.inventario else {}
-        oggetti_curativi_disponibili = 0
-        for nome, quantita in inventario.items():
-            if "Pozione" in nome or "Curativo" in nome or "Vita" in nome:
-                oggetti_curativi_disponibili += quantita
-        
         # Pulsanti combattimento - array locale
         pulsanti_combattimento = []
+        oggetti_curativi_disponibili = self.conta_oggetti_curativi()
         
-        if in_combattimento:
-            # Pulsante attacca - variabile locale
-            pulsante_attacca = ft.ElevatedButton(
-                text="Attacca",
-                on_click=self.attacca_mostro,
-                width=200,
-                height=50,
-                bgcolor=ft.Colors.RED_600,
-                color=ft.Colors.WHITE,
-                tooltip=f"Attacca il {mostro_attuale['nome'] if mostro_attuale else 'mostro'}",
-                data="attacca"
-            )
-            
-            # Pulsante difendi - variabile locale
-            pulsante_difendi = ft.ElevatedButton(
-                text="Difendi",
-                on_click=self.difendi_combattimento,
-                width=200,
-                height=50,
-                bgcolor=ft.Colors.BLUE_600,
-                color=ft.Colors.WHITE,
-                tooltip="Riduci il danno subito del 50%",
-                data="difendi"
-            )
-            
-            # Pulsante pozione - variabile locale
-            pulsante_pozione = ft.ElevatedButton(
-                text=f"Usa Oggetto Curativo ({oggetti_curativi_disponibili})",
-                on_click=self.usa_pozione_combattimento,
-                width=200,
-                height=50,
-                bgcolor=ft.Colors.GREEN_600 if oggetti_curativi_disponibili > 0 else ft.Colors.GREY_600,
-                color=ft.Colors.WHITE,
-                tooltip=f"Usa oggetti curativi. Disponibili: {oggetti_curativi_disponibili}",
-                disabled=oggetti_curativi_disponibili <= 0,
-                data="pozione"
-            )
-            
-            # Pulsante fuggi - variabile locale
-            pulsante_fuggi = ft.ElevatedButton(
-                text="Fuggi",
-                on_click=self.fuggi_combattimento,
-                width=200,
-                height=50,
-                bgcolor=ft.Colors.PURPLE_600,
-                color=ft.Colors.WHITE,
-                tooltip="Tenta di fuggire dal combattimento. 70% di successo",
-                data="fuggi"
-            )
-            
-            pulsanti_combattimento.extend([pulsante_attacca, pulsante_difendi, pulsante_pozione, pulsante_fuggi])
-        else:
-            if not in_battaglia and not in_combattimento and mostro_attuale is None:
-                # Pulsante cerca mostri - variabile locale
-                pulsante_cerca = ft.ElevatedButton(
-                    text="Cerca Mostri",
-                    on_click=self.inizia_combattimento,
+        if self.in_combattimento:
+            pulsanti_combattimento.extend([
+                ft.ElevatedButton(
+                    text="Attacca",
+                    on_click=self.attacca_mostro,
                     width=200,
                     height=50,
-                    bgcolor=ft.Colors.ORANGE_600,
+                    bgcolor=ft.Colors.RED_600,
                     color=ft.Colors.WHITE,
-                    tooltip="Cerca mostri da combattere"
+                    tooltip=f"Attacca il {self.mostro_attuale['nome'] if self.mostro_attuale else 'mostro'}",
+                    data="attacca"
+                ),
+                ft.ElevatedButton(
+                    text="Difendi",
+                    on_click=self.difendi_combattimento,
+                    width=200,
+                    height=50,
+                    bgcolor=ft.Colors.BLUE_600,
+                    color=ft.Colors.WHITE,
+                    tooltip="Riduci il danno subito del 50%",
+                    data="difendi"
+                ),
+                ft.ElevatedButton(
+                    text=f"Usa Oggetto Curativo ({oggetti_curativi_disponibili})",
+                    on_click=self.usa_pozione_combattimento,
+                    width=200,
+                    height=50,
+                    bgcolor=ft.Colors.GREEN_600 if oggetti_curativi_disponibili > 0 else ft.Colors.GREY_600,
+                    color=ft.Colors.WHITE,
+                    tooltip=f"Usa oggetti curativi. Disponibili: {oggetti_curativi_disponibili}",
+                    disabled=oggetti_curativi_disponibili <= 0,
+                    data="pozione"
+                ),
+                ft.ElevatedButton(
+                    text="Fuggi",
+                    on_click=self.fuggi_combattimento,
+                    width=200,
+                    height=50,
+                    bgcolor=ft.Colors.PURPLE_600,
+                    color=ft.Colors.WHITE,
+                    tooltip="Tenta di fuggire dal combattimento. 70% di successo",
+                    data="fuggi"
                 )
-                pulsanti_combattimento.append(pulsante_cerca)
+            ])
+        else:
+            if not self.in_battaglia and not self.in_combattimento and self.mostro_attuale is None:
+                pulsanti_combattimento.append(
+                    ft.ElevatedButton(
+                        text="Cerca Mostri",
+                        on_click=self.inizia_combattimento,
+                        width=200,
+                        height=50,
+                        bgcolor=ft.Colors.ORANGE_600,
+                        color=ft.Colors.WHITE,
+                        tooltip="Cerca mostri da combattere"
+                    )
+                )
         
         # Pulsante indietro - variabile locale
         pulsante_indietro = ft.ElevatedButton(
@@ -2753,8 +2617,8 @@ class AvventuraEpica:
             color=ft.Colors.ORANGE_400
         )
         
-        # Crea contenuto negozio con variabili locali
-        testo_monete_negozio = ft.Text(f"Monete disponibili: {self.monete}", size=16, color=ft.Colors.AMBER_400)
+        # Crea contenuto negozio direttamente qui (come fa inventario)
+        self.testo_monete_negozio = ft.Text(f"Monete disponibili: {self.monete}", size=16, color=ft.Colors.AMBER_400)
         
         # Create shop items localmente
         oggetti_negozio = [
@@ -2789,7 +2653,7 @@ class AvventuraEpica:
             oggetti_controls.append(oggetto_card)
         
         negozio_controls = [
-            testo_monete_negozio,
+            self.testo_monete_negozio,
             ft.Container(height=20),
             ft.Column(oggetti_controls, spacing=10)
         ]
@@ -2838,8 +2702,10 @@ class AvventuraEpica:
             self.haptic_feedback("success")
             if self.audio_abilitato:
                 self.riproduci_effetto("monete")
-            # Aggiorna la vista per riflettere i cambiamenti
-            self.page.go("/negozio")
+            # Aggiorna il display delle monete
+            if hasattr(self, 'testo_monete_negozio'):
+                self.testo_monete_negozio.value = f"Monete disponibili: {self.monete}"
+                self.page.update()
         else:
             self.aggiorna_storia(f"❌ Non hai abbastanza monete per {nome} (servono {prezzo}, ne hai {self.monete})")
             self.haptic_feedback("error")
@@ -3429,23 +3295,20 @@ class AvventuraEpica:
             # Controlla sblocco gatti
             self.controlla_sblocco_gatti()
             
-            # Progressione area per combattimento vinto (assicurati che l'area esista)
-            if self.area_attuale not in self.progressione_area:
-                self.progressione_area[self.area_attuale] = 0
-                print(f"⚠️ Aggiunta area mancante in progressione_area: {self.area_attuale}")
-            
-            self.progressione_area[self.area_attuale] += 1
-            print(f" Progressione {self.area_attuale}: {self.progressione_area[self.area_attuale]}")
-            
-            # Controlla se il boss dell'area è stato sbloccato per la prima volta
-            if (self.progressione_area[self.area_attuale] >= 100 and 
-                self.area_attuale not in self.boss_notifications_mostrate):
-                boss_sconfitto = self.controlla_boss_sconfitto(self.area_attuale)
-                if not boss_sconfitto:
-                    # Mostra notifica sblocco boss solo una volta
-                    self.boss_notifications_mostrate.add(self.area_attuale)
-                    self.mostra_notifica_boss_sbloccato(self.area_attuale)
-                    messaggio += f"\n Devi prima sconfiggere il boss di quest'area per procedere!"
+            # Progressione area per combattimento vinto
+            if self.area_attuale in self.progressione_area:
+                self.progressione_area[self.area_attuale] += 1
+                print(f" Progressione {self.area_attuale}: {self.progressione_area[self.area_attuale]}")
+                
+                # Controlla se il boss dell'area è stato sbloccato per la prima volta
+                if (self.progressione_area[self.area_attuale] >= 100 and 
+                    self.area_attuale not in self.boss_notifications_mostrate):
+                    boss_sconfitto = self.controlla_boss_sconfitto(self.area_attuale)
+                    if not boss_sconfitto:
+                        # Mostra notifica sblocco boss solo una volta
+                        self.boss_notifications_mostrate.add(self.area_attuale)
+                        self.mostra_notifica_boss_sbloccato(self.area_attuale)
+                        messaggio += f"\n Devi prima sconfiggere il boss di quest'area per procedere!"
             
             messaggio += f" +{oro_guadagnato} oro\n +{exp_guadagnata} esperienza"
             
@@ -4474,23 +4337,13 @@ class AvventuraEpica:
         
     def aggiorna_storia(self, testo):
         """Aggiorna testo storia"""
-        if hasattr(self, 'area_storia') and self.area_storia:
-            try:
-                self.area_storia.value = testo
-                self.area_storia.update()
-            except AssertionError:
-                # Il controllo non è ancora aggiunto alla pagina, salva il testo per dopo
-                self.ultimo_testo_storia = testo
+        self.area_storia.value = testo
+        self.page.update()
         
     def aggiorna_stats(self, testo):
         """Aggiorna statistiche giocatore"""
-        if hasattr(self, 'area_stats') and self.area_stats:
-            try:
-                self.area_stats.value = testo
-                self.area_stats.update()
-            except AssertionError:
-                # Il controllo non è ancora aggiunto alla pagina, salva il testo per dopo
-                self.ultimo_testo_stats = testo
+        self.area_stats.value = testo
+        self.page.update()
         
     def inizia_gioco(self, e):
         """Inizia nuova avventura"""
@@ -4628,13 +4481,11 @@ class AvventuraEpica:
             testo = f"Esplori {area} accuratamente\n"
             testo += f" +{exp_guadagnata} EXP per l'esplorazione"
             
-        # Progressione area (assicurati che l'area esista)
-        if area not in self.progressione_area:
-            self.progressione_area[area] = 0
-            print(f"⚠️ Aggiunta area mancante in progressione_area: {area}")
-        
-        self.progressione_area[area] += 1
-        print(f" Progressione {area}: {self.progressione_area[area]}")
+        # Progressione area (solo se area valida)
+        if area in self.progressione_area:
+            self.progressione_area[area] += 1
+        else:
+            print(f"⚠️ Area non trovata in progressione_area: {area}")
         
         # Controlla livello
         testo_livello = self.gestisci_livello()
@@ -4812,13 +4663,10 @@ class AvventuraEpica:
                     
                     self.aggiorna_storia(f"😻 {gatto['nome']} è felice della vittoria!")
                     
-                    # Aggiorna progressione area dopo vittoria (assicurati che l'area esista)
-                    if self.area_attuale not in self.progressione_area:
-                        self.progressione_area[self.area_attuale] = 0
-                        print(f"⚠️ Aggiunta area mancante in progressione_area: {self.area_attuale}")
-                    
-                    self.progressione_area[self.area_attuale] += 1
-                    self.aggiorna_storia(f"Progressione {self.area_attuale}: {self.progressione_area[self.area_attuale]}/100")
+                    # Aggiorna progressione area dopo vittoria
+                    if self.area_attuale in self.progressione_area:
+                        self.progressione_area[self.area_attuale] += 1
+                        self.aggiorna_storia(f"Progressione {self.area_attuale}: {self.progressione_area[self.area_attuale]}/100")
                     
                 else:
                     # Ferma musica di battaglia SUBITO
@@ -5594,7 +5442,7 @@ class AvventuraEpica:
         if self.schermata_corrente != "gioco":
             self.page.go("/gioco")
         else:
-            self.page.go("/gioco")  # Forza il refresh della vista
+            self.crea_menu_gioco()
         
     def muovi(self, direzione):
         """Movimento con controlli migliorati"""
@@ -5668,7 +5516,7 @@ class AvventuraEpica:
             if self.schermata_corrente != "gioco":
                 self.page.go("/gioco")
             else:
-                self.page.go("/gioco")  # Forza il refresh della vista
+                self.crea_menu_gioco()
         else:
             testo = "❌ Niente da raccogliere qui."
             self.haptic_feedback("warning")
