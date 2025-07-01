@@ -2185,7 +2185,7 @@ class AvventuraEpica:
             ),
             ft.Container(height=20),
             ft.ElevatedButton(
-                text="◀ Torna al Menu",
+                text="Torna al Menu",
                 on_click=lambda e: self.page.go("/"),
                 width=200,
                 height=50,
@@ -2439,26 +2439,29 @@ class AvventuraEpica:
         # Info mostro
         if self.mostro_attuale:
             info_mostro = ft.Text(
-                f"🧌 {self.mostro_attuale['nome']}\n HP: {self.hp_mostro_attuale}/{self.mostro_attuale['hp']}\n Attacco: {self.mostro_attuale['attacco']}", 
+                f"{self.mostro_attuale['nome']}\n HP: {self.hp_mostro_attuale}/{self.mostro_attuale['hp']}\n Attacco: {self.mostro_attuale['attacco']}", 
                 size=18, 
                 text_align=ft.TextAlign.CENTER,
-                color=ft.Colors.ORANGE_300
+                color=ft.Colors.ORANGE_300,
+                semantics_label=f"Nemico: {self.mostro_attuale['nome']}, Punti vita {self.hp_mostro_attuale} su {self.mostro_attuale['hp']}, Attacco {self.mostro_attuale['attacco']}"
             )
         else:
             info_mostro = ft.Text(
-                "🔍 Nessun mostro in vista\nClicca 'Cerca Mostri' per iniziare una battaglia!", 
+                "Nessun mostro in vista\nClicca 'Cerca Mostri' per iniziare una battaglia!", 
                 size=16, 
                 text_align=ft.TextAlign.CENTER,
-                color=ft.Colors.GREY_400
+                color=ft.Colors.GREY_400,
+                semantics_label="Nessun nemico presente. Cerca mostri per iniziare una battaglia"
             )
         
         # Info giocatore
         gatto_info = self.gatti[self.gatto_attivo]
         info_giocatore = ft.Text(
-            f" {gatto_info['emoji']} {gatto_info['nome']}\n Vita: {self.vita}/{self.vita_massima}\n Attacco: {self.calcola_attacco_totale()}\n Energia: {self.risorse['energia']}", 
+            f"{gatto_info['nome']}\n Vita: {self.vita}/{self.vita_massima}\n Attacco: {self.calcola_attacco_totale()}\n Energia: {self.risorse['energia']}", 
             size=18, 
             text_align=ft.TextAlign.CENTER,
-            color=ft.Colors.GREEN_300
+            color=ft.Colors.GREEN_300,
+            semantics_label=f"Giocatore: {gatto_info['nome']}, Vita {self.vita} su {self.vita_massima}, Attacco {self.calcola_attacco_totale()}, Energia {self.risorse['energia']}"
         )
         
         # Crea log combattimento locale (invece di self.log_combattimento)
@@ -2475,7 +2478,9 @@ class AvventuraEpica:
             bgcolor=ft.Colors.DEEP_ORANGE_900,
             color=ft.Colors.AMBER_100,
             border_color=ft.Colors.RED_400,
-            focused_border_color=ft.Colors.RED_300
+            focused_border_color=ft.Colors.RED_300,
+            label="Log del combattimento",
+            hint_text="Cronologia delle azioni di combattimento"
         )
         
         # Pulsanti combattimento
@@ -2564,7 +2569,7 @@ class AvventuraEpica:
             ),
             ft.Container(height=20),
             ft.ElevatedButton(
-                text="◀ Torna al Gioco",
+                text="Torna al Gioco",
                 on_click=lambda e: self.page.go("/gioco"),
                 width=200,
                 height=50,
@@ -2598,7 +2603,7 @@ class AvventuraEpica:
         )
         
         # Crea contenuto negozio direttamente qui (come fa inventario)
-        testo_monete_locale = ft.Text(f"Monete disponibili: {self.monete}", size=16, color=ft.Colors.AMBER_400)
+        self.testo_monete_negozio = ft.Text(f"Monete disponibili: {self.monete}", size=16, color=ft.Colors.AMBER_400)
         
         # Create shop items localmente
         oggetti_negozio = [
@@ -2633,7 +2638,7 @@ class AvventuraEpica:
             oggetti_controls.append(oggetto_card)
         
         negozio_controls = [
-            testo_monete_locale,
+            self.testo_monete_negozio,
             ft.Container(height=20),
             ft.Column(oggetti_controls, spacing=10)
         ]
@@ -2682,13 +2687,13 @@ class AvventuraEpica:
             self.haptic_feedback("success")
             if self.audio_abilitato:
                 self.riproduci_effetto("monete")
-            # Ricarica la vista negozio per aggiornare le monete
-            self.page.go("/negozio")
+            # Aggiorna il display delle monete
+            if hasattr(self, 'testo_monete_negozio'):
+                self.testo_monete_negozio.value = f"Monete disponibili: {self.monete}"
+                self.page.update()
         else:
             self.aggiorna_storia(f"❌ Non hai abbastanza monete per {nome} (servono {prezzo}, ne hai {self.monete})")
             self.haptic_feedback("error")
-            # Ricarica la vista negozio per aggiornare le monete
-            self.page.go("/negozio")
     
     def crea_vista_gatti(self):
         """Crea la vista di gestione gatti"""
@@ -3642,7 +3647,8 @@ class AvventuraEpica:
             size=24, 
             weight=ft.FontWeight.BOLD, 
             text_align=ft.TextAlign.CENTER,
-            color=ft.Colors.RED_400
+            color=ft.Colors.RED_400,
+            semantics_label="Titolo principale: Avventura in corso"
         )
         
         # AZIONI INCREMENTALI - Prima riga
