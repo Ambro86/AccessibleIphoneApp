@@ -2102,19 +2102,58 @@ class AvventuraEpica:
             color=ft.Colors.AMBER_400
         )
         
+        # MANTIENI i TextField globali per la funzionalità ma con struttura accessibile
+        # Aggiorna i valori se esistono già
+        if hasattr(self, 'area_storia') and self.area_storia:
+            area_storia_locale = self.area_storia
+        else:
+            self.area_storia = ft.TextField(
+                value="🎮 Benvenuto nell'Avventura Incrementale!\n Compagni gatti con abilità speciali\n Raccogli risorse e costruisci\n Combatti mostri e sali di livello\n🍽️ Gestisci cibo e acqua per energia\n🎵 Audio immersivo e feedback aptico\n\nPremi 'Inizia Avventura' per cominciare!",
+                multiline=True,
+                read_only=True,
+                expand=True,
+                min_lines=10,
+                max_lines=15,
+                text_size=14,
+                bgcolor=ft.Colors.DEEP_PURPLE_900,
+                color=ft.Colors.AMBER_100,
+                border_color=ft.Colors.AMBER_400,
+                focused_border_color=ft.Colors.AMBER_300
+            )
+            area_storia_locale = self.area_storia
+        
+        if hasattr(self, 'area_stats') and self.area_stats:
+            area_stats_locale = self.area_stats
+        else:
+            self.area_stats = ft.TextField(
+                value=" Statistiche Giocatore:\n Livello 1 •  100/100 HP •  100 monete\n Attacco: 15 •  Difesa: 0\n EXP: 0/100",
+                multiline=True,
+                read_only=True,
+                min_lines=4,
+                max_lines=6,
+                text_size=14,
+                bgcolor=ft.Colors.BLUE_GREY_900,
+                color=ft.Colors.CYAN_100,
+                border_color=ft.Colors.CYAN_400,
+                focused_border_color=ft.Colors.CYAN_300
+            )
+            area_stats_locale = self.area_stats
+        
+        gioco_controls = [
+            area_storia_locale,
+            area_stats_locale,
+            ft.Column(pulsanti_gioco, horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=15)
+        ]
+        
         content = ft.Column([
             titolo_gioco,
             ft.Container(height=20),
             ft.Container(
-                content=ft.Column([
-                    self.area_storia,
-                    self.area_stats,
-                    ft.Column(pulsanti_gioco, horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=15)
-                ], spacing=10),
-                height=400,
+                content=ft.Column(gioco_controls, spacing=10),
                 bgcolor=ft.Colors.GREY_800,
                 border_radius=10,
-                padding=10
+                padding=10,
+                expand=True
             ),
             ft.Container(height=20),
             self.crea_pulsante_indietro()
@@ -2390,12 +2429,10 @@ class AvventuraEpica:
             color=ft.Colors.GREEN_300
         )
         
-        # Area log combattimento - mantieni il valore esistente se c'è
+        # Crea log combattimento locale (invece di self.log_combattimento)
         valore_log = "Preparati al combattimento!"
-        if hasattr(self, 'log_combattimento') and self.log_combattimento and self.log_combattimento.value:
-            valore_log = self.log_combattimento.value
         
-        self.log_combattimento = ft.TextField(
+        log_combattimento_locale = ft.TextField(
             value=valore_log,
             multiline=True,
             read_only=True,
@@ -2483,7 +2520,7 @@ class AvventuraEpica:
                     ft.Container(height=10),
                     info_giocatore,
                     ft.Container(height=20),
-                    self.log_combattimento,
+                    log_combattimento_locale,
                     ft.Container(height=20),
                     ft.Column(pulsanti_combattimento, horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=10)
                 ], spacing=10),
@@ -2518,13 +2555,10 @@ class AvventuraEpica:
             color=ft.Colors.ORANGE_400
         )
         
-        # Crea un campo monete che possiamo aggiornare
-        self.testo_monete_negozio = ft.Text(f"Monete disponibili: {self.monete}", size=16, color=ft.Colors.AMBER_400)
+        # Crea contenuto negozio direttamente qui (come fa inventario)
+        testo_monete_locale = ft.Text(f"Monete disponibili: {self.monete}", size=16, color=ft.Colors.AMBER_400)
         
-        # Shop content
-        pulsante_indietro = self.crea_pulsante_indietro()
-        
-        # Create shop items
+        # Create shop items localmente
         oggetti_negozio = [
             {"nome": "Pozione Vita", "prezzo": 50, "descrizione": "Ripristina 30 HP"},
             {"nome": "Spada di Ferro", "prezzo": 200, "descrizione": "Attacco +10"},
@@ -2556,22 +2590,24 @@ class AvventuraEpica:
             )
             oggetti_controls.append(oggetto_card)
         
+        negozio_controls = [
+            testo_monete_locale,
+            ft.Container(height=20),
+            ft.Column(oggetti_controls, spacing=10)
+        ]
+        
         content = ft.Column([
             titolo,
             ft.Container(height=20),
             ft.Container(
-                content=ft.Column([
-                    self.testo_monete_negozio,
-                    ft.Container(height=20),
-                    ft.Column(oggetti_controls, spacing=10)
-                ], spacing=10),
+                content=ft.Column(negozio_controls, spacing=10),
                 height=400,
                 bgcolor=ft.Colors.GREY_800,
                 border_radius=10,
                 padding=10
             ),
             ft.Container(height=20),
-            pulsante_indietro
+            self.crea_pulsante_indietro()
         ], scroll=ft.ScrollMode.AUTO, spacing=20, expand=True)
         
         return ft.View(
@@ -2614,10 +2650,7 @@ class AvventuraEpica:
             if self.audio_abilitato:
                 self.riproduci_effetto("monete")
                 print(f"🔊 DEBUG: Effetto monete riprodotto")
-            # Aggiorna il display delle monete dinamicamente
-            if hasattr(self, 'testo_monete_negozio'):
-                self.testo_monete_negozio.value = f"Monete disponibili: {self.monete}"
-                self.testo_monete_negozio.update()
+            # Rimosso: aggiornamento testo_monete_negozio (ora locale)
             print(f"🔄 DEBUG: Monete aggiornate a {self.monete}")
         else:
             print(f"❌ DEBUG: Non abbastanza monete: {self.monete} < {prezzo}")
@@ -2642,8 +2675,7 @@ class AvventuraEpica:
             "Scegli il tuo gatto attivo tra quelli disponibili",
             size=16,
             text_align=ft.TextAlign.CENTER,
-            color=ft.Colors.GREY_400,
-            semantics_label="Istruzioni: seleziona quale gatto vuoi come compagno attivo"
+            color=ft.Colors.GREY_400
         )
         
         # Lista gatti
@@ -2924,19 +2956,17 @@ class AvventuraEpica:
             color=ft.Colors.PURPLE_400
         )
         
+        # Crea contenuto rinomina gatto direttamente qui (come fa inventario)
         if not self.gatto_attivo or not self.gatti[self.gatto_attivo].get("sbloccato", False):
-            content = ft.Column([
-                titolo,
-                ft.Container(height=20),
-                ft.Text("Nessun gatto attivo disponibile", size=16, text_align=ft.TextAlign.CENTER),
-                ft.Container(height=20),
-                self.crea_pulsante_indietro()
-            ], scroll=ft.ScrollMode.AUTO, spacing=20, expand=True)
+            # Caso: nessun gatto disponibile
+            rinomina_controls = [
+                ft.Text("Nessun gatto attivo disponibile", size=16, text_align=ft.TextAlign.CENTER)
+            ]
         else:
             gatto_info = self.gatti[self.gatto_attivo]
             
-            # TextField per nuovo nome
-            self.campo_nuovo_nome = ft.TextField(
+            # TextField locale per nuovo nome (invece di self.campo_nuovo_nome)
+            campo_nuovo_nome_locale = ft.TextField(
                 value=gatto_info["nome"],
                 width=300,
                 autofocus=True,
@@ -2944,7 +2974,7 @@ class AvventuraEpica:
             )
             
             def conferma_rinomina(e):
-                nuovo_nome = self.campo_nuovo_nome.value.strip()
+                nuovo_nome = campo_nuovo_nome_locale.value.strip()
                 if nuovo_nome and nuovo_nome != gatto_info["nome"]:
                     self.gatti[self.gatto_attivo]["nome"] = nuovo_nome
                     self.gatti[self.gatto_attivo]["nome_personalizzato"] = True
@@ -2952,12 +2982,10 @@ class AvventuraEpica:
                     self.haptic_feedback("light")
                 self.torna_indietro()
             
-            content = ft.Column([
-                titolo,
-                ft.Container(height=20),
+            rinomina_controls = [
                 ft.Text(f"Rinomina: {gatto_info['emoji']} {gatto_info['nome']}", size=18, text_align=ft.TextAlign.CENTER),
                 ft.Container(height=20),
-                self.campo_nuovo_nome,
+                campo_nuovo_nome_locale,
                 ft.Container(height=20),
                 ft.Row([
                     ft.ElevatedButton(
@@ -2981,10 +3009,22 @@ class AvventuraEpica:
                         color=ft.Colors.WHITE,
                         tooltip="Annulla la rinomina"
                     )
-                ], alignment=ft.MainAxisAlignment.CENTER),
-                ft.Container(height=20),
-                self.crea_pulsante_indietro()
-            ], scroll=ft.ScrollMode.AUTO, spacing=20, expand=True, horizontal_alignment=ft.CrossAxisAlignment.CENTER)
+                ], alignment=ft.MainAxisAlignment.CENTER)
+            ]
+        
+        content = ft.Column([
+            titolo,
+            ft.Container(height=20),
+            ft.Container(
+                content=ft.Column(rinomina_controls, spacing=10, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
+                height=400,
+                bgcolor=ft.Colors.GREY_800,
+                border_radius=10,
+                padding=10
+            ),
+            ft.Container(height=20),
+            self.crea_pulsante_indietro()
+        ], scroll=ft.ScrollMode.AUTO, spacing=20, expand=True)
         
         return ft.View(
             "/rinomina_gatto",
@@ -3106,7 +3146,7 @@ class AvventuraEpica:
     def inizia_combattimento(self, e):
         """Inizia un nuovo combattimento"""
         if self.risorse["energia"] < 20:
-            self.aggiorna_log_combattimento(" Non hai abbastanza energia per combattere!")
+            # Rimosso: self.aggiorna_log_combattimento(" Non hai abbastanza energia per combattere!")
             self.haptic_feedback("warning")
             return
         
@@ -3141,7 +3181,7 @@ class AvventuraEpica:
             self.avvia_musica_battaglia("normale")
         
         messaggio_log = f"Incontri un {self.mostro_attuale['nome']}!\n{self.mostro_attuale['verso']}\n\nIl combattimento inizia!"
-        self.aggiorna_log_combattimento(messaggio_log)
+        # Rimosso: self.aggiorna_log_combattimento(messaggio_log)
         self.haptic_feedback("medium")
         
         # Aggiorna solo le info, non ricreare la schermata
@@ -3255,7 +3295,7 @@ class AvventuraEpica:
                 self.haptic_feedback("light")
         
         self.round_combattimento += 1
-        self.aggiorna_log_combattimento(messaggio)
+        # Rimosso: self.aggiorna_log_combattimento(messaggio)
         self.aggiorna_info_combattimento()
     
     def difendi_combattimento(self, e):
@@ -3285,7 +3325,7 @@ class AvventuraEpica:
             self.haptic_feedback("light")
         
         self.round_combattimento += 1
-        self.aggiorna_log_combattimento(messaggio)
+        # Rimosso: self.aggiorna_log_combattimento(messaggio)
         # Non ricreare l'intera schermata, solo aggiornare le info
         self.aggiorna_info_combattimento()
     
@@ -3310,7 +3350,7 @@ class AvventuraEpica:
             cura = 10
             
         if not oggetto_da_usare:
-            self.aggiorna_log_combattimento("Non hai oggetti curativi da usare!")
+            # Rimosso: self.aggiorna_log_combattimento("Non hai oggetti curativi da usare!")
             return
             
         # Usa l'oggetto
@@ -3343,7 +3383,7 @@ class AvventuraEpica:
             self.haptic_feedback("light")
         
         self.round_combattimento += 1
-        self.aggiorna_log_combattimento(messaggio)
+        # Rimosso: self.aggiorna_log_combattimento(messaggio)
         # Non ricreare l'intera schermata, solo aggiornare le info
         self.aggiorna_info_combattimento()
     
@@ -3383,15 +3423,9 @@ class AvventuraEpica:
                 self.haptic_feedback("medium")
         
         self.round_combattimento += 1
-        self.aggiorna_log_combattimento(messaggio)
+        # Rimosso: self.aggiorna_log_combattimento(messaggio)
         # Non ricreare l'intera schermata, solo aggiornare le info
         self.aggiorna_info_combattimento()
-    
-    def aggiorna_log_combattimento(self, messaggio):
-        """Aggiorna il log del combattimento"""
-        if hasattr(self, 'log_combattimento') and self.log_combattimento:
-            self.log_combattimento.value = messaggio
-            self.page.update()
     
     def aggiorna_info_combattimento(self):
         """Aggiorna le informazioni di combattimento e ricrea i pulsanti se necessario"""
@@ -7169,6 +7203,9 @@ class AvventuraEpica:
             self.haptic_feedback("success")
             self.aggiorna_storia("📂 Avventura caricata con successo!")
             self.descrivi_situazione_attuale()
+            
+            # Vai alla vista gioco dopo il caricamento
+            self.page.go("/gioco")
             
         except Exception as ex:
             self.aggiorna_storia(f"❌ Errore caricamento: {str(ex)}")

@@ -1,35 +1,49 @@
-00. ❌ Primo elemento vuoto in VoiceOver → ✅ Struttura vista come inventario
+
+00. ❌ Variabili self.* nel contenuto → ✅ Creare tutto localmente nella vista
 • 
-Problema: VoiceOver legge un elemento vuoto come primo elemento invece del titolo della vista.
+Problema: Usare variabili self.* (come self.area_storia, self.log_combattimento) o chiamare funzioni esterne self.crea_contenuto_*() nel contenuto principale delle viste fa sì che VoiceOver legga elementi nascosti invece del titolo come primo elemento.
 • 
-✅ SOLUZIONE: Usare ESATTAMENTE la struttura di crea_vista_inventario che funziona:
+❌ SBAGLIATO - Variabili esterne:
+content = ft.Column([
+    titolo,                    # <- VoiceOver NON vede questo come primo
+    self.area_storia,          # <- VoiceOver vede elementi interni di questo!
+    self.area_stats
+])
+
+❌ SBAGLIATO - Funzioni esterne:
+content = ft.Column([
+    titolo,                    # <- VoiceOver NON vede questo come primo
+    self.crea_contenuto_*(),   # <- VoiceOver vede primi elementi della funzione!
+])
+
+✅ CORRETTO - Tutto locale:
+# Crea TextField/controlli locali (non self.*)
+area_storia_locale = ft.TextField(
+    value=self.area_storia.value if hasattr(self, 'area_storia') and self.area_storia else "Default",
+    multiline=True, read_only=True, ...
+)
+
+controls_locali = [
+    area_storia_locale,
+    ft.Text("Info locale", ...)
+]
 
 content = ft.Column([
-    titolo,                    # <- PRIMO elemento = titolo
-    ft.Container(height=20),   # <- Spaziatura
-    ft.Container(              # <- Contenuto principale in Container
-        content=ft.Column([    # <- Column interno per il contenuto
-            elemento1,
-            elemento2,
-            pulsanti
-        ], spacing=10),
-        bgcolor=ft.Colors.GREY_800,
-        border_radius=10,
-        padding=10
-    ),
-    ft.Container(height=20),   # <- Spaziatura finale
-    self.crea_pulsante_indietro()  # <- Pulsante indietro alla fine
-], scroll=ft.ScrollMode.AUTO, spacing=20, expand=True)
+    titolo,                    # <- VoiceOver vede questo come PRIMO!
+    ft.Container(height=20),
+    ft.Container(
+        content=ft.Column(controls_locali, spacing=10),
+        height=400, bgcolor=ft.Colors.GREY_800, border_radius=10, padding=10
+    )
+])
 
-❌ NON mettere altri elementi prima del titolo:
-- ❌ self.area_storia direttamente dopo titolo
-- ❌ sottotitolo direttamente dopo titolo  
-- ❌ pulsante_indietro come primo elemento
-- ❌ AppBar (rimuovere se presente)
+✅ Le modifiche ai controlli locali si propagano globalmente tramite callbacks:
+def conferma_azione(e):
+    valore = campo_locale.value         # <- Legge dal controllo LOCALE
+    self.dati_globali = valore          # <- Salva nei dati GLOBALI
+    self.aggiorna_storia("Modificato!") # <- Effetto GLOBALE
 
-✅ Tutto il contenuto va DENTRO il Container principale!
-
-Il trucco era: mettere il contenuto esterno dentro un ft.Container() con un ft.Column() interno
+REGOLA: Mai usare self.* direttamente nel content principale, creare sempre controlli locali che leggono/scrivono dai dati globali.
 
 0. ❌ semantics_label nei titoli → ✅ Non usare semantics_label sui titoli delle viste
 • 

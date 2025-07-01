@@ -10,8 +10,10 @@
   "esperienza_prossimo_livello": 100,
   "attacco_base": 15,
   "difesa": 0,
-  "monete": 100,
-  "inventario": {},
+  "monete": 0,
+  "inventario": {
+    "Pozione Vita": 2
+  },
   "equipaggiamento": {
     "arma": null,
     "armatura": null,
