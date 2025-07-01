@@ -2111,6 +2111,7 @@ class AvventuraEpica:
                     self.area_stats,
                     ft.Column(pulsanti_gioco, horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=15)
                 ], spacing=10),
+                height=400,
                 bgcolor=ft.Colors.GREY_800,
                 border_radius=10,
                 padding=10
@@ -2142,12 +2143,74 @@ class AvventuraEpica:
             color=ft.Colors.PURPLE_400
         )
         
-        # Crea contenuto direttamente qui (come fa inventario)
+        # Crea contenuto impostazioni direttamente qui (come fa inventario)
+        # Toggle audio e haptic
+        toggle_audio = ft.Switch(
+            label="Audio Attivato",
+            value=self.audio_abilitato,
+            on_change=self.toggle_audio_callback,
+            tooltip="Attiva o disattiva tutti gli effetti audio"
+        )
+        
+        toggle_haptic = ft.Switch(
+            label="Vibrazione Attivata",
+            value=self.haptic_abilitato,
+            on_change=self.toggle_haptic_callback,
+            tooltip="Attiva o disattiva il feedback aptico"
+        )
+        
+        # Slider volume musica per tab
+        self.volume_musica_label_tab = ft.Text(f"Volume Musica: {int(self.volume_musica * 100)}%")
+        slider_volume_musica = ft.Slider(
+            min=0,
+            max=1,
+            value=self.volume_musica,
+            divisions=10,
+            on_change=self.cambia_volume_musica_tab,
+            tooltip="Regola il volume della musica di sottofondo"
+        )
+        
+        # Slider volume effetti per tab
+        self.volume_effetti_label_tab = ft.Text(f"Volume Effetti: {int(self.volume_effetti * 100)}%")
+        slider_volume_effetti = ft.Slider(
+            min=0,
+            max=1,
+            value=self.volume_effetti,
+            divisions=10,
+            on_change=self.cambia_volume_effetti_tab,
+            tooltip="Regola il volume degli effetti sonori"
+        )
+        
+        # Pulsante test audio
+        test_audio_btn = ft.ElevatedButton(
+            "Testa Audio",
+            on_click=self.testa_audio,
+            width=200,
+            tooltip="Riproduci un suono di test"
+        )
+        
+        impostazioni_controls = [
+            ft.Text("Audio", size=16, weight=ft.FontWeight.BOLD),
+            toggle_audio,
+            ft.Container(height=10),
+            self.volume_musica_label_tab,
+            slider_volume_musica,
+            ft.Container(height=10),
+            self.volume_effetti_label_tab,
+            slider_volume_effetti,
+            ft.Container(height=10),
+            test_audio_btn,
+            ft.Divider(),
+            ft.Text("Feedback", size=16, weight=ft.FontWeight.BOLD),
+            toggle_haptic,
+        ]
+        
         content = ft.Column([
             titolo,
             ft.Container(height=20),
             ft.Container(
-                content=ft.Column(self.crea_contenuto_impostazioni(), spacing=10),
+                content=ft.Column(impostazioni_controls, spacing=10),
+                height=400,
                 bgcolor=ft.Colors.GREY_800,
                 border_radius=10,
                 padding=10
@@ -2179,12 +2242,41 @@ class AvventuraEpica:
             color=ft.Colors.ORANGE_400
         )
         
-        # Crea contenuto direttamente qui (come fa inventario)
+        # Crea contenuto info direttamente qui (come fa inventario)
+        info_controls = [
+            ft.Container(height=20),
+            ft.Text("AVVENTURA EPICA", size=24, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER),
+            ft.Container(height=10),
+            ft.Text(f" Versione: {self.versione}", size=16),
+            ft.Text(f"Autore: {self.autore}", size=16),
+            ft.Text("Data rilascio: 18 giugno 2025", size=16),
+            ft.Container(height=20),
+            ft.Text("Descrizione:", size=16, weight=ft.FontWeight.BOLD),
+            ft.Text(
+                "Un emozionante RPG accessibile con audio immersivo e feedback aptico. "
+                "Esplora 16 aree diverse, combatti mostri, raccogli tesori, visita negozi "
+                "e diventa il nuovo re!",
+                size=14,
+                text_align=ft.TextAlign.CENTER
+            ),
+            ft.Container(height=20),
+            ft.Text("Caratteristiche:", size=16, weight=ft.FontWeight.BOLD),
+            ft.Text("16 aree uniche da esplorare", size=14),
+            ft.Text("Sistema di combattimento con livellamento", size=14),
+            ft.Text("Negozi e mercanti", size=14),
+            ft.Text("Sistema di inventario ed equipaggiamento", size=14),
+            ft.Text("Audio immersivo per ogni area", size=14),
+            ft.Text("Feedback aptico per un'esperienza tattile", size=14),
+            ft.Text("Salvataggio e caricamento partite", size=14),
+            ft.Text("Completamente accessibile con screen reader", size=14),
+        ]
+        
         content = ft.Column([
             titolo,
             ft.Container(height=20),
             ft.Container(
-                content=ft.Column(self.crea_contenuto_info(), spacing=10),
+                content=ft.Column(info_controls, spacing=10),
+                height=400,
                 bgcolor=ft.Colors.GREY_800,
                 border_radius=10,
                 padding=10
@@ -2395,6 +2487,7 @@ class AvventuraEpica:
                     ft.Container(height=20),
                     ft.Column(pulsanti_combattimento, horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=10)
                 ], spacing=10),
+                height=400,
                 bgcolor=ft.Colors.GREY_800,
                 border_radius=10,
                 padding=10
@@ -2472,6 +2565,7 @@ class AvventuraEpica:
                     ft.Container(height=20),
                     ft.Column(oggetti_controls, spacing=10)
                 ], spacing=10),
+                height=400,
                 bgcolor=ft.Colors.GREY_800,
                 border_radius=10,
                 padding=10
@@ -2671,6 +2765,7 @@ class AvventuraEpica:
                     ft.Container(height=20),
                     ft.Column(pulsanti_azioni, horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=10)
                 ], spacing=10),
+                height=400,
                 bgcolor=ft.Colors.GREY_800,
                 border_radius=10,
                 padding=10
@@ -6029,6 +6124,7 @@ class AvventuraEpica:
                         tooltip="Torna al gioco"
                     )
                 ], spacing=10),
+                height=400,
                 bgcolor=ft.Colors.GREY_800,
                 border_radius=10,
                 padding=10
