@@ -2253,7 +2253,7 @@ class AvventuraEpica:
         
 
     def crea_vista_gioco(self):
-        """Test 6b: TUTTO incluso azioni_incrementali_possibili() + height=800"""
+        """Soluzione A: Container con scroll invece di height fissa"""
         titolo = ft.Text("AVVENTURA IN CORSO", size=24, weight=ft.FontWeight.BOLD)
         
         # Valori dinamici
@@ -2299,7 +2299,7 @@ class AvventuraEpica:
         self.area_storia = area_storia_locale
         self.area_stats = area_stats_locale
         
-        # AZIONI_INCREMENTALI_POSSIBILI()
+        # Pulsanti dinamici
         pulsanti_gioco = []
         
         # Azioni incrementali dinamiche
@@ -2395,13 +2395,14 @@ class AvventuraEpica:
             spacing=15
         )
         
-        # Metti tutto insieme
+        # Controlli di gioco
         gioco_controls = [
             area_storia_locale,
             area_stats_locale,
             colonna_pulsanti
         ]
         
+        # Pulsante menu
         pulsante_menu = ft.ElevatedButton(
             text="Torna al Menu",
             on_click=lambda e: self.page.go("/"),
@@ -2412,17 +2413,23 @@ class AvventuraEpica:
             tooltip="Torna al menu principale"
         )
         
+        # SOLUZIONE A: Scroll interno e niente height fissa
         content = ft.Column([
             titolo,
             ft.Container(
-                content=ft.Column(gioco_controls, spacing=10),
-                height=800,  # CAMBIATO A 800
+                content=ft.Column(
+                    gioco_controls, 
+                    spacing=10,
+                    scroll=ft.ScrollMode.AUTO  # Scroll qui dentro
+                ),
+                # NIENTE height - usa expand
                 bgcolor=ft.Colors.GREY_800,
                 border_radius=10,
-                padding=10
+                padding=10,
+                expand=True  # Expand invece di height fissa
             ),
             pulsante_menu
-        ], scroll=ft.ScrollMode.AUTO, spacing=30, expand=True)
+        ], spacing=30, expand=True)  # Niente scroll qui
         
         return ft.View(
             "/gioco",
