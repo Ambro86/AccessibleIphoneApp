@@ -17,6 +17,7 @@ class AvventuraEpica:
         
 
     def analizza_accessibilita(self, view):
+        return  # DEBUG TEMPORANEAMENTE DISABILITATO
         print(f"\n🔍 ========== ANALISI ACCESSIBILITÀ ==========\n🎯 VIEW: {view.route}\n📱 PIATTAFORMA: {self.page.platform}")
         
         # Statistiche generali
@@ -2118,6 +2119,10 @@ class AvventuraEpica:
                 vista = self.crea_vista_gestione_reliquie()
                 self.page.views.append(vista)
                 self.analizza_accessibilita(vista)
+            case "/salvataggio_conferma":
+                vista = self.crea_vista_salvataggio_conferma()
+                self.page.views.append(vista)
+                self.analizza_accessibilita(vista)
             case _:
                 vista = self.crea_vista_menu_principale()
                 self.page.views.append(vista)
@@ -2155,7 +2160,8 @@ class AvventuraEpica:
             "gestione_gatti": "/gatti",
             "inventario": "/inventario",
             "rinomina_gatto": "/rinomina_gatto",
-            "gestione_reliquie": "/gestione_reliquie"
+            "gestione_reliquie": "/gestione_reliquie",
+            "salvataggio_conferma": "/salvataggio_conferma"
         }
 
         route = route_map.get(nuova_schermata, "/")
@@ -2428,14 +2434,20 @@ class AvventuraEpica:
         return ft.View(
             "/gioco",
             controls=[
+                titolo,
                 ft.Container(
-                    content=content,
-                    bgcolor=ft.Colors.GREY_900,
-                    padding=20,
+                    content=ft.Column(gioco_controls, spacing=10),
+                    bgcolor=ft.Colors.GREY_800,
+                    border_radius=10,
+                    padding=10,
                     expand=True
-                )
+                ),
+                pulsante_menu
             ],
-            bgcolor=ft.Colors.GREY_900
+            scroll=ft.ScrollMode.AUTO,
+            spacing=30,
+            bgcolor=ft.Colors.GREY_900,
+            padding=20
         )
     
     def crea_vista_impostazioni(self):
@@ -2656,7 +2668,7 @@ class AvventuraEpica:
             color=ft.Colors.RED_400
         )
         
-        # Info mostro - variabile locale
+        # Info mostro
         if self.mostro_attuale:
             info_mostro = ft.Text(
                 f"{self.mostro_attuale['nome']}\n HP: {self.hp_mostro_attuale}/{self.mostro_attuale['hp']}\n Attacco: {self.mostro_attuale['attacco']}", 
@@ -2674,7 +2686,7 @@ class AvventuraEpica:
                 semantics_label="Nessun nemico presente. Cerca mostri per iniziare una battaglia"
             )
         
-        # Info giocatore - variabile locale
+        # Info giocatore
         gatto_info = self.gatti[self.gatto_attivo]
         info_giocatore = ft.Text(
             f"{gatto_info['nome']}\n Vita: {self.vita}/{self.vita_massima}\n Attacco: {self.calcola_attacco_totale()}\n Energia: {self.risorse['energia']}", 
@@ -2684,7 +2696,7 @@ class AvventuraEpica:
             semantics_label=f"Giocatore: {gatto_info['nome']}, Vita {self.vita} su {self.vita_massima}, Attacco {self.calcola_attacco_totale()}, Energia {self.risorse['energia']}"
         )
         
-        # Log combattimento - sempre variabile locale
+        # Log combattimento
         valore_log = "Preparati al combattimento!"
         log_combattimento_locale = ft.TextField(
             value=valore_log,
@@ -2796,14 +2808,25 @@ class AvventuraEpica:
         return ft.View(
             "/combattimento",
             controls=[
+                titolo,
                 ft.Container(
-                    content=content,
-                    bgcolor=ft.Colors.GREY_900,
-                    padding=20,
+                    content=ft.Column([
+                        info_mostro,
+                        info_giocatore,
+                        log_combattimento_locale,
+                        ft.Column(pulsanti_combattimento, horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=10)
+                    ], spacing=25),
+                    bgcolor=ft.Colors.GREY_800,
+                    border_radius=10,
+                    padding=10,
                     expand=True
-                )
+                ),
+                pulsante_indietro
             ],
-            bgcolor=ft.Colors.GREY_900
+            scroll=ft.ScrollMode.AUTO,
+            spacing=30,
+            bgcolor=ft.Colors.GREY_900,
+            padding=20
         )
     
     def crea_vista_negozio(self):
@@ -3729,18 +3752,18 @@ class AvventuraEpica:
         self.aggiorna_info_combattimento()
     
     def aggiorna_info_combattimento(self):
-        """Aggiorna le informazioni di combattimento e ricrea i pulsanti se necessario"""
+        """Aggiorna le informazioni di combattimento ricreando la vista"""
         # SOLO se siamo nella vista combattimento, aggiornala
         if len(self.page.views) > 0 and self.page.views[-1].route == "/combattimento":
-            # Forza la ricreazione della vista rimuovendo e riaggiungendo
+            # Ricrea la vista combattimento
             self.page.views.pop()  # Rimuovi vista corrente
             vista = self.crea_vista_combattimento()
             self.page.views.append(vista)
             self.analizza_accessibilita(vista)
             self.page.update()
+            print("🎮 INFO: Vista combattimento aggiornata")
         else:
-            # Se non siamo nella vista combattimento, non fare NULLA
-            print(f"🎮 DEBUG: Non nella vista combattimento ({current_route}), IGNORO completamente")
+            print("🎮 DEBUG: Non nella vista combattimento, IGNORO aggiornamento")
 
     def seleziona_tab(self, index):
         """Seleziona tab e aggiorna la navigazione"""
@@ -4458,9 +4481,16 @@ class AvventuraEpica:
         self.cambia_musica_area(self.area_attuale)
         
     def aggiorna_storia(self, testo):
-        """Aggiorna testo storia"""
-        self.area_storia.value = testo
-        self.page.update()
+        """Aggiorna testo storia - usa log combattimento se in battaglia"""
+        if (hasattr(self, 'log_combattimento_campo') and self.log_combattimento_campo and 
+            len(self.page.views) > 0 and self.page.views[-1].route == "/combattimento"):
+            # Se siamo in combattimento, aggiorna il log di combattimento
+            self.log_combattimento_campo.value = testo
+            self.log_combattimento_campo.update()
+        elif hasattr(self, 'area_storia') and self.area_storia:
+            # Altrimenti aggiorna l'area storia normale
+            self.area_storia.value = testo
+            self.page.update()
         
     def aggiorna_stats(self, testo):
         """Aggiorna statistiche giocatore"""
@@ -6205,7 +6235,11 @@ class AvventuraEpica:
 
     def salva_gioco(self, e):
         """Salvataggio completo"""
+        print(f"🎮 DEBUG: Tentativo salvataggio - gioco_iniziato = {self.gioco_iniziato}")
         if not self.gioco_iniziato:
+            print("❌ ERRORE: Impossibile salvare - gioco non iniziato!")
+            self.aggiorna_storia("❌ Errore: Devi prima iniziare una partita!")
+            self.haptic_feedback("error")
             return
             
         stato_gioco = {
@@ -6243,11 +6277,161 @@ class AvventuraEpica:
         try:
             with open("avventura_epica_save.json", "w") as file:
                 json.dump(stato_gioco, file, indent=2)
-            self.mostra_conferma_salvataggio(True)
-            self.haptic_feedback("success")
-        except Exception as ex:
-            self.mostra_conferma_salvataggio(False, str(ex))
+            print("✅ DEBUG: Salvataggio completato con successo!")
             
+            # Salva stato per la vista di conferma
+            self.salvataggio_successo = True
+            self.salvataggio_errore = None
+            self.page.go("/salvataggio_conferma")
+            self.haptic_feedback("success")
+            
+        except Exception as ex:
+            print(f"❌ DEBUG: Errore durante salvataggio: {str(ex)}")
+            self.salvataggio_successo = False
+            self.salvataggio_errore = str(ex)
+            self.page.go("/salvataggio_conferma")
+            self.haptic_feedback("error")
+            
+    def crea_vista_salvataggio_conferma(self):
+        """Crea vista pulita di conferma salvataggio"""
+        if getattr(self, 'salvataggio_successo', True):
+            titolo = "✅ Partita Salvata"
+            messaggio = "La tua avventura è stata salvata con successo!"
+            colore = ft.Colors.GREEN_400
+        else:
+            titolo = "❌ Errore Salvataggio"
+            messaggio = f"Errore durante il salvataggio:\n{getattr(self, 'salvataggio_errore', 'Errore sconosciuto')}"
+            colore = ft.Colors.RED_400
+        
+        content = ft.Column([
+            ft.Text(
+                titolo,
+                size=28,
+                weight=ft.FontWeight.BOLD,
+                text_align=ft.TextAlign.CENTER,
+                color=colore,
+                style=ft.TextThemeStyle.HEADLINE_MEDIUM
+            ),
+            ft.Text(
+                messaggio,
+                size=18,
+                text_align=ft.TextAlign.CENTER,
+                color=ft.Colors.WHITE
+            ),
+            ft.ElevatedButton(
+                text="Torna al Gioco",
+                on_click=lambda e: self.page.go("/gioco"),
+                width=200,
+                height=50,
+                bgcolor=ft.Colors.BLUE_600,
+                color=ft.Colors.WHITE,
+                tooltip="Torna alla schermata di gioco"
+            )
+        ], 
+        spacing=40,
+        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+        alignment=ft.MainAxisAlignment.CENTER,
+        expand=True)
+        
+        return ft.View(
+            route="/salvataggio_conferma",
+            controls=[
+                ft.Container(
+                    content=content,
+                    bgcolor=ft.Colors.GREY_900,
+                    padding=40,
+                    expand=True
+                )
+            ],
+            bgcolor=ft.Colors.GREY_900
+        )
+
+    def mostra_dialog_salvataggio(self, successo, errore=None):
+        """Mostra dialog di conferma salvataggio"""
+        if successo:
+            titolo = "✅ Partita Salvata"
+            messaggio = "La tua avventura è stata salvata con successo!"
+        else:
+            titolo = "❌ Errore"
+            messaggio = f"Errore durante il salvataggio:\n{errore}"
+        
+        def chiudi_dialog(e):
+            self.dialog_salvataggio.open = False
+            self.page.update()
+        
+        self.dialog_salvataggio = ft.AlertDialog(
+            modal=True,
+            title=ft.Text(titolo, size=20, weight=ft.FontWeight.BOLD),
+            content=ft.Text(messaggio, size=16),
+            actions=[
+                ft.TextButton("OK", on_click=chiudi_dialog)
+            ],
+            actions_alignment=ft.MainAxisAlignment.END,
+        )
+        
+        self.page.dialog = self.dialog_salvataggio
+        self.dialog_salvataggio.open = True
+        self.page.update()
+        print(f"🎮 DEBUG: Dialog salvataggio mostrato - successo: {successo}")
+
+    def mostra_conferma_salvataggio_pulita(self, successo, errore=None):
+        """Mostra finestra pulita di conferma salvataggio"""
+        print(f"🎮 DEBUG: Creando vista conferma - successo: {successo}")
+        
+        if successo:
+            titolo = "Partita Salvata"
+            messaggio = "Salvataggio completato!"
+        else:
+            titolo = "Errore Salvataggio"
+            messaggio = f"Errore: {errore}"
+        
+        # Vista molto semplice per debug
+        vista_conferma = ft.View(
+            route="/salvataggio_conferma",
+            controls=[
+                ft.Text(titolo, size=24, color=ft.Colors.WHITE),
+                ft.Text(messaggio, size=16, color=ft.Colors.WHITE),
+                ft.ElevatedButton(
+                    text="Indietro",
+                    on_click=self.torna_alla_vista_precedente,
+                    bgcolor=ft.Colors.BLUE_600,
+                    color=ft.Colors.WHITE
+                )
+            ],
+            bgcolor=ft.Colors.GREY_900
+        )
+        
+        print(f"🎮 DEBUG: Creando vista conferma salvataggio")
+        print(f"🎮 DEBUG: Views prima di aggiungere conferma: {[v.route for v in self.page.views]}")
+        
+        self.page.views.append(vista_conferma)
+        self.analizza_accessibilita(vista_conferma)
+        
+        print(f"🎮 DEBUG: Views dopo aver aggiunto conferma: {[v.route for v in self.page.views]}")
+        print(f"🎮 DEBUG: Navigando verso /salvataggio_conferma")
+        
+        self.page.go("/salvataggio_conferma")
+
+    def torna_alla_vista_precedente(self, e):
+        """Torna alla vista da cui si è venuti"""
+        try:
+            print(f"🎮 DEBUG: INIZIO - Tornando alla vista precedente")
+            print(f"🎮 DEBUG: Views attuali: {[v.route for v in self.page.views]}")
+            
+            # Semplicemente rimuovi la vista corrente e torna indietro
+            if len(self.page.views) > 1:
+                self.page.views.pop()
+                print(f"🎮 DEBUG: Vista rimossa, views rimaste: {[v.route for v in self.page.views]}")
+                self.page.update()
+                print(f"🎮 DEBUG: SUCCESSO - Navigazione completata")
+            else:
+                print(f"🎮 DEBUG: ERRORE - Non abbastanza views per tornare indietro")
+                
+        except Exception as ex:
+            print(f"🎮 DEBUG: ERRORE in torna_alla_vista_precedente: {str(ex)}")
+            import traceback
+            traceback.print_exc()
+
     def mostra_conferma_salvataggio(self, successo, errore=None):
         """Mostra una schermata di conferma salvataggio accessibile"""
         if successo:
@@ -6270,10 +6454,9 @@ class AvventuraEpica:
             color=colore_titolo
         )
         
-        # Crea vista identica a inventario
+        # Crea vista con accessibilità migliorata
         content = ft.Column([
             titolo_principale,
-            ft.Container(height=20),
             ft.Container(
                 content=ft.Column([
                     # Icona separata per decorazione
@@ -6282,7 +6465,6 @@ class AvventuraEpica:
                         size=48,
                         text_align=ft.TextAlign.CENTER
                     ),
-                    ft.Container(height=20),
                     # Messaggio principale
                     ft.Text(
                         messaggio,
@@ -6290,7 +6472,6 @@ class AvventuraEpica:
                         text_align=ft.TextAlign.CENTER,
                         color=ft.Colors.WHITE
                     ),
-                    ft.Container(height=30),
                     # Pulsante per tornare al gioco
                     ft.ElevatedButton(
                         text="Continua",
@@ -6301,13 +6482,13 @@ class AvventuraEpica:
                         color=ft.Colors.WHITE,
                         tooltip="Torna al gioco"
                     )
-                ], spacing=10),
+                ], spacing=30),
                 height=400,
                 bgcolor=ft.Colors.GREY_800,
                 border_radius=10,
                 padding=10
             )
-        ], scroll=ft.ScrollMode.AUTO, spacing=20, expand=True)
+        ], scroll=ft.ScrollMode.AUTO, spacing=30, expand=True)
         
         vista_conferma = ft.View(
             route="/conferma_salvataggio",
@@ -6328,9 +6509,18 @@ class AvventuraEpica:
         
     def torna_al_gioco_da_conferma(self, e):
         """Torna al gioco dalla schermata di conferma salvataggio"""
-        if len(self.page.views) > 1:
-            self.page.views.pop()
-            self.page.go(self.page.views[-1].route)
+        print(f"🎮 DEBUG: Tornando al gioco da conferma salvataggio")
+        print(f"🎮 DEBUG: Views attuali: {[v.route for v in self.page.views]}")
+        
+        # Rimuovi tutte le views e ricrea quella del gioco
+        self.page.views.clear()
+        self.page.views.append(ft.View("/", []))  # Vista base
+        vista_gioco = self.crea_vista_gioco()
+        self.page.views.append(vista_gioco)
+        self.analizza_accessibilita(vista_gioco)
+        self.page.update()
+        
+        print(f"🎮 DEBUG: Dopo ricreazione: {[v.route for v in self.page.views]}")
 
     def controlla_sblocco_portale_sogni(self):
         """Controlla se il portale dei sogni può essere sbloccato"""
