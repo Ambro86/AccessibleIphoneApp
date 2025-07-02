@@ -2251,10 +2251,10 @@ class AvventuraEpica:
             bgcolor=ft.Colors.GREY_900
         )
     def crea_vista_gioco(self):
-        """Test 3: Step 4 + lista + self + valori dinamici"""
+        """Test 4: Step 4 + lista + self + valori dinamici + stili TextField"""
         titolo = ft.Text("AVVENTURA IN CORSO", size=24, weight=ft.FontWeight.BOLD)
         
-        # AGGIUNGI I VALORI DINAMICI
+        # Valori dinamici
         valore_storia = "🎮 Benvenuto nell'Avventura Incrementale!"
         if hasattr(self, 'area_storia') and self.area_storia and hasattr(self.area_storia, 'value'):
             valore_storia = self.area_storia.value
@@ -2263,14 +2263,20 @@ class AvventuraEpica:
         if hasattr(self, 'area_stats') and self.area_stats and hasattr(self.area_stats, 'value'):
             valore_stats = self.area_stats.value
         
-        # Crea i TextField
+        # AGGIUNGI GLI STILI AI TEXTFIELD
         area_storia_locale = ft.TextField(
             value=valore_storia,
             multiline=True,
             read_only=True,
             expand=True,
             min_lines=10,
-            max_lines=15
+            max_lines=15,
+            text_size=14,
+            bgcolor=ft.Colors.DEEP_PURPLE_900,
+            color=ft.Colors.AMBER_100,
+            border_color=ft.Colors.AMBER_400,
+            focused_border_color=ft.Colors.AMBER_300,
+            label="Storia dell'avventura"
         )
         
         area_stats_locale = ft.TextField(
@@ -2278,7 +2284,13 @@ class AvventuraEpica:
             multiline=True,
             read_only=True,
             min_lines=4,
-            max_lines=6
+            max_lines=6,
+            text_size=14,
+            bgcolor=ft.Colors.BLUE_GREY_900,
+            color=ft.Colors.CYAN_100,
+            border_color=ft.Colors.CYAN_400,
+            focused_border_color=ft.Colors.CYAN_300,
+            label="Statistiche giocatore"
         )
         
         # Assegnazioni self
