@@ -2251,7 +2251,7 @@ class AvventuraEpica:
             bgcolor=ft.Colors.GREY_900
         )
     def crea_vista_gioco(self):
-        """Test 1: Step 4 + lista di pulsanti"""
+        """Test 2: Step 4 + lista pulsanti + assegnazioni self"""
         titolo = ft.Text("AVVENTURA IN CORSO", size=24, weight=ft.FontWeight.BOLD)
         
         # Valori per i TextField
@@ -2276,7 +2276,11 @@ class AvventuraEpica:
             max_lines=6
         )
         
-        # USA UNA LISTA invece di un singolo pulsante
+        # AGGIUNGI LE ASSEGNAZIONI SELF
+        self.area_storia = area_storia_locale
+        self.area_stats = area_stats_locale
+        
+        # Lista di pulsanti
         pulsanti_gioco = []
         
         pulsante_test = ft.ElevatedButton(
@@ -2310,7 +2314,7 @@ class AvventuraEpica:
         gioco_controls = [
             area_storia_locale,
             area_stats_locale,
-            colonna_pulsanti  # Column invece di singolo pulsante
+            colonna_pulsanti
         ]
         
         pulsante_menu = ft.ElevatedButton(
@@ -2324,7 +2328,7 @@ class AvventuraEpica:
             titolo,
             ft.Container(
                 content=ft.Column(gioco_controls, spacing=10),
-                height=400,  # Mantieni 400
+                height=400,
                 bgcolor=ft.Colors.GREY_800,
                 border_radius=10,
                 padding=10
