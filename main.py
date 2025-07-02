@@ -2253,7 +2253,7 @@ class AvventuraEpica:
         
 
     def crea_vista_gioco(self):
-        """Test 5: Step 4 + tutto + veri on_click e più pulsanti"""
+        """Test 6b: TUTTO incluso azioni_incrementali_possibili() + height=800"""
         titolo = ft.Text("AVVENTURA IN CORSO", size=24, weight=ft.FontWeight.BOLD)
         
         # Valori dinamici
@@ -2299,21 +2299,24 @@ class AvventuraEpica:
         self.area_storia = area_storia_locale
         self.area_stats = area_stats_locale
         
-        # AGGIUNGI PIÙ PULSANTI CON VERI ON_CLICK
+        # AZIONI_INCREMENTALI_POSSIBILI()
         pulsanti_gioco = []
         
-        # Pulsanti manuali (senza azioni_incrementali)
-        pulsante_raccogli = ft.ElevatedButton(
-            text="Raccogli Risorse",
-            on_click=self.raccogli_risorse,  # Vero on_click
-            width=280,
-            height=50,
-            bgcolor=ft.Colors.GREEN_600,
-            color=ft.Colors.WHITE,
-            tooltip="Raccogli risorse nell'area attuale"
-        )
-        pulsanti_gioco.append(pulsante_raccogli)
+        # Azioni incrementali dinamiche
+        azioni_incrementali = self.azioni_incrementali_possibili()
+        for testo, funzione, tooltip in azioni_incrementali:
+            pulsante_incrementale = ft.ElevatedButton(
+                text=testo,
+                on_click=funzione,
+                width=280,
+                height=50,
+                bgcolor=ft.Colors.GREEN_600,
+                color=ft.Colors.WHITE,
+                tooltip=tooltip
+            )
+            pulsanti_gioco.append(pulsante_incrementale)
         
+        # Pulsanti statici di navigazione
         pulsante_combattimento = ft.ElevatedButton(
             text="Combattimento",
             on_click=lambda e: self.page.go("/combattimento"),
@@ -2323,7 +2326,6 @@ class AvventuraEpica:
             color=ft.Colors.WHITE,
             tooltip="Combatti contro i mostri"
         )
-        pulsanti_gioco.append(pulsante_combattimento)
         
         pulsante_negozio = ft.ElevatedButton(
             text="Negozio",
@@ -2334,7 +2336,6 @@ class AvventuraEpica:
             color=ft.Colors.WHITE,
             tooltip="Visita il negozio"
         )
-        pulsanti_gioco.append(pulsante_negozio)
         
         pulsante_gatti = ft.ElevatedButton(
             text="Gatti",
@@ -2345,7 +2346,36 @@ class AvventuraEpica:
             color=ft.Colors.WHITE,
             tooltip="Gestisci i tuoi gatti"
         )
-        pulsanti_gioco.append(pulsante_gatti)
+        
+        pulsanti_gioco.extend([pulsante_combattimento, pulsante_negozio, pulsante_gatti])
+        
+        # Pulsante cambio area (condizionale)
+        if len(self.aree_sbloccate) > 1:
+            pulsante_aree = ft.ElevatedButton(
+                text="Cambia Area",
+                on_click=lambda e: self.page.go("/aree"),
+                width=280,
+                height=50,
+                bgcolor=ft.Colors.BLUE_600,
+                color=ft.Colors.WHITE,
+                tooltip="Scegli area da esplorare"
+            )
+            pulsanti_gioco.append(pulsante_aree)
+        
+        # Pulsante boss (condizionale)
+        if (self.area_attuale in self.boss_aree and 
+            self.boss_aree[self.area_attuale]["nome"] not in self.boss_sconfitti and
+            self.progressione_area.get(self.area_attuale, 0) >= 100):
+            pulsante_boss = ft.ElevatedButton(
+                text="Combatti Boss dell'Area!",
+                on_click=self.combatti_boss,
+                width=280,
+                height=50,
+                bgcolor=ft.Colors.DEEP_PURPLE_600,
+                color=ft.Colors.WHITE,
+                tooltip=f"Affronta il boss: {self.boss_aree[self.area_attuale]['nome']}"
+            )
+            pulsanti_gioco.append(pulsante_boss)
         
         pulsante_salva = ft.ElevatedButton(
             text="Salva Partita",
@@ -2386,7 +2416,7 @@ class AvventuraEpica:
             titolo,
             ft.Container(
                 content=ft.Column(gioco_controls, spacing=10),
-                height=400,  # Ancora 400
+                height=800,  # CAMBIATO A 800
                 bgcolor=ft.Colors.GREY_800,
                 border_radius=10,
                 padding=10
