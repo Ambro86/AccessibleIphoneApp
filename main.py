@@ -2251,7 +2251,7 @@ class AvventuraEpica:
             bgcolor=ft.Colors.GREY_900
         )
     def crea_vista_gioco(self):
-        """Step 5: Vista con pulsanti dinamici"""
+        """Crea la vista principale di gioco"""
         titolo = ft.Text("AVVENTURA IN CORSO", size=24, weight=ft.FontWeight.BOLD)
         
         # Valori per i TextField
@@ -2291,31 +2291,34 @@ class AvventuraEpica:
         self.area_storia = area_storia_locale
         self.area_stats = area_stats_locale
         
-        # PULSANTI DINAMICI - Aggiungiamoli gradualmente
+        # Pulsanti dinamici con controllo
         pulsanti_gioco = []
         
-        # Prima aggiungi SOLO le azioni incrementali
+        # SOLUZIONE 1: Controllo esplicito per lista non vuota
         azioni_incrementali = self.azioni_incrementali_possibili()
-        for testo, funzione, tooltip in azioni_incrementali:
-            pulsante_incrementale = ft.ElevatedButton(
-                text=testo,
-                on_click=funzione,
-                width=280,
-                height=50,
-                bgcolor=ft.Colors.GREEN_600,
-                color=ft.Colors.WHITE,
-                tooltip=tooltip
-            )
-            pulsanti_gioco.append(pulsante_incrementale)
         
-        # Aggiungi pulsanti di navigazione statici
+        if azioni_incrementali and len(azioni_incrementali) > 0:
+            for testo, funzione, tooltip in azioni_incrementali:
+                pulsante_incrementale = ft.ElevatedButton(
+                    text=testo,
+                    on_click=funzione,
+                    width=280,
+                    height=50,
+                    bgcolor=ft.Colors.GREEN_600,
+                    color=ft.Colors.WHITE,
+                    tooltip=tooltip
+                )
+                pulsanti_gioco.append(pulsante_incrementale)
+        
+        # Pulsanti statici
         pulsante_combattimento = ft.ElevatedButton(
             text="Combattimento",
             on_click=lambda e: self.page.go("/combattimento"),
             width=280,
             height=50,
             bgcolor=ft.Colors.RED_600,
-            color=ft.Colors.WHITE
+            color=ft.Colors.WHITE,
+            tooltip="Combatti contro i mostri"
         )
         
         pulsante_negozio = ft.ElevatedButton(
@@ -2324,7 +2327,8 @@ class AvventuraEpica:
             width=280,
             height=50,
             bgcolor=ft.Colors.ORANGE_600,
-            color=ft.Colors.WHITE
+            color=ft.Colors.WHITE,
+            tooltip="Visita il negozio"
         )
         
         pulsante_gatti = ft.ElevatedButton(
@@ -2333,21 +2337,39 @@ class AvventuraEpica:
             width=280,
             height=50,
             bgcolor=ft.Colors.PINK_600,
-            color=ft.Colors.WHITE
+            color=ft.Colors.WHITE,
+            tooltip="Gestisci i tuoi gatti"
         )
         
         pulsanti_gioco.extend([pulsante_combattimento, pulsante_negozio, pulsante_gatti])
         
-        # COMMENTA PER ORA i pulsanti condizionali
-        # # Pulsante cambio area
-        # if len(self.aree_sbloccate) > 1:
-        #     pulsante_aree = ft.ElevatedButton(...)
-        #     pulsanti_gioco.append(pulsante_aree)
+        # Pulsante cambio area (condizionale)
+        if len(self.aree_sbloccate) > 1:
+            pulsante_aree = ft.ElevatedButton(
+                text="Cambia Area",
+                on_click=lambda e: self.page.go("/aree"),
+                width=280,
+                height=50,
+                bgcolor=ft.Colors.BLUE_600,
+                color=ft.Colors.WHITE,
+                tooltip="Scegli area da esplorare"
+            )
+            pulsanti_gioco.append(pulsante_aree)
         
-        # # Pulsante boss
-        # if (self.area_attuale in self.boss_aree and ...):
-        #     pulsante_boss = ft.ElevatedButton(...)
-        #     pulsanti_gioco.append(pulsante_boss)
+        # Pulsante boss (condizionale)
+        if (self.area_attuale in self.boss_aree and 
+            self.boss_aree[self.area_attuale]["nome"] not in self.boss_sconfitti and
+            self.progressione_area.get(self.area_attuale, 0) >= 100):
+            pulsante_boss = ft.ElevatedButton(
+                text="Combatti Boss dell'Area!",
+                on_click=self.combatti_boss,
+                width=280,
+                height=50,
+                bgcolor=ft.Colors.DEEP_PURPLE_600,
+                color=ft.Colors.WHITE,
+                tooltip=f"Affronta il boss: {self.boss_aree[self.area_attuale]['nome']}"
+            )
+            pulsanti_gioco.append(pulsante_boss)
         
         # Pulsante salva
         pulsante_salva = ft.ElevatedButton(
@@ -2356,7 +2378,8 @@ class AvventuraEpica:
             width=280,
             height=50,
             bgcolor=ft.Colors.PURPLE_600,
-            color=ft.Colors.WHITE
+            color=ft.Colors.WHITE,
+            tooltip="Salva il tuo progresso"
         )
         pulsanti_gioco.append(pulsante_salva)
         
@@ -2381,7 +2404,8 @@ class AvventuraEpica:
             width=200,
             height=50,
             bgcolor=ft.Colors.GREY_600,
-            color=ft.Colors.WHITE
+            color=ft.Colors.WHITE,
+            tooltip="Torna al menu principale"
         )
         
         # Content principale
