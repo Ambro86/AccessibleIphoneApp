@@ -2251,17 +2251,32 @@ class AvventuraEpica:
             bgcolor=ft.Colors.GREY_900
         )
     def crea_vista_gioco(self):
-        """Step 1: Solo titolo + container vuoto"""
+        """Step 3: Aggiungi area_storia"""
         titolo = ft.Text("AVVENTURA IN CORSO", size=24)
+        
+        valore_storia = "Test storia..."
+        area_storia_locale = ft.TextField(
+            value=valore_storia,
+            multiline=True,
+            read_only=True,
+            expand=True,
+            min_lines=10
+        )
+        
+        pulsante_menu = ft.ElevatedButton(
+            text="Torna al Menu",
+            on_click=lambda e: self.page.go("/")
+        )
         
         content = ft.Column([
             titolo,
             ft.Container(
-                content=ft.Text("Test contenuto"),
+                content=area_storia_locale,  # Usa TextField
                 height=400,
                 bgcolor=ft.Colors.GREY_800,
                 padding=10
-            )
+            ),
+            pulsante_menu
         ])
         
         return ft.View(
