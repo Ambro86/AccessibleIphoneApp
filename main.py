@@ -2250,10 +2250,204 @@ class AvventuraEpica:
             ],
             bgcolor=ft.Colors.GREY_900
         )
-
     def crea_vista_gioco(self):
-        """Vista con paginazione per migliore performance"""
+        """Vista di gioco ottimizzata per performance e accessibilità"""
         titolo = ft.Text("AVVENTURA IN CORSO", size=24, weight=ft.FontWeight.BOLD)
+
+        # 🔁 Riutilizza o crea area_storia
+        valore_storia = getattr(self.area_storia, "value", "🎮 Benvenuto nell'Avventura Incrementale!")
+        if hasattr(self, 'area_storia') and self.area_storia:
+            self.area_storia.value = valore_storia
+        else:
+            self.area_storia = ft.TextField(
+                value=valore_storia,
+                multiline=True,
+                read_only=True,
+                expand=True,
+                min_lines=10,
+                max_lines=15,
+                text_size=14,
+                bgcolor=ft.Colors.DEEP_PURPLE_900,
+                color=ft.Colors.AMBER_100,
+                border_color=ft.Colors.AMBER_400,
+                focused_border_color=ft.Colors.AMBER_300,
+                label="Storia dell'avventura"
+            )
+
+        # 🔁 Riutilizza o crea area_stats
+        valore_stats = f" Statistiche Giocatore:\n Livello {self.livello} •  {self.vita}/{self.vita_massima} HP •  {self.monete} monete\n Attacco: {self.calcola_attacco_totale()} •  Difesa: {self.calcola_difesa_totale()}\n EXP: {self.esperienza}/{self.esperienza_necessaria}"
+        if hasattr(self, 'area_stats') and self.area_stats:
+            self.area_stats.value = valore_stats
+        else:
+            self.area_stats = ft.TextField(
+                value=valore_stats,
+                multiline=True,
+                read_only=True,
+                min_lines=4,
+                max_lines=6,
+                text_size=14,
+                bgcolor=ft.Colors.BLUE_GREY_900,
+                color=ft.Colors.CYAN_100,
+                border_color=ft.Colors.CYAN_400,
+                focused_border_color=ft.Colors.CYAN_300,
+                label="Statistiche giocatore"
+            )
+
+        # 🔁 Ricrea solo i pulsanti dinamici
+        pulsanti_gioco = []
+
+        for testo, funzione, tooltip in self.azioni_incrementali_possibili():
+            pulsanti_gioco.append(
+                ft.ElevatedButton(
+                    text=testo,
+                    on_click=funzione,
+                    width=280,
+                    height=50,
+                    bgcolor=ft.Colors.GREEN_600,
+                    color=ft.Colors.WHITE,
+                    tooltip=tooltip
+                )
+            )
+
+        # ✅ Pulsanti statici (riutilizzati o creati una volta)
+        if not hasattr(self, 'pulsante_combattimento'):
+            self.pulsante_combattimento = ft.ElevatedButton(
+                text="Combattimento",
+                on_click=lambda e: self.page.go("/combattimento"),
+                width=280,
+                height=50,
+                bgcolor=ft.Colors.RED_600,
+                color=ft.Colors.WHITE,
+                tooltip="Combatti contro i mostri"
+            )
+
+            self.pulsante_negozio = ft.ElevatedButton(
+                text="Negozio",
+                on_click=lambda e: self.page.go("/negozio"),
+                width=280,
+                height=50,
+                bgcolor=ft.Colors.ORANGE_600,
+                color=ft.Colors.WHITE,
+                tooltip="Visita il negozio"
+            )
+
+            self.pulsante_gatti = ft.ElevatedButton(
+                text="Gatti",
+                on_click=lambda e: self.page.go("/gatti"),
+                width=280,
+                height=50,
+                bgcolor=ft.Colors.PINK_600,
+                color=ft.Colors.WHITE,
+                tooltip="Gestisci i tuoi gatti"
+            )
+
+            self.pulsante_salva = ft.ElevatedButton(
+                text="Salva Partita",
+                on_click=self.salva_gioco,
+                width=280,
+                height=50,
+                bgcolor=ft.Colors.PURPLE_600,
+                color=ft.Colors.WHITE,
+                tooltip="Salva il tuo progresso"
+            )
+
+        pulsanti_gioco.extend([
+            self.pulsante_combattimento,
+            self.pulsante_negozio,
+            self.pulsante_gatti
+        ])
+
+        # 🔁 Condizionale: pulsante aree
+        if len(self.aree_sbloccate) > 1:
+            pulsanti_gioco.append(
+                ft.ElevatedButton(
+                    text="Cambia Area",
+                    on_click=lambda e: self.page.go("/aree"),
+                    width=280,
+                    height=50,
+                    bgcolor=ft.Colors.BLUE_600,
+                    color=ft.Colors.WHITE,
+                    tooltip="Scegli area da esplorare"
+                )
+            )
+
+        # 🔁 Condizionale: boss
+        if (self.area_attuale in self.boss_aree and
+            self.boss_aree[self.area_attuale]["nome"] not in self.boss_sconfitti and
+            self.progressione_area.get(self.area_attuale, 0) >= 100):
+            pulsanti_gioco.append(
+                ft.ElevatedButton(
+                    text="Combatti Boss dell'Area!",
+                    on_click=self.combatti_boss,
+                    width=280,
+                    height=50,
+                    bgcolor=ft.Colors.DEEP_PURPLE_600,
+                    color=ft.Colors.WHITE,
+                    tooltip=f"Affronta il boss: {self.boss_aree[self.area_attuale]['nome']}"
+                )
+            )
+
+        # ✅ Pulsante salva (già creato sopra)
+        pulsanti_gioco.append(self.pulsante_salva)
+
+        # 🔁 Colonna pulsanti in ListView per performance
+        colonna_pulsanti = ft.Column(
+            pulsanti_gioco,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+            spacing=15
+        )
+
+        # ✅ Usa ListView scrollabile per evitare lag
+        area_gioco_scrollabile = ft.ListView(
+            controls=[
+                self.area_storia,
+                self.area_stats,
+                colonna_pulsanti
+            ],
+            expand=True,
+            spacing=10,
+            padding=10
+        )
+
+        # Pulsante menu
+        pulsante_menu = ft.ElevatedButton(
+            text="Torna al Menu",
+            on_click=lambda e: self.page.go("/"),
+            width=200,
+            height=50,
+            bgcolor=ft.Colors.GREY_600,
+            color=ft.Colors.WHITE,
+            tooltip="Torna al menu principale"
+        )
+
+        # ✅ Layout finale
+        content = ft.Column([
+            titolo,
+            ft.Container(
+                content=area_gioco_scrollabile,
+                bgcolor=ft.Colors.GREY_800,
+                border_radius=10,
+                expand=True
+            ),
+            pulsante_menu
+        ], spacing=30, expand=True)
+
+        return ft.View(
+            "/gioco",
+            controls=[
+                ft.Container(
+                    content=content,
+                    bgcolor=ft.Colors.GREY_900,
+                    padding=20,
+                    expand=True
+                )
+            ],
+            bgcolor=ft.Colors.GREY_900
+        )
+
+    def crea_vista_gioco_NonOttimizzata(self):
+        """Vista con paginazione per migliore performance"""
+        titolo = ft.Text("AVVENTURA EPICA", size=24, weight=ft.FontWeight.BOLD)
         
         # Valori dinamici
         valore_storia = "🎮 Benvenuto nell'Avventura Incrementale!"
@@ -2385,12 +2579,14 @@ class AvventuraEpica:
         ]
         
         # Pulsante menu
-        pulsante_menu = ft.IconButton(
-            icon=ft.Icons.HOME,  # Icona home
+        pulsante_menu = ft.ElevatedButton(
+            text="Torna al Menu Principale",
+            icon=ft.Icons.HOME,
             icon_color=ft.Colors.GREY_400,
-            icon_size=30,
-            tooltip="Menu Principale",
-            on_click=lambda e: self.page.go("/")
+            on_click=lambda e: self.page.go("/"),
+            bgcolor=ft.Colors.GREY_600,
+            color=ft.Colors.WHITE,
+            tooltip="Torna al menu principale"
         )
         
         # Layout finale senza scroll
@@ -2441,19 +2637,23 @@ class AvventuraEpica:
             pulsanti_dialog.append(pulsante)
         
         dlg = ft.AlertDialog(
-            title=ft.Text("Altre Azioni"),
+            modal=True,
+            title=ft.Text("Altre Azioni", size=20, weight=ft.FontWeight.BOLD),
             content=ft.Column(
                 pulsanti_dialog,
                 tight=True,
                 scroll=ft.ScrollMode.AUTO,
-                height=300
+                height=300,
+                spacing=10
             ),
             actions=[
                 ft.TextButton("Chiudi", on_click=lambda e: self.page.close(dlg))
-            ]
+            ],
+            actions_alignment=ft.MainAxisAlignment.END
         )
         
         self.page.open(dlg)
+        print(f"🎮 DEBUG: Dialog azioni extra aperto")
     def crea_vista_gioco_vecchia(self):
         """Crea la vista principale di gioco"""
         # Crea tutte le variabili locali per evitare il problema dell'elemento vuoto in VoiceOver
@@ -2911,7 +3111,10 @@ class AvventuraEpica:
         pulsanti_combattimento = []
         oggetti_curativi_disponibili = self.conta_oggetti_curativi()
         
+        print(f"🎮 DEBUG: Creando pulsanti combattimento - in_combattimento = {self.in_combattimento}")
+        
         if self.in_combattimento:
+            print(f"🎮 DEBUG: Aggiungendo pulsanti Attacca e Difendi")
             pulsanti_combattimento.extend([
                 ft.ElevatedButton(
                     text="Attacca",
@@ -2956,7 +3159,9 @@ class AvventuraEpica:
                 )
             ])
         else:
+            print(f"🎮 DEBUG: Non in combattimento - in_battaglia={getattr(self, 'in_battaglia', False)}, mostro_attuale={self.mostro_attuale}")
             if not self.in_battaglia and not self.in_combattimento and self.mostro_attuale is None:
+                print(f"🎮 DEBUG: Aggiungendo pulsante Cerca Mostri")
                 pulsanti_combattimento.append(
                     ft.ElevatedButton(
                         text="Cerca Mostri",
@@ -2989,14 +3194,14 @@ class AvventuraEpica:
                     info_giocatore,
                     log_combattimento_locale,
                     ft.Column(pulsanti_combattimento, horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=10)
-                ], spacing=25),
+                ], spacing=25, scroll=ft.ScrollMode.AUTO),
                 bgcolor=ft.Colors.GREY_800,
                 border_radius=10,
                 padding=10,
                 expand=True
             ),
             pulsante_indietro
-        ], scroll=ft.ScrollMode.AUTO, spacing=30, expand=True)
+        ], spacing=30, expand=True)
         
         return ft.View(
             "/combattimento",
@@ -3630,7 +3835,8 @@ class AvventuraEpica:
         # Controlla se la vita è già bassa all'inizio del combattimento
         self.controlla_vita_bassa()
         
-        # Aggiorna solo le info, non ricreare la schermata
+        # Aggiorna il log di combattimento e poi ricrea la vista
+        self.aggiorna_storia(messaggio_log)
         self.aggiorna_info_combattimento()
     
     
@@ -3934,31 +4140,19 @@ class AvventuraEpica:
         self.aggiorna_info_combattimento()
     
     def aggiorna_info_combattimento(self):
-        """Aggiorna solo gli elementi specifici di combattimento senza ricreare l'intera vista"""
-        # SOLO se siamo nella vista combattimento e abbiamo i riferimenti agli elementi
-        if (len(self.page.views) > 0 and self.page.views[-1].route == "/combattimento" and
-            hasattr(self, 'info_mostro_combattimento') and hasattr(self, 'info_giocatore_combattimento')):
-            
-            # Aggiorna info mostro
-            if self.mostro_attuale:
-                self.info_mostro_combattimento.value = f"{self.mostro_attuale['nome']}\n HP: {self.hp_mostro_attuale}/{self.mostro_attuale['hp']}\n Attacco: {self.mostro_attuale['attacco']}"
-                self.info_mostro_combattimento.semantics_label = f"Nemico: {self.mostro_attuale['nome']}, Punti vita {self.hp_mostro_attuale} su {self.mostro_attuale['hp']}, Attacco {self.mostro_attuale['attacco']}"
-            else:
-                self.info_mostro_combattimento.value = "Nessun mostro in vista\nClicca 'Cerca Mostri' per iniziare una battaglia!"
-                self.info_mostro_combattimento.semantics_label = "Nessun nemico presente. Cerca mostri per iniziare una battaglia"
-            
-            # Aggiorna info giocatore
-            gatto_info = self.gatti[self.gatto_attivo]
-            self.info_giocatore_combattimento.value = f"{gatto_info['nome']}\n Vita: {self.vita}/{self.vita_massima}\n Attacco: {self.calcola_attacco_totale()}\n Energia: {self.risorse['energia']}"
-            self.info_giocatore_combattimento.semantics_label = f"Giocatore: {gatto_info['nome']}, Vita {self.vita} su {self.vita_massima}, Attacco {self.calcola_attacco_totale()}, Energia {self.risorse['energia']}"
-            
-            # Aggiorna solo i singoli elementi
-            self.info_mostro_combattimento.update()
-            self.info_giocatore_combattimento.update()
-            
-            print("🎮 INFO: Aggiornati solo elementi specifici di combattimento")
+        """Aggiorna le informazioni di combattimento ricreando la vista"""
+        # SOLO se siamo nella vista combattimento, aggiornala
+        if len(self.page.views) > 0 and self.page.views[-1].route == "/combattimento":
+            print(f"🎮 DEBUG: Ricreando vista combattimento - in_combattimento = {self.in_combattimento}")
+            # Ricrea la vista combattimento
+            self.page.views.pop()  # Rimuovi vista corrente
+            vista = self.crea_vista_combattimento()
+            self.page.views.append(vista)
+            self.analizza_accessibilita(vista)
+            self.page.update()
+            print("🎮 INFO: Vista combattimento ricreata")
         else:
-            print("🎮 DEBUG: Non nella vista combattimento o riferimenti mancanti, IGNORO aggiornamento")
+            print("🎮 DEBUG: Non nella vista combattimento, IGNORO aggiornamento")
 
     def seleziona_tab(self, index):
         """Seleziona tab e aggiorna la navigazione"""
@@ -4653,8 +4847,16 @@ class AvventuraEpica:
             self.cambia_suono_ambiente_area(self.area_attuale)
         
     def vai_a_inventario(self, e):
-        """Naviga alla schermata inventario"""
+        """Naviga alla schermata inventario con vista pulita"""
+        print(f"🎮 DEBUG: Navigando a inventario - views attuali: {[v.route for v in self.page.views]}")
+        
+        # Assicurati che le views siano pulite prima della navigazione
+        if len(self.page.views) > 1:
+            # Mantieni solo la vista base
+            self.page.views = [self.page.views[0]]
+        
         self.page.go("/inventario")
+        print(f"🎮 DEBUG: Navigazione inventario completata")
         
     def vai_a_negozio(self, e):
         """Vai al menu negozio"""
