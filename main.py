@@ -2250,8 +2250,10 @@ class AvventuraEpica:
             ],
             bgcolor=ft.Colors.GREY_900
         )
+        
+
     def crea_vista_gioco(self):
-        """Test 4: Step 4 + lista + self + valori dinamici + stili TextField"""
+        """Test 5: Step 4 + tutto + veri on_click e più pulsanti"""
         titolo = ft.Text("AVVENTURA IN CORSO", size=24, weight=ft.FontWeight.BOLD)
         
         # Valori dinamici
@@ -2263,7 +2265,7 @@ class AvventuraEpica:
         if hasattr(self, 'area_stats') and self.area_stats and hasattr(self.area_stats, 'value'):
             valore_stats = self.area_stats.value
         
-        # AGGIUNGI GLI STILI AI TEXTFIELD
+        # TextField con stili
         area_storia_locale = ft.TextField(
             value=valore_storia,
             multiline=True,
@@ -2297,28 +2299,64 @@ class AvventuraEpica:
         self.area_storia = area_storia_locale
         self.area_stats = area_stats_locale
         
-        # Lista di pulsanti
+        # AGGIUNGI PIÙ PULSANTI CON VERI ON_CLICK
         pulsanti_gioco = []
         
-        pulsante_test = ft.ElevatedButton(
-            text="Azione Test",
-            on_click=lambda e: print("Pulsante cliccato"),
+        # Pulsanti manuali (senza azioni_incrementali)
+        pulsante_raccogli = ft.ElevatedButton(
+            text="Raccogli Risorse",
+            on_click=self.raccogli_risorse,  # Vero on_click
             width=280,
             height=50,
             bgcolor=ft.Colors.GREEN_600,
-            color=ft.Colors.WHITE
+            color=ft.Colors.WHITE,
+            tooltip="Raccogli risorse nell'area attuale"
         )
-        pulsanti_gioco.append(pulsante_test)
+        pulsanti_gioco.append(pulsante_raccogli)
         
-        pulsante_test2 = ft.ElevatedButton(
-            text="Azione Test 2",
-            on_click=lambda e: print("Pulsante 2 cliccato"),
+        pulsante_combattimento = ft.ElevatedButton(
+            text="Combattimento",
+            on_click=lambda e: self.page.go("/combattimento"),
             width=280,
             height=50,
             bgcolor=ft.Colors.RED_600,
-            color=ft.Colors.WHITE
+            color=ft.Colors.WHITE,
+            tooltip="Combatti contro i mostri"
         )
-        pulsanti_gioco.append(pulsante_test2)
+        pulsanti_gioco.append(pulsante_combattimento)
+        
+        pulsante_negozio = ft.ElevatedButton(
+            text="Negozio",
+            on_click=lambda e: self.page.go("/negozio"),
+            width=280,
+            height=50,
+            bgcolor=ft.Colors.ORANGE_600,
+            color=ft.Colors.WHITE,
+            tooltip="Visita il negozio"
+        )
+        pulsanti_gioco.append(pulsante_negozio)
+        
+        pulsante_gatti = ft.ElevatedButton(
+            text="Gatti",
+            on_click=lambda e: self.page.go("/gatti"),
+            width=280,
+            height=50,
+            bgcolor=ft.Colors.PINK_600,
+            color=ft.Colors.WHITE,
+            tooltip="Gestisci i tuoi gatti"
+        )
+        pulsanti_gioco.append(pulsante_gatti)
+        
+        pulsante_salva = ft.ElevatedButton(
+            text="Salva Partita",
+            on_click=self.salva_gioco,
+            width=280,
+            height=50,
+            bgcolor=ft.Colors.PURPLE_600,
+            color=ft.Colors.WHITE,
+            tooltip="Salva il tuo progresso"
+        )
+        pulsanti_gioco.append(pulsante_salva)
         
         # Usa Column per i pulsanti
         colonna_pulsanti = ft.Column(
@@ -2338,14 +2376,17 @@ class AvventuraEpica:
             text="Torna al Menu",
             on_click=lambda e: self.page.go("/"),
             width=200,
-            height=50
+            height=50,
+            bgcolor=ft.Colors.GREY_600,
+            color=ft.Colors.WHITE,
+            tooltip="Torna al menu principale"
         )
         
         content = ft.Column([
             titolo,
             ft.Container(
                 content=ft.Column(gioco_controls, spacing=10),
-                height=400,
+                height=400,  # Ancora 400
                 bgcolor=ft.Colors.GREY_800,
                 border_radius=10,
                 padding=10
