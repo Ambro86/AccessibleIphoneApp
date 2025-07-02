@@ -2251,101 +2251,59 @@ class AvventuraEpica:
             bgcolor=ft.Colors.GREY_900
         )
     def crea_vista_gioco(self):
-        """Crea la vista principale di gioco - SENZA pulsanti condizionali"""
+        """Crea la vista principale di gioco - VERSIONE SUPER SEMPLIFICATA"""
         titolo = ft.Text("AVVENTURA IN CORSO", size=24, weight=ft.FontWeight.BOLD)
         
-        # Valori per i TextField
-        valore_storia = "🎮 Benvenuto nell'Avventura Incrementale!"
-        if hasattr(self, 'area_storia') and self.area_storia and hasattr(self.area_storia, 'value'):
-            valore_storia = self.area_storia.value
-        
-        valore_stats = f" Statistiche Giocatore:\n Livello {self.livello} •  {self.vita}/{self.vita_massima} HP •  {self.monete} monete\n Attacco: {self.calcola_attacco_totale()} •  Difesa: {self.calcola_difesa_totale()}\n EXP: {self.esperienza}/{self.esperienza_necessaria}"
-        if hasattr(self, 'area_stats') and self.area_stats and hasattr(self.area_stats, 'value'):
-            valore_stats = self.area_stats.value
-        
-        # Crea i TextField
-        area_storia_locale = ft.TextField(
-            value=valore_storia,
-            multiline=True,
-            read_only=True,
-            expand=True,
-            min_lines=10,
-            max_lines=15,
+        # INVECE dei TextField, usa semplici Text
+        area_storia_locale = ft.Container(
+            content=ft.Text(
+                "🎮 Benvenuto nell'Avventura Incrementale!",
+                size=14,
+                color=ft.Colors.AMBER_100
+            ),
             bgcolor=ft.Colors.DEEP_PURPLE_900,
-            color=ft.Colors.AMBER_100,
-            label="Storia dell'avventura"
+            padding=10,
+            expand=True
         )
         
-        area_stats_locale = ft.TextField(
-            value=valore_stats,
-            multiline=True,
-            read_only=True,
-            min_lines=4,
-            max_lines=6,
+        area_stats_locale = ft.Container(
+            content=ft.Text(
+                "Statistiche Giocatore:\nLivello 1 • 100/100 HP",
+                size=14,
+                color=ft.Colors.CYAN_100
+            ),
             bgcolor=ft.Colors.BLUE_GREY_900,
-            color=ft.Colors.CYAN_100,
-            label="Statistiche giocatore"
+            padding=10
         )
         
-        # Aggiorna riferimenti
-        self.area_storia = area_storia_locale
-        self.area_stats = area_stats_locale
+        # NON assegnare a self.area_storia e self.area_stats
         
-        # SOLO pulsanti statici, NIENTE condizioni if
-        pulsanti_gioco = []
-        
-        pulsante_raccogli = ft.ElevatedButton(
-            text="Raccogli Risorse",
-            on_click=self.raccogli_risorse,
-            width=280,
-            height=50,
-            bgcolor=ft.Colors.GREEN_600,
-            color=ft.Colors.WHITE
-        )
-        
-        pulsante_combattimento = ft.ElevatedButton(
-            text="Combattimento",
-            on_click=lambda e: self.page.go("/combattimento"),
-            width=280,
-            height=50,
-            bgcolor=ft.Colors.RED_600,
-            color=ft.Colors.WHITE
-        )
-        
-        pulsante_negozio = ft.ElevatedButton(
-            text="Negozio",
-            on_click=lambda e: self.page.go("/negozio"),
-            width=280,
-            height=50,
-            bgcolor=ft.Colors.ORANGE_600,
-            color=ft.Colors.WHITE
-        )
-        
-        pulsante_gatti = ft.ElevatedButton(
-            text="Gatti",
-            on_click=lambda e: self.page.go("/gatti"),
-            width=280,
-            height=50,
-            bgcolor=ft.Colors.PINK_600,
-            color=ft.Colors.WHITE
-        )
-        
-        pulsante_salva = ft.ElevatedButton(
-            text="Salva Partita",
-            on_click=self.salva_gioco,
-            width=280,
-            height=50,
-            bgcolor=ft.Colors.PURPLE_600,
-            color=ft.Colors.WHITE
-        )
-        
-        # Aggiungi tutti i pulsanti in una volta
+        # Pulsanti semplici
         pulsanti_gioco = [
-            pulsante_raccogli,
-            pulsante_combattimento,
-            pulsante_negozio,
-            pulsante_gatti,
-            pulsante_salva
+            ft.ElevatedButton(
+                text="Raccogli Risorse",
+                on_click=lambda e: print("click"),
+                width=280,
+                height=50,
+                bgcolor=ft.Colors.GREEN_600,
+                color=ft.Colors.WHITE
+            ),
+            ft.ElevatedButton(
+                text="Combattimento",
+                on_click=lambda e: print("click"),
+                width=280,
+                height=50,
+                bgcolor=ft.Colors.RED_600,
+                color=ft.Colors.WHITE
+            ),
+            ft.ElevatedButton(
+                text="Negozio",
+                on_click=lambda e: print("click"),
+                width=280,
+                height=50,
+                bgcolor=ft.Colors.ORANGE_600,
+                color=ft.Colors.WHITE
+            )
         ]
         
         # Colonna pulsanti
@@ -2365,7 +2323,7 @@ class AvventuraEpica:
         # Pulsante menu
         pulsante_menu = ft.ElevatedButton(
             text="Torna al Menu",
-            on_click=lambda e: self.page.go("/"),
+            on_click=lambda e: print("menu"),
             width=200,
             height=50,
             bgcolor=ft.Colors.GREY_600,
