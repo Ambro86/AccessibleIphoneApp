@@ -2250,14 +2250,23 @@ class AvventuraEpica:
             ],
             bgcolor=ft.Colors.GREY_900
         )
-
     def crea_vista_gioco(self):
-        """Vista SUPER minima per debug"""
+        """Step 1: Solo titolo + container vuoto"""
+        titolo = ft.Text("AVVENTURA IN CORSO", size=24)
+        
+        content = ft.Column([
+            titolo,
+            ft.Container(
+                content=ft.Text("Test contenuto"),
+                height=400,
+                bgcolor=ft.Colors.GREY_800,
+                padding=10
+            )
+        ])
+        
         return ft.View(
             "/gioco",
-            controls=[
-                ft.Text("AVVENTURA IN CORSO", size=24)
-            ],
+            controls=[content],
             bgcolor=ft.Colors.GREY_900
         )
     def crea_vista_gioco_vecchia(self):
