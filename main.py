@@ -2250,10 +2250,9 @@ class AvventuraEpica:
             ],
             bgcolor=ft.Colors.GREY_900
         )
-        
 
     def crea_vista_gioco(self):
-        """Soluzione B: Rimuovi un livello di Container"""
+        """Vista con paginazione per migliore performance"""
         titolo = ft.Text("AVVENTURA IN CORSO", size=24, weight=ft.FontWeight.BOLD)
         
         # Valori dinamici
@@ -2265,7 +2264,7 @@ class AvventuraEpica:
         if hasattr(self, 'area_stats') and self.area_stats and hasattr(self.area_stats, 'value'):
             valore_stats = self.area_stats.value
         
-        # TextField con stili
+        # TextField
         area_storia_locale = ft.TextField(
             value=valore_storia,
             multiline=True,
@@ -2295,17 +2294,16 @@ class AvventuraEpica:
             label="Statistiche giocatore"
         )
         
-        # Assegnazioni self
         self.area_storia = area_storia_locale
         self.area_stats = area_stats_locale
         
-        # Pulsanti dinamici
-        pulsanti_gioco = []
+        # SOLUZIONE: Crea solo i pulsanti ESSENZIALI (max 4-5)
+        pulsanti_essenziali = []
         
-        # Azioni incrementali dinamiche
+        # Azioni incrementali - prendi solo le prime 2-3
         azioni_incrementali = self.azioni_incrementali_possibili()
-        for testo, funzione, tooltip in azioni_incrementali:
-            pulsante_incrementale = ft.ElevatedButton(
+        for i, (testo, funzione, tooltip) in enumerate(azioni_incrementali[:3]):
+            pulsante = ft.ElevatedButton(
                 text=testo,
                 on_click=funzione,
                 width=280,
@@ -2314,125 +2312,140 @@ class AvventuraEpica:
                 color=ft.Colors.WHITE,
                 tooltip=tooltip
             )
-            pulsanti_gioco.append(pulsante_incrementale)
+            pulsanti_essenziali.append(pulsante)
         
-        # Pulsanti statici di navigazione
-        pulsante_combattimento = ft.ElevatedButton(
-            text="Combattimento",
-            on_click=lambda e: self.page.go("/combattimento"),
-            width=280,
-            height=50,
-            bgcolor=ft.Colors.RED_600,
-            color=ft.Colors.WHITE,
-            tooltip="Combatti contro i mostri"
-        )
-        
-        pulsante_negozio = ft.ElevatedButton(
-            text="Negozio",
-            on_click=lambda e: self.page.go("/negozio"),
-            width=280,
-            height=50,
-            bgcolor=ft.Colors.ORANGE_600,
-            color=ft.Colors.WHITE,
-            tooltip="Visita il negozio"
-        )
-        
-        pulsante_gatti = ft.ElevatedButton(
-            text="Gatti",
-            on_click=lambda e: self.page.go("/gatti"),
-            width=280,
-            height=50,
-            bgcolor=ft.Colors.PINK_600,
-            color=ft.Colors.WHITE,
-            tooltip="Gestisci i tuoi gatti"
-        )
-        
-        pulsanti_gioco.extend([pulsante_combattimento, pulsante_negozio, pulsante_gatti])
-        
-        # Pulsante cambio area (condizionale)
-        if len(self.aree_sbloccate) > 1:
-            pulsante_aree = ft.ElevatedButton(
-                text="Cambia Area",
-                on_click=lambda e: self.page.go("/aree"),
+        # Se ci sono più azioni, aggiungi pulsante "Altre Azioni"
+        if len(azioni_incrementali) > 3:
+            pulsante_altre_azioni = ft.ElevatedButton(
+                text=f"Altre {len(azioni_incrementali) - 3} Azioni...",
+                on_click=lambda e: self.mostra_menu_azioni_extra(e),
                 width=280,
                 height=50,
-                bgcolor=ft.Colors.BLUE_600,
+                bgcolor=ft.Colors.GREY_600,
                 color=ft.Colors.WHITE,
-                tooltip="Scegli area da esplorare"
+                tooltip="Mostra altre azioni disponibili"
             )
-            pulsanti_gioco.append(pulsante_aree)
+            pulsanti_essenziali.append(pulsante_altre_azioni)
         
-        # Pulsante boss (condizionale)
-        if (self.area_attuale in self.boss_aree and 
-            self.boss_aree[self.area_attuale]["nome"] not in self.boss_sconfitti and
-            self.progressione_area.get(self.area_attuale, 0) >= 100):
-            pulsante_boss = ft.ElevatedButton(
-                text="Combatti Boss dell'Area!",
-                on_click=self.combatti_boss,
-                width=280,
-                height=50,
-                bgcolor=ft.Colors.DEEP_PURPLE_600,
-                color=ft.Colors.WHITE,
-                tooltip=f"Affronta il boss: {self.boss_aree[self.area_attuale]['nome']}"
+        # Pulsanti navigazione in un Row orizzontale (più compatto)
+        pulsanti_nav = ft.Row([
+            ft.IconButton(
+                icon=ft.Icons.SPORTS_KABADDI,  # Icona combattimento
+                icon_color=ft.Colors.RED_400,
+                icon_size=30,
+                tooltip="Combattimento",
+                on_click=lambda e: self.page.go("/combattimento")
+            ),
+            ft.IconButton(
+                icon=ft.Icons.STORE,  # Icona negozio
+                icon_color=ft.Colors.ORANGE_400,
+                icon_size=30,
+                tooltip="Negozio",
+                on_click=lambda e: self.page.go("/negozio")
+            ),
+            ft.IconButton(
+                icon=ft.Icons.PETS,  # Icona gatti
+                icon_color=ft.Colors.PINK_400,
+                icon_size=30,
+                tooltip="Gatti",
+                on_click=lambda e: self.page.go("/gatti")
+            ),
+            ft.IconButton(
+                icon=ft.Icons.SAVE,  # Icona salva
+                icon_color=ft.Colors.PURPLE_400,
+                icon_size=30,
+                tooltip="Salva",
+                on_click=self.salva_gioco
             )
-            pulsanti_gioco.append(pulsante_boss)
+        ], alignment=ft.MainAxisAlignment.SPACE_AROUND)
         
-        pulsante_salva = ft.ElevatedButton(
-            text="Salva Partita",
-            on_click=self.salva_gioco,
-            width=280,
-            height=50,
-            bgcolor=ft.Colors.PURPLE_600,
-            color=ft.Colors.WHITE,
-            tooltip="Salva il tuo progresso"
-        )
-        pulsanti_gioco.append(pulsante_salva)
-        
-        # Usa Column per i pulsanti
-        colonna_pulsanti = ft.Column(
-            pulsanti_gioco,
-            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-            spacing=15
+        # Container per navigazione
+        container_nav = ft.Container(
+            content=pulsanti_nav,
+            bgcolor=ft.Colors.GREY_800,
+            border_radius=10,
+            padding=10,
+            margin=ft.margin.only(top=10)
         )
         
-        # Controlli di gioco
+        # Controlli principali
         gioco_controls = [
             area_storia_locale,
             area_stats_locale,
-            colonna_pulsanti
+            ft.Column(pulsanti_essenziali, spacing=10),  # Solo pulsanti essenziali
+            container_nav  # Navigazione compatta
         ]
         
         # Pulsante menu
-        pulsante_menu = ft.ElevatedButton(
-            text="Torna al Menu",
-            on_click=lambda e: self.page.go("/"),
-            width=200,
-            height=50,
-            bgcolor=ft.Colors.GREY_600,
-            color=ft.Colors.WHITE,
-            tooltip="Torna al menu principale"
+        pulsante_menu = ft.IconButton(
+            icon=ft.Icons.HOME,  # Icona home
+            icon_color=ft.Colors.GREY_400,
+            icon_size=30,
+            tooltip="Menu Principale",
+            on_click=lambda e: self.page.go("/")
         )
         
-        # Struttura semplificata
+        # Layout finale senza scroll
         content = ft.Column([
-            titolo,
+            ft.Row([
+                titolo,
+                pulsante_menu
+            ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
             ft.Container(
                 content=ft.Column(gioco_controls, spacing=10),
-                height=800,
                 bgcolor=ft.Colors.GREY_800,
                 border_radius=10,
-                padding=10
-            ),
-            pulsante_menu
-        ], scroll=ft.ScrollMode.AUTO, spacing=30, expand=True)
+                padding=10,
+                expand=True
+            )
+        ], spacing=20, expand=True)
         
-        # SOLUZIONE B: RIMUOVI il Container wrapper esterno
         return ft.View(
             "/gioco",
-            controls=[content],  # Passa content DIRETTAMENTE
-            bgcolor=ft.Colors.GREY_900,
-            padding=20  # Sposta il padding qui nella View
+            controls=[
+                ft.Container(
+                    content=content,
+                    bgcolor=ft.Colors.GREY_900,
+                    padding=20,
+                    expand=True
+                )
+            ],
+            bgcolor=ft.Colors.GREY_900
         )
+
+    def mostra_menu_azioni_extra(self, e):
+        """Mostra un dialog con le azioni extra"""
+        azioni_incrementali = self.azioni_incrementali_possibili()
+        azioni_extra = azioni_incrementali[3:]  # Salta le prime 3
+        
+        pulsanti_dialog = []
+        for testo, funzione, tooltip in azioni_extra:
+            def crea_handler(f):
+                def handler(e):
+                    self.page.close(dlg)
+                    f(e)
+                return handler
+            
+            pulsante = ft.TextButton(
+                text=testo,
+                on_click=crea_handler(funzione)
+            )
+            pulsanti_dialog.append(pulsante)
+        
+        dlg = ft.AlertDialog(
+            title=ft.Text("Altre Azioni"),
+            content=ft.Column(
+                pulsanti_dialog,
+                tight=True,
+                scroll=ft.ScrollMode.AUTO,
+                height=300
+            ),
+            actions=[
+                ft.TextButton("Chiudi", on_click=lambda e: self.page.close(dlg))
+            ]
+        )
+        
+        self.page.open(dlg)
     def crea_vista_gioco_vecchia(self):
         """Crea la vista principale di gioco"""
         # Crea tutte le variabili locali per evitare il problema dell'elemento vuoto in VoiceOver
