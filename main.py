@@ -2251,12 +2251,17 @@ class AvventuraEpica:
             bgcolor=ft.Colors.GREY_900
         )
     def crea_vista_gioco(self):
-        """Test 2: Step 4 + lista pulsanti + assegnazioni self"""
+        """Test 3: Step 4 + lista + self + valori dinamici"""
         titolo = ft.Text("AVVENTURA IN CORSO", size=24, weight=ft.FontWeight.BOLD)
         
-        # Valori per i TextField
+        # AGGIUNGI I VALORI DINAMICI
         valore_storia = "🎮 Benvenuto nell'Avventura Incrementale!"
-        valore_stats = f"Statistiche Giocatore:\nLivello 1 • 100/100 HP"
+        if hasattr(self, 'area_storia') and self.area_storia and hasattr(self.area_storia, 'value'):
+            valore_storia = self.area_storia.value
+        
+        valore_stats = f" Statistiche Giocatore:\n Livello {self.livello} •  {self.vita}/{self.vita_massima} HP •  {self.monete} monete\n Attacco: {self.calcola_attacco_totale()} •  Difesa: {self.calcola_difesa_totale()}\n EXP: {self.esperienza}/{self.esperienza_necessaria}"
+        if hasattr(self, 'area_stats') and self.area_stats and hasattr(self.area_stats, 'value'):
+            valore_stats = self.area_stats.value
         
         # Crea i TextField
         area_storia_locale = ft.TextField(
@@ -2276,7 +2281,7 @@ class AvventuraEpica:
             max_lines=6
         )
         
-        # AGGIUNGI LE ASSEGNAZIONI SELF
+        # Assegnazioni self
         self.area_storia = area_storia_locale
         self.area_stats = area_stats_locale
         
