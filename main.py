@@ -2426,7 +2426,7 @@ class AvventuraEpica:
                 bgcolor=ft.Colors.GREY_800,
                 border_radius=10,
                 padding=10,
-                expand=True
+                height=800
             ),
             pulsante_menu
         ], scroll=ft.ScrollMode.AUTO, spacing=30, expand=True)
