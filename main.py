@@ -2329,33 +2329,41 @@ class AvventuraEpica:
         
         # Pulsanti navigazione in un Row orizzontale (più compatto)
         pulsanti_nav = ft.Row([
-            ft.IconButton(
-                icon=ft.Icons.SPORTS_KABADDI,  # Icona combattimento
+            ft.ElevatedButton(
+                text="Combattimento",
+                icon=ft.Icons.SPORTS_KABADDI,
                 icon_color=ft.Colors.RED_400,
-                icon_size=30,
-                tooltip="Combattimento",
-                on_click=lambda e: self.page.go("/combattimento")
+                on_click=lambda e: self.page.go("/combattimento"),
+                bgcolor=ft.Colors.RED_600,
+                color=ft.Colors.WHITE,
+                tooltip="Vai al combattimento"
             ),
-            ft.IconButton(
-                icon=ft.Icons.STORE,  # Icona negozio
+            ft.ElevatedButton(
+                text="Negozio",
+                icon=ft.Icons.STORE,
                 icon_color=ft.Colors.ORANGE_400,
-                icon_size=30,
-                tooltip="Negozio",
-                on_click=lambda e: self.page.go("/negozio")
+                on_click=lambda e: self.page.go("/negozio"),
+                bgcolor=ft.Colors.ORANGE_600,
+                color=ft.Colors.WHITE,
+                tooltip="Vai al negozio"
             ),
-            ft.IconButton(
-                icon=ft.Icons.PETS,  # Icona gatti
+            ft.ElevatedButton(
+                text="Gatti",
+                icon=ft.Icons.PETS,
                 icon_color=ft.Colors.PINK_400,
-                icon_size=30,
-                tooltip="Gatti",
-                on_click=lambda e: self.page.go("/gatti")
+                on_click=lambda e: self.page.go("/gatti"),
+                bgcolor=ft.Colors.PINK_600,
+                color=ft.Colors.WHITE,
+                tooltip="Gestisci i tuoi gatti"
             ),
-            ft.IconButton(
-                icon=ft.Icons.SAVE,  # Icona salva
+            ft.ElevatedButton(
+                text="Salva",
+                icon=ft.Icons.SAVE,
                 icon_color=ft.Colors.PURPLE_400,
-                icon_size=30,
-                tooltip="Salva",
-                on_click=self.salva_gioco
+                on_click=self.salva_gioco,
+                bgcolor=ft.Colors.PURPLE_600,
+                color=ft.Colors.WHITE,
+                tooltip="Salva la partita"
             )
         ], alignment=ft.MainAxisAlignment.SPACE_AROUND)
         
