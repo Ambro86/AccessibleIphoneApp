@@ -2250,8 +2250,17 @@ class AvventuraEpica:
             ],
             bgcolor=ft.Colors.GREY_900
         )
-    
+
     def crea_vista_gioco(self):
+        """Vista SUPER minima per debug"""
+        return ft.View(
+            "/gioco",
+            controls=[
+                ft.Text("AVVENTURA IN CORSO", size=24)
+            ],
+            bgcolor=ft.Colors.GREY_900
+        )
+    def crea_vista_gioco_vecchia(self):
         """Crea la vista principale di gioco"""
         # Crea tutte le variabili locali per evitare il problema dell'elemento vuoto in VoiceOver
         titolo = ft.Text(
