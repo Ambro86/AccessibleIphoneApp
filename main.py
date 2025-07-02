@@ -48,6 +48,11 @@ class AvventuraEpica:
             print(f"✅ OTTIMO: Nessun problema di accessibilità rilevato!")
         
         print(f"\n🔍 ========================================\n")
+        
+        # Stampa ordine di lettura
+        print("\n📐 ORDINE VISIVO E DI LETTURA:")
+        for c in view.controls:
+            self._stampa_ordine_lettura(c)
 
     def _analizza_control(self, control, path, problemi=None):
         if problemi is None:
@@ -186,6 +191,28 @@ class AvventuraEpica:
                 count += self._conta_elementi(c)
                 
         return count
+
+    def _stampa_ordine_lettura(self, control, depth=0):
+        indent = "  " * depth
+        if isinstance(control, ft.Text):
+            descr = f'Text: "{control.value}"'
+        elif isinstance(control, ft.Container):
+            descr = f'Container: height={control.height}, width={control.width}'
+        elif isinstance(control, ft.Column):
+            descr = "Column"
+        elif isinstance(control, ft.Row):
+            descr = "Row"
+        else:
+            descr = control.__class__.__name__
+        
+        print(f"{indent}- {descr}")
+        
+        # Analizza figli
+        if hasattr(control, 'content') and control.content:
+            self._stampa_ordine_lettura(control.content, depth + 1)
+        if hasattr(control, 'controls') and control.controls:
+            for c in control.controls:
+                self._stampa_ordine_lettura(c, depth + 1)
 
     def inizializza_gioco(self):
         # Nuove aree con progressione lineare + area segreta
@@ -1840,6 +1867,8 @@ class AvventuraEpica:
             boss_nome = self.boss_aree[self.area_attuale]["nome"]
             azioni.append(("Combatti Boss dell'Area!", self.combatti_boss, f"Affronta {boss_nome}"))
         
+        # Inventario sempre disponibile (in fondo alla lista)
+        azioni.append(("Inventario", self.vai_a_inventario, "Visualizza inventario ed equipaggiamento"))
             
         return azioni
     
@@ -2224,7 +2253,9 @@ class AvventuraEpica:
             size=24, 
             weight=ft.FontWeight.BOLD, 
             text_align=ft.TextAlign.CENTER,
-            color=ft.Colors.AMBER_400
+            color=ft.Colors.AMBER_400,
+            semantics_label="Avventura in corso",
+            style=ft.TextThemeStyle.HEADLINE_MEDIUM
         )
         
         # Ottieni i valori attuali dalle variabili globali se esistono
@@ -2331,17 +2362,7 @@ class AvventuraEpica:
             tooltip="Gestisci i tuoi gatti"
         )
         
-        pulsante_inventario = ft.ElevatedButton(
-            text="Inventario",
-            on_click=lambda e: self.page.go("/inventario"),
-            width=280,
-            height=50,
-            bgcolor=ft.Colors.CYAN_600,
-            color=ft.Colors.WHITE,
-            tooltip="Gestisci inventario"
-        )
-        
-        pulsanti_gioco.extend([pulsante_combattimento, pulsante_negozio, pulsante_gatti, pulsante_inventario])
+        pulsanti_gioco.extend([pulsante_combattimento, pulsante_negozio, pulsante_gatti])
         
         # Pulsante boss - variabile locale
         if (self.area_attuale in self.boss_aree and 
@@ -2391,7 +2412,7 @@ class AvventuraEpica:
             tooltip="Torna al menu principale"
         )
         
-        # Content principale - variabile locale
+        # Content principale - variabile locale  
         content = ft.Column([
             titolo,
             ft.Container(
