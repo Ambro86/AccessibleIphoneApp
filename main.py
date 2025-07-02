@@ -2251,12 +2251,17 @@ class AvventuraEpica:
             bgcolor=ft.Colors.GREY_900
         )
     def crea_vista_gioco(self):
-        """Step 4: Vista con TextField e UN pulsante"""
+        """Step 5: Vista con pulsanti dinamici"""
         titolo = ft.Text("AVVENTURA IN CORSO", size=24, weight=ft.FontWeight.BOLD)
         
         # Valori per i TextField
         valore_storia = "🎮 Benvenuto nell'Avventura Incrementale!"
-        valore_stats = f"Statistiche Giocatore:\nLivello 1 • 100/100 HP"
+        if hasattr(self, 'area_storia') and self.area_storia and hasattr(self.area_storia, 'value'):
+            valore_storia = self.area_storia.value
+        
+        valore_stats = f" Statistiche Giocatore:\n Livello {self.livello} •  {self.vita}/{self.vita_massima} HP •  {self.monete} monete\n Attacco: {self.calcola_attacco_totale()} •  Difesa: {self.calcola_difesa_totale()}\n EXP: {self.esperienza}/{self.esperienza_necessaria}"
+        if hasattr(self, 'area_stats') and self.area_stats and hasattr(self.area_stats, 'value'):
+            valore_stats = self.area_stats.value
         
         # Crea i TextField
         area_storia_locale = ft.TextField(
@@ -2265,7 +2270,10 @@ class AvventuraEpica:
             read_only=True,
             expand=True,
             min_lines=10,
-            max_lines=15
+            max_lines=15,
+            bgcolor=ft.Colors.DEEP_PURPLE_900,
+            color=ft.Colors.AMBER_100,
+            label="Storia dell'avventura"
         )
         
         area_stats_locale = ft.TextField(
@@ -2273,41 +2281,118 @@ class AvventuraEpica:
             multiline=True,
             read_only=True,
             min_lines=4,
-            max_lines=6
+            max_lines=6,
+            bgcolor=ft.Colors.BLUE_GREY_900,
+            color=ft.Colors.CYAN_100,
+            label="Statistiche giocatore"
         )
         
-        # Crea UN SOLO pulsante di test
-        pulsante_test = ft.ElevatedButton(
-            text="Azione Test",
-            on_click=lambda e: print("Pulsante cliccato"),
+        # Aggiorna riferimenti
+        self.area_storia = area_storia_locale
+        self.area_stats = area_stats_locale
+        
+        # PULSANTI DINAMICI - Aggiungiamoli gradualmente
+        pulsanti_gioco = []
+        
+        # Prima aggiungi SOLO le azioni incrementali
+        azioni_incrementali = self.azioni_incrementali_possibili()
+        for testo, funzione, tooltip in azioni_incrementali:
+            pulsante_incrementale = ft.ElevatedButton(
+                text=testo,
+                on_click=funzione,
+                width=280,
+                height=50,
+                bgcolor=ft.Colors.GREEN_600,
+                color=ft.Colors.WHITE,
+                tooltip=tooltip
+            )
+            pulsanti_gioco.append(pulsante_incrementale)
+        
+        # Aggiungi pulsanti di navigazione statici
+        pulsante_combattimento = ft.ElevatedButton(
+            text="Combattimento",
+            on_click=lambda e: self.page.go("/combattimento"),
             width=280,
             height=50,
-            bgcolor=ft.Colors.GREEN_600,
+            bgcolor=ft.Colors.RED_600,
             color=ft.Colors.WHITE
         )
         
-        # Metti tutto insieme
+        pulsante_negozio = ft.ElevatedButton(
+            text="Negozio",
+            on_click=lambda e: self.page.go("/negozio"),
+            width=280,
+            height=50,
+            bgcolor=ft.Colors.ORANGE_600,
+            color=ft.Colors.WHITE
+        )
+        
+        pulsante_gatti = ft.ElevatedButton(
+            text="Gatti",
+            on_click=lambda e: self.page.go("/gatti"),
+            width=280,
+            height=50,
+            bgcolor=ft.Colors.PINK_600,
+            color=ft.Colors.WHITE
+        )
+        
+        pulsanti_gioco.extend([pulsante_combattimento, pulsante_negozio, pulsante_gatti])
+        
+        # COMMENTA PER ORA i pulsanti condizionali
+        # # Pulsante cambio area
+        # if len(self.aree_sbloccate) > 1:
+        #     pulsante_aree = ft.ElevatedButton(...)
+        #     pulsanti_gioco.append(pulsante_aree)
+        
+        # # Pulsante boss
+        # if (self.area_attuale in self.boss_aree and ...):
+        #     pulsante_boss = ft.ElevatedButton(...)
+        #     pulsanti_gioco.append(pulsante_boss)
+        
+        # Pulsante salva
+        pulsante_salva = ft.ElevatedButton(
+            text="Salva Partita",
+            on_click=self.salva_gioco,
+            width=280,
+            height=50,
+            bgcolor=ft.Colors.PURPLE_600,
+            color=ft.Colors.WHITE
+        )
+        pulsanti_gioco.append(pulsante_salva)
+        
+        # Colonna pulsanti
+        colonna_pulsanti = ft.Column(
+            pulsanti_gioco, 
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER, 
+            spacing=15
+        )
+        
+        # Controlli di gioco
         gioco_controls = [
             area_storia_locale,
             area_stats_locale,
-            pulsante_test  # Solo UN pulsante
+            colonna_pulsanti
         ]
         
+        # Pulsante menu
         pulsante_menu = ft.ElevatedButton(
             text="Torna al Menu",
             on_click=lambda e: self.page.go("/"),
             width=200,
-            height=50
+            height=50,
+            bgcolor=ft.Colors.GREY_600,
+            color=ft.Colors.WHITE
         )
         
+        # Content principale
         content = ft.Column([
             titolo,
             ft.Container(
                 content=ft.Column(gioco_controls, spacing=10),
-                height=400,
                 bgcolor=ft.Colors.GREY_800,
                 border_radius=10,
-                padding=10
+                padding=10,
+                height=800
             ),
             pulsante_menu
         ], scroll=ft.ScrollMode.AUTO, spacing=30, expand=True)
