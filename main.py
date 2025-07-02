@@ -15,6 +15,178 @@ class AvventuraEpica:
         self.crea_ui()
         self.app_inizializzata = True  # Ora l'app è pronta
         
+
+    def analizza_accessibilita(self, view):
+        print(f"\n🔍 ========== ANALISI ACCESSIBILITÀ ==========\n🎯 VIEW: {view.route}\n📱 PIATTAFORMA: {self.page.platform}")
+        
+        # Statistiche generali
+        problemi_totali = []
+        elementi_totali = 0
+        
+        for idx, control in enumerate(view.controls):
+            problemi = self._analizza_control(control, path=f"root[{idx}]", problemi=[])
+            problemi_totali.extend(problemi)
+            elementi_totali += self._conta_elementi(control)
+        
+        # Riepilogo finale
+        print(f"\n📊 RIEPILOGO ACCESSIBILITÀ:")
+        print(f"🔢 Elementi totali: {elementi_totali}")
+        print(f"⚠️  Problemi trovati: {len(problemi_totali)}")
+        
+        if problemi_totali:
+            print(f"\n❌ PROBLEMI CRITICI DA RISOLVERE:")
+            for i, problema in enumerate(problemi_totali, 1):
+                if isinstance(problema, dict):
+                    print(f"\n   {i}. 📍 POSIZIONE: {problema['path']}")
+                    print(f"      🏷️  TIPO: {problema['tipo']} - {problema['descrizione']}")
+                    print(f"      🔧 SOLUZIONE: {problema['raccomandazione']}")
+                    print(f"      ♿ PERCHÉ: {problema['impatto_accessibilita']}")
+                else:
+                    print(f"   {i}. {problema}")
+            print(f"\n🎯 PRIORITÀ: Risolvi questi problemi per migliorare l'accessibilità della view '{view.route}'")
+        else:
+            print(f"✅ OTTIMO: Nessun problema di accessibilità rilevato!")
+        
+        print(f"\n🔍 ========================================\n")
+
+    def _analizza_control(self, control, path, problemi=None):
+        if problemi is None:
+            problemi = []
+            
+        # Controlli vuoti rilevanti
+        vuoto = False
+        raccomandazione = ""
+        
+        if isinstance(control, ft.Text):
+            if not control.value or not control.value.strip():
+                vuoto = True
+                raccomandazione = "TEXT VUOTO - Aggiungi valore al text o rimuovi l'elemento"
+        elif isinstance(control, ft.Container):
+            if not control.content:
+                vuoto = True
+                raccomandazione = self._genera_raccomandazione_container(control, path)
+        elif isinstance(control, (ft.Column, ft.Row)):
+            if not getattr(control, 'controls', []):
+                vuoto = True
+                raccomandazione = f"Rimuovi {type(control).__name__} vuoto o aggiungi elementi"
+        elif isinstance(control, ft.TextField):
+            if not control.value and not control.label and not control.hint_text:
+                vuoto = True
+                raccomandazione = "Aggiungi label, hint_text o valore iniziale"
+        elif isinstance(control, ft.ElevatedButton):
+            if not control.text and not control.content:
+                vuoto = True
+                raccomandazione = "Aggiungi text o content al button"
+        elif isinstance(control, ft.Card):
+            if not control.content:
+                vuoto = True
+                raccomandazione = "Aggiungi content alla Card o rimuovila"
+        
+        if vuoto:
+            problema = {
+                'path': path,
+                'tipo': type(control).__name__,
+                'descrizione': f"{type(control).__name__} vuoto",
+                'raccomandazione': raccomandazione,
+                'impatto_accessibilita': self._spiega_impatto_accessibilita(control)
+            }
+            problemi.append(problema)
+            print(f"⚠️  {path} → {type(control).__name__}: {problema['descrizione']}")
+            print(f"🔧 SOLUZIONE: {raccomandazione}")
+            print(f"♿ IMPATTO: {problema['impatto_accessibilita']}")
+        
+        # Verifica problemi di accessibilità aggiuntivi
+        self._verifica_accessibilita_specifica(control, path, problemi)
+        
+        # Analizza figli
+        if hasattr(control, 'content') and control.content:
+            self._analizza_control(control.content, path + ".content", problemi)
+        if hasattr(control, 'controls') and control.controls:
+            for i, c in enumerate(control.controls):
+                self._analizza_control(c, f"{path}.controls[{i}]", problemi)
+                
+        return problemi
+    
+    def _genera_raccomandazione_container(self, control, path):
+        """Genera raccomandazione specifica per Container vuoti"""
+        # Controlla se è un spaziatore (ha solo height)
+        if hasattr(control, 'height') and control.height and not control.width:
+            spacing_value = int(control.height * 1.5) if isinstance(control.height, (int, float)) else 30
+            return f"SPAZIATORE VUOTO - Rimuovi 'ft.Container(height={control.height})' e aumenta spacing del parent Column/Row a {spacing_value}"
+        elif hasattr(control, 'width') and control.width and not control.height:
+            return f"SPAZIATORE VUOTO - Rimuovi 'ft.Container(width={control.width})' e usa padding o margin"
+        else:
+            return "CONTAINER VUOTO - Aggiungi content o rimuovi completamente"
+    
+    def _spiega_impatto_accessibilita(self, control):
+        """Spiega perché l'elemento vuoto è problematico per l'accessibilità"""
+        if isinstance(control, ft.Container):
+            return "Screen reader si confonde con elementi vuoti, crea navigazione inconsistente"
+        elif isinstance(control, ft.Text):
+            return "Text vuoto causa pause confuse nella lettura dello screen reader"
+        elif isinstance(control, (ft.Column, ft.Row)):
+            return "Layout vuoto può causare problemi di focus e navigazione"
+        else:
+            return "Elemento vuoto può confondere gli utenti con disabilità visive"
+    
+    def _verifica_accessibilita_specifica(self, control, path, problemi):
+        """Verifica problemi specifici di accessibilità"""
+        
+        # Verifica bottoni senza tooltip
+        if isinstance(control, (ft.ElevatedButton, ft.TextButton, ft.IconButton)):
+            if not getattr(control, 'tooltip', None):
+                problema = {
+                    'path': path,
+                    'tipo': type(control).__name__,
+                    'descrizione': 'Manca tooltip',
+                    'raccomandazione': f"Aggiungi tooltip=\"Descrizione azione\" al button",
+                    'impatto_accessibilita': 'Utenti screen reader non capiscono la funzione del button'
+                }
+                problemi.append(problema)
+                print(f"💡 {path} → {type(control).__name__}: Manca tooltip")
+                print(f"🔧 SOLUZIONE: {problema['raccomandazione']}")
+        
+        # Verifica immagini senza semantics
+        if isinstance(control, ft.Image):
+            if not getattr(control, 'semantics_label', None):
+                problema = {
+                    'path': path,
+                    'tipo': 'Image',
+                    'descrizione': 'Manca semantics_label',
+                    'raccomandazione': 'Aggiungi semantics_label="Descrizione immagine"',
+                    'impatto_accessibilita': 'Screen reader non può descrivere l\'immagine agli utenti non vedenti'
+                }
+                problemi.append(problema)
+                print(f"🖼️  {path} → Image: Manca semantics_label")
+                print(f"🔧 SOLUZIONE: {problema['raccomandazione']}")
+        
+        # Verifica testi troppo piccoli
+        if isinstance(control, ft.Text):
+            size = getattr(control, 'size', 14)
+            if size is not None and size < 12:
+                problema = {
+                    'path': path,
+                    'tipo': 'Text',
+                    'descrizione': f'Testo troppo piccolo ({size}px)',
+                    'raccomandazione': f'Aumenta size a minimo 12px (raccomandato 14px+)',
+                    'impatto_accessibilita': 'Testo piccolo difficile da leggere per utenti ipovedenti'
+                }
+                problemi.append(problema)
+                print(f"📏 {path} → Text: Dimensione troppo piccola ({size}px)")
+                print(f"🔧 SOLUZIONE: {problema['raccomandazione']}")
+    
+    def _conta_elementi(self, control):
+        """Conta il numero totale di elementi UI"""
+        count = 1
+        
+        if hasattr(control, 'content') and control.content:
+            count += self._conta_elementi(control.content)
+        if hasattr(control, 'controls') and control.controls:
+            for c in control.controls:
+                count += self._conta_elementi(c)
+                
+        return count
+
     def inizializza_gioco(self):
         # Nuove aree con progressione lineare + area segreta
         self.aree_ordinate = [
@@ -1668,8 +1840,6 @@ class AvventuraEpica:
             boss_nome = self.boss_aree[self.area_attuale]["nome"]
             azioni.append(("Combatti Boss dell'Area!", self.combatti_boss, f"Affronta {boss_nome}"))
         
-        # Inventario sempre disponibile (in fondo alla lista)
-        azioni.append(("Inventario", self.vai_a_inventario, "Visualizza inventario ed equipaggiamento"))
             
         return azioni
     
@@ -1830,7 +2000,9 @@ class AvventuraEpica:
         
         # Inizializza con la vista del menu principale
         self.page.views.clear()
-        self.page.views.append(self.crea_vista_menu_principale())
+        vista_menu = self.crea_vista_menu_principale()
+        self.page.views.append(vista_menu)
+        self.analizza_accessibilita(vista_menu)  # 👈 Diagnostica la view
         self.page.go("/")
     
     def inizia_o_continua_gioco(self, e):
@@ -1856,71 +2028,92 @@ class AvventuraEpica:
         # Sincronizza esperienza
         if hasattr(self, 'esperienza_prossimo_livello'):
             self.esperienza_necessaria = self.esperienza_prossimo_livello
-    
+
     def route_change(self, route):
         """Handler per cambiamenti di route"""
         print(f"🧭 NAVIGAZIONE: Route cambiata a '{route.route}'")
-        
-        if route.route == "/":
+
+        # Sempre pulire prima di cambiare vista
+        if route.route != "/gioco" or (len(self.page.views) == 0 or self.page.views[-1].route != "/gioco"):
             self.page.views.clear()
-            self.page.views.append(self.crea_vista_menu_principale())
-        elif route.route == "/gioco":
-            # Controlla se l'ULTIMA vista è già /gioco per evitare duplicati
-            if len(self.page.views) > 0 and self.page.views[-1].route == "/gioco":
-                print(f"🎮 DEBUG: Vista /gioco già presente come ultima vista, non aggiungo duplicato")
-            else:
-                print(f"🎮 DEBUG: Aggiungendo nuova vista /gioco (stack attuale: {[v.route for v in self.page.views]})")
-                self.page.views.append(self.crea_vista_gioco())
-        elif route.route == "/impostazioni":
-            self.page.views.append(self.crea_vista_impostazioni())
-        elif route.route == "/info":
-            self.page.views.append(self.crea_vista_info())
-        elif route.route == "/negozio":
-            self.page.views.append(self.crea_vista_negozio())
-        elif route.route == "/aree":
-            self.page.views.append(self.crea_vista_aree())
-        elif route.route == "/combattimento":
-            self.page.views.append(self.crea_vista_combattimento())
-        elif route.route == "/gatti":
-            self.page.views.append(self.crea_vista_gatti())
-        elif route.route == "/inventario":
-            self.page.views.append(self.crea_vista_inventario())
-        elif route.route == "/statistiche":
-            self.page.views.append(self.crea_vista_statistiche())
-        elif route.route == "/rinomina_gatto":
-            self.page.views.append(self.crea_vista_rinomina_gatto())
-        elif route.route == "/gestione_reliquie":
-            self.page.views.append(self.crea_vista_gestione_reliquie())
-        
+
+        match route.route:
+            case "/":
+                vista = self.crea_vista_menu_principale()
+                self.page.views.append(vista)
+                self.analizza_accessibilita(vista)
+            case "/gioco":
+                if len(self.page.views) > 0 and self.page.views[-1].route == "/gioco":
+                    print(f"🎮 DEBUG: Vista /gioco già presente, non duplico")
+                else:
+                    vista = self.crea_vista_gioco()
+                    self.page.views.append(vista)
+                    self.analizza_accessibilita(vista)
+            case "/impostazioni":
+                vista = self.crea_vista_impostazioni()
+                self.page.views.append(vista)
+                self.analizza_accessibilita(vista)
+            case "/info":
+                vista = self.crea_vista_info()
+                self.page.views.append(vista)
+                self.analizza_accessibilita(vista)
+            case "/negozio":
+                vista = self.crea_vista_negozio()
+                self.page.views.append(vista)
+                self.analizza_accessibilita(vista)
+            case "/aree":
+                vista = self.crea_vista_aree()
+                self.page.views.append(vista)
+                self.analizza_accessibilita(vista)
+            case "/combattimento":
+                vista = self.crea_vista_combattimento()
+                self.page.views.append(vista)
+                self.analizza_accessibilita(vista)
+            case "/gatti":
+                vista = self.crea_vista_gatti()
+                self.page.views.append(vista)
+                self.analizza_accessibilita(vista)
+            case "/inventario":
+                vista = self.crea_vista_inventario()
+                self.page.views.append(vista)
+                self.analizza_accessibilita(vista)
+            case "/statistiche":
+                vista = self.crea_vista_statistiche()
+                self.page.views.append(vista)
+                self.analizza_accessibilita(vista)
+            case "/rinomina_gatto":
+                vista = self.crea_vista_rinomina_gatto()
+                self.page.views.append(vista)
+                self.analizza_accessibilita(vista)
+            case "/gestione_reliquie":
+                vista = self.crea_vista_gestione_reliquie()
+                self.page.views.append(vista)
+                self.analizza_accessibilita(vista)
+            case _:
+                vista = self.crea_vista_menu_principale()
+                self.page.views.append(vista)
+                self.analizza_accessibilita(vista)
+
         self.page.update()
         self.haptic_feedback("light")
-    
+
     def torna_indietro(self, e=None):
-        """Torna alla vista precedente"""
         print(f"🔙 Torna indietro - Views: {len(self.page.views)}")
-        
+
         if len(self.page.views) > 1:
-            current_route = self.page.views[-1].route if len(self.page.views) > 0 else "None"
             self.page.views.pop()
-            # Ottieni il route della vista precedente
-            if len(self.page.views) > 0:
-                previous_view = self.page.views[-1]
-                print(f"🔙 DEBUG: {current_route} → {previous_view.route}")
-                self.page.go(previous_view.route)
-            else:
-                print(f"🔙 DEBUG: {current_route} → / (nessuna vista precedente)")
-                self.page.go("/")
+            previous_route = self.page.views[-1].route if len(self.page.views) > 0 else "/"
+            self.page.views.clear()
+            self.page.go(previous_route)
         else:
-            # Se non ci sono viste precedenti, vai al menu principale o alla schermata di gioco
-            if self.gioco_iniziato:
-                self.page.go("/gioco")
-            else:
-                self.page.go("/")
-        
+            self.page.views.clear()
+            self.page.go("/gioco" if self.gioco_iniziato else "/")
+
         self.haptic_feedback("light")
-    
+
     def naviga_a_schermata(self, nuova_schermata):
-        """Naviga a una nuova schermata usando page.go()"""
+        """Naviga a una nuova schermata usando page.go(), evitando navigazioni ridondanti"""
+        
         route_map = {
             "menu_principale": "/",
             "gioco": "/gioco",
@@ -1935,11 +2128,15 @@ class AvventuraEpica:
             "rinomina_gatto": "/rinomina_gatto",
             "gestione_reliquie": "/gestione_reliquie"
         }
-        
+
         route = route_map.get(nuova_schermata, "/")
-        print(f"🧭 NAVIGAZIONE: Andando a {nuova_schermata} -> {route}")
-        self.page.go(route)
-    
+        
+        if self.page.route != route:
+            print(f"🧭 NAVIGAZIONE: Andando a {nuova_schermata} -> {route}")
+            self.page.go(route)
+        else:
+            print(f"ℹ️ Già sulla schermata '{nuova_schermata}', nessuna navigazione necessaria.")
+
     def crea_pulsante_indietro(self):
         """Crea pulsante per tornare indietro"""
         return ft.ElevatedButton(
@@ -2003,9 +2200,8 @@ class AvventuraEpica:
         
         content = ft.Column([
             titolo,
-            ft.Container(height=30),
             ft.Column(pulsanti, horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=20)
-        ], scroll=ft.ScrollMode.AUTO, spacing=20, expand=True)
+        ], scroll=ft.ScrollMode.AUTO, spacing=50, expand=True)
         
         return ft.View(
             "/",
@@ -2198,7 +2394,6 @@ class AvventuraEpica:
         # Content principale - variabile locale
         content = ft.Column([
             titolo,
-            ft.Container(height=20),
             ft.Container(
                 content=ft.Column(gioco_controls, spacing=10),
                 bgcolor=ft.Colors.GREY_800,
@@ -2206,9 +2401,8 @@ class AvventuraEpica:
                 padding=10,
                 expand=True
             ),
-            ft.Container(height=20),
             pulsante_menu
-        ], scroll=ft.ScrollMode.AUTO, spacing=20, expand=True)
+        ], scroll=ft.ScrollMode.AUTO, spacing=30, expand=True)
         
         return ft.View(
             "/gioco",
@@ -2282,13 +2476,10 @@ class AvventuraEpica:
         impostazioni_controls = [
             ft.Text("Audio", size=16, weight=ft.FontWeight.BOLD),
             toggle_audio,
-            ft.Container(height=10),
             self.volume_musica_label_tab,
             slider_volume_musica,
-            ft.Container(height=10),
             self.volume_effetti_label_tab,
             slider_volume_effetti,
-            ft.Container(height=10),
             test_audio_btn,
             ft.Divider(),
             ft.Text("Feedback", size=16, weight=ft.FontWeight.BOLD),
@@ -2297,17 +2488,15 @@ class AvventuraEpica:
         
         content = ft.Column([
             titolo,
-            ft.Container(height=20),
             ft.Container(
-                content=ft.Column(impostazioni_controls, spacing=10),
+                content=ft.Column(impostazioni_controls, spacing=15),
                 height=400,
                 bgcolor=ft.Colors.GREY_800,
                 border_radius=10,
                 padding=10
             ),
-            ft.Container(height=20),
             self.crea_pulsante_indietro()
-        ], scroll=ft.ScrollMode.AUTO, spacing=20, expand=True)
+        ], scroll=ft.ScrollMode.AUTO, spacing=30, expand=True)
         
         return ft.View(
             "/impostazioni",
@@ -2334,13 +2523,10 @@ class AvventuraEpica:
         
         # Crea contenuto info direttamente qui (come fa inventario)
         info_controls = [
-            ft.Container(height=20),
             ft.Text("AVVENTURA EPICA", size=24, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER),
-            ft.Container(height=10),
             ft.Text(f" Versione: {self.versione}", size=16),
             ft.Text(f"Autore: {self.autore}", size=16),
             ft.Text("Data rilascio: 18 giugno 2025", size=16),
-            ft.Container(height=20),
             ft.Text("Descrizione:", size=16, weight=ft.FontWeight.BOLD),
             ft.Text(
                 "Un emozionante RPG accessibile con audio immersivo e feedback aptico. "
@@ -2349,7 +2535,6 @@ class AvventuraEpica:
                 size=14,
                 text_align=ft.TextAlign.CENTER
             ),
-            ft.Container(height=20),
             ft.Text("Caratteristiche:", size=16, weight=ft.FontWeight.BOLD),
             ft.Text("16 aree uniche da esplorare", size=14),
             ft.Text("Sistema di combattimento con livellamento", size=14),
@@ -2363,17 +2548,15 @@ class AvventuraEpica:
         
         content = ft.Column([
             titolo,
-            ft.Container(height=20),
             ft.Container(
-                content=ft.Column(info_controls, spacing=10),
+                content=ft.Column(info_controls, spacing=20),
                 height=400,
                 bgcolor=ft.Colors.GREY_800,
                 border_radius=10,
                 padding=10
             ),
-            ft.Container(height=20),
             self.crea_pulsante_indietro()
-        ], scroll=ft.ScrollMode.AUTO, spacing=20, expand=True)
+        ], scroll=ft.ScrollMode.AUTO, spacing=30, expand=True)
         
         return ft.View(
             "/info",
@@ -2574,25 +2757,20 @@ class AvventuraEpica:
         # Content principale - variabile locale
         content = ft.Column([
             titolo,
-            ft.Container(height=20),
             ft.Container(
                 content=ft.Column([
                     info_mostro,
-                    ft.Container(height=10),
                     info_giocatore,
-                    ft.Container(height=20),
                     log_combattimento_locale,
-                    ft.Container(height=20),
                     ft.Column(pulsanti_combattimento, horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=10)
-                ], spacing=10),
+                ], spacing=25),
                 bgcolor=ft.Colors.GREY_800,
                 border_radius=10,
                 padding=10,
                 expand=True
             ),
-            ft.Container(height=20),
             pulsante_indietro
-        ], scroll=ft.ScrollMode.AUTO, spacing=20, expand=True)
+        ], scroll=ft.ScrollMode.AUTO, spacing=30, expand=True)
         
         return ft.View(
             "/combattimento",
@@ -2654,23 +2832,20 @@ class AvventuraEpica:
         
         negozio_controls = [
             self.testo_monete_negozio,
-            ft.Container(height=20),
             ft.Column(oggetti_controls, spacing=10)
         ]
         
         content = ft.Column([
             titolo,
-            ft.Container(height=20),
             ft.Container(
-                content=ft.Column(negozio_controls, spacing=10),
+                content=ft.Column(negozio_controls, spacing=20),
                 height=400,
                 bgcolor=ft.Colors.GREY_800,
                 border_radius=10,
                 padding=10
             ),
-            ft.Container(height=20),
             self.crea_pulsante_indietro()
-        ], scroll=ft.ScrollMode.AUTO, spacing=20, expand=True)
+        ], scroll=ft.ScrollMode.AUTO, spacing=30, expand=True)
         
         return ft.View(
             "/negozio",
@@ -2797,7 +2972,7 @@ class AvventuraEpica:
         # Contenitore scrollabile per i gatti
         gatti_container = ft.Column([
             ft.Text(
-                "",
+                "Lista gatti disponibili",
                 semantics_label="Lista gatti disponibili, scorri per vedere tutti i gatti",
                 visible=False
             ),
@@ -2837,23 +3012,19 @@ class AvventuraEpica:
         
         content = ft.Column([
             titolo,
-            ft.Container(height=20),
             ft.Container(
                 content=ft.Column([
                     sottotitolo,
-                    ft.Container(height=20),
                     gatti_container,
-                    ft.Container(height=20),
                     ft.Column(pulsanti_azioni, horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=10)
-                ], spacing=10),
+                ], spacing=30),
                 height=400,
                 bgcolor=ft.Colors.GREY_800,
                 border_radius=10,
                 padding=10
             ),
-            ft.Container(height=20),
             self.crea_pulsante_indietro()
-        ], scroll=ft.ScrollMode.AUTO, spacing=20, expand=True)
+        ], scroll=ft.ScrollMode.AUTO, spacing=30, expand=True)
         
         return ft.View(
             "/gatti",
@@ -2924,7 +3095,6 @@ class AvventuraEpica:
         
         content = ft.Column([
             titolo,
-            ft.Container(height=20),
             ft.Container(
                 content=ft.Column(oggetti_controls, spacing=10),
                 height=400,
@@ -2932,9 +3102,8 @@ class AvventuraEpica:
                 border_radius=10,
                 padding=10
             ),
-            ft.Container(height=20),
             self.crea_pulsante_indietro()
-        ], scroll=ft.ScrollMode.AUTO, spacing=20, expand=True)
+        ], scroll=ft.ScrollMode.AUTO, spacing=30, expand=True)
         
         return ft.View(
             "/inventario",
@@ -3033,9 +3202,7 @@ class AvventuraEpica:
             
             rinomina_controls = [
                 ft.Text(f"Rinomina: {gatto_info['emoji']} {gatto_info['nome']}", size=18, text_align=ft.TextAlign.CENTER),
-                ft.Container(height=20),
                 campo_nuovo_nome_locale,
-                ft.Container(height=20),
                 ft.Row([
                     ft.ElevatedButton(
                         text="Conferma Rinomina",
@@ -3047,7 +3214,6 @@ class AvventuraEpica:
                         tooltip="Conferma il nuovo nome per il gatto"
                     )
                 ], alignment=ft.MainAxisAlignment.CENTER),
-                ft.Container(height=10),
                 ft.Row([
                     ft.ElevatedButton(
                         text="Annulla",
@@ -3063,17 +3229,15 @@ class AvventuraEpica:
         
         content = ft.Column([
             titolo,
-            ft.Container(height=20),
             ft.Container(
-                content=ft.Column(rinomina_controls, spacing=10, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
+                content=ft.Column(rinomina_controls, spacing=25, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
                 height=400,
                 bgcolor=ft.Colors.GREY_800,
                 border_radius=10,
                 padding=10
             ),
-            ft.Container(height=20),
             self.crea_pulsante_indietro()
-        ], scroll=ft.ScrollMode.AUTO, spacing=20, expand=True)
+        ], scroll=ft.ScrollMode.AUTO, spacing=30, expand=True)
         
         return ft.View(
             "/rinomina_gatto",
@@ -3549,7 +3713,9 @@ class AvventuraEpica:
         if len(self.page.views) > 0 and self.page.views[-1].route == "/combattimento":
             # Forza la ricreazione della vista rimuovendo e riaggiungendo
             self.page.views.pop()  # Rimuovi vista corrente
-            self.page.views.append(self.crea_vista_combattimento())
+            vista = self.crea_vista_combattimento()
+            self.page.views.append(vista)
+            self.analizza_accessibilita(vista)
             self.page.update()
         else:
             # Se non siamo nella vista combattimento, non fare NULLA
@@ -6136,6 +6302,7 @@ class AvventuraEpica:
         )
         
         self.page.views.append(vista_conferma)
+        self.analizza_accessibilita(vista_conferma)
         self.page.go("/conferma_salvataggio")
         
     def torna_al_gioco_da_conferma(self, e):
