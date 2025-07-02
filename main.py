@@ -2251,7 +2251,7 @@ class AvventuraEpica:
             bgcolor=ft.Colors.GREY_900
         )
     def crea_vista_gioco(self):
-        """Crea la vista principale di gioco - SENZA LOOP"""
+        """Crea la vista principale di gioco - SENZA azioni_incrementali"""
         titolo = ft.Text("AVVENTURA IN CORSO", size=24, weight=ft.FontWeight.BOLD)
         
         # Valori per i TextField
@@ -2291,59 +2291,33 @@ class AvventuraEpica:
         self.area_storia = area_storia_locale
         self.area_stats = area_stats_locale
         
-        # SOLUZIONE 2: Niente loop, crea pulsanti manualmente
+        # NIENTE CHIAMATA A azioni_incrementali_possibili()
         pulsanti_gioco = []
         
-        # Ottieni le azioni ma NON usare il loop
-        azioni_incrementali = self.azioni_incrementali_possibili()
+        # Crea pulsanti STATICI al posto di quelli dinamici
+        pulsante_raccogli = ft.ElevatedButton(
+            text="Raccogli Risorse",
+            on_click=self.raccogli_risorse,
+            width=280,
+            height=50,
+            bgcolor=ft.Colors.GREEN_600,
+            color=ft.Colors.WHITE,
+            tooltip="Raccogli risorse nell'area attuale"
+        )
+        pulsanti_gioco.append(pulsante_raccogli)
         
-        # Crea pulsanti manualmente se ci sono azioni
-        if azioni_incrementali and len(azioni_incrementali) > 0:
-            # Pulsante 0 - Raccogli Risorse (sempre presente)
-            if len(azioni_incrementali) > 0:
-                testo, funzione, tooltip = azioni_incrementali[0]
-                pulsante_0 = ft.ElevatedButton(
-                    text=testo,
-                    on_click=funzione,
-                    width=280,
-                    height=50,
-                    bgcolor=ft.Colors.GREEN_600,
-                    color=ft.Colors.WHITE,
-                    tooltip=tooltip
-                )
-                pulsanti_gioco.append(pulsante_0)
-            
-            # Pulsante 1 - Consuma Cibo
-            if len(azioni_incrementali) > 1:
-                testo, funzione, tooltip = azioni_incrementali[1]
-                pulsante_1 = ft.ElevatedButton(
-                    text=testo,
-                    on_click=funzione,
-                    width=280,
-                    height=50,
-                    bgcolor=ft.Colors.GREEN_600,
-                    color=ft.Colors.WHITE,
-                    tooltip=tooltip
-                )
-                pulsanti_gioco.append(pulsante_1)
-            
-            # Pulsante 2 - Bevi Acqua
-            if len(azioni_incrementali) > 2:
-                testo, funzione, tooltip = azioni_incrementali[2]
-                pulsante_2 = ft.ElevatedButton(
-                    text=testo,
-                    on_click=funzione,
-                    width=280,
-                    height=50,
-                    bgcolor=ft.Colors.GREEN_600,
-                    color=ft.Colors.WHITE,
-                    tooltip=tooltip
-                )
-                pulsanti_gioco.append(pulsante_2)
-            
-            # Aggiungi altri se necessario...
+        pulsante_cibo = ft.ElevatedButton(
+            text="Consuma Cibo",
+            on_click=self.consuma_cibo,
+            width=280,
+            height=50,
+            bgcolor=ft.Colors.GREEN_600,
+            color=ft.Colors.WHITE,
+            tooltip="Mangia per recuperare energia e HP"
+        )
+        pulsanti_gioco.append(pulsante_cibo)
         
-        # Pulsanti statici
+        # Pulsanti statici di navigazione
         pulsante_combattimento = ft.ElevatedButton(
             text="Combattimento",
             on_click=lambda e: self.page.go("/combattimento"),
