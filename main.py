@@ -2251,94 +2251,83 @@ class AvventuraEpica:
             bgcolor=ft.Colors.GREY_900
         )
     def crea_vista_gioco(self):
-        """Crea la vista principale di gioco - VERSIONE SUPER SEMPLIFICATA"""
+        """Test 1: Step 4 + lista di pulsanti"""
         titolo = ft.Text("AVVENTURA IN CORSO", size=24, weight=ft.FontWeight.BOLD)
         
-        # INVECE dei TextField, usa semplici Text
-        area_storia_locale = ft.Container(
-            content=ft.Text(
-                "🎮 Benvenuto nell'Avventura Incrementale!",
-                size=14,
-                color=ft.Colors.AMBER_100
-            ),
-            bgcolor=ft.Colors.DEEP_PURPLE_900,
-            padding=10,
-            expand=True
+        # Valori per i TextField
+        valore_storia = "🎮 Benvenuto nell'Avventura Incrementale!"
+        valore_stats = f"Statistiche Giocatore:\nLivello 1 • 100/100 HP"
+        
+        # Crea i TextField
+        area_storia_locale = ft.TextField(
+            value=valore_storia,
+            multiline=True,
+            read_only=True,
+            expand=True,
+            min_lines=10,
+            max_lines=15
         )
         
-        area_stats_locale = ft.Container(
-            content=ft.Text(
-                "Statistiche Giocatore:\nLivello 1 • 100/100 HP",
-                size=14,
-                color=ft.Colors.CYAN_100
-            ),
-            bgcolor=ft.Colors.BLUE_GREY_900,
-            padding=10
+        area_stats_locale = ft.TextField(
+            value=valore_stats,
+            multiline=True,
+            read_only=True,
+            min_lines=4,
+            max_lines=6
         )
         
-        # NON assegnare a self.area_storia e self.area_stats
+        # USA UNA LISTA invece di un singolo pulsante
+        pulsanti_gioco = []
         
-        # Pulsanti semplici
-        pulsanti_gioco = [
-            ft.ElevatedButton(
-                text="Raccogli Risorse",
-                on_click=lambda e: print("click"),
-                width=280,
-                height=50,
-                bgcolor=ft.Colors.GREEN_600,
-                color=ft.Colors.WHITE
-            ),
-            ft.ElevatedButton(
-                text="Combattimento",
-                on_click=lambda e: print("click"),
-                width=280,
-                height=50,
-                bgcolor=ft.Colors.RED_600,
-                color=ft.Colors.WHITE
-            ),
-            ft.ElevatedButton(
-                text="Negozio",
-                on_click=lambda e: print("click"),
-                width=280,
-                height=50,
-                bgcolor=ft.Colors.ORANGE_600,
-                color=ft.Colors.WHITE
-            )
-        ]
+        pulsante_test = ft.ElevatedButton(
+            text="Azione Test",
+            on_click=lambda e: print("Pulsante cliccato"),
+            width=280,
+            height=50,
+            bgcolor=ft.Colors.GREEN_600,
+            color=ft.Colors.WHITE
+        )
+        pulsanti_gioco.append(pulsante_test)
         
-        # Colonna pulsanti
+        pulsante_test2 = ft.ElevatedButton(
+            text="Azione Test 2",
+            on_click=lambda e: print("Pulsante 2 cliccato"),
+            width=280,
+            height=50,
+            bgcolor=ft.Colors.RED_600,
+            color=ft.Colors.WHITE
+        )
+        pulsanti_gioco.append(pulsante_test2)
+        
+        # Usa Column per i pulsanti
         colonna_pulsanti = ft.Column(
-            pulsanti_gioco, 
-            horizontal_alignment=ft.CrossAxisAlignment.CENTER, 
+            pulsanti_gioco,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
             spacing=15
         )
         
-        # Controlli di gioco
+        # Metti tutto insieme
         gioco_controls = [
             area_storia_locale,
             area_stats_locale,
-            colonna_pulsanti
+            colonna_pulsanti  # Column invece di singolo pulsante
         ]
         
-        # Pulsante menu
         pulsante_menu = ft.ElevatedButton(
             text="Torna al Menu",
-            on_click=lambda e: print("menu"),
+            on_click=lambda e: self.page.go("/"),
             width=200,
-            height=50,
-            bgcolor=ft.Colors.GREY_600,
-            color=ft.Colors.WHITE
+            height=50
         )
         
-        # Content principale
         content = ft.Column([
             titolo,
             ft.Container(
                 content=ft.Column(gioco_controls, spacing=10),
+                height=400,  # Mantieni 400
                 bgcolor=ft.Colors.GREY_800,
                 border_radius=10,
-                padding=10,
-                height=800
+                padding=10
             ),
             pulsante_menu
         ], scroll=ft.ScrollMode.AUTO, spacing=30, expand=True)
