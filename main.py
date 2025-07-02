@@ -2253,7 +2253,7 @@ class AvventuraEpica:
         
 
     def crea_vista_gioco(self):
-        """Soluzione A: Container con scroll invece di height fissa"""
+        """Soluzione B: Rimuovi un livello di Container"""
         titolo = ft.Text("AVVENTURA IN CORSO", size=24, weight=ft.FontWeight.BOLD)
         
         # Valori dinamici
@@ -2413,35 +2413,25 @@ class AvventuraEpica:
             tooltip="Torna al menu principale"
         )
         
-        # SOLUZIONE A: Scroll interno e niente height fissa
+        # Struttura semplificata
         content = ft.Column([
             titolo,
             ft.Container(
-                content=ft.Column(
-                    gioco_controls, 
-                    spacing=10,
-                    scroll=ft.ScrollMode.AUTO  # Scroll qui dentro
-                ),
-                # NIENTE height - usa expand
+                content=ft.Column(gioco_controls, spacing=10),
+                height=800,
                 bgcolor=ft.Colors.GREY_800,
                 border_radius=10,
-                padding=10,
-                expand=True  # Expand invece di height fissa
+                padding=10
             ),
             pulsante_menu
-        ], spacing=30, expand=True)  # Niente scroll qui
+        ], scroll=ft.ScrollMode.AUTO, spacing=30, expand=True)
         
+        # SOLUZIONE B: RIMUOVI il Container wrapper esterno
         return ft.View(
             "/gioco",
-            controls=[
-                ft.Container(
-                    content=content,
-                    bgcolor=ft.Colors.GREY_900,
-                    padding=20,
-                    expand=True
-                )
-            ],
-            bgcolor=ft.Colors.GREY_900
+            controls=[content],  # Passa content DIRETTAMENTE
+            bgcolor=ft.Colors.GREY_900,
+            padding=20  # Sposta il padding qui nella View
         )
     def crea_vista_gioco_vecchia(self):
         """Crea la vista principale di gioco"""
