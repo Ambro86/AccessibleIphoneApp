@@ -2274,35 +2274,28 @@ class AvventuraEpica:
             valore_stats = self.area_stats.value
         
         # Crea controlli locali per VoiceOver accessibility
-        area_storia_locale = ft.TextField(
-            value=valore_storia,
-            multiline=True,
-            read_only=True,
-            expand=True,
-            min_lines=10,
-            max_lines=15,
-            text_size=14,
+        area_storia_locale = ft.Container(
+            content=ft.Text(
+                valore_storia,
+                size=14,
+                color=ft.Colors.AMBER_100
+            ),
             bgcolor=ft.Colors.DEEP_PURPLE_900,
-            color=ft.Colors.AMBER_100,
-            border_color=ft.Colors.AMBER_400,
-            focused_border_color=ft.Colors.AMBER_300,
-            label="Storia dell'avventura"
+            border_radius=5,
+            padding=10,
+            expand=True
         )
-        
-        area_stats_locale = ft.TextField(
-            value=valore_stats,
-            multiline=True,
-            read_only=True,
-            min_lines=4,
-            max_lines=6,
-            text_size=14,
+
+        area_stats_locale = ft.Container(
+            content=ft.Text(
+                valore_stats,
+                size=14,
+                color=ft.Colors.CYAN_100
+            ),
             bgcolor=ft.Colors.BLUE_GREY_900,
-            color=ft.Colors.CYAN_100,
-            border_color=ft.Colors.CYAN_400,
-            focused_border_color=ft.Colors.CYAN_300,
-            label="Statistiche giocatore"
+            border_radius=5,
+            padding=10
         )
-        
         # Aggiorna i riferimenti globali per mantenere la sincronizzazione
         self.area_storia = area_storia_locale
         self.area_stats = area_stats_locale
