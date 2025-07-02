@@ -2434,20 +2434,14 @@ class AvventuraEpica:
         return ft.View(
             "/gioco",
             controls=[
-                titolo,
                 ft.Container(
-                    content=ft.Column(gioco_controls, spacing=10),
-                    bgcolor=ft.Colors.GREY_800,
-                    border_radius=10,
-                    padding=10,
+                    content=content,
+                    bgcolor=ft.Colors.GREY_900,
+                    padding=20,
                     expand=True
-                ),
-                pulsante_menu
+                )
             ],
-            scroll=ft.ScrollMode.AUTO,
-            spacing=30,
-            bgcolor=ft.Colors.GREY_900,
-            padding=20
+            bgcolor=ft.Colors.GREY_900
         )
     
     def crea_vista_impostazioni(self):
@@ -2668,9 +2662,9 @@ class AvventuraEpica:
             color=ft.Colors.RED_400
         )
         
-        # Info mostro
+        # Info mostro - salva riferimento per aggiornamenti
         if self.mostro_attuale:
-            info_mostro = ft.Text(
+            self.info_mostro_combattimento = ft.Text(
                 f"{self.mostro_attuale['nome']}\n HP: {self.hp_mostro_attuale}/{self.mostro_attuale['hp']}\n Attacco: {self.mostro_attuale['attacco']}", 
                 size=18, 
                 text_align=ft.TextAlign.CENTER,
@@ -2678,27 +2672,29 @@ class AvventuraEpica:
                 semantics_label=f"Nemico: {self.mostro_attuale['nome']}, Punti vita {self.hp_mostro_attuale} su {self.mostro_attuale['hp']}, Attacco {self.mostro_attuale['attacco']}"
             )
         else:
-            info_mostro = ft.Text(
+            self.info_mostro_combattimento = ft.Text(
                 "Nessun mostro in vista\nClicca 'Cerca Mostri' per iniziare una battaglia!", 
                 size=16, 
                 text_align=ft.TextAlign.CENTER,
                 color=ft.Colors.GREY_400,
                 semantics_label="Nessun nemico presente. Cerca mostri per iniziare una battaglia"
             )
+        info_mostro = self.info_mostro_combattimento
         
-        # Info giocatore
+        # Info giocatore - salva riferimento per aggiornamenti
         gatto_info = self.gatti[self.gatto_attivo]
-        info_giocatore = ft.Text(
+        self.info_giocatore_combattimento = ft.Text(
             f"{gatto_info['nome']}\n Vita: {self.vita}/{self.vita_massima}\n Attacco: {self.calcola_attacco_totale()}\n Energia: {self.risorse['energia']}", 
             size=18, 
             text_align=ft.TextAlign.CENTER,
             color=ft.Colors.GREEN_300,
             semantics_label=f"Giocatore: {gatto_info['nome']}, Vita {self.vita} su {self.vita_massima}, Attacco {self.calcola_attacco_totale()}, Energia {self.risorse['energia']}"
         )
+        info_giocatore = self.info_giocatore_combattimento
         
-        # Log combattimento
+        # Log combattimento - salva riferimento per aggiornamenti
         valore_log = "Preparati al combattimento!"
-        log_combattimento_locale = ft.TextField(
+        self.log_combattimento_campo = ft.TextField(
             value=valore_log,
             multiline=True,
             read_only=True,
@@ -2713,6 +2709,7 @@ class AvventuraEpica:
             label="Log del combattimento",
             hint_text="Cronologia delle azioni di combattimento"
         )
+        log_combattimento_locale = self.log_combattimento_campo
         
         # Pulsanti combattimento - array locale
         pulsanti_combattimento = []
@@ -2808,25 +2805,14 @@ class AvventuraEpica:
         return ft.View(
             "/combattimento",
             controls=[
-                titolo,
                 ft.Container(
-                    content=ft.Column([
-                        info_mostro,
-                        info_giocatore,
-                        log_combattimento_locale,
-                        ft.Column(pulsanti_combattimento, horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=10)
-                    ], spacing=25),
-                    bgcolor=ft.Colors.GREY_800,
-                    border_radius=10,
-                    padding=10,
+                    content=content,
+                    bgcolor=ft.Colors.GREY_900,
+                    padding=20,
                     expand=True
-                ),
-                pulsante_indietro
+                )
             ],
-            scroll=ft.ScrollMode.AUTO,
-            spacing=30,
-            bgcolor=ft.Colors.GREY_900,
-            padding=20
+            bgcolor=ft.Colors.GREY_900
         )
     
     def crea_vista_negozio(self):
@@ -3752,18 +3738,31 @@ class AvventuraEpica:
         self.aggiorna_info_combattimento()
     
     def aggiorna_info_combattimento(self):
-        """Aggiorna le informazioni di combattimento ricreando la vista"""
-        # SOLO se siamo nella vista combattimento, aggiornala
-        if len(self.page.views) > 0 and self.page.views[-1].route == "/combattimento":
-            # Ricrea la vista combattimento
-            self.page.views.pop()  # Rimuovi vista corrente
-            vista = self.crea_vista_combattimento()
-            self.page.views.append(vista)
-            self.analizza_accessibilita(vista)
-            self.page.update()
-            print("🎮 INFO: Vista combattimento aggiornata")
+        """Aggiorna solo gli elementi specifici di combattimento senza ricreare l'intera vista"""
+        # SOLO se siamo nella vista combattimento e abbiamo i riferimenti agli elementi
+        if (len(self.page.views) > 0 and self.page.views[-1].route == "/combattimento" and
+            hasattr(self, 'info_mostro_combattimento') and hasattr(self, 'info_giocatore_combattimento')):
+            
+            # Aggiorna info mostro
+            if self.mostro_attuale:
+                self.info_mostro_combattimento.value = f"{self.mostro_attuale['nome']}\n HP: {self.hp_mostro_attuale}/{self.mostro_attuale['hp']}\n Attacco: {self.mostro_attuale['attacco']}"
+                self.info_mostro_combattimento.semantics_label = f"Nemico: {self.mostro_attuale['nome']}, Punti vita {self.hp_mostro_attuale} su {self.mostro_attuale['hp']}, Attacco {self.mostro_attuale['attacco']}"
+            else:
+                self.info_mostro_combattimento.value = "Nessun mostro in vista\nClicca 'Cerca Mostri' per iniziare una battaglia!"
+                self.info_mostro_combattimento.semantics_label = "Nessun nemico presente. Cerca mostri per iniziare una battaglia"
+            
+            # Aggiorna info giocatore
+            gatto_info = self.gatti[self.gatto_attivo]
+            self.info_giocatore_combattimento.value = f"{gatto_info['nome']}\n Vita: {self.vita}/{self.vita_massima}\n Attacco: {self.calcola_attacco_totale()}\n Energia: {self.risorse['energia']}"
+            self.info_giocatore_combattimento.semantics_label = f"Giocatore: {gatto_info['nome']}, Vita {self.vita} su {self.vita_massima}, Attacco {self.calcola_attacco_totale()}, Energia {self.risorse['energia']}"
+            
+            # Aggiorna solo i singoli elementi
+            self.info_mostro_combattimento.update()
+            self.info_giocatore_combattimento.update()
+            
+            print("🎮 INFO: Aggiornati solo elementi specifici di combattimento")
         else:
-            print("🎮 DEBUG: Non nella vista combattimento, IGNORO aggiornamento")
+            print("🎮 DEBUG: Non nella vista combattimento o riferimenti mancanti, IGNORO aggiornamento")
 
     def seleziona_tab(self, index):
         """Seleziona tab e aggiorna la navigazione"""
