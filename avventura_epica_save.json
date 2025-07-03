@@ -17,9 +17,7 @@
     "armatura": null,
     "accessorio": null
   },
-  "effetti_temporanei": {
-    "idratazione": 5
-  },
+  "effetti_temporanei": {},
   "oggetti": {
     "Villaggio": "\ud83d\udddd\ufe0f chiave di bronzo",
     "\ud83c\udf32 Bosco": "\ud83c\udff9 arco elfico",
@@ -155,7 +153,7 @@
       "fame": 100,
       "felicita": 100,
       "sbloccato": true,
-      "affinita": 34,
+      "affinita": 33,
       "nome_personalizzato": false,
       "aree_non_usato": 0,
       "forma_evoluta": false,
@@ -229,8 +227,8 @@
   },
   "gatto_attivo": "gatto_1",
   "risorse": {
-    "cibo": 50,
-    "acqua": 49,
+    "cibo": 46,
+    "acqua": 59,
     "legno": 0,
     "pietra": 0,
     "ferro": 0,

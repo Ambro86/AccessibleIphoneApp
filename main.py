@@ -2322,77 +2322,69 @@ class AvventuraEpica:
         # Pulsanti di gioco
         pulsanti_gioco = []
         
-        # Azioni incrementali con Semantics individuali
+        # Elemento decorativo per evitare elemento vuoto
+        elemento_decorativo = ft.Semantics(
+            container=True,
+            content=ft.Container(height=1, bgcolor=ft.Colors.TRANSPARENT)
+        )
+        pulsanti_gioco.append(elemento_decorativo)
+        
+        # Azioni incrementali senza Semantics
         azioni_incrementali = self.azioni_incrementali_possibili()
         for testo, funzione, tooltip in azioni_incrementali:
-            pulsante_incrementale = ft.Semantics(
-                container=True,
-                content=ft.ElevatedButton(
-                    text=testo,
-                    on_click=funzione,
-                    width=280,
-                    height=50,
-                    bgcolor=ft.Colors.GREEN_600,
-                    color=ft.Colors.WHITE,
-                    tooltip=tooltip
-                )
+            pulsante_incrementale = ft.ElevatedButton(
+                text=testo,
+                on_click=funzione,
+                width=280,
+                height=50,
+                bgcolor=ft.Colors.GREEN_600,
+                color=ft.Colors.WHITE,
+                tooltip=tooltip
             )
             pulsanti_gioco.append(pulsante_incrementale)
         
         # Pulsante cambio area
         if len(self.aree_sbloccate) > 1:
-            pulsante_aree = ft.Semantics(
-                container=True,
-                content=ft.ElevatedButton(
-                    text="Cambia Area",
-                    on_click=lambda e: self.page.go("/aree"),
-                    width=280,
-                    height=50,
-                    bgcolor=ft.Colors.BLUE_600,
-                    color=ft.Colors.WHITE,
-                    tooltip="Scegli area da esplorare"
-                )
+            pulsante_aree = ft.ElevatedButton(
+                text="Cambia Area",
+                on_click=lambda e: self.page.go("/aree"),
+                width=280,
+                height=50,
+                bgcolor=ft.Colors.BLUE_600,
+                color=ft.Colors.WHITE,
+                tooltip="Scegli area da esplorare"
             )
             pulsanti_gioco.append(pulsante_aree)
         
         # Pulsanti di navigazione
-        pulsante_combattimento = ft.Semantics(
-            container=True,
-            content=ft.ElevatedButton(
-                text="Combattimento",
-                on_click=lambda e: self.page.go("/combattimento"),
-                width=280,
-                height=50,
-                bgcolor=ft.Colors.RED_600,
-                color=ft.Colors.WHITE,
-                tooltip="Combatti contro i mostri"
-            )
+        pulsante_combattimento = ft.ElevatedButton(
+            text="Combattimento",
+            on_click=lambda e: self.page.go("/combattimento"),
+            width=280,
+            height=50,
+            bgcolor=ft.Colors.RED_600,
+            color=ft.Colors.WHITE,
+            tooltip="Combatti contro i mostri"
         )
         
-        pulsante_negozio = ft.Semantics(
-            container=True,
-            content=ft.ElevatedButton(
-                text="Negozio",
-                on_click=lambda e: self.page.go("/negozio"),
-                width=280,
-                height=50,
-                bgcolor=ft.Colors.ORANGE_600,
-                color=ft.Colors.WHITE,
-                tooltip="Visita il negozio"
-            )
+        pulsante_negozio = ft.ElevatedButton(
+            text="Negozio",
+            on_click=lambda e: self.page.go("/negozio"),
+            width=280,
+            height=50,
+            bgcolor=ft.Colors.ORANGE_600,
+            color=ft.Colors.WHITE,
+            tooltip="Visita il negozio"
         )
         
-        pulsante_gatti = ft.Semantics(
-            container=True,
-            content=ft.ElevatedButton(
-                text="Gatti",
-                on_click=lambda e: self.page.go("/gatti"),
-                width=280,
-                height=50,
-                bgcolor=ft.Colors.PINK_600,
-                color=ft.Colors.WHITE,
-                tooltip="Gestisci i tuoi gatti"
-            )
+        pulsante_gatti = ft.ElevatedButton(
+            text="Gatti",
+            on_click=lambda e: self.page.go("/gatti"),
+            width=280,
+            height=50,
+            bgcolor=ft.Colors.PINK_600,
+            color=ft.Colors.WHITE,
+            tooltip="Gestisci i tuoi gatti"
         )
         
         pulsanti_gioco.extend([pulsante_combattimento, pulsante_negozio, pulsante_gatti])
@@ -2401,32 +2393,26 @@ class AvventuraEpica:
         if (self.area_attuale in self.boss_aree and 
             self.boss_aree[self.area_attuale]["nome"] not in self.boss_sconfitti and
             self.progressione_area.get(self.area_attuale, 0) >= 100):
-            pulsante_boss = ft.Semantics(
-                container=True,
-                content=ft.ElevatedButton(
-                    text="Combatti Boss dell'Area!",
-                    on_click=self.combatti_boss,
-                    width=280,
-                    height=50,
-                    bgcolor=ft.Colors.DEEP_PURPLE_600,
-                    color=ft.Colors.WHITE,
-                    tooltip=f"Affronta il boss: {self.boss_aree[self.area_attuale]['nome']}"
-                )
+            pulsante_boss = ft.ElevatedButton(
+                text="Combatti Boss dell'Area!",
+                on_click=self.combatti_boss,
+                width=280,
+                height=50,
+                bgcolor=ft.Colors.DEEP_PURPLE_600,
+                color=ft.Colors.WHITE,
+                tooltip=f"Affronta il boss: {self.boss_aree[self.area_attuale]['nome']}"
             )
             pulsanti_gioco.append(pulsante_boss)
         
         # Pulsante salva
-        pulsante_salva = ft.Semantics(
-            container=True,
-            content=ft.ElevatedButton(
-                text="Salva Partita",
-                on_click=self.salva_gioco,
-                width=280,
-                height=50,
-                bgcolor=ft.Colors.PURPLE_600,
-                color=ft.Colors.WHITE,
-                tooltip="Salva il tuo progresso"
-            )
+        pulsante_salva = ft.ElevatedButton(
+            text="Salva Partita",
+            on_click=self.salva_gioco,
+            width=280,
+            height=50,
+            bgcolor=ft.Colors.PURPLE_600,
+            color=ft.Colors.WHITE,
+            tooltip="Salva il tuo progresso"
         )
         pulsanti_gioco.append(pulsante_salva)
         
