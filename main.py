@@ -2497,7 +2497,8 @@ class AvventuraEpica:
                     expand=True
                 )
             ],
-            bgcolor=ft.Colors.GREY_900
+            bgcolor=ft.Colors.GREY_900,
+            scroll=ft.ScrollMode.AUTO
         )
 
     def crea_vista_gioco_NonOttimizzata(self):
