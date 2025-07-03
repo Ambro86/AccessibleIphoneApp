@@ -2277,13 +2277,12 @@ class AvventuraEpica:
         if hasattr(self, 'area_stats') and self.area_stats and hasattr(self.area_stats, 'value'):
             valore_stats = self.area_stats.value
         
-        # Aree contenuto
+        # Aree contenuto senza semantics_label per leggere il contenuto reale
         area_storia_locale = ft.Container(
             content=ft.Text(
                 valore_storia,
                 size=14,
-                color=ft.Colors.AMBER_100,
-                semantics_label="Area storia del gioco"
+                color=ft.Colors.AMBER_100
             ),
             bgcolor=ft.Colors.DEEP_PURPLE_900,
             border_radius=5,
@@ -2295,8 +2294,7 @@ class AvventuraEpica:
             content=ft.Text(
                 valore_stats,
                 size=14,
-                color=ft.Colors.CYAN_100,
-                semantics_label="Statistiche giocatore"
+                color=ft.Colors.CYAN_100
             ),
             bgcolor=ft.Colors.BLUE_GREY_900,
             border_radius=5,
@@ -2397,20 +2395,20 @@ class AvventuraEpica:
         )
         pulsanti_gioco.append(pulsante_salva)
         
-        # Lista pulsanti come ListView per scrolling ottimale
-        lista_pulsanti = ft.ListView(
+        # Colonna pulsanti senza padding per evitare elementi vuoti
+        lista_pulsanti = ft.Column(
             controls=pulsanti_gioco,
-            expand=1,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
             spacing=15,
-            padding=ft.padding.symmetric(horizontal=20)
+            scroll=ft.ScrollMode.AUTO
         )
         
-        # Controlli di gioco
-        gioco_controls = [
+        # Controlli di gioco senza label per preservare il contenuto naturale
+        gioco_controls = ft.Column([
             area_storia_locale,
             area_stats_locale,
             lista_pulsanti
-        ]
+        ], spacing=10, tight=False)
         
         # Pulsante menu
         pulsante_menu = ft.ElevatedButton(
@@ -2427,7 +2425,7 @@ class AvventuraEpica:
         content = ft.Column([
             titolo,
             ft.Container(
-                content=ft.Column(gioco_controls, spacing=10, tight=False),
+                content=gioco_controls,
                 bgcolor=ft.Colors.GREY_800,
                 border_radius=10,
                 padding=10,
@@ -2439,16 +2437,11 @@ class AvventuraEpica:
         return ft.View(
             "/gioco",
             controls=[
-                # Usa Semantics per controllare l'annuncio di VoiceOver
-                ft.Semantics(
-                    label="Schermata principale del gioco",
-                    container=True,
-                    content=ft.Container(
-                        content=content,
-                        bgcolor=ft.Colors.GREY_900,
-                        padding=20,
-                        expand=True
-                    )
+                ft.Container(
+                    content=content,
+                    bgcolor=ft.Colors.GREY_900,
+                    padding=20,
+                    expand=True
                 )
             ],
             bgcolor=ft.Colors.GREY_900
