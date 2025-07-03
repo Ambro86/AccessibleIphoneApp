@@ -1493,6 +1493,9 @@ class AvventuraEpica:
             # Riproduci effetto livello su canale dedicato
             self.riproduci_effetto("livello")
             
+            # Aggiorna debug widget
+            self.aggiorna_debug_widget()
+            
             return f"🎉 LIVELLO AUMENTATO! Ora sei livello {self.livello}!\n💪 HP Max: {self.hp_max}, Attacco: {self.attacco_base}\n"
         return ""
         
@@ -1559,23 +1562,35 @@ class AvventuraEpica:
             testo += f"• +{quantita} {risorsa}\n"
             
         # Bonus esperienza
+        exp_precedente = self.esperienza
         exp_guadagnata = 1
         self.esperienza += exp_guadagnata
-        testo += f"\n +{exp_guadagnata} EXP"
+        testo += f"\n✨ +{exp_guadagnata} EXP ({exp_precedente} → {self.esperienza})"
         
         # Controlla livello
+        livello_precedente = self.livello
         testo_livello = self.gestisci_livello()
         if testo_livello:
             testo += "\n" + testo_livello
+        elif livello_precedente != self.livello:
+            testo += f"\n🎉 LEVEL UP! {livello_precedente} → {self.livello}"
         
         # Controlla sblocco gatti
         self.controlla_sblocco_gatti()
             
         # Progressione area (solo se area valida)
         if area in self.progressione_area:
+            prog_precedente = self.progressione_area[area]
             self.progressione_area[area] += 1
-            print(f" Progressione {area}: {self.progressione_area[area]}")
+            prog_attuale = self.progressione_area[area]
+            testo += f"\n🏆 Progressione {area}: {prog_precedente} → {prog_attuale}/100"
+            print(f" Progressione {area}: {prog_attuale}")
+        
+        # Aggiorna debug widget
+        self.aggiorna_debug_widget()
             
+        # Progressione area - controllo boss
+        if area in self.progressione_area:
             # Controlla se il boss dell'area è stato sbloccato per la prima volta
             if (self.progressione_area[area] >= 100 and 
                 area not in self.boss_notifications_mostrate):
@@ -1597,7 +1612,7 @@ class AvventuraEpica:
         else:
             self.riproduci_effetto("raccogli")
         self.aggiorna_storia(testo)
-        # self.aggiorna_stats_incrementali()  # Temporaneamente commentato per test VoiceOver
+        self.aggiorna_stats_incrementali()  # Riattivato - era commentato per test VoiceOver
         
     def nutri_gatto(self, e):
         """Nutri il gatto attivo"""
@@ -1723,6 +1738,9 @@ class AvventuraEpica:
         self.haptic_feedback("light")
         self.aggiorna_storia(f" Ti sposti in {nuova_area}")
         self.aggiorna_stats_incrementali()
+        
+        # Aggiorna debug widget
+        self.aggiorna_debug_widget()
         
     def cambia_gatto_attivo(self, nome_gatto):
         """Cambia gatto attivo"""
@@ -2251,47 +2269,41 @@ class AvventuraEpica:
             bgcolor=ft.Colors.GREY_900
         )
     def crea_vista_gioco(self):
-        """Crea la vista principale di gioco"""
-        
-        # Titolo con Semantics senza label
-        titolo = ft.Semantics(
-            container=True,
-            content=ft.Text(
-                "AVVENTURA IN CORSO", 
-                size=24, 
-                weight=ft.FontWeight.BOLD, 
-                text_align=ft.TextAlign.CENTER,
-                color=ft.Colors.AMBER_400,
-                style=ft.TextThemeStyle.HEADLINE_MEDIUM
-            )
+        """Crea la vista principale di gioco, ottimizzata per accessibilità"""
+
+        # Titolo semplicemente come testo, senza Semantics
+        titolo = ft.Text(
+            "AVVENTURA IN CORSO", 
+            size=24, 
+            weight=ft.FontWeight.BOLD, 
+            text_align=ft.TextAlign.CENTER,
+            color=ft.Colors.AMBER_400,
+            style=ft.TextThemeStyle.HEADLINE_MEDIUM
         )
-        
+
         # Ottieni i valori attuali dalle variabili globali se esistono
         valore_storia = "🎮 Benvenuto nell'Avventura Incrementale!\n Compagni gatti con abilità speciali\n Raccogli risorse e costruisci\n Combatti mostri e sali di livello\n🍽️ Gestisci cibo e acqua per energia\n🎵 Audio immersivo e feedback aptico\n\nPremi 'Inizia Avventura' per cominciare!"
         if hasattr(self, 'area_storia') and self.area_storia and hasattr(self.area_storia, 'value'):
             valore_storia = self.area_storia.value
-        
+
         valore_stats = f" Statistiche Giocatore:\n Livello {self.livello} •  {self.vita}/{self.vita_massima} HP •  {self.monete} monete\n Attacco: {self.calcola_attacco_totale()} •  Difesa: {self.calcola_difesa_totale()}\n EXP: {self.esperienza}/{self.esperienza_necessaria}"
         if hasattr(self, 'area_stats') and self.area_stats and hasattr(self.area_stats, 'value'):
             valore_stats = self.area_stats.value
-        
-        # Area storia come gruppo semantico
-        area_storia_locale = ft.Semantics(
-            container=True,
-            content=ft.Container(
-                content=ft.Text(
-                    valore_storia,
-                    size=14,
-                    color=ft.Colors.AMBER_100
-                ),
-                bgcolor=ft.Colors.DEEP_PURPLE_900,
-                border_radius=5,
-                padding=10,
-                expand=True
-            )
+
+        # Area storia come semplice container con testo
+        area_storia_locale = ft.Container(
+            content=ft.Text(
+                valore_storia,
+                size=14,
+                color=ft.Colors.AMBER_100
+            ),
+            bgcolor=ft.Colors.DEEP_PURPLE_900,
+            border_radius=5,
+            padding=10,
+            expand=True
         )
 
-        # Area statistiche come gruppo semantico con TextField
+        # Area statistiche come container con TextField readonly
         area_stats_textfield = ft.TextField(
             value=valore_stats,
             multiline=True,
@@ -2304,32 +2316,22 @@ class AvventuraEpica:
             focused_border_color=ft.Colors.TRANSPARENT,
             bgcolor=ft.Colors.TRANSPARENT
         )
-        
-        area_stats_locale = ft.Semantics(
-            container=True,
-            content=ft.Container(
-                content=area_stats_textfield,
-                bgcolor=ft.Colors.BLUE_GREY_900,
-                border_radius=5,
-                padding=10
-            )
+
+        area_stats_locale = ft.Container(
+            content=area_stats_textfield,
+            bgcolor=ft.Colors.BLUE_GREY_900,
+            border_radius=5,
+            padding=10
         )
-        
+
         # Aggiorna i riferimenti globali per mantenere la sincronizzazione
         self.area_storia = area_storia_locale
         self.area_stats = area_stats_textfield  # Punta al TextField per aggiornamenti
-        
+
         # Pulsanti di gioco
         pulsanti_gioco = []
-        
-        # Elemento decorativo per evitare elemento vuoto
-        elemento_decorativo = ft.Semantics(
-            container=True,
-            content=ft.Container(height=1, bgcolor=ft.Colors.TRANSPARENT)
-        )
-        pulsanti_gioco.append(elemento_decorativo)
-        
-        # Azioni incrementali senza Semantics
+
+        # Azioni incrementali
         azioni_incrementali = self.azioni_incrementali_possibili()
         for i, (testo, funzione, tooltip) in enumerate(azioni_incrementali):
             pulsante_incrementale = ft.ElevatedButton(
@@ -2343,7 +2345,7 @@ class AvventuraEpica:
                 key=f"azione_{i}_{testo.replace(' ', '_')}"
             )
             pulsanti_gioco.append(pulsante_incrementale)
-        
+
         # Pulsante cambio area
         if len(self.aree_sbloccate) > 1:
             pulsante_aree = ft.ElevatedButton(
@@ -2357,7 +2359,7 @@ class AvventuraEpica:
                 key="btn_cambia_area"
             )
             pulsanti_gioco.append(pulsante_aree)
-        
+
         # Pulsanti di navigazione
         pulsante_combattimento = ft.ElevatedButton(
             text="Combattimento",
@@ -2368,7 +2370,7 @@ class AvventuraEpica:
             color=ft.Colors.WHITE,
             tooltip="Combatti contro i mostri"
         )
-        
+
         pulsante_negozio = ft.ElevatedButton(
             text="Negozio",
             on_click=lambda e: self.page.go("/negozio"),
@@ -2378,7 +2380,7 @@ class AvventuraEpica:
             color=ft.Colors.WHITE,
             tooltip="Visita il negozio"
         )
-        
+
         pulsante_gatti = ft.ElevatedButton(
             text="Gatti",
             on_click=lambda e: self.page.go("/gatti"),
@@ -2388,9 +2390,9 @@ class AvventuraEpica:
             color=ft.Colors.WHITE,
             tooltip="Gestisci i tuoi gatti"
         )
-        
+
         pulsanti_gioco.extend([pulsante_combattimento, pulsante_negozio, pulsante_gatti])
-        
+
         # Pulsante boss
         if (self.area_attuale in self.boss_aree and 
             self.boss_aree[self.area_attuale]["nome"] not in self.boss_sconfitti and
@@ -2405,7 +2407,7 @@ class AvventuraEpica:
                 tooltip=f"Affronta il boss: {self.boss_aree[self.area_attuale]['nome']}"
             )
             pulsanti_gioco.append(pulsante_boss)
-        
+
         # Pulsante salva
         pulsante_salva = ft.ElevatedButton(
             text="Salva Partita",
@@ -2417,65 +2419,85 @@ class AvventuraEpica:
             tooltip="Salva il tuo progresso"
         )
         pulsanti_gioco.append(pulsante_salva)
-        
-        # Colonna pulsanti senza Semantics per permettere accesso individuale
+
+        # Colonna pulsanti
         lista_pulsanti = ft.Column(
             controls=pulsanti_gioco,
             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
             spacing=15,
             scroll=ft.ScrollMode.AUTO
         )
-        
-        # Controlli di gioco senza label per preservare il contenuto naturale
+
+        # Colonna principale dei controlli di gioco
         gioco_controls = ft.Column([
             area_storia_locale,
             area_stats_locale,
             lista_pulsanti
         ], spacing=10, tight=False)
+
+        # Pulsante menu in fondo
+        pulsante_menu = ft.ElevatedButton(
+            text="Torna al Menu",
+            on_click=lambda e: self.page.go("/"),
+            width=200,
+            height=50,
+            bgcolor=ft.Colors.GREY_600,
+            color=ft.Colors.WHITE,
+            tooltip="Torna al menu principale"
+        )
+
+        # Debug Display Widget
+        debug_exp_text = f"EXP: {self.esperienza}/{self.esperienza_prossimo_livello}"
+        debug_progress_text = f"Area: {self.progressione_area.get(self.area_attuale, 0)}/100"
+        debug_level_text = f"Level: {self.livello}"
         
-        # Pulsante menu come gruppo semantico
-        pulsante_menu = ft.Semantics(
-            container=True,
-            content=ft.ElevatedButton(
-                text="Torna al Menu",
-                on_click=lambda e: self.page.go("/"),
-                width=200,
-                height=50,
-                bgcolor=ft.Colors.GREY_600,
-                color=ft.Colors.WHITE,
-                tooltip="Torna al menu principale"
-            )
+        debug_widget = ft.Container(
+            content=ft.Row([
+                ft.Text(debug_level_text, size=12, color=ft.Colors.AMBER_300),
+                ft.Text(debug_exp_text, size=12, color=ft.Colors.CYAN_300),
+                ft.Text(debug_progress_text, size=12, color=ft.Colors.GREEN_300),
+            ], spacing=15, alignment=ft.MainAxisAlignment.CENTER),
+            bgcolor=ft.Colors.BLACK54,
+            border_radius=5,
+            padding=5,
+            opacity=0.8
         )
         
-        # Content principale senza height fisso per evitare contenuto vuoto
+        # Store reference for updates
+        self.debug_widget_exp = debug_widget.content.controls[1]
+        self.debug_widget_progress = debug_widget.content.controls[2]
+        self.debug_widget_level = debug_widget.content.controls[0]
+        
+        # Debug log
+        print(f"🔧 Debug widget created: Level={self.livello}, EXP={self.esperienza}/{self.esperienza_prossimo_livello}, Area Progress={self.progressione_area.get(self.area_attuale, 0)}/100")
+
+        # Content principale
         content = ft.Column([
             titolo,
+            debug_widget,
             ft.Container(
                 content=gioco_controls,
                 bgcolor=ft.Colors.GREY_800,
                 border_radius=10,
                 padding=10,
-                expand=True  # Usa expand invece di height
+                expand=True
             ),
             pulsante_menu
-        ], scroll=ft.ScrollMode.AUTO, spacing=30, expand=True)
-        
+        ], scroll=ft.ScrollMode.AUTO, spacing=15, expand=True)
+
         return ft.View(
             "/gioco",
             controls=[
-                # Semantics senza label per evitare elemento vuoto ma preservare contenuto
-                ft.Semantics(
-                    container=True,
-                    content=ft.Container(
-                        content=content,
-                        bgcolor=ft.Colors.GREY_900,
-                        padding=20,
-                        expand=True
-                    )
+                ft.Container(
+                    content=content,
+                    bgcolor=ft.Colors.GREY_900,
+                    padding=20,
+                    expand=True
                 )
             ],
             bgcolor=ft.Colors.GREY_900
         )
+
     def crea_vista_gioco_NonOttimizzata(self):
         """Vista con paginazione per migliore performance"""
         titolo = ft.Text("AVVENTURA EPICA", size=24, weight=ft.FontWeight.BOLD)
@@ -2935,7 +2957,7 @@ class AvventuraEpica:
             self.volume_effetti_label_tab,
             slider_volume_effetti,
             test_audio_btn,
-            ft.Divider(),
+            ft.Divider(semantics_excluded=True),
             ft.Text("Feedback", size=16, weight=ft.FontWeight.BOLD),
             toggle_haptic,
         ]
@@ -3061,9 +3083,8 @@ class AvventuraEpica:
         
         content = ft.Column([
             titolo,
-            ft.Container(height=20),
             ft.Column(pulsanti_aree, horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=15)
-        ], scroll=ft.ScrollMode.AUTO, spacing=20, expand=True)
+        ], scroll=ft.ScrollMode.AUTO, spacing=30, expand=True)
         
         return ft.View(
             "/aree",
@@ -3078,18 +3099,288 @@ class AvventuraEpica:
             bgcolor=ft.Colors.GREY_900
         )
     
-    def crea_vista_combattimento(self):
-        """Crea la vista del combattimento"""
-        # Crea tutte le variabili locali per evitare il problema dell'elemento vuoto in VoiceOver
-        titolo = ft.Text(
-            "Combattimento", 
-            size=24, 
-            weight=ft.FontWeight.BOLD, 
-            text_align=ft.TextAlign.CENTER,
-            color=ft.Colors.RED_400
+    def aggiorna_debug_combat(self):
+        """Aggiorna il debug widget per il combattimento"""
+        if hasattr(self, 'debug_level_combat'):
+            self.debug_level_combat.value = f"Lv: {self.livello}"
+            
+        if hasattr(self, 'debug_hp_combat'):
+            self.debug_hp_combat.value = f"HP: {self.hp_giocatore}/{self.hp_max}"
+            
+        if hasattr(self, 'debug_monster_combat'):
+            if self.mostro_attuale:
+                self.debug_monster_combat.value = f"Nemico: {self.hp_mostro_attuale}/{self.mostro_attuale['hp']}"
+            else:
+                self.debug_monster_combat.value = "Nessun nemico"
+                
+        if hasattr(self, 'page'):
+            self.page.update()
+
+    def crea_sezione_combattenti(self):
+        """Crea la sezione che mostra i combattenti faccia a faccia"""
+        # Info giocatore
+        gatto_info = self.gatti[self.gatto_attivo] if self.gatto_attivo else {"nome": "Eroe", "emoji": "🦸"}
+        giocatore_info = ft.Container(
+            content=ft.Column([
+                ft.Text(f"{gatto_info.get('emoji', '🦸')} {gatto_info['nome']}", size=20, weight=ft.FontWeight.BOLD, color=ft.Colors.GREEN_400),
+                ft.Text(f"❤️ HP: {self.hp_giocatore}/{self.hp_max}", size=16, color=ft.Colors.GREEN_300),
+                ft.Text(f"⚔️ ATK: {self.calcola_attacco_totale()}", size=14, color=ft.Colors.GREEN_200),
+                ft.Text(f"⚡ Energia: {self.risorse['energia']}", size=14, color=ft.Colors.BLUE_200)
+            ], horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=5),
+            bgcolor=ft.Colors.GREEN_900,
+            border_radius=10,
+            padding=15,
+            width=200
         )
         
-        # Info mostro - salva riferimento per aggiornamenti
+        # VS centrale
+        vs_text = ft.Container(
+            content=ft.Text("⚔️\\nVS", size=24, weight=ft.FontWeight.BOLD, color=ft.Colors.RED_400, text_align=ft.TextAlign.CENTER),
+            padding=20
+        )
+        
+        # Info mostro
+        if self.mostro_attuale:
+            mostro_info = ft.Container(
+                content=ft.Column([
+                    ft.Text(f"👹 {self.mostro_attuale['nome']}", size=20, weight=ft.FontWeight.BOLD, color=ft.Colors.RED_400),
+                    ft.Text(f"❤️ HP: {self.hp_mostro_attuale}/{self.mostro_attuale['hp']}", size=16, color=ft.Colors.RED_300),
+                    ft.Text(f"⚔️ ATK: {self.mostro_attuale['attacco']}", size=14, color=ft.Colors.RED_200),
+                    ft.Text(f"📊 Lv: {self.mostro_attuale.get('livello', '?')}", size=14, color=ft.Colors.ORANGE_200)
+                ], horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=5),
+                bgcolor=ft.Colors.RED_900,
+                border_radius=10,
+                padding=15,
+                width=200
+            )
+        else:
+            mostro_info = ft.Container(
+                content=ft.Column([
+                    ft.Text("❓ Nessun Nemico", size=18, weight=ft.FontWeight.BOLD, color=ft.Colors.GREY_400),
+                    ft.Text("Cerca mostri per\\niniziare il combattimento!", size=14, color=ft.Colors.GREY_300, text_align=ft.TextAlign.CENTER)
+                ], horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=10),
+                bgcolor=ft.Colors.GREY_800,
+                border_radius=10,
+                padding=15,
+                width=200
+            )
+        
+        return ft.Container(
+            content=ft.Row([giocatore_info, vs_text, mostro_info], alignment=ft.MainAxisAlignment.SPACE_AROUND),
+            bgcolor=ft.Colors.GREY_800,
+            border_radius=10,
+            padding=20,
+            border=ft.border.all(2, ft.Colors.AMBER_600)
+        )
+
+    def crea_pulsanti_combattimento_completi(self):
+        """Crea tutti i pulsanti di combattimento sempre disponibili"""
+        oggetti_curativi = self.conta_oggetti_curativi()
+        
+        # Pulsanti sempre disponibili
+        pulsanti = [
+            ft.ElevatedButton(
+                text="🔍 Cerca Mostri",
+                on_click=self.inizia_combattimento,
+                width=250,
+                height=50,
+                bgcolor=ft.Colors.ORANGE_600,
+                color=ft.Colors.WHITE,
+                tooltip="Cerca mostri da combattere",
+                disabled=self.in_combattimento
+            )
+        ]
+        
+        # Pulsanti di combattimento (se in combattimento)
+        if self.in_combattimento and self.mostro_attuale:
+            pulsanti.extend([
+                ft.ElevatedButton(
+                    text="⚔️ Attacca",
+                    on_click=self.attacca_mostro,
+                    width=250,
+                    height=50,
+                    bgcolor=ft.Colors.RED_600,
+                    color=ft.Colors.WHITE,
+                    tooltip=f"Attacca {self.mostro_attuale['nome']}"
+                ),
+                ft.ElevatedButton(
+                    text="🛡️ Difendi",
+                    on_click=self.difendi_combattimento,
+                    width=250,
+                    height=50,
+                    bgcolor=ft.Colors.BLUE_600,
+                    color=ft.Colors.WHITE,
+                    tooltip="Riduci il danno del 50%"
+                ),
+                ft.ElevatedButton(
+                    text=f"💊 Cura ({oggetti_curativi})",
+                    on_click=self.usa_pozione_combattimento,
+                    width=250,
+                    height=50,
+                    bgcolor=ft.Colors.GREEN_600 if oggetti_curativi > 0 else ft.Colors.GREY_600,
+                    color=ft.Colors.WHITE,
+                    tooltip=f"Usa oggetti curativi. Disponibili: {oggetti_curativi}",
+                    disabled=oggetti_curativi <= 0
+                ),
+                ft.ElevatedButton(
+                    text="🏃 Fuggi",
+                    on_click=self.fuggi_combattimento,
+                    width=250,
+                    height=50,
+                    bgcolor=ft.Colors.PURPLE_600,
+                    color=ft.Colors.WHITE,
+                    tooltip="Prova a fuggire (70% successo)"
+                )
+            ])
+        
+        return pulsanti
+
+    def crea_vista_combattimento(self):
+        """Crea la vista del combattimento - NUOVO DESIGN RIVOLUZIONARIO"""
+        # Titolo principale
+        titolo = ft.Text(
+            "⚔️ Arena di Combattimento", 
+            size=26, 
+            weight=ft.FontWeight.BOLD, 
+            text_align=ft.TextAlign.CENTER,
+            color=ft.Colors.RED_400,
+            semantics_label="Arena di Combattimento"
+        )
+        
+        # Debug widget per combat stats (come nel gioco principale)
+        # Debug widget per combat stats (come nel gioco principale) 
+        if not hasattr(self, 'debug_level_combat') or not hasattr(self, 'debug_hp_combat'):
+            self.debug_level_combat = ft.Text("", size=12, color=ft.Colors.AMBER_300)
+            self.debug_hp_combat = ft.Text("", size=12, color=ft.Colors.CYAN_300)
+            self.debug_monster_combat = ft.Text("", size=12, color=ft.Colors.RED_300)
+        
+        self.aggiorna_debug_combat()
+        
+        self.debug_widget_combat = ft.Container(
+            content=ft.Row([
+                self.debug_level_combat,
+                self.debug_hp_combat, 
+                self.debug_monster_combat
+            ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
+            bgcolor=ft.Colors.BLACK54,
+            opacity=0.8,
+            border_radius=5,
+            padding=ft.padding.symmetric(horizontal=10, vertical=5),
+            margin=ft.margin.only(bottom=10)
+        )
+        
+        # Sezione combattenti (mostro vs giocatore)
+        combattenti_container = self.crea_sezione_combattenti()
+        
+        # Historia del combattimento (sostituisce il log)
+        if not hasattr(self, 'historia_combattimento_text'):
+            self.historia_combattimento_text = "⚔️ Benvenuto nell'Arena!\\n\\nPreparati al combattimento. Puoi cercare mostri o usare le azioni disponibili."
+        
+        self.historia_combattimento = ft.Text(
+            self.historia_combattimento_text,
+            size=16,
+            color=ft.Colors.AMBER_200,
+            text_align=ft.TextAlign.CENTER,
+            semantics_label="Storia del combattimento"
+        )
+        
+        # Container per la storia del combattimento
+        historia_container = ft.Container(
+            content=self.historia_combattimento,
+            bgcolor=ft.Colors.GREY_800,
+            border_radius=10,
+            padding=15,
+            height=150,
+            border=ft.border.all(2, ft.Colors.RED_400)
+        )
+        
+        # Pulsanti di combattimento - SEMPRE DISPONIBILI (come nel gioco principale)
+        pulsanti_combattimento = self.crea_pulsanti_combattimento_completi()
+        
+        # Pulsanti di navigazione (come nel gioco principale)
+        pulsanti_navigazione = [
+            ft.ElevatedButton(
+                text="🎮 Torna al Gioco",
+                on_click=lambda e: self.page.go("/gioco"),
+                width=280,
+                height=50,
+                bgcolor=ft.Colors.BLUE_600,
+                color=ft.Colors.WHITE,
+                tooltip="Torna alla schermata principale"
+            ),
+            ft.ElevatedButton(
+                text="🐈 Gestisci Gatti",
+                on_click=lambda e: self.page.go("/gatti"),
+                width=280,
+                height=50,
+                bgcolor=ft.Colors.PINK_600,
+                color=ft.Colors.WHITE,
+                tooltip="Gestisci i tuoi gatti"
+            ),
+            ft.ElevatedButton(
+                text="🏪 Negozio",
+                on_click=lambda e: self.page.go("/negozio"),
+                width=280,
+                height=50,
+                bgcolor=ft.Colors.ORANGE_600,
+                color=ft.Colors.WHITE,
+                tooltip="Visita il negozio"
+            )
+        ]
+        
+        # Layout principale - NUOVO DESIGN
+        content = ft.Column([
+            titolo,
+            self.debug_widget_combat,
+            combattenti_container,
+            historia_container,
+            
+            # Sezione azioni di combattimento
+            ft.Container(
+                content=ft.Column([
+                    ft.Text("⚔️ Azioni di Combattimento", size=18, weight=ft.FontWeight.BOLD, color=ft.Colors.RED_300, text_align=ft.TextAlign.CENTER),
+                    ft.Column(pulsanti_combattimento, horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=10)
+                ], spacing=15),
+                bgcolor=ft.Colors.GREY_800,
+                border_radius=10,
+                padding=15,
+                border=ft.border.all(2, ft.Colors.RED_400)
+            ),
+            
+            # Sezione navigazione
+            ft.Container(
+                content=ft.Column([
+                    ft.Text("🗺️ Navigazione", size=18, weight=ft.FontWeight.BOLD, color=ft.Colors.BLUE_300, text_align=ft.TextAlign.CENTER),
+                    ft.Column(pulsanti_navigazione, horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=10)
+                ], spacing=15),
+                bgcolor=ft.Colors.GREY_800,
+                border_radius=10,
+                padding=15,
+                border=ft.border.all(2, ft.Colors.BLUE_400)
+            )
+        ], spacing=20, expand=True, scroll=ft.ScrollMode.AUTO)
+        
+        return ft.View(
+            "/combattimento",
+            controls=[
+                ft.Container(
+                    content=content,
+                    bgcolor=ft.Colors.GREY_900,
+                    padding=20,
+                    expand=True
+                )
+            ],
+            bgcolor=ft.Colors.GREY_900
+        )
+    
+    def aggiorna_historia_combattimento(self, testo):
+        """Aggiorna la storia del combattimento"""
+        self.historia_combattimento_text = testo
+        if hasattr(self, 'historia_combattimento'):
+            self.historia_combattimento.value = testo
+            self.page.update()
+            
+    def crea_vista_negozio_OLD_REMOVED(self):
         if self.mostro_attuale:
             self.info_mostro_combattimento = ft.Text(
                 f"{self.mostro_attuale['nome']}\n HP: {self.hp_mostro_attuale}/{self.mostro_attuale['hp']}\n Attacco: {self.mostro_attuale['attacco']}", 
@@ -3433,17 +3724,13 @@ class AvventuraEpica:
         
         # Contenitore scrollabile per i gatti
         gatti_container = ft.Column([
-            ft.Text(
-                "Lista gatti disponibili",
-                semantics_label="Lista gatti disponibili, scorri per vedere tutti i gatti",
-                visible=False
-            ),
             ft.Container(
                 content=ft.Column(gatti_controls, spacing=10),
                 height=400,
                 bgcolor=ft.Colors.GREY_800,
                 border_radius=10,
-                padding=10
+                padding=10,
+                semantics_label="Lista gatti disponibili, scorri per vedere tutti i gatti"
             )
         ])
         
@@ -3601,7 +3888,6 @@ class AvventuraEpica:
         
         content = ft.Column([
             titolo,
-            ft.Container(height=20),
             ft.Container(
                 content=contenuto_stats,
                 bgcolor=ft.Colors.GREY_800,
@@ -3609,9 +3895,8 @@ class AvventuraEpica:
                 padding=20,
                 expand=True
             ),
-            ft.Container(height=20),
             self.crea_pulsante_indietro()
-        ], scroll=ft.ScrollMode.AUTO, spacing=20, expand=True)
+        ], scroll=ft.ScrollMode.AUTO, spacing=30, expand=True)
         
         return ft.View(
             "/statistiche",
@@ -3786,18 +4071,15 @@ class AvventuraEpica:
         
         content = ft.Column([
             titolo,
-            ft.Container(height=20),
             ft.Text("Equipaggiamento Attuale", size=18, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER),
-            ft.Container(height=10),
             ft.Container(
                 content=ft.Column(equipaggiamento_controls, spacing=10),
                 bgcolor=ft.Colors.GREY_800,
                 border_radius=10,
                 padding=10
             ),
-            ft.Container(height=20),
             self.crea_pulsante_indietro()
-        ], scroll=ft.ScrollMode.AUTO, spacing=20, expand=True)
+        ], scroll=ft.ScrollMode.AUTO, spacing=30, expand=True)
         
         return ft.View(
             "/gestione_reliquie",
@@ -4171,17 +4453,21 @@ class AvventuraEpica:
         self.aggiorna_info_combattimento()
     
     def aggiorna_info_combattimento(self):
-        """Aggiorna le informazioni di combattimento ricreando la vista"""
+        """Aggiorna le informazioni di combattimento con la nuova UI"""
         # SOLO se siamo nella vista combattimento, aggiornala
         if len(self.page.views) > 0 and self.page.views[-1].route == "/combattimento":
-            print(f"🎮 DEBUG: Ricreando vista combattimento - in_combattimento = {self.in_combattimento}")
-            # Ricrea la vista combattimento
+            print(f"🎮 DEBUG: Aggiornando vista combattimento - in_combattimento = {self.in_combattimento}")
+            
+            # Aggiorna debug widget
+            self.aggiorna_debug_combat()
+            
+            # Ricrea completamente la vista per semplicità
             self.page.views.pop()  # Rimuovi vista corrente
             vista = self.crea_vista_combattimento()
             self.page.views.append(vista)
             self.analizza_accessibilita(vista)
             self.page.update()
-            print("🎮 INFO: Vista combattimento ricreata")
+            print("🎮 INFO: Vista combattimento aggiornata con nuovo design")
         else:
             print("🎮 DEBUG: Non nella vista combattimento, IGNORO aggiornamento")
 
@@ -4747,23 +5033,19 @@ class AvventuraEpica:
         # Layout impostazioni
         impostazioni_content = ft.Column([
             ft.Text("=== IMPOSTAZIONI ===", size=20, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER),
-            ft.Divider(),
+            ft.Divider(semantics_excluded=True),
             ft.Text("🔊 Audio", size=16, weight=ft.FontWeight.BOLD),
             toggle_audio,
-            ft.Container(height=10),
             self.volume_musica_label,
             slider_volume_musica,
-            ft.Container(height=10),
             self.volume_effetti_label,
             slider_volume_effetti,
-            ft.Container(height=10),
             test_audio_btn,
             debug_audio_btn,
-            ft.Divider(),
+            ft.Divider(semantics_excluded=True),
             
             ft.Text("📳 Feedback", size=16, weight=ft.FontWeight.BOLD),
             toggle_haptic,
-            ft.Container(height=20),
             
             ft.ElevatedButton(
                 "🔙 Torna al Menu Principale", 
@@ -4773,7 +5055,7 @@ class AvventuraEpica:
                 tooltip="Torna al menu principale",
                 data="btn_torna_menu"
             )
-        ], horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=10)
+        ], horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=20)
         
         self.container_pulsanti.controls.append(impostazioni_content)
         
@@ -4924,6 +5206,21 @@ class AvventuraEpica:
         """Aggiorna statistiche giocatore"""
         self.area_stats.value = testo
         self.page.update()
+    
+    def aggiorna_debug_widget(self):
+        """Aggiorna il widget debug con i valori correnti"""
+        if (hasattr(self, 'debug_widget_exp') and 
+            hasattr(self, 'debug_widget_progress') and 
+            hasattr(self, 'debug_widget_level')):
+            
+            self.debug_widget_level.value = f"Level: {self.livello}"
+            self.debug_widget_exp.value = f"EXP: {self.esperienza}/{self.esperienza_prossimo_livello}"
+            self.debug_widget_progress.value = f"Area: {self.progressione_area.get(self.area_attuale, 0)}/100"
+            
+            # Debug log
+            print(f"🔧 Debug widget updated: Level={self.livello}, EXP={self.esperienza}/{self.esperienza_prossimo_livello}, Area Progress={self.progressione_area.get(self.area_attuale, 0)}/100")
+            
+            self.page.update()
         
     def inizia_gioco(self, e):
         """Inizia nuova avventura"""
@@ -5233,6 +5530,9 @@ class AvventuraEpica:
                     
                     self.esperienza += exp_guadagnata
                     self.risorse["cibo"] += oro_guadagnato // 2
+                    
+                    # Aggiorna debug widget
+                    self.aggiorna_debug_widget()
                     
                     self.aggiorna_storia(f" +{exp_guadagnata} esperienza")
                     self.aggiorna_storia(f"🥕 +{oro_guadagnato//2} cibo")
@@ -5593,6 +5893,9 @@ class AvventuraEpica:
             
             # Controlla sblocco gatti dopo boss sconfitto
             self.controlla_sblocco_gatti()
+            
+            # Aggiorna debug widget
+            self.aggiorna_debug_widget()
             
             # Effetto monete per boss
             self.riproduci_effetto("monete")
@@ -5989,6 +6292,20 @@ class AvventuraEpica:
             self.riproduci_effetto("gatto_raccolta")
         else:
             self.riproduci_effetto("raccogli")
+        
+        # Aggiungi esperienza e progressione
+        exp_precedente = self.esperienza
+        self.esperienza += 1
+        prog_precedente = self.progressione_area.get(self.area_attuale, 0)
+        self.progressione_area[self.area_attuale] = prog_precedente + 1
+        prog_attuale = self.progressione_area[self.area_attuale]
+        
+        # Mostra incrementi nell'interfaccia
+        testo += f"\n✨ +1 EXP ({exp_precedente} → {self.esperienza})"
+        testo += f"\n🏆 Progressione {self.area_attuale}: {prog_precedente} → {prog_attuale}/100"
+        
+        self.gestisci_livello()
+        
         self.aggiorna_storia(testo)
         self.aggiorna_stats_incrementali()
         
@@ -6323,9 +6640,8 @@ class AvventuraEpica:
             title=ft.Text(f"Gestisci: {nome_oggetto}"),
             content=ft.Column([
                 ft.Text(f"Cosa vuoi fare con {nome_oggetto}?", size=16),
-                ft.Container(height=10),
                 ft.Column(azioni, spacing=10)
-            ], tight=True),
+            ], tight=True, spacing=15),
             actions_alignment=ft.MainAxisAlignment.CENTER
         )
         
@@ -7532,6 +7848,19 @@ class AvventuraEpica:
         # Chance di Zanna Primordiale
         if random.randint(1, 100) <= 12:
             self.ottieni_reliquia("🌿 Zanna Primordiale")
+        
+        # Aggiungi esperienza e progressione
+        exp_precedente = self.esperienza
+        self.esperienza += 1
+        prog_precedente = self.progressione_area.get(self.area_attuale, 0)
+        self.progressione_area[self.area_attuale] = prog_precedente + 1
+        prog_attuale = self.progressione_area[self.area_attuale]
+        
+        # Mostra incrementi nell'interfaccia
+        testo += f"\n✨ +1 EXP ({exp_precedente} → {self.esperienza})"
+        testo += f"\n🏆 Progressione {self.area_attuale}: {prog_precedente} → {prog_attuale}/100"
+        
+        self.gestisci_livello()
             
         self.aggiorna_storia(testo)
         self.aggiorna_stats_incrementali()
@@ -7559,6 +7888,19 @@ class AvventuraEpica:
         # Chance di Nucleo Energetico
         if random.randint(1, 100) <= 8:
             self.ottieni_reliquia("🏭 Nucleo Energetico")
+        
+        # Aggiungi esperienza e progressione
+        exp_precedente = self.esperienza
+        self.esperienza += 1
+        prog_precedente = self.progressione_area.get(self.area_attuale, 0)
+        self.progressione_area[self.area_attuale] = prog_precedente + 1
+        prog_attuale = self.progressione_area[self.area_attuale]
+        
+        # Mostra incrementi nell'interfaccia
+        testo += f"\n✨ +1 EXP ({exp_precedente} → {self.esperienza})"
+        testo += f"\n🏆 Progressione {self.area_attuale}: {prog_precedente} → {prog_attuale}/100"
+        
+        self.gestisci_livello()
             
         self.aggiorna_storia(testo)
         self.aggiorna_stats_incrementali()
@@ -7595,6 +7937,19 @@ class AvventuraEpica:
         # Chance di Piccone di Diamante
         if random.randint(1, 100) <= 10:
             self.ottieni_reliquia("⛏️ Piccone di Diamante")
+        
+        # Aggiungi esperienza e progressione
+        exp_precedente = self.esperienza
+        self.esperienza += 1
+        prog_precedente = self.progressione_area.get(self.area_attuale, 0)
+        self.progressione_area[self.area_attuale] = prog_precedente + 1
+        prog_attuale = self.progressione_area[self.area_attuale]
+        
+        # Mostra incrementi nell'interfaccia
+        testo += f"\n✨ +1 EXP ({exp_precedente} → {self.esperienza})"
+        testo += f"\n🏆 Progressione {self.area_attuale}: {prog_precedente} → {prog_attuale}/100"
+        
+        self.gestisci_livello()
             
         self.aggiorna_storia(testo)
         self.aggiorna_stats_incrementali()
@@ -7966,6 +8321,9 @@ class AvventuraEpica:
             self.haptic_feedback("success")
             self.aggiorna_storia("📂 Avventura caricata con successo!")
             self.descrivi_situazione_attuale()
+            
+            # Aggiorna debug widget
+            self.aggiorna_debug_widget()
             
             # Vai alla vista gioco dopo il caricamento
             self.page.go("/gioco")
