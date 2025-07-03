@@ -2271,6 +2271,17 @@ class AvventuraEpica:
     def crea_vista_gioco(self):
         """Crea la vista principale di gioco, ottimizzata per accessibilità"""
 
+        # Pulsante per tornare indietro - PRIMA DEL TITOLO
+        pulsante_indietro = ft.ElevatedButton(
+            text="Torna al Menu",
+            on_click=lambda e: self.page.go("/"),
+            width=200,
+            height=40,
+            bgcolor=ft.Colors.GREY_600,
+            color=ft.Colors.WHITE,
+            tooltip="Torna al menu principale"
+        )
+
         # Titolo semplicemente come testo, senza Semantics
         titolo = ft.Text(
             "AVVENTURA IN CORSO", 
@@ -2435,16 +2446,7 @@ class AvventuraEpica:
             lista_pulsanti
         ], spacing=10, tight=False)
 
-        # Pulsante menu in fondo
-        pulsante_menu = ft.ElevatedButton(
-            text="Torna al Menu",
-            on_click=lambda e: self.page.go("/"),
-            width=200,
-            height=50,
-            bgcolor=ft.Colors.GREY_600,
-            color=ft.Colors.WHITE,
-            tooltip="Torna al menu principale"
-        )
+        # Il pulsante menu è ora definito all'inizio della funzione come pulsante_indietro
 
         # Debug Display Widget
         debug_exp_text = f"EXP: {self.esperienza}/{self.esperienza_prossimo_livello}"
@@ -2473,6 +2475,7 @@ class AvventuraEpica:
 
         # Content principale
         content = ft.Column([
+            pulsante_indietro,
             titolo,
             debug_widget,
             ft.Container(
@@ -2481,8 +2484,7 @@ class AvventuraEpica:
                 border_radius=10,
                 padding=10,
                 expand=True
-            ),
-            pulsante_menu
+            )
         ], scroll=ft.ScrollMode.AUTO, spacing=15, expand=True)
 
         return ft.View(
@@ -3120,12 +3122,19 @@ class AvventuraEpica:
         """Crea la sezione che mostra i combattenti faccia a faccia"""
         # Info giocatore
         gatto_info = self.gatti[self.gatto_attivo] if self.gatto_attivo else {"nome": "Eroe", "emoji": "🦸"}
+        
+        # Crea i testi e salva i riferimenti per aggiornamenti
+        self.giocatore_nome_text = ft.Text(f"{gatto_info['nome']}", size=20, weight=ft.FontWeight.BOLD, color=ft.Colors.GREEN_400)
+        self.giocatore_hp_text = ft.Text(f"HP: {self.hp_giocatore}/{self.hp_max}", size=16, color=ft.Colors.GREEN_300)
+        self.giocatore_atk_text = ft.Text(f"ATK: {self.calcola_attacco_totale()}", size=14, color=ft.Colors.GREEN_200)
+        self.giocatore_energia_text = ft.Text(f"Energia: {self.risorse['energia']}", size=14, color=ft.Colors.BLUE_200)
+        
         giocatore_info = ft.Container(
             content=ft.Column([
-                ft.Text(f"{gatto_info.get('emoji', '🦸')} {gatto_info['nome']}", size=20, weight=ft.FontWeight.BOLD, color=ft.Colors.GREEN_400),
-                ft.Text(f"❤️ HP: {self.hp_giocatore}/{self.hp_max}", size=16, color=ft.Colors.GREEN_300),
-                ft.Text(f"⚔️ ATK: {self.calcola_attacco_totale()}", size=14, color=ft.Colors.GREEN_200),
-                ft.Text(f"⚡ Energia: {self.risorse['energia']}", size=14, color=ft.Colors.BLUE_200)
+                self.giocatore_nome_text,
+                self.giocatore_hp_text,
+                self.giocatore_atk_text,
+                self.giocatore_energia_text
             ], horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=5),
             bgcolor=ft.Colors.GREEN_900,
             border_radius=10,
@@ -3135,18 +3144,23 @@ class AvventuraEpica:
         
         # VS centrale
         vs_text = ft.Container(
-            content=ft.Text("⚔️\\nVS", size=24, weight=ft.FontWeight.BOLD, color=ft.Colors.RED_400, text_align=ft.TextAlign.CENTER),
+            content=ft.Text("VS", size=24, weight=ft.FontWeight.BOLD, color=ft.Colors.RED_400, text_align=ft.TextAlign.CENTER),
             padding=20
         )
         
-        # Info mostro
+        # Info mostro - crea i testi e salva i riferimenti
         if self.mostro_attuale:
+            self.mostro_nome_text = ft.Text(f"{self.mostro_attuale['nome']}", size=20, weight=ft.FontWeight.BOLD, color=ft.Colors.RED_400)
+            self.mostro_hp_text = ft.Text(f"HP: {self.hp_mostro_attuale}/{self.mostro_attuale['hp']}", size=16, color=ft.Colors.RED_300)
+            self.mostro_atk_text = ft.Text(f"ATK: {self.mostro_attuale['attacco']}", size=14, color=ft.Colors.RED_200)
+            self.mostro_lv_text = ft.Text(f"Lv: {self.mostro_attuale.get('livello', '?')}", size=14, color=ft.Colors.ORANGE_200)
+            
             mostro_info = ft.Container(
                 content=ft.Column([
-                    ft.Text(f"👹 {self.mostro_attuale['nome']}", size=20, weight=ft.FontWeight.BOLD, color=ft.Colors.RED_400),
-                    ft.Text(f"❤️ HP: {self.hp_mostro_attuale}/{self.mostro_attuale['hp']}", size=16, color=ft.Colors.RED_300),
-                    ft.Text(f"⚔️ ATK: {self.mostro_attuale['attacco']}", size=14, color=ft.Colors.RED_200),
-                    ft.Text(f"📊 Lv: {self.mostro_attuale.get('livello', '?')}", size=14, color=ft.Colors.ORANGE_200)
+                    self.mostro_nome_text,
+                    self.mostro_hp_text,
+                    self.mostro_atk_text,
+                    self.mostro_lv_text
                 ], horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=5),
                 bgcolor=ft.Colors.RED_900,
                 border_radius=10,
@@ -3154,10 +3168,15 @@ class AvventuraEpica:
                 width=200
             )
         else:
+            self.mostro_nome_text = ft.Text("Nessun Nemico", size=18, weight=ft.FontWeight.BOLD, color=ft.Colors.GREY_400)
+            self.mostro_hp_text = ft.Text("Cerca mostri per iniziare il combattimento!", size=14, color=ft.Colors.GREY_300, text_align=ft.TextAlign.CENTER)
+            self.mostro_atk_text = None
+            self.mostro_lv_text = None
+            
             mostro_info = ft.Container(
                 content=ft.Column([
-                    ft.Text("❓ Nessun Nemico", size=18, weight=ft.FontWeight.BOLD, color=ft.Colors.GREY_400),
-                    ft.Text("Cerca mostri per\\niniziare il combattimento!", size=14, color=ft.Colors.GREY_300, text_align=ft.TextAlign.CENTER)
+                    self.mostro_nome_text,
+                    self.mostro_hp_text
                 ], horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=10),
                 bgcolor=ft.Colors.GREY_800,
                 border_radius=10,
@@ -3174,72 +3193,81 @@ class AvventuraEpica:
         )
 
     def crea_pulsanti_combattimento_completi(self):
-        """Crea tutti i pulsanti di combattimento sempre disponibili"""
+        """Crea tutti i pulsanti di combattimento e salva i riferimenti"""
         oggetti_curativi = self.conta_oggetti_curativi()
         
-        # Pulsanti sempre disponibili
-        pulsanti = [
-            ft.ElevatedButton(
-                text="🔍 Cerca Mostri",
-                on_click=self.inizia_combattimento,
-                width=250,
-                height=50,
-                bgcolor=ft.Colors.ORANGE_600,
-                color=ft.Colors.WHITE,
-                tooltip="Cerca mostri da combattere",
-                disabled=self.in_combattimento
-            )
+        # Crea TUTTI i pulsanti e salva i riferimenti
+        self.btn_cerca_mostri = ft.ElevatedButton(
+            text="Cerca Mostri",
+            on_click=self.inizia_combattimento,
+            width=250,
+            height=50,
+            bgcolor=ft.Colors.ORANGE_600,
+            color=ft.Colors.WHITE,
+            tooltip="Cerca mostri da combattere",
+            disabled=self.in_combattimento,
+            visible=not self.in_combattimento  # Visibile solo se NON in combattimento
+        )
+        
+        self.btn_attacca = ft.ElevatedButton(
+            text="Attacca",
+            on_click=self.attacca_mostro,
+            width=250,
+            height=50,
+            bgcolor=ft.Colors.RED_600,
+            color=ft.Colors.WHITE,
+            tooltip="Attacca il mostro",
+            visible=self.in_combattimento and self.mostro_attuale is not None
+        )
+        
+        self.btn_difendi = ft.ElevatedButton(
+            text="Difendi",
+            on_click=self.difendi_combattimento,
+            width=250,
+            height=50,
+            bgcolor=ft.Colors.BLUE_600,
+            color=ft.Colors.WHITE,
+            tooltip="Riduci il danno del 50%",
+            visible=self.in_combattimento and self.mostro_attuale is not None
+        )
+        
+        self.btn_cura = ft.ElevatedButton(
+            text=f"Cura ({oggetti_curativi})",
+            on_click=self.usa_pozione_combattimento,
+            width=250,
+            height=50,
+            bgcolor=ft.Colors.GREEN_600 if oggetti_curativi > 0 else ft.Colors.GREY_600,
+            color=ft.Colors.WHITE,
+            tooltip=f"Usa oggetti curativi. Disponibili: {oggetti_curativi}",
+            disabled=oggetti_curativi <= 0,
+            visible=self.in_combattimento and self.mostro_attuale is not None
+        )
+        
+        self.btn_fuggi = ft.ElevatedButton(
+            text="Fuggi",
+            on_click=self.fuggi_combattimento,
+            width=250,
+            height=50,
+            bgcolor=ft.Colors.PURPLE_600,
+            color=ft.Colors.WHITE,
+            tooltip="Prova a fuggire (70% successo)",
+            visible=self.in_combattimento and self.mostro_attuale is not None
+        )
+        
+        # Ritorna TUTTI i pulsanti (la visibilità li controlla)
+        return [
+            self.btn_cerca_mostri,
+            self.btn_attacca,
+            self.btn_difendi,
+            self.btn_cura,
+            self.btn_fuggi
         ]
-        
-        # Pulsanti di combattimento (se in combattimento)
-        if self.in_combattimento and self.mostro_attuale:
-            pulsanti.extend([
-                ft.ElevatedButton(
-                    text="⚔️ Attacca",
-                    on_click=self.attacca_mostro,
-                    width=250,
-                    height=50,
-                    bgcolor=ft.Colors.RED_600,
-                    color=ft.Colors.WHITE,
-                    tooltip=f"Attacca {self.mostro_attuale['nome']}"
-                ),
-                ft.ElevatedButton(
-                    text="🛡️ Difendi",
-                    on_click=self.difendi_combattimento,
-                    width=250,
-                    height=50,
-                    bgcolor=ft.Colors.BLUE_600,
-                    color=ft.Colors.WHITE,
-                    tooltip="Riduci il danno del 50%"
-                ),
-                ft.ElevatedButton(
-                    text=f"💊 Cura ({oggetti_curativi})",
-                    on_click=self.usa_pozione_combattimento,
-                    width=250,
-                    height=50,
-                    bgcolor=ft.Colors.GREEN_600 if oggetti_curativi > 0 else ft.Colors.GREY_600,
-                    color=ft.Colors.WHITE,
-                    tooltip=f"Usa oggetti curativi. Disponibili: {oggetti_curativi}",
-                    disabled=oggetti_curativi <= 0
-                ),
-                ft.ElevatedButton(
-                    text="🏃 Fuggi",
-                    on_click=self.fuggi_combattimento,
-                    width=250,
-                    height=50,
-                    bgcolor=ft.Colors.PURPLE_600,
-                    color=ft.Colors.WHITE,
-                    tooltip="Prova a fuggire (70% successo)"
-                )
-            ])
-        
-        return pulsanti
 
     def crea_vista_combattimento(self):
         """Crea la vista del combattimento - NUOVO DESIGN RIVOLUZIONARIO"""
         # Titolo principale
         titolo = ft.Text(
-            "⚔️ Arena di Combattimento", 
+            "Arena di Combattimento", 
             size=26, 
             weight=ft.FontWeight.BOLD, 
             text_align=ft.TextAlign.CENTER,
@@ -3274,7 +3302,7 @@ class AvventuraEpica:
         
         # Historia del combattimento (sostituisce il log)
         if not hasattr(self, 'historia_combattimento_text'):
-            self.historia_combattimento_text = "⚔️ Benvenuto nell'Arena!\\n\\nPreparati al combattimento. Puoi cercare mostri o usare le azioni disponibili."
+            self.historia_combattimento_text = "Benvenuto nell'Arena!\\n\\nPreparati al combattimento. Puoi cercare mostri o usare le azioni disponibili."
         
         self.historia_combattimento = ft.Text(
             self.historia_combattimento_text,
@@ -3300,7 +3328,7 @@ class AvventuraEpica:
         # Pulsanti di navigazione (come nel gioco principale)
         pulsanti_navigazione = [
             ft.ElevatedButton(
-                text="🎮 Torna al Gioco",
+                text="Torna al Gioco",
                 on_click=lambda e: self.page.go("/gioco"),
                 width=280,
                 height=50,
@@ -3309,7 +3337,7 @@ class AvventuraEpica:
                 tooltip="Torna alla schermata principale"
             ),
             ft.ElevatedButton(
-                text="🐈 Gestisci Gatti",
+                text="Gestisci Gatti",
                 on_click=lambda e: self.page.go("/gatti"),
                 width=280,
                 height=50,
@@ -3318,7 +3346,7 @@ class AvventuraEpica:
                 tooltip="Gestisci i tuoi gatti"
             ),
             ft.ElevatedButton(
-                text="🏪 Negozio",
+                text="Negozio",
                 on_click=lambda e: self.page.go("/negozio"),
                 width=280,
                 height=50,
@@ -3338,7 +3366,7 @@ class AvventuraEpica:
             # Sezione azioni di combattimento
             ft.Container(
                 content=ft.Column([
-                    ft.Text("⚔️ Azioni di Combattimento", size=18, weight=ft.FontWeight.BOLD, color=ft.Colors.RED_300, text_align=ft.TextAlign.CENTER),
+                    ft.Text("Azioni di Combattimento", size=18, weight=ft.FontWeight.BOLD, color=ft.Colors.RED_300, text_align=ft.TextAlign.CENTER),
                     ft.Column(pulsanti_combattimento, horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=10)
                 ], spacing=15),
                 bgcolor=ft.Colors.GREY_800,
@@ -3350,7 +3378,7 @@ class AvventuraEpica:
             # Sezione navigazione
             ft.Container(
                 content=ft.Column([
-                    ft.Text("🗺️ Navigazione", size=18, weight=ft.FontWeight.BOLD, color=ft.Colors.BLUE_300, text_align=ft.TextAlign.CENTER),
+                    ft.Text("Navigazione", size=18, weight=ft.FontWeight.BOLD, color=ft.Colors.BLUE_300, text_align=ft.TextAlign.CENTER),
                     ft.Column(pulsanti_navigazione, horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=10)
                 ], spacing=15),
                 bgcolor=ft.Colors.GREY_800,
@@ -3374,11 +3402,11 @@ class AvventuraEpica:
         )
     
     def aggiorna_historia_combattimento(self, testo):
-        """Aggiorna la storia del combattimento"""
+        """Aggiorna la storia del combattimento SENZA ricreare la vista"""
         self.historia_combattimento_text = testo
         if hasattr(self, 'historia_combattimento'):
             self.historia_combattimento.value = testo
-            self.page.update()
+            # NON chiamare page.update() qui - sarà chiamato da aggiorna_contenuti_combattimento
             
     def crea_vista_negozio_OLD_REMOVED(self):
         if self.mostro_attuale:
@@ -4275,6 +4303,9 @@ class AvventuraEpica:
                 self.aggiorna_stats_incrementali()  # Aggiorna statistiche dopo danno
                 self.haptic_feedback("light")
         
+        # Aggiorna la storia del combattimento
+        self.aggiorna_historia_combattimento(messaggio)
+        
         self.round_combattimento += 1
         self.aggiorna_info_combattimento()
     
@@ -4453,23 +4484,100 @@ class AvventuraEpica:
         self.aggiorna_info_combattimento()
     
     def aggiorna_info_combattimento(self):
-        """Aggiorna le informazioni di combattimento con la nuova UI"""
+        """Aggiorna le informazioni di combattimento SENZA ricreare la vista"""
         # SOLO se siamo nella vista combattimento, aggiornala
         if len(self.page.views) > 0 and self.page.views[-1].route == "/combattimento":
-            print(f"🎮 DEBUG: Aggiornando vista combattimento - in_combattimento = {self.in_combattimento}")
+            print(f"🎮 DEBUG: Aggiornando contenuti combattimento - in_combattimento = {self.in_combattimento}")
             
+            # Aggiorna solo i contenuti che cambiano (NO RICREAZIONE VISTA)
+            self.aggiorna_contenuti_combattimento()
+            
+            print("🎮 INFO: Contenuti combattimento aggiornati senza ricreare vista")
+        else:
+            print("🎮 DEBUG: Non nella vista combattimento, IGNORO aggiornamento")
+    
+    def aggiorna_contenuti_combattimento(self):
+        """Aggiorna solo i contenuti che cambiano nel combattimento"""
+        try:
             # Aggiorna debug widget
             self.aggiorna_debug_combat()
             
-            # Ricrea completamente la vista per semplicità
-            self.page.views.pop()  # Rimuovi vista corrente
+            # Aggiorna info giocatore (se esistono i riferimenti)
+            if hasattr(self, 'giocatore_hp_text'):
+                self.giocatore_hp_text.value = f"HP: {self.hp_giocatore}/{self.hp_max}"
+            if hasattr(self, 'giocatore_atk_text'):
+                self.giocatore_atk_text.value = f"ATK: {self.calcola_attacco_totale()}"
+            if hasattr(self, 'giocatore_energia_text'):
+                self.giocatore_energia_text.value = f"Energia: {self.risorse['energia']}"
+                
+            # Aggiorna info mostro (se esistono i riferimenti)
+            if self.mostro_attuale:
+                if hasattr(self, 'mostro_nome_text'):
+                    self.mostro_nome_text.value = f"{self.mostro_attuale['nome']}"
+                if hasattr(self, 'mostro_hp_text'):
+                    self.mostro_hp_text.value = f"HP: {self.hp_mostro_attuale}/{self.mostro_attuale['hp']}"
+                if hasattr(self, 'mostro_atk_text') and self.mostro_atk_text:
+                    self.mostro_atk_text.value = f"ATK: {self.mostro_attuale['attacco']}"
+                if hasattr(self, 'mostro_lv_text') and self.mostro_lv_text:
+                    self.mostro_lv_text.value = f"Lv: {self.mostro_attuale.get('livello', '?')}"
+            else:
+                # Nessun mostro
+                if hasattr(self, 'mostro_nome_text'):
+                    self.mostro_nome_text.value = "Nessun Nemico"
+                if hasattr(self, 'mostro_hp_text'):
+                    self.mostro_hp_text.value = "Cerca mostri per iniziare il combattimento!"
+            
+            # Aggiorna visibilità dei pulsanti in base allo stato
+            self.aggiorna_pulsanti_combattimento()
+                    
+            # Aggiorna historia se esiste
+            if hasattr(self, 'historia_combattimento'):
+                # La historia viene aggiornata direttamente dalle funzioni di combattimento
+                pass
+                
+            # Aggiorna solo questa pagina specifica
+            self.page.update()
+            
+        except Exception as e:
+            print(f"❌ Errore aggiornamento contenuti: {e}")
+            # Fallback: ricrea la vista se l'aggiornamento parziale fallisce
+            self.page.views.pop()
             vista = self.crea_vista_combattimento()
             self.page.views.append(vista)
-            self.analizza_accessibilita(vista)
             self.page.update()
-            print("🎮 INFO: Vista combattimento aggiornata con nuovo design")
-        else:
-            print("🎮 DEBUG: Non nella vista combattimento, IGNORO aggiornamento")
+    
+    def aggiorna_pulsanti_combattimento(self):
+        """Aggiorna la visibilità dei pulsanti in base allo stato del combattimento"""
+        try:
+            in_combattimento = self.in_combattimento and self.mostro_attuale is not None
+            oggetti_curativi = self.conta_oggetti_curativi()
+            
+            # Aggiorna pulsante Cerca Mostri
+            if hasattr(self, 'btn_cerca_mostri'):
+                self.btn_cerca_mostri.visible = not in_combattimento
+                self.btn_cerca_mostri.disabled = in_combattimento
+            
+            # Aggiorna pulsanti di combattimento
+            if hasattr(self, 'btn_attacca'):
+                self.btn_attacca.visible = in_combattimento
+                if in_combattimento and self.mostro_attuale:
+                    self.btn_attacca.tooltip = f"Attacca {self.mostro_attuale['nome']}"
+                    
+            if hasattr(self, 'btn_difendi'):
+                self.btn_difendi.visible = in_combattimento
+                
+            if hasattr(self, 'btn_cura'):
+                self.btn_cura.visible = in_combattimento
+                self.btn_cura.text = f"Cura ({oggetti_curativi})"
+                self.btn_cura.disabled = oggetti_curativi <= 0
+                self.btn_cura.bgcolor = ft.Colors.GREEN_600 if oggetti_curativi > 0 else ft.Colors.GREY_600
+                self.btn_cura.tooltip = f"Usa oggetti curativi. Disponibili: {oggetti_curativi}"
+                
+            if hasattr(self, 'btn_fuggi'):
+                self.btn_fuggi.visible = in_combattimento
+                
+        except Exception as e:
+            print(f"❌ Errore aggiornamento pulsanti: {e}")
 
     def seleziona_tab(self, index):
         """Seleziona tab e aggiorna la navigazione"""
