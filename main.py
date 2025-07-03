@@ -1597,7 +1597,7 @@ class AvventuraEpica:
         else:
             self.riproduci_effetto("raccogli")
         self.aggiorna_storia(testo)
-        self.aggiorna_stats_incrementali()
+        # self.aggiorna_stats_incrementali()  # Temporaneamente commentato per test VoiceOver
         
     def nutri_gatto(self, e):
         """Nutri il gatto attivo"""
@@ -2331,7 +2331,7 @@ class AvventuraEpica:
         
         # Azioni incrementali senza Semantics
         azioni_incrementali = self.azioni_incrementali_possibili()
-        for testo, funzione, tooltip in azioni_incrementali:
+        for i, (testo, funzione, tooltip) in enumerate(azioni_incrementali):
             pulsante_incrementale = ft.ElevatedButton(
                 text=testo,
                 on_click=funzione,
@@ -2339,7 +2339,8 @@ class AvventuraEpica:
                 height=50,
                 bgcolor=ft.Colors.GREEN_600,
                 color=ft.Colors.WHITE,
-                tooltip=tooltip
+                tooltip=tooltip,
+                key=f"azione_{i}_{testo.replace(' ', '_')}"
             )
             pulsanti_gioco.append(pulsante_incrementale)
         
@@ -2352,7 +2353,8 @@ class AvventuraEpica:
                 height=50,
                 bgcolor=ft.Colors.BLUE_600,
                 color=ft.Colors.WHITE,
-                tooltip="Scegli area da esplorare"
+                tooltip="Scegli area da esplorare",
+                key="btn_cambia_area"
             )
             pulsanti_gioco.append(pulsante_aree)
         
