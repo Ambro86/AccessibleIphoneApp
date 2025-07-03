@@ -2253,15 +2253,19 @@ class AvventuraEpica:
     def crea_vista_gioco(self):
         """Crea la vista principale di gioco"""
         
-        # Titolo diretto senza wrapper per evitare elementi vuoti
-        titolo = ft.Text(
-            "AVVENTURA IN CORSO", 
-            size=24, 
-            weight=ft.FontWeight.BOLD, 
-            text_align=ft.TextAlign.CENTER,
-            color=ft.Colors.AMBER_400,
-            semantics_label="Avventura in corso",
-            style=ft.TextThemeStyle.HEADLINE_MEDIUM
+        # Titolo con semantica per heading
+        titolo = ft.Semantics(
+            content=ft.Text(
+                "AVVENTURA IN CORSO", 
+                size=24, 
+                weight=ft.FontWeight.BOLD, 
+                text_align=ft.TextAlign.CENTER,
+                color=ft.Colors.AMBER_400,
+                style=ft.TextThemeStyle.HEADLINE_MEDIUM
+            ),
+            heading_level=1,
+            header=True,
+            label="Avventura in corso"
         )
         
         # Ottieni i valori attuali dalle variabili globali se esistono
@@ -2435,11 +2439,16 @@ class AvventuraEpica:
         return ft.View(
             "/gioco",
             controls=[
-                ft.Container(
-                    content=content,
-                    bgcolor=ft.Colors.GREY_900,
-                    padding=20,
-                    expand=True
+                # Usa Semantics per controllare l'annuncio di VoiceOver
+                ft.Semantics(
+                    label="Schermata principale del gioco",
+                    container=True,
+                    content=ft.Container(
+                        content=content,
+                        bgcolor=ft.Colors.GREY_900,
+                        padding=20,
+                        expand=True
+                    )
                 )
             ],
             bgcolor=ft.Colors.GREY_900
