@@ -2437,11 +2437,15 @@ class AvventuraEpica:
         return ft.View(
             "/gioco",
             controls=[
-                ft.Container(
-                    content=content,
-                    bgcolor=ft.Colors.GREY_900,
-                    padding=20,
-                    expand=True
+                # Semantics senza label per evitare elemento vuoto ma preservare contenuto
+                ft.Semantics(
+                    container=True,
+                    content=ft.Container(
+                        content=content,
+                        bgcolor=ft.Colors.GREY_900,
+                        padding=20,
+                        expand=True
+                    )
                 )
             ],
             bgcolor=ft.Colors.GREY_900
