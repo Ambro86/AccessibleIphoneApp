@@ -2473,9 +2473,8 @@ class AvventuraEpica:
         # Debug log
         print(f"🔧 Debug widget created: Level={self.livello}, EXP={self.esperienza}/{self.esperienza_prossimo_livello}, Area Progress={self.progressione_area.get(self.area_attuale, 0)}/100")
 
-        # Content principale
+        # Content principale (senza pulsante indietro)
         content = ft.Column([
-            pulsante_indietro,
             titolo,
             debug_widget,
             ft.Container(
@@ -2490,6 +2489,7 @@ class AvventuraEpica:
         return ft.View(
             "/gioco",
             controls=[
+                pulsante_indietro,
                 ft.Container(
                     content=content,
                     bgcolor=ft.Colors.GREY_900,
