@@ -2253,8 +2253,9 @@ class AvventuraEpica:
     def crea_vista_gioco(self):
         """Crea la vista principale di gioco"""
         
-        # Titolo con semantica per heading
+        # Titolo con Semantics senza label
         titolo = ft.Semantics(
+            container=True,
             content=ft.Text(
                 "AVVENTURA IN CORSO", 
                 size=24, 
@@ -2262,10 +2263,7 @@ class AvventuraEpica:
                 text_align=ft.TextAlign.CENTER,
                 color=ft.Colors.AMBER_400,
                 style=ft.TextThemeStyle.HEADLINE_MEDIUM
-            ),
-            heading_level=1,
-            header=True,
-            label="Avventura in corso"
+            )
         )
         
         # Ottieni i valori attuali dalle variabili globali se esistono
@@ -2277,33 +2275,49 @@ class AvventuraEpica:
         if hasattr(self, 'area_stats') and self.area_stats and hasattr(self.area_stats, 'value'):
             valore_stats = self.area_stats.value
         
-        # Aree contenuto senza semantics_label per leggere il contenuto reale
-        area_storia_locale = ft.Container(
-            content=ft.Text(
-                valore_storia,
-                size=14,
-                color=ft.Colors.AMBER_100
-            ),
-            bgcolor=ft.Colors.DEEP_PURPLE_900,
-            border_radius=5,
-            padding=10,
-            expand=True
+        # Area storia come gruppo semantico
+        area_storia_locale = ft.Semantics(
+            container=True,
+            content=ft.Container(
+                content=ft.Text(
+                    valore_storia,
+                    size=14,
+                    color=ft.Colors.AMBER_100
+                ),
+                bgcolor=ft.Colors.DEEP_PURPLE_900,
+                border_radius=5,
+                padding=10,
+                expand=True
+            )
         )
 
-        area_stats_locale = ft.Container(
-            content=ft.Text(
-                valore_stats,
-                size=14,
-                color=ft.Colors.CYAN_100
-            ),
-            bgcolor=ft.Colors.BLUE_GREY_900,
-            border_radius=5,
-            padding=10
+        # Area statistiche come gruppo semantico con TextField
+        area_stats_textfield = ft.TextField(
+            value=valore_stats,
+            multiline=True,
+            read_only=True,
+            min_lines=4,
+            max_lines=6,
+            text_size=14,
+            color=ft.Colors.CYAN_100,
+            border_color=ft.Colors.TRANSPARENT,
+            focused_border_color=ft.Colors.TRANSPARENT,
+            bgcolor=ft.Colors.TRANSPARENT
+        )
+        
+        area_stats_locale = ft.Semantics(
+            container=True,
+            content=ft.Container(
+                content=area_stats_textfield,
+                bgcolor=ft.Colors.BLUE_GREY_900,
+                border_radius=5,
+                padding=10
+            )
         )
         
         # Aggiorna i riferimenti globali per mantenere la sincronizzazione
         self.area_storia = area_storia_locale
-        self.area_stats = area_stats_locale
+        self.area_stats = area_stats_textfield  # Punta al TextField per aggiornamenti
         
         # Pulsanti di gioco
         pulsanti_gioco = []
@@ -2395,12 +2409,15 @@ class AvventuraEpica:
         )
         pulsanti_gioco.append(pulsante_salva)
         
-        # Colonna pulsanti senza padding per evitare elementi vuoti
-        lista_pulsanti = ft.Column(
-            controls=pulsanti_gioco,
-            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-            spacing=15,
-            scroll=ft.ScrollMode.AUTO
+        # Colonna pulsanti con Semantics per evitare elemento vuoto
+        lista_pulsanti = ft.Semantics(
+            container=True,
+            content=ft.Column(
+                controls=pulsanti_gioco,
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                spacing=15,
+                scroll=ft.ScrollMode.AUTO
+            )
         )
         
         # Controlli di gioco senza label per preservare il contenuto naturale
@@ -2410,15 +2427,18 @@ class AvventuraEpica:
             lista_pulsanti
         ], spacing=10, tight=False)
         
-        # Pulsante menu
-        pulsante_menu = ft.ElevatedButton(
-            text="Torna al Menu",
-            on_click=lambda e: self.page.go("/"),
-            width=200,
-            height=50,
-            bgcolor=ft.Colors.GREY_600,
-            color=ft.Colors.WHITE,
-            tooltip="Torna al menu principale"
+        # Pulsante menu come gruppo semantico
+        pulsante_menu = ft.Semantics(
+            container=True,
+            content=ft.ElevatedButton(
+                text="Torna al Menu",
+                on_click=lambda e: self.page.go("/"),
+                width=200,
+                height=50,
+                bgcolor=ft.Colors.GREY_600,
+                color=ft.Colors.WHITE,
+                tooltip="Torna al menu principale"
+            )
         )
         
         # Content principale senza height fisso per evitare contenuto vuoto
