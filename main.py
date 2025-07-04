@@ -3763,8 +3763,7 @@ class AvventuraEpica:
                 height=400,
                 bgcolor=ft.Colors.GREY_800,
                 border_radius=10,
-                padding=10,
-                semantics_label="Lista gatti disponibili, scorri per vedere tutti i gatti"
+                padding=10
             )
         ])
         
