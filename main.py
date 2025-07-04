@@ -2282,14 +2282,17 @@ class AvventuraEpica:
             tooltip="Torna al menu principale"
         )
 
-        # Titolo semplicemente come testo, senza Semantics
-        titolo = ft.Text(
-            "AVVENTURA IN CORSO", 
-            size=24, 
-            weight=ft.FontWeight.BOLD, 
+        # Titolo come TextField focusabile per VoiceOver
+        titolo = ft.TextField(
+            value="AVVENTURA IN CORSO",
+            text_size=24,
+            text_style=ft.TextStyle(weight=ft.FontWeight.BOLD, color=ft.Colors.AMBER_400),
             text_align=ft.TextAlign.CENTER,
-            color=ft.Colors.AMBER_400,
-            style=ft.TextThemeStyle.HEADLINE_MEDIUM
+            read_only=True,
+            border=ft.InputBorder.NONE,
+            bgcolor=ft.Colors.TRANSPARENT,
+            autofocus=True,
+            content_padding=0
         )
 
         # Ottieni i valori attuali dalle variabili globali se esistono
@@ -2490,15 +2493,19 @@ class AvventuraEpica:
             "/gioco",
             controls=[
                 pulsante_indietro,
-                ft.Container(
-                    content=content,
-                    bgcolor=ft.Colors.GREY_900,
-                    padding=20,
-                    expand=True
+                # Semantics per avvolgere i contenuti
+                ft.Semantics(
+                    container=True,
+                    disabled=False,
+                    content=ft.Container(
+                        content=content,
+                        bgcolor=ft.Colors.GREY_900,
+                        padding=20,
+                        expand=True
+                    )
                 )
             ],
-            bgcolor=ft.Colors.GREY_900,
-            scroll=ft.ScrollMode.AUTO
+            bgcolor=ft.Colors.GREY_900
         )
 
     def crea_vista_gioco_NonOttimizzata(self):
