@@ -2094,7 +2094,7 @@ class AvventuraEpica:
                 if len(self.page.views) > 0 and self.page.views[-1].route == "/gioco":
                     print(f"🎮 DEBUG: Vista /gioco già presente, non duplico")
                 else:
-                    vista = self.crea_vista_gioco()
+                    vista = self.crea_vista_gioco_semantics()
                     self.page.views.append(vista)
                     self.analizza_accessibilita(vista)
             case "/impostazioni":
@@ -2498,6 +2498,217 @@ class AvventuraEpica:
                 ),
                 ft.Container(
                     content=content,
+                    bgcolor=ft.Colors.GREY_900,
+                    padding=20,
+                    expand=True
+                )
+            ],
+            bgcolor=ft.Colors.GREY_900
+        )
+
+    def crea_vista_gioco_semantics(self):
+        """Crea la vista principale di gioco con ogni controllo avvolto in ft.Semantics"""
+        
+        # Ottieni i valori attuali dalle variabili globali se esistono
+        valore_storia = "🎮 Benvenuto nell'Avventura Incrementale!\n Compagni gatti con abilità speciali\n Raccogli risorse e costruisci\n Combatti mostri e sali di livello\n🍽️ Gestisci cibo e acqua per energia\n🎵 Audio immersivo e feedback aptico\n\nPremi 'Inizia Avventura' per cominciare!"
+        if hasattr(self, 'area_storia') and self.area_storia and hasattr(self.area_storia, 'value'):
+            valore_storia = self.area_storia.value
+
+        valore_stats = f" Statistiche Giocatore:\n Livello {self.livello} •  {self.vita}/{self.vita_massima} HP •  {self.monete} monete\n Attacco: {self.calcola_attacco_totale()} •  Difesa: {self.calcola_difesa_totale()}\n EXP: {self.esperienza}/{self.esperienza_necessaria}"
+        if hasattr(self, 'area_stats') and self.area_stats and hasattr(self.area_stats, 'value'):
+            valore_stats = self.area_stats.value
+
+        # Lista dei controlli wrappati in Semantics
+        controlli_semantics = []
+
+        # Pulsante indietro
+        controlli_semantics.append(
+            ft.Semantics(
+                container=True,
+                content=ft.ElevatedButton(
+                    text="Torna al Menu",
+                    on_click=lambda e: self.page.go("/"),
+                    width=200,
+                    height=40,
+                    bgcolor=ft.Colors.GREY_600,
+                    color=ft.Colors.WHITE,
+                    tooltip="Torna al menu principale"
+                )
+            )
+        )
+
+        # Titolo
+        controlli_semantics.append(
+            ft.Semantics(
+                container=True,
+                content=ft.TextField(
+                    value="AVVENTURA IN CORSO",
+                    text_size=24,
+                    text_style=ft.TextStyle(weight=ft.FontWeight.BOLD, color=ft.Colors.AMBER_400),
+                    text_align=ft.TextAlign.CENTER,
+                    read_only=True,
+                    border=ft.InputBorder.NONE,
+                    bgcolor=ft.Colors.TRANSPARENT,
+                    autofocus=True,
+                    content_padding=0
+                )
+            )
+        )
+
+
+        # Area storia
+        controlli_semantics.append(
+            ft.Semantics(
+                container=True,
+                content=ft.Container(
+                    content=ft.Text(
+                        valore_storia,
+                        size=14,
+                        color=ft.Colors.AMBER_100
+                    ),
+                    bgcolor=ft.Colors.DEEP_PURPLE_900,
+                    border_radius=5,
+                    padding=10,
+                    height=150
+                )
+            )
+        )
+
+        # Area stats
+        controlli_semantics.append(
+            ft.Semantics(
+                container=True,
+                content=ft.Container(
+                    content=ft.Text(
+                        valore_stats,
+                        size=12,
+                        color=ft.Colors.WHITE
+                    ),
+                    bgcolor=ft.Colors.GREY_700,
+                    border_radius=5,
+                    padding=10,
+                    height=80
+                )
+            )
+        )
+
+
+        # Pulsanti incrementali
+        azioni_incrementali = self.azioni_incrementali_possibili()
+        for azione in azioni_incrementali:
+            # azione è una tupla (nome, callback, tooltip)
+            nome_azione = azione[0]
+            callback_azione = azione[1] 
+            tooltip_azione = azione[2] if len(azione) > 2 else ""
+            
+            controlli_semantics.append(
+                ft.Semantics(
+                    container=True,
+                    content=ft.ElevatedButton(
+                        text=nome_azione,
+                        on_click=callback_azione,
+                        width=280,
+                        height=50,
+                        bgcolor=ft.Colors.BLUE_600,
+                        color=ft.Colors.WHITE,
+                        tooltip=tooltip_azione
+                    )
+                )
+            )
+
+        # Pulsante combattimento
+        controlli_semantics.append(
+            ft.Semantics(
+                container=True,
+                content=ft.ElevatedButton(
+                    text="Combattimento",
+                    on_click=lambda e: self.page.go("/combattimento"),
+                    width=280,
+                    height=50,
+                    bgcolor=ft.Colors.RED_600,
+                    color=ft.Colors.WHITE,
+                    tooltip="Vai alla modalità combattimento"
+                )
+            )
+        )
+
+        # Pulsante negozio
+        controlli_semantics.append(
+            ft.Semantics(
+                container=True,
+                content=ft.ElevatedButton(
+                    text="Negozio",
+                    on_click=lambda e: self.page.go("/negozio"),
+                    width=280,
+                    height=50,
+                    bgcolor=ft.Colors.YELLOW_600,
+                    color=ft.Colors.WHITE,
+                    tooltip="Visita il negozio"
+                )
+            )
+        )
+
+        # Pulsante gatti
+        controlli_semantics.append(
+            ft.Semantics(
+                container=True,
+                content=ft.ElevatedButton(
+                    text="Gatti",
+                    on_click=lambda e: self.page.go("/gatti"),
+                    width=280,
+                    height=50,
+                    bgcolor=ft.Colors.PINK_600,
+                    color=ft.Colors.WHITE,
+                    tooltip="Gestisci i tuoi gatti"
+                )
+            )
+        )
+
+        # Pulsante boss (condizionale)
+        if (self.area_attuale in self.boss_aree and 
+            self.boss_aree[self.area_attuale]["nome"] not in self.boss_sconfitti and
+            self.progressione_area.get(self.area_attuale, 0) >= 100):
+            controlli_semantics.append(
+                ft.Semantics(
+                    container=True,
+                    content=ft.ElevatedButton(
+                        text="Combatti Boss dell'Area!",
+                        on_click=self.combatti_boss,
+                        width=280,
+                        height=50,
+                        bgcolor=ft.Colors.DEEP_PURPLE_600,
+                        color=ft.Colors.WHITE,
+                        tooltip=f"Affronta il boss: {self.boss_aree[self.area_attuale]['nome']}"
+                    )
+                )
+            )
+
+        # Pulsante salva
+        controlli_semantics.append(
+            ft.Semantics(
+                container=True,
+                content=ft.ElevatedButton(
+                    text="Salva Partita",
+                    on_click=self.salva_gioco,
+                    width=280,
+                    height=50,
+                    bgcolor=ft.Colors.PURPLE_600,
+                    color=ft.Colors.WHITE,
+                    tooltip="Salva il tuo progresso"
+                )
+            )
+        )
+
+        return ft.View(
+            "/gioco",
+            controls=[
+                ft.Container(
+                    content=ft.Column(
+                        controls=controlli_semantics,
+                        spacing=15,
+                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                        scroll=ft.ScrollMode.AUTO
+                    ),
                     bgcolor=ft.Colors.GREY_900,
                     padding=20,
                     expand=True
