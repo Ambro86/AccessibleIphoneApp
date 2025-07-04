@@ -2492,16 +2492,15 @@ class AvventuraEpica:
         return ft.View(
             "/gioco",
             controls=[
-                pulsante_indietro,
-                # Semantics per avvolgere i contenuti
                 ft.Semantics(
                     container=True,
-                    content=ft.Container(
-                        content=content,
-                        bgcolor=ft.Colors.GREY_900,
-                        padding=20,
-                        expand=True
-                    )
+                    content=pulsante_indietro
+                ),
+                ft.Container(
+                    content=content,
+                    bgcolor=ft.Colors.GREY_900,
+                    padding=20,
+                    expand=True
                 )
             ],
             bgcolor=ft.Colors.GREY_900
