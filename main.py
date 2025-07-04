@@ -2496,7 +2496,6 @@ class AvventuraEpica:
                 # Semantics per avvolgere i contenuti
                 ft.Semantics(
                     container=True,
-                    disabled=False,
                     content=ft.Container(
                         content=content,
                         bgcolor=ft.Colors.GREY_900,
