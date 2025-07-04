@@ -2541,31 +2541,37 @@ class AvventuraEpica:
         controlli_semantics.append(
             ft.Semantics(
                 container=True,
-                content=ft.TextField(
-                    value="AVVENTURA IN CORSO",
-                    text_size=24,
-                    text_style=ft.TextStyle(weight=ft.FontWeight.BOLD, color=ft.Colors.AMBER_400),
+                content=ft.Text(
+                    "AVVENTURA IN CORSO",
+                    size=24,
+                    weight=ft.FontWeight.BOLD,
                     text_align=ft.TextAlign.CENTER,
-                    read_only=True,
-                    border=ft.InputBorder.NONE,
-                    bgcolor=ft.Colors.TRANSPARENT,
-                    autofocus=True,
-                    content_padding=0
+                    color=ft.Colors.AMBER_400
                 )
             )
         )
 
 
-        # Area storia
+        # Area storia - crea TextField e salva riferimento globale
+        area_storia_textfield = ft.TextField(
+            value=valore_storia,
+            multiline=True,
+            read_only=True,
+            min_lines=6,
+            max_lines=8,
+            text_size=14,
+            color=ft.Colors.AMBER_100,
+            border_color=ft.Colors.TRANSPARENT,
+            focused_border_color=ft.Colors.TRANSPARENT,
+            bgcolor=ft.Colors.TRANSPARENT
+        )
+        self.area_storia = area_storia_textfield
+        
         controlli_semantics.append(
             ft.Semantics(
                 container=True,
                 content=ft.Container(
-                    content=ft.Text(
-                        valore_storia,
-                        size=14,
-                        color=ft.Colors.AMBER_100
-                    ),
+                    content=area_storia_textfield,
                     bgcolor=ft.Colors.DEEP_PURPLE_900,
                     border_radius=5,
                     padding=10,
@@ -2574,16 +2580,26 @@ class AvventuraEpica:
             )
         )
 
-        # Area stats
+        # Area stats - crea TextField e salva riferimento globale
+        area_stats_textfield = ft.TextField(
+            value=valore_stats,
+            multiline=True,
+            read_only=True,
+            min_lines=4,
+            max_lines=6,
+            text_size=14,
+            color=ft.Colors.CYAN_100,
+            border_color=ft.Colors.TRANSPARENT,
+            focused_border_color=ft.Colors.TRANSPARENT,
+            bgcolor=ft.Colors.TRANSPARENT
+        )
+        self.area_stats = area_stats_textfield
+        
         controlli_semantics.append(
             ft.Semantics(
                 container=True,
                 content=ft.Container(
-                    content=ft.Text(
-                        valore_stats,
-                        size=12,
-                        color=ft.Colors.WHITE
-                    ),
+                    content=area_stats_textfield,
                     bgcolor=ft.Colors.GREY_700,
                     border_radius=5,
                     padding=10,
@@ -2701,20 +2717,11 @@ class AvventuraEpica:
 
         return ft.View(
             "/gioco",
-            controls=[
-                ft.Container(
-                    content=ft.Column(
-                        controls=controlli_semantics,
-                        spacing=15,
-                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                        scroll=ft.ScrollMode.AUTO
-                    ),
-                    bgcolor=ft.Colors.GREY_900,
-                    padding=20,
-                    expand=True
-                )
-            ],
-            bgcolor=ft.Colors.GREY_900
+            controls=controlli_semantics,
+            bgcolor=ft.Colors.GREY_900,
+            scroll=ft.ScrollMode.AUTO,
+            spacing=15,
+            padding=20
         )
 
     def crea_vista_gioco_NonOttimizzata(self):
