@@ -3363,7 +3363,6 @@ class AvventuraEpica:
         
         # Layout principale - NUOVO DESIGN
         content = ft.Column([
-            titolo,
             self.debug_widget_combat,
             combattenti_container,
             historia_container,
@@ -3396,6 +3395,10 @@ class AvventuraEpica:
         return ft.View(
             "/combattimento",
             controls=[
+                ft.Semantics(
+                    container=True,
+                    content=titolo
+                ),
                 ft.Container(
                     content=content,
                     bgcolor=ft.Colors.GREY_900,
