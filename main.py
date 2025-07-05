@@ -3,6 +3,8 @@ import flet_audio as fa
 import json
 import os
 import random
+import logging
+import datetime
 
 class AvventuraEpica:
     def __init__(self, page: ft.Page):
@@ -10,11 +12,77 @@ class AvventuraEpica:
         self.versione = "1.0.0" 
         self.autore   = "Ambrogio Riili"
         self.app_inizializzata = False  # Flag per evitare suoni durante init
+        self.setup_logging()
+        self.log_info("App inizializzata")
         self.inizializza_gioco()
         self.crea_audio_system()
         self.crea_ui()
         self.app_inizializzata = True  # Ora l'app è pronta
+        self.log_info("App pronta")
         
+    def setup_logging(self):
+        """Configura il sistema di logging per debug iPhone"""
+        try:
+            # Crea file di log nella directory dell'app
+            self.log_file = os.path.join(os.getcwd(), "debug_log.txt")
+            
+            # Configura logging
+            logging.basicConfig(
+                level=logging.DEBUG,
+                format='%(asctime)s - %(levelname)s - %(message)s',
+                handlers=[
+                    logging.FileHandler(self.log_file, mode='a'),
+                    logging.StreamHandler()  # Mantiene anche console
+                ]
+            )
+            
+            self.logger = logging.getLogger("AvventuraEpica")
+            self.logger.info(f"=== NUOVO AVVIO APP {datetime.datetime.now()} ===")
+            self.logger.info(f"Piattaforma: {os.name}")
+            
+        except Exception as e:
+            print(f"Errore setup logging: {e}")
+            self.logger = None
+    
+    def log_info(self, message):
+        """Log messaggi informativi"""
+        try:
+            if hasattr(self, 'logger') and self.logger:
+                self.logger.info(message)
+            print(f"INFO: {message}")
+        except:
+            print(f"INFO: {message}")
+    
+    def log_error(self, message):
+        """Log errori"""
+        try:
+            if hasattr(self, 'logger') and self.logger:
+                self.logger.error(message)
+            print(f"ERROR: {message}")
+        except:
+            print(f"ERROR: {message}")
+    
+    def log_audio(self, message):
+        """Log specifici per audio"""
+        try:
+            if hasattr(self, 'logger') and self.logger:
+                self.logger.info(f"AUDIO: {message}")
+            print(f"AUDIO: {message}")
+        except:
+            print(f"AUDIO: {message}")
+    
+    def scarica_log_debug(self, e):
+        """Permette di scaricare il file di log per debugging iPhone"""
+        try:
+            if hasattr(self, 'log_file') and os.path.exists(self.log_file):
+                # Su mobile, Flet può aprire il file per il download
+                self.page.launch_url(f"file://{self.log_file}")
+                self.aggiorna_storia("📱 File di log aperto. Su iPhone: Condividi > Salva su File")
+            else:
+                self.aggiorna_storia("❌ Nessun file di log trovato")
+        except Exception as e:
+            print(f"Errore apertura log: {e}")
+            self.aggiorna_storia("❌ Errore nell'apertura del log")
 
     def analizza_accessibilita(self, view):
         return  # DEBUG TEMPORANEAMENTE DISABILITATO
@@ -1236,30 +1304,49 @@ class AvventuraEpica:
             
     def on_musica_state_changed(self, e):
         """Loop musica"""
+        self.log_audio(f"Stato musica cambiato: {e.data}")
         print(f"🎵 Stato musica cambiato: {e.data}")
+        
         if e.data == "completed" and self.audio_abilitato:
+            self.log_audio("Musica completata - Riavvio loop")
             self.musica_sottofondo.play()
         elif e.data == "playing":
+            self.log_audio("Musica in riproduzione!")
             print("🎵 Musica in riproduzione!")
         elif e.data == "paused":
+            self.log_audio("Musica in pausa")
             print("🎵 Musica in pausa")
+        elif e.data == "stopped":
+            self.log_audio("Musica fermata")
+            print("🎵 Musica fermata")
+        elif e.data == "error":
+            self.log_error("Errore riproduzione musica")
+            print("🎵 Errore musica")
     
             
     def cambia_musica_area(self, area):
         """Cambia musica con sistema robusto"""
+        self.log_audio(f"Cambio musica richiesto per area: {area}")
+        
         if not self.audio_abilitato or area not in self.musiche_aree:
+            self.log_audio(f"Cambio musica saltato - Audio: {self.audio_abilitato}, Area valida: {area in self.musiche_aree}")
             return
             
         # Non cambiare musica se si è in battaglia
         if self.in_battaglia:
+            self.log_audio("Cambio musica saltato - In battaglia")
             return
             
         file_musica = self.musiche_aree[area]
         
         if self.musica_attuale == file_musica:
+            self.log_audio(f"Musica già attiva: {file_musica}")
             return
             
         # Debug per capire il problema
+        self.log_audio(f"Tentativo di caricare: {file_musica}")
+        self.log_audio(f"Directory corrente: {os.getcwd()}")
+        self.log_audio(f"File esiste: {os.path.exists(file_musica)}")
         print(f"🎵 Tentativo di caricare: {file_musica}")
         print(f"🎵 Directory corrente: {os.getcwd()}")
         print(f"🎵 File esiste: {os.path.exists(file_musica)}")
@@ -1398,14 +1485,25 @@ class AvventuraEpica:
     
     def on_ambiente_state_changed(self, e):
         """Loop suono ambiente"""
+        self.log_audio(f"Stato ambiente cambiato: {e.data}")
         print(f"🌿 Stato ambiente cambiato: {e.data}")
+        
         if e.data == "completed" and self.audio_abilitato:
+            self.log_audio("Ambiente completato - Riavvio loop")
             # Loop infinito per suoni ambientali
             self.audio_ambiente.play()
         elif e.data == "playing":
+            self.log_audio("Ambiente in riproduzione!")
             print("🌿 Ambiente in riproduzione!")
         elif e.data == "paused":
+            self.log_audio("Ambiente in pausa")
             print("🌿 Ambiente in pausa")
+        elif e.data == "stopped":
+            self.log_audio("Ambiente fermato")
+            print("🌿 Ambiente fermato")
+        elif e.data == "error":
+            self.log_error("Errore riproduzione ambiente")
+            print("🌿 Errore ambiente")
     
     def usa_pozione_vita(self, e=None):
         """Usa pozione vita se disponibile nell'inventario"""
@@ -3416,6 +3514,15 @@ class AvventuraEpica:
             tooltip="Riproduci un suono di test"
         )
         
+        # Pulsante scarica log per iPhone
+        download_log_btn = ft.ElevatedButton(
+            "Scarica Log Debug",
+            on_click=self.scarica_log_debug,
+            width=200,
+            bgcolor=ft.Colors.ORANGE_600,
+            tooltip="Scarica file di log per debugging iPhone"
+        )
+        
         impostazioni_controls = [
             ft.Text("Audio", size=16, weight=ft.FontWeight.BOLD),
             toggle_audio,
@@ -3424,7 +3531,10 @@ class AvventuraEpica:
             self.volume_effetti_label_tab,
             slider_volume_effetti,
             test_audio_btn,
-            ft.Divider(semantics_excluded=True),
+            ft.Divider(),
+            ft.Text("Debug", size=16, weight=ft.FontWeight.BOLD),
+            download_log_btn,
+            ft.Divider(),
             ft.Text("Feedback", size=16, weight=ft.FontWeight.BOLD),
             toggle_haptic,
         ]
@@ -5912,7 +6022,7 @@ class AvventuraEpica:
         # Layout impostazioni
         impostazioni_content = ft.Column([
             ft.Text("=== IMPOSTAZIONI ===", size=20, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER),
-            ft.Divider(semantics_excluded=True),
+            ft.Divider(),
             ft.Text("🔊 Audio", size=16, weight=ft.FontWeight.BOLD),
             toggle_audio,
             self.volume_musica_label,
@@ -5921,7 +6031,7 @@ class AvventuraEpica:
             slider_volume_effetti,
             test_audio_btn,
             debug_audio_btn,
-            ft.Divider(semantics_excluded=True),
+            ft.Divider(),
             
             ft.Text("📳 Feedback", size=16, weight=ft.FontWeight.BOLD),
             toggle_haptic,
