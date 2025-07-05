@@ -1908,6 +1908,10 @@ class AvventuraEpica:
         if not self.gioco_iniziato:
             return
             
+        if self.risorse["energia"] == 0:
+            self.page.go("/energia_esaurita")
+            return
+            
         if self.risorse["energia"] < 10:
             # Raccolta con energia bassa - penalità
             self.aggiorna_storia(" Energia bassa! Raccogli poche risorse e perdi 1 HP.")
@@ -2588,6 +2592,10 @@ class AvventuraEpica:
                 self.analizza_accessibilita(vista)
             case "/cibo_insufficiente":
                 vista = self.crea_vista_cibo_insufficiente()
+                self.page.views.append(vista)
+                self.analizza_accessibilita(vista)
+            case "/energia_esaurita":
+                vista = self.crea_vista_energia_esaurita()
                 self.page.views.append(vista)
                 self.analizza_accessibilita(vista)
             case "/boss_notification":
@@ -8134,6 +8142,64 @@ class AvventuraEpica:
         
         return ft.View(
             route="/cibo_insufficiente",
+            controls=[
+                ft.Container(
+                    content=content,
+                    bgcolor=ft.Colors.GREY_900,
+                    padding=40,
+                    expand=True
+                )
+            ],
+            bgcolor=ft.Colors.GREY_900
+        )
+
+    def crea_vista_energia_esaurita(self):
+        """Crea vista pulita per energia esaurita"""
+        titolo = "Energia Esaurita"
+        
+        # Messaggio con suggerimenti
+        messaggio_base = "Non hai energia per raccogliere risorse!"
+        
+        suggerimenti = [
+            "Nutri il tuo gatto per recuperare energia",
+            "Raccogli risorse quando avrai un po' di energia",
+            "Mangia del cibo per recuperare energia",
+            "Usa la funzione 'Riposa' se disponibile"
+        ]
+        
+        messaggio_completo = messaggio_base + "\n\nCome recuperare energia:\n" + "\n".join(suggerimenti)
+        
+        content = ft.Column([
+            ft.Text(
+                titolo,
+                size=28,
+                weight=ft.FontWeight.BOLD,
+                text_align=ft.TextAlign.CENTER,
+                color=ft.Colors.RED_400
+            ),
+            ft.Container(height=20),
+            ft.Text(
+                messaggio_completo,
+                size=16,
+                text_align=ft.TextAlign.CENTER,
+                color=ft.Colors.WHITE
+            ),
+            ft.Container(height=30),
+            ft.ElevatedButton(
+                text="Torna al Gioco",
+                on_click=lambda e: self.page.go("/gioco"),
+                width=200,
+                height=50,
+                bgcolor=ft.Colors.RED_600,
+                color=ft.Colors.WHITE
+            )
+        ],
+        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+        alignment=ft.MainAxisAlignment.CENTER,
+        expand=True)
+        
+        return ft.View(
+            route="/energia_esaurita",
             controls=[
                 ft.Container(
                     content=content,
