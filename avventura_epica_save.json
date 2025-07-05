@@ -3,21 +3,24 @@
     0,
     0
   ],
-  "hp_giocatore": 100,
-  "hp_max": 100,
-  "livello": 1,
-  "esperienza": 1,
-  "esperienza_prossimo_livello": 100,
-  "attacco_base": 15,
+  "hp_giocatore": 3403,
+  "hp_max": 10060,
+  "livello": 4,
+  "esperienza": 320,
+  "esperienza_prossimo_livello": 400,
+  "attacco_base": 34,
   "difesa": 0,
-  "monete": 100,
+  "monete": 1360,
   "inventario": {},
   "equipaggiamento": {
     "arma": null,
+    "scudo": null,
     "armatura": null,
     "accessorio": null
   },
-  "effetti_temporanei": {},
+  "effetti_temporanei": {
+    "idratazione": 5
+  },
   "oggetti": {
     "Villaggio": "\ud83d\udddd\ufe0f chiave di bronzo",
     "\ud83c\udf32 Bosco": "\ud83c\udff9 arco elfico",
@@ -132,7 +135,7 @@
     },
     "\ud83d\udc51 Palazzo": {
       "nome": "\ud83d\udc51 Boss Finale",
-      "hp": 100,
+      "hp": 6000,
       "attacco": 30,
       "livello": 10,
       "exp": 500
@@ -145,20 +148,22 @@
   "volume_effetti": 0.7,
   "gatti": {
     "gatto_1": {
-      "nome": "Micio",
+      "nome": " Micio Stellare",
       "emoji": "",
-      "livello": 1,
-      "attacco": 5,
-      "abilita": "raccolta",
+      "livello": 5,
+      "attacco": 15,
+      "abilita": "raccolta_suprema",
       "fame": 100,
       "felicita": 100,
       "sbloccato": true,
-      "affinita": 33,
+      "affinita": 250,
       "nome_personalizzato": false,
       "aree_non_usato": 0,
-      "forma_evoluta": false,
+      "forma_evoluta": true,
       "dialoghi_sbloccati": [],
-      "scene_viste": []
+      "scene_viste": [
+        "scena_100"
+      ]
     },
     "gatto_2": {
       "nome": "Shadow",
@@ -227,20 +232,22 @@
   },
   "gatto_attivo": "gatto_1",
   "risorse": {
-    "cibo": 46,
-    "acqua": 59,
+    "cibo": 35,
+    "acqua": 403,
     "legno": 0,
     "pietra": 0,
     "ferro": 0,
-    "energia": 100
+    "energia": 30
   },
   "aree_sbloccate": [
-    "Villaggio"
+    "Villaggio",
+    "\ud83c\udfe0 Cantina",
+    "\ud83d\udeb0 Fogne"
   ],
-  "area_attuale": "Villaggio",
+  "area_attuale": "\ud83d\udeb0 Fogne",
   "progressione_area": {
-    "Villaggio": 1,
-    "\ud83c\udfe0 Cantina": 0,
+    "Villaggio": 163,
+    "\ud83c\udfe0 Cantina": 100,
     "\ud83d\udeb0 Fogne": 0,
     "\ud83c\udf00 Labirinto Antico": 0,
     "\u2744\ufe0f Area Innevata": 0,
@@ -256,5 +263,13 @@
     "\ud83c\udf0b Vulcano Attivo": 0,
     "\ud83d\udc51 Palazzo Finale": 0
   },
-  "pesce_raccolto": 0
+  "pesce_raccolto": 0,
+  "boss_notifications_mostrate": [
+    "Villaggio",
+    "\ud83c\udfe0 Cantina"
+  ],
+  "boss_sconfitti": [
+    "Villaggio",
+    "\ud83c\udfe0 Cantina"
+  ]
 }

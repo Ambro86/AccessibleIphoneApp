@@ -310,7 +310,7 @@ class AvventuraEpica:
         self.boss_sconfitti = []
         
         # Area segreta endgame
-        self.area_segreta = "🌌 Regno dei Sogni"
+        self.area_segreta = "🌌 Regno degli Incubi"
         self.portale_sogni_sbloccato = False
         self.pesci_magici_rari = 0
         self.finale_alternativo_raggiunto = False
@@ -534,8 +534,8 @@ class AvventuraEpica:
                 "chiave": "🗝️ Chiave della Cantina", "abilita_speciale": "morso_feroce"
             },
             "🏠 Cantina": {
-                "nome": "🐁 Re Ratto", "hp": 240, "attacco": 50, "exp": 100,
-                "chiave": "🗝️ Chiave della Cantina", "abilita_speciale": "richiama_ratti"
+                "nome": "🕷️ Regina dei Ragni", "hp": 240, "attacco": 50, "exp": 100,
+                "chiave": "🗝️ Chiave della Cantina", "abilita_speciale": "ragnatela_velenosa"
             },
             "🚰 Fogne": {
                 "nome": "🐀 Boss Topo delle Fogne", "hp": 360, "attacco": 65, "exp": 150,
@@ -593,7 +593,7 @@ class AvventuraEpica:
                 "nome": "👑 Imperatore Oscuro", "hp": 1500, "attacco": 200, "exp": 1000,
                 "chiave": None, "abilita_speciale": "dominazione"
             },
-            "🌌 Regno dei Sogni": {
+            "🌌 Regno degli Incubi": {
                 "nome": "🌌 Dream Eternal", "hp": 2500, "attacco": 250, "exp": 2000,
                 "chiave": None, "abilita_speciale": "metamorfosi", "richiede_nox": True
             }
@@ -601,8 +601,8 @@ class AvventuraEpica:
         
         # Descrizioni ricche e immersive
         self.descrizioni = {
-            "Villaggio": "Un tranquillo villaggio con case di pietra. Gli abitanti ti salutano calorosamente. Qui puoi riposare e fare acquisti. Ma si sentono strani rumori dalla cantina...",
-            "🏠 Cantina": "Una cantina buia e umida sotto il villaggio. Odore di muffa e formaggio invecchiato. Occhi rossi ti fissano dall'oscurità. I ratti giganti hanno invaso questo posto e il loro Re Ratto custodisce una chiave antica.",
+            "Villaggio": "Un tranquillo villaggio di campagna con case di pietra. Gli abitanti ti salutano calorosamente. Qui puoi riposare e fare acquisti. Ma si sentono strani rumori dalla cantina...",
+            "🏠 Cantina": "Una cantina buia e umida sotto il villaggio. Odore di muffa e formaggio invecchiato. Ragnatele giganti pendono dal soffitto. Ragni velenosi hanno invaso questo posto e la loro Regina dei Ragni custodisce una chiave antica.",
             "🚰 Fogne": "Tunnel sotterranei fetidi con acqua stagnante. Topi di fogna enormi si aggirano nei canali. Il fetore è insopportabile e da solo non riusciresti mai. Serve l'aiuto di un gatto partner per affrontare il Boss Topo delle Fogne.",
             "🌀 Labirinto Antico": "Un intricato labirinto di pietra con pareti che si spostano magicamente. Antiche rune brillano debolmente illuminando corridoi senza fine. Il Guardiano del Labirinto conosce tutti i passaggi segreti e può teletrasportarsi istantaneamente.",
             "❄️ Area Innevata": "Una distesa di ghiaccio e neve eterna. Vento gelido e bufera rendono difficile la visione. Qui puoi costruire rifugi di ghiaccio, pescare nei laghi ghiacciati e raccogliere cristalli di ghiaccio magici. Il Lupo Bianco Alfa custodisce la chiave del gelo.",
@@ -617,7 +617,7 @@ class AvventuraEpica:
             "🏔️ Montagna Sacra": "Una montagna maestosa che tocca le nuvole, con templi antichi incastonati nella roccia. L'aria è pura e carica di energia divina. Un Angelo Custode protegge questo luogo sacro con la sua luce accecante.",
             "🌋 Vulcano Attivo": "Un vulcano in eruzione con lava incandescente e gas velenosi. Il calore è insopportabile e la terra trema costantemente. Il Signore del Magma governa questo inferno di fuoco e roccia fusa.",
             "👑 Palazzo Finale": "Il palazzo reale con sale dorate e tesori infiniti. Il boss finale, l'Imperatore Oscuro, ti aspetta sul trono.",
-            "🌌 Regno dei Sogni": "Un regno onirico dove la realtà cambia forma secondo le tue scelte. Qui le decisioni influenzano non solo il presente, ma anche il passato e il futuro. Il tempo stesso è fluido e Nox può aiutarti a riavvolgere i momenti critici. Il Dream Eternal, boss finale segreto, assume forme diverse in base alle tue scelte oniriche precedenti."
+            "🌌 Regno degli Incubi": "Un regno oscuro dove gli incubi prendono forma e la realtà si distorce in visioni terrificanti. Qui le paure più profonde diventano nemici tangibili e Nox può aiutarti a riavvolgere i momenti più critici. Il Dream Eternal, boss finale segreto, assume forme mostruose basate sui tuoi incubi più profondi."
         }
         
         # 🎒 Oggetti speciali distribuiti per il mondo
@@ -660,23 +660,127 @@ class AvventuraEpica:
             "👑 Palazzo": {"nome": "👑 Boss Finale", "hp": 100, "attacco": 30, "livello": 10, "exp": 500}
         }
         
-        # 🏪 Negozi e mercanti
+        # 🏪 Negozi e mercanti - Material Progression System
         self.negozi = {
             "Villaggio": {
+                # Material 1 - Legno (Wood)
                 "Pane": {"prezzo": 60, "tipo": "cibo", "descrizione": "Ripristina 15 HP"},
-                "Spada": {"prezzo": 300, "tipo": "arma", "descrizione": "+5 danno"},
-                "Armatura": {"prezzo": 400, "tipo": "armatura", "descrizione": "-3 danni ricevuti"}
+                "Spada di Legno": {"prezzo": 150, "tipo": "arma", "descrizione": "+3 danno - Arma basilare"},
+                "Scudo di Legno": {"prezzo": 100, "tipo": "scudo", "descrizione": "+2 difesa - Protezione base"},
+                "Armatura di Cuoio": {"prezzo": 200, "tipo": "armatura", "descrizione": "+2 difesa - Protezione leggera"}
             },
-            "🏪 Mercato": {
+            "🏠 Cantina": {
+                # Material 2 - Pietra (Stone)
                 "Pozione Vita": {"prezzo": 300, "tipo": "pozione", "descrizione": "Ripristina 50 HP"},
                 "Pozione Forza": {"prezzo": 450, "tipo": "pozione", "descrizione": "+10 danno per 3 turni"},
-                "Arco Lungo": {"prezzo": 720, "tipo": "arma", "descrizione": "+8 danno"},
+                "Spada di Pietra": {"prezzo": 400, "tipo": "arma", "descrizione": "+5 danno - Arma primitiva"},
+                "Scudo di Pietra": {"prezzo": 300, "tipo": "scudo", "descrizione": "+3 difesa - Protezione solida"},
                 "Anello Magico": {"prezzo": 1200, "tipo": "accessorio", "descrizione": "+2 HP per turno"}
             },
-            "🛤️ Strada": {
+            "🚰 Fogne": {
+                # Material 3 - Rame (Copper)
                 "Mela": {"prezzo": 330, "tipo": "cibo", "descrizione": "Ripristina 10 HP"},
-                "Pugnale": {"prezzo": 390, "tipo": "arma", "descrizione": "+3 danno"},
+                "Spada di Rame": {"prezzo": 800, "tipo": "arma", "descrizione": "+8 danno - Primo metallo"},
+                "Scudo di Rame": {"prezzo": 600, "tipo": "scudo", "descrizione": "+5 difesa - Protezione metallica"},
                 "Mappa": {"prezzo": 360, "tipo": "oggetto", "descrizione": "Mostra tutte le aree"}
+            },
+            "🌀 Labirinto Antico": {
+                # Material 4 - Bronzo (Bronze)
+                "Pozione Stamina": {"prezzo": 500, "tipo": "pozione", "descrizione": "Ripristina energia"},
+                "Spada di Bronzo": {"prezzo": 1200, "tipo": "arma", "descrizione": "+12 danno - Arma degli antichi"},
+                "Scudo di Bronzo": {"prezzo": 900, "tipo": "scudo", "descrizione": "+8 difesa - Protezione antica"},
+                "Elmo di Bronzo": {"prezzo": 800, "tipo": "armatura", "descrizione": "+6 difesa - Protezione testa"}
+            },
+            "❄️ Area Innevata": {
+                # Material 5 - Ferro (Iron)
+                "Razione di Ferro": {"prezzo": 600, "tipo": "cibo", "descrizione": "Ripristina 35 HP"},
+                "Spada di Ferro": {"prezzo": 1800, "tipo": "arma", "descrizione": "+15 danno - Arma medievale"},
+                "Scudo di Ferro": {"prezzo": 1400, "tipo": "scudo", "descrizione": "+12 difesa - Protezione pesante"},
+                "Armatura di Ferro": {"prezzo": 2000, "tipo": "armatura", "descrizione": "+10 difesa - Protezione completa"}
+            },
+            "🌿 Giungla Selvaggia": {
+                # Material 6 - Acciaio (Steel)
+                "Pozione Nobile": {"prezzo": 800, "tipo": "pozione", "descrizione": "Ripristina 80 HP"},
+                "Spada di Acciaio": {"prezzo": 2500, "tipo": "arma", "descrizione": "+20 danno - Arma dei cavalieri"},
+                "Scudo di Acciaio": {"prezzo": 2000, "tipo": "scudo", "descrizione": "+15 difesa - Protezione d'acciaio"},
+                "Armatura di Acciaio": {"prezzo": 3000, "tipo": "armatura", "descrizione": "+15 difesa - Armatura da cavaliere"}
+            },
+            "🌲 Bosco Profondo": {
+                # Material 7 - Acciaio Temprato (Tempered Steel)
+                "Pozione Gladiatore": {"prezzo": 1000, "tipo": "pozione", "descrizione": "Ripristina 100 HP"},
+                "Spada di Acciaio Temprato": {"prezzo": 3500, "tipo": "arma", "descrizione": "+25 danno - Arma da gladiatore"},
+                "Scudo di Acciaio Temprato": {"prezzo": 2800, "tipo": "scudo", "descrizione": "+20 difesa - Protezione templata"},
+                "Armatura da Gladiatore": {"prezzo": 4000, "tipo": "armatura", "descrizione": "+20 difesa - Armatura da combattimento"}
+            },
+            "⚰️ Cimitero": {
+                # Material 8 - Argento (Silver)
+                "Acqua Benedetta": {"prezzo": 700, "tipo": "pozione", "descrizione": "Efficace contro non-morti"},
+                "Spada d'Argento": {"prezzo": 4000, "tipo": "arma", "descrizione": "+22 danno - Efficace contro non-morti"},
+                "Scudo d'Argento": {"prezzo": 3200, "tipo": "scudo", "descrizione": "+18 difesa - Protezione magica"},
+                "Simbolo Sacro": {"prezzo": 2500, "tipo": "accessorio", "descrizione": "+5 danno contro non-morti"}
+            },
+            "🏚️ Casa degli Orrori": {
+                # Material 9 - Oro (Gold)
+                "Elisir Reale": {"prezzo": 1500, "tipo": "pozione", "descrizione": "Ripristina 150 HP"},
+                "Spada d'Oro": {"prezzo": 6000, "tipo": "arma", "descrizione": "+28 danno - Arma cerimoniale"},
+                "Scudo d'Oro": {"prezzo": 4500, "tipo": "scudo", "descrizione": "+25 difesa - Protezione nobile"},
+                "Corona Reale": {"prezzo": 8000, "tipo": "accessorio", "descrizione": "+10 carisma, +5 difesa"}
+            },
+            "🏭 Fabbrica Abbandonata": {
+                # Material 10 - Platino (Platinum)
+                "Gemma Energetica": {"prezzo": 2000, "tipo": "pozione", "descrizione": "Ripristina 200 HP"},
+                "Spada di Platino": {"prezzo": 8000, "tipo": "arma", "descrizione": "+32 danno - Arma di lusso"},
+                "Scudo di Platino": {"prezzo": 6000, "tipo": "scudo", "descrizione": "+30 difesa - Protezione preziosa"},
+                "Anello di Platino": {"prezzo": 5000, "tipo": "accessorio", "descrizione": "+15 difesa, +10 HP per turno"}
+            },
+            "⛏️ Miniera Profonda": {
+                # Material 11 - Titanio (Titanium)
+                "Stimpack": {"prezzo": 1200, "tipo": "pozione", "descrizione": "Ripristina 120 HP istantaneamente"},
+                "Spada di Titanio": {"prezzo": 10000, "tipo": "arma", "descrizione": "+35 danno - Tecnologia avanzata"},
+                "Scudo di Titanio": {"prezzo": 7500, "tipo": "scudo", "descrizione": "+35 difesa - Protezione moderna"},
+                "Esoscheletro": {"prezzo": 12000, "tipo": "armatura", "descrizione": "+25 difesa, +5 forza"}
+            },
+            "🌙 Cripta Maledetta": {
+                # Material 12 - Ossidiana (Obsidian)
+                "Pozione Lavica": {"prezzo": 1800, "tipo": "pozione", "descrizione": "Ripristina 180 HP + resistenza fuoco"},
+                "Spada di Ossidiana": {"prezzo": 12000, "tipo": "arma", "descrizione": "+40 danno - Lama vulcanica tagliente"},
+                "Scudo di Ossidiana": {"prezzo": 9000, "tipo": "scudo", "descrizione": "+40 difesa - Protezione vulcanica"},
+                "Amuleto Vulcanico": {"prezzo": 8000, "tipo": "accessorio", "descrizione": "Immunità al fuoco, +10 attacco"}
+            },
+            "🌊 Mare": {
+                # Material 13 - Diamante (Diamond)
+                "Elisir Cristallino": {"prezzo": 3000, "tipo": "pozione", "descrizione": "Ripristina 250 HP"},
+                "Spada di Diamante": {"prezzo": 15000, "tipo": "arma", "descrizione": "+45 danno - Durezza suprema"},
+                "Scudo di Diamante": {"prezzo": 12000, "tipo": "scudo", "descrizione": "+45 difesa - Protezione indistruttibile"},
+                "Diadema di Diamante": {"prezzo": 20000, "tipo": "accessorio", "descrizione": "+20 difesa, +15 attacco"}
+            },
+            "🏔️ Montagna Sacra": {
+                # Material 14 - Mithril
+                "Pozione Onirica": {"prezzo": 4000, "tipo": "pozione", "descrizione": "Ripristina 300 HP + protezione mentale"},
+                "Spada di Mithril": {"prezzo": 20000, "tipo": "arma", "descrizione": "+50 danno - Metallo mitologico"},
+                "Scudo di Mithril": {"prezzo": 15000, "tipo": "scudo", "descrizione": "+50 difesa - Protezione magica"},
+                "Armatura di Mithril": {"prezzo": 25000, "tipo": "armatura", "descrizione": "+35 difesa - Leggera ma indistruttibile"}
+            },
+            "🌋 Vulcano Attivo": {
+                # Material 15 - Cristallo Runico (Runic Crystal)
+                "Pozione Runica": {"prezzo": 5000, "tipo": "pozione", "descrizione": "Ripristina 350 HP + amplifica magia"},
+                "Spada di Cristallo Runico": {"prezzo": 25000, "tipo": "arma", "descrizione": "+55 danno - Amplifica potere magico"},
+                "Scudo di Cristallo Runico": {"prezzo": 20000, "tipo": "scudo", "descrizione": "+55 difesa - Assorbe magia nemica"},
+                "Bastone Runico": {"prezzo": 30000, "tipo": "accessorio", "descrizione": "+25 attacco magico, +20 difesa"}
+            },
+            "👑 Palazzo Finale": {
+                # Material 16 - Essenza Divina (Divine Essence)
+                "Ambrosia": {"prezzo": 7000, "tipo": "pozione", "descrizione": "Ripristina 400 HP + benedizione divina"},
+                "Spada di Essenza Divina": {"prezzo": 35000, "tipo": "arma", "descrizione": "+60 danno - Potere celestiale"},
+                "Scudo di Essenza Divina": {"prezzo": 28000, "tipo": "scudo", "descrizione": "+60 difesa - Protezione divina"},
+                "Aureola Sacra": {"prezzo": 40000, "tipo": "accessorio", "descrizione": "+30 difesa, +25 attacco, aura guaritrice"}
+            },
+            "🌌 Regno degli Incubi": {
+                # Material 17 - Scaglie di Drago (Dragon Scales) - FINAL TIER
+                "Elisir del Drago": {"prezzo": 10000, "tipo": "pozione", "descrizione": "Ripristina 500 HP + potere draconico"},
+                "Spada di Scaglie di Drago": {"prezzo": 50000, "tipo": "arma", "descrizione": "+70 danno - ARMA FINALE"},
+                "Scudo di Scaglie di Drago": {"prezzo": 40000, "tipo": "scudo", "descrizione": "+70 difesa - PROTEZIONE FINALE"},
+                "Armatura di Scaglie di Drago": {"prezzo": 60000, "tipo": "armatura", "descrizione": "+50 difesa - ARMATURA FINALE"}
             }
         }
         
@@ -698,7 +802,7 @@ class AvventuraEpica:
             "🏚️ Casa degli Orrori": "assets/music/casa_orrori.mp3",
             "🌋 Vulcano Attivo": "assets/music/vulcano.mp3",
             "👑 Palazzo Finale": "assets/music/palazzo_finale.mp3",
-            "🌌 Regno dei Sogni": "assets/music/regno_sogni.mp3"
+            "🌌 Regno degli Incubi": "assets/music/regno_incubi.mp3"
         }
         
         # 🌿 Suoni ambientali per ogni area
@@ -719,7 +823,7 @@ class AvventuraEpica:
             "🏔️ Montagna Sacra": "assets/music/ambient_montagna_vento.mp3",
             "🌋 Vulcano Attivo": "assets/music/ambient_vulcano_lava.mp3",
             "👑 Palazzo Finale": "assets/music/ambient_palazzo_eco.mp3",
-            "🌌 Regno dei Sogni": "assets/music/ambient_sogni_magia.mp3"
+            "🌌 Regno degli Incubi": "assets/music/ambient_incubi.mp3"
         }
         
         #  Stato del giocatore incrementale
@@ -736,7 +840,7 @@ class AvventuraEpica:
         self.monete = 100
         self.oro = 100  # Alias per compatibilità
         self.inventario = {}
-        self.equipaggiamento = {"arma": None, "armatura": None, "accessorio": None}
+        self.equipaggiamento = {"arma": None, "scudo": None, "armatura": None, "accessorio": None}
         self.effetti_temporanei = {}
         self.contenuto_storia_corrente = None  # Per preservare il contenuto della storia
         self.app_in_foreground = True  # Stato dell'app (foreground/background)
@@ -758,6 +862,9 @@ class AvventuraEpica:
         self.musica_battaglia_boss_finale = "assets/music/battaglia_boss_finale.mp3"
         self.in_battaglia = False
         self.musica_area_precedente = None
+        
+        # Canale dedicato per musica di battaglia (separato da musica normale)
+        self.musica_battaglia_canale = None
         
         #  Sistema energie e automazione
         self.automazione = {
@@ -851,7 +958,7 @@ class AvventuraEpica:
         self.difesa = 0
         self.monete = 100
         self.inventario = {}
-        self.equipaggiamento = {"arma": None, "armatura": None, "accessorio": None}
+        self.equipaggiamento = {"arma": None, "scudo": None, "armatura": None, "accessorio": None}
         self.effetti_temporanei = {}
         self.turno = 0
         
@@ -959,12 +1066,13 @@ class AvventuraEpica:
             balance=0
         )
         
-        # Canale dedicato per suono heartbeat (vita bassa) - in loop
+        # Canale dedicato per suono heartbeat (vita bassa) - in loop veloce
         self.effetto_heartbeat = fa.Audio(
             src="assets/music/effetto_heartbeat.mp3",
             autoplay=False,
             volume=self.volume_effetti,
             balance=0,
+            playback_rate=1.6,  # Heartbeat più veloce per maggiore urgenza
             on_state_changed=self.heartbeat_loop_handler
         )
         
@@ -979,6 +1087,93 @@ class AvventuraEpica:
             balance=0,
             on_state_changed=lambda e: print(f"🌿 Ambiente: {e.data}"),
             on_loaded=lambda _: print("🌿 Suono ambiente caricato")
+        )
+        
+        # Canali dedicati per suoni dei mostri
+        self.effetto_mostro_1 = fa.Audio(
+            src="assets/music/effetto_mostro_1.mp3",
+            autoplay=False,
+            volume=self.volume_effetti,
+            balance=0
+        )
+        
+        self.effetto_mostro_2 = fa.Audio(
+            src="assets/music/effetto_mostro_2.mp3",
+            autoplay=False,
+            volume=self.volume_effetti,
+            balance=0
+        )
+        
+        self.effetto_mostro_3 = fa.Audio(
+            src="assets/music/effetto_mostro_3.mp3",
+            autoplay=False,
+            volume=self.volume_effetti,
+            balance=0
+        )
+        
+        self.effetto_mostro_4 = fa.Audio(
+            src="assets/music/effetto_mostro_4.mp3",
+            autoplay=False,
+            volume=self.volume_effetti,
+            balance=0
+        )
+        
+        self.effetto_mostro_5 = fa.Audio(
+            src="assets/music/effetto_mostro_5.mp3",
+            autoplay=False,
+            volume=self.volume_effetti,
+            balance=0
+        )
+        
+        # Canali dedicati per mostri della Cantina
+        self.effetto_cantina_ragno = fa.Audio(
+            src="assets/music/effetto_cantina_ragno.mp3",
+            autoplay=False,
+            volume=self.volume_effetti,
+            balance=0
+        )
+        
+        self.effetto_cantina_pipistrelli = fa.Audio(
+            src="assets/music/effetto_cantina_pipistrelli.mp3",
+            autoplay=False,
+            volume=self.volume_effetti,
+            balance=0
+        )
+        
+        self.effetto_cantina_muffa = fa.Audio(
+            src="assets/music/effetto_cantina_muffa.mp3",
+            autoplay=False,
+            volume=self.volume_effetti,
+            balance=0
+        )
+        
+        self.effetto_cantina_insetto = fa.Audio(
+            src="assets/music/effetto_cantina_insetto.mp3",
+            autoplay=False,
+            volume=self.volume_effetti,
+            balance=0
+        )
+        
+        self.effetto_cantina_melma = fa.Audio(
+            src="assets/music/effetto_cantina_melma.mp3",
+            autoplay=False,
+            volume=self.volume_effetti,
+            balance=0
+        )
+        
+        # Canali dedicati per boss
+        self.effetto_boss_1 = fa.Audio(
+            src="assets/music/effetto_boss_1.mp3",
+            autoplay=False,
+            volume=self.volume_effetti,
+            balance=0
+        )
+        
+        self.effetto_boss_regina_ragni = fa.Audio(
+            src="assets/music/effetto_boss_regina_ragni.mp3",
+            autoplay=False,
+            volume=self.volume_effetti,
+            balance=0
         )
         
         self.musica_attuale = ""
@@ -998,7 +1193,19 @@ class AvventuraEpica:
             self.effetto_bere_acqua,
             self.effetto_fusa,
             self.effetto_heartbeat,
-            self.audio_ambiente
+            self.audio_ambiente,
+            self.effetto_mostro_1,
+            self.effetto_mostro_2,
+            self.effetto_mostro_3,
+            self.effetto_mostro_4,
+            self.effetto_mostro_5,
+            self.effetto_cantina_ragno,
+            self.effetto_cantina_pipistrelli,
+            self.effetto_cantina_muffa,
+            self.effetto_cantina_insetto,
+            self.effetto_cantina_melma,
+            self.effetto_boss_1,
+            self.effetto_boss_regina_ragni
         ])
         
     def haptic_feedback(self, tipo="light"):
@@ -1298,21 +1505,66 @@ class AvventuraEpica:
         elif effetto == "livello":
             print(f"🎵 DEBUG: Riproducendo effetto livello up")
             try:
+                # Ferma temporaneamente musica di sottofondo per dare priorità al level up
+                if hasattr(self, 'musica_sottofondo'):
+                    print(f"🎵 DEBUG: Pausing background music for level up")
+                    self.musica_sottofondo.pause()
+                
                 # Ferma altri effetti per dare priorità al level up
                 if hasattr(self, 'effetto_raccolta'):
                     self.effetto_raccolta.pause()
                 if hasattr(self, 'effetto_gatto_raccolta'):
                     self.effetto_gatto_raccolta.pause()
+                if hasattr(self, 'audio_ambiente'):
+                    self.audio_ambiente.pause()
                     
+                # Aumenta volume temporaneamente per il level up
+                volume_originale = self.volume_effetti
+                self.effetto_livello.volume = min(1.0, volume_originale + 0.3)
+                    
+                # Test se il file esiste prima di riprodurre
+                import os
+                file_path = "assets/music/effetto_livello_up.mp3"
+                print(f"🎵 DEBUG: File exists: {os.path.exists(file_path)}")
+                print(f"🎵 DEBUG: File size: {os.path.getsize(file_path) if os.path.exists(file_path) else 'N/A'} bytes")
+                print(f"🎵 DEBUG: Audio src: {self.effetto_livello.src}")
+                print(f"🎵 DEBUG: Audio volume: {self.effetto_livello.volume}")
+                print(f"🎵 DEBUG: Audio state before play: {getattr(self.effetto_livello, 'state', 'unknown')}")
+                
                 # Riproduci level up su canale prioritario
                 self.effetto_livello.play()
-                print(f"🎵 DEBUG: Effetto livello play() chiamato")
+                print(f"🎵 DEBUG: Effetto livello play() chiamato con volume aumentato")
+                print(f"🎵 DEBUG: Audio state after play: {getattr(self.effetto_livello, 'state', 'unknown')}")
+                
+                # Ripristina audio dopo 3 secondi (durata tipica del suono level up)
+                import threading
+                def ripristina_audio_dopo_levelup():
+                    import time
+                    time.sleep(3)  # Aspetta che il suono finisca
+                    try:
+                        # Ripristina volume normale
+                        self.effetto_livello.volume = volume_originale
+                        # Riavvia musica e ambiente se non in combattimento
+                        if not getattr(self, 'in_combattimento', False):
+                            if hasattr(self, 'musica_sottofondo'):
+                                self.musica_sottofondo.play()
+                            if hasattr(self, 'audio_ambiente'):
+                                self.audio_ambiente.play()
+                        print(f"🎵 DEBUG: Audio ripristinato dopo level up")
+                    except Exception as e:
+                        print(f"🎵 ERROR: Errore ripristino audio dopo level up: {e}")
+                
+                thread = threading.Thread(target=ripristina_audio_dopo_levelup)
+                thread.daemon = True
+                thread.start()
+                
             except Exception as e:
                 print(f"🎵 ERROR: Errore riproduzione livello: {e}")
                 # Usa canale backup
                 try:
+                    self.effetto_livello_backup.volume = min(1.0, self.volume_effetti + 0.3)
                     self.effetto_livello_backup.play()
-                    print(f"🎵 DEBUG: Usando canale backup per livello up")
+                    print(f"🎵 DEBUG: Usando canale backup per livello up con volume aumentato")
                 except Exception as e2:
                     print(f"🎵 ERROR: Anche backup fallito: {e2}")
         elif effetto == "raccogli":
@@ -1337,33 +1589,55 @@ class AvventuraEpica:
         if hasattr(e, 'data'):
             print(f"🎵 DEBUG: Effetto livello stato: {e.data}")
             if e.data == "error":
-                print(f"🎵 ERROR: Problema con audio livello up")
+                print(f"🎵 ERROR: Problema con audio livello up - provo backup")
+                try:
+                    self.effetto_livello_backup.play()
+                    print(f"🎵 DEBUG: Backup avviato per errore canale principale")
+                except Exception as ex:
+                    print(f"🎵 ERROR: Anche backup ha fallito: {ex}")
+            elif e.data == "playing":
+                print(f"🎵 DEBUG: ✅ LEVEL UP AUDIO CONFERMATO IN RIPRODUZIONE!")
+            elif e.data == "completed":
+                print(f"🎵 DEBUG: ✅ LEVEL UP AUDIO COMPLETATO!")
     
     def heartbeat_loop_handler(self, e):
         """Gestisce il loop del heartbeat quando finisce"""
         if e.data == "completed" and self.heartbeat_attivo:
-            # Se heartbeat deve continuare, riavvialo
-            percentuale_vita = (self.vita / self.vita_massima) * 100
-            if percentuale_vita <= 20 and self.vita > 0:
+            # Se heartbeat deve continuare, riavvialo usando le variabili reali
+            percentuale_vita = (self.hp_giocatore / self.hp_max) * 100
+            if percentuale_vita <= 20 and self.hp_giocatore > 0:
                 self.effetto_heartbeat.play()
+            else:
+                # Vita aumentata sopra il 20%, ferma heartbeat
+                self.heartbeat_attivo = False
     
     def controlla_vita_bassa(self):
         """Controlla se la vita è sotto il 20% e gestisce il loop heartbeat"""
         if not self.audio_abilitato:
+            print(f"🎵 DEBUG: Audio disabilitato, heartbeat non può essere attivato")
             return
             
-        percentuale_vita = (self.vita / self.vita_massima) * 100
+        # Usa le variabili reali del gioco, non quelle legacy
+        percentuale_vita = (self.hp_giocatore / self.hp_max) * 100
+        print(f"🎵 DEBUG: HP: {self.hp_giocatore}/{self.hp_max} ({percentuale_vita:.1f}%)")
+        print(f"🎵 DEBUG: Heartbeat attivo: {self.heartbeat_attivo}")
         
         # Se la vita è sotto o uguale al 20%, avvia heartbeat loop
-        if percentuale_vita <= 20 and self.vita > 0:
+        if percentuale_vita <= 20 and self.hp_giocatore > 0:
+            print(f"🎵 DEBUG: Vita bassa rilevata! Percentuale: {percentuale_vita:.1f}%")
             if not self.heartbeat_attivo:
                 self.heartbeat_attivo = True
                 self.effetto_heartbeat.play()
+                print(f"🎵 DEBUG: Heartbeat attivato per la prima volta")
+            else:
+                print(f"🎵 DEBUG: Heartbeat già attivo")
         else:
+            print(f"🎵 DEBUG: Vita normale ({percentuale_vita:.1f}%)")
             # Se la vita è sopra il 20%, ferma heartbeat
             if self.heartbeat_attivo:
                 self.heartbeat_attivo = False
                 self.effetto_heartbeat.pause()
+                print(f"🎵 DEBUG: Heartbeat fermato - vita sopra 20%")
     
     def ferma_heartbeat(self):
         """Ferma il loop del heartbeat"""
@@ -1371,9 +1645,19 @@ class AvventuraEpica:
             self.heartbeat_attivo = False
             self.effetto_heartbeat.pause()
     
+    def attiva_heartbeat(self):
+        """Attiva il loop del heartbeat per vita bassa"""
+        if not self.audio_abilitato:
+            return
+            
+        if not self.heartbeat_attivo:
+            self.heartbeat_attivo = True
+            self.effetto_heartbeat.play()
+            print("🎵 DEBUG: Heartbeat attivato per vita bassa")
+    
     def avvia_musica_battaglia(self, tipo_battaglia="normale"):
-        """Avvia musica di battaglia specifica"""
-        if not self.audio_abilitato or self.in_battaglia:
+        """Avvia musica di battaglia specifica su canale dedicato"""
+        if not self.audio_abilitato or self.in_combattimento:
             return
             
         # Salva musica area corrente
@@ -1392,7 +1676,41 @@ class AvventuraEpica:
             musica_battaglia = self.musica_battaglia
             
         print(f"🎵 Avvio musica battaglia: {tipo_battaglia}")
-        self.cambia_musica_diretta(musica_battaglia)
+        self.avvia_musica_battaglia_canale(musica_battaglia)
+        
+        # Pausa la musica normale (senza fermarla)
+        if hasattr(self, 'musica_sottofondo') and self.musica_sottofondo:
+            try:
+                self.musica_sottofondo.pause()
+                print("🎵 Musica normale in pausa per battaglia")
+            except:
+                pass
+    
+    def avvia_musica_battaglia_canale(self, file_musica):
+        """Avvia musica di battaglia su canale dedicato"""
+        # Ferma musica di battaglia precedente se esiste
+        if hasattr(self, 'musica_battaglia_canale') and self.musica_battaglia_canale and self.musica_battaglia_canale in self.page.overlay:
+            try:
+                self.musica_battaglia_canale.pause()
+                self.page.overlay.remove(self.musica_battaglia_canale)
+            except:
+                pass
+        
+        try:
+            self.musica_battaglia_canale = fa.Audio(
+                src=file_musica,
+                autoplay=True,
+                volume=self.volume_musica,
+                balance=0,
+                playback_rate=1.0,
+                on_state_changed=lambda e: print(f"🎵 Battaglia: {e.data}")
+            )
+            
+            self.page.overlay.append(self.musica_battaglia_canale)
+            self.page.update()
+            print(f"✅ Musica battaglia caricata su canale dedicato: {file_musica}")
+        except Exception as e:
+            print(f"❌ Errore caricamento musica battaglia: {e}")
     
     def termina_musica_battaglia(self):
         """Termina musica di battaglia e riprende quella dell'area"""
@@ -1402,24 +1720,38 @@ class AvventuraEpica:
         self.in_battaglia = False
         print("🎵 Fine battaglia - ripristino musica area")
         
-        # NON fermare gli effetti sonori qui - devono suonare!
+        # Ferma e rimuovi musica di battaglia dal canale dedicato
+        if hasattr(self, 'musica_battaglia_canale') and self.musica_battaglia_canale and self.musica_battaglia_canale in self.page.overlay:
+            try:
+                self.musica_battaglia_canale.pause()
+                self.page.overlay.remove(self.musica_battaglia_canale)
+                self.musica_battaglia_canale = None
+                print("🎵 Musica battaglia fermata su canale dedicato")
+            except:
+                pass
         
         # PAUSA NON-BLOCCANTE prima di riavviare la musica per dare tempo agli effetti finali
         import threading
         
         def ripristina_audio_dopo_battaglia():
             import time
-            time.sleep(4)  # 4 secondi per sentire gli effetti finali
+            time.sleep(2)  # 2 secondi per sentire gli effetti finali
             
             if not self.audio_abilitato:
                 return
                 
-            # Riprendi musica area precedente o attuale
-            if self.musica_area_precedente and self.musica_area_precedente in self.musiche_aree.values():
-                self.cambia_musica_diretta(self.musica_area_precedente)
-            else:
-                # Fallback: musica area attuale
-                self.cambia_musica_diretta(self.musiche_aree[self.area_attuale])
+            # Riprendi musica normale
+            if hasattr(self, 'musica_sottofondo') and self.musica_sottofondo:
+                try:
+                    self.musica_sottofondo.play()
+                    print("🎵 Musica normale ripresa")
+                except:
+                    # Se non riesce a riprendere, ricarica la musica dell'area
+                    if self.musica_area_precedente and self.musica_area_precedente in self.musiche_aree.values():
+                        self.cambia_musica_diretta(self.musica_area_precedente)
+                    else:
+                        # Fallback: musica area attuale
+                        self.cambia_musica_diretta(self.musiche_aree[self.area_attuale])
             
             # Riprendi suoni ambientali dopo la battaglia
             print("🎵 Tentativo ripresa suono ambiente...")
@@ -1457,6 +1789,10 @@ class AvventuraEpica:
         
         # Rimuovi audio precedente
         if hasattr(self, 'musica_sottofondo') and self.musica_sottofondo in self.page.overlay:
+            try:
+                self.musica_sottofondo.pause()
+            except:
+                pass
             self.page.overlay.remove(self.musica_sottofondo)
         
         try:
@@ -1531,10 +1867,9 @@ class AvventuraEpica:
             
             self.haptic_feedback("success")
             
-            # Riproduci effetto livello su canale dedicato - CON DEBUG
+            # Audio level up verrà gestito nel combattimento
             print(f"🎉 LEVEL UP! Livello {self.livello-1} -> {self.livello}")
-            print(f"🎵 Chiamando riproduci_effetto('livello')...")
-            self.riproduci_effetto("livello")
+            print(f"🎵 Audio livello gestito nel combattimento...")
             
             # Aggiorna debug widget
             self.aggiorna_debug_widget()
@@ -1605,9 +1940,14 @@ class AvventuraEpica:
             
         # Aggiorna risorse
         testo = f" Raccogli risorse in {area}:\n"
+        cibo_prima = self.risorse["cibo"]
         for risorsa, quantita in risorse_raccolte.items():
             self.risorse[risorsa] += quantita
             testo += f"• +{quantita} {risorsa}\n"
+        
+        # Log del cambio stato cibo
+        if cibo_prima == 0 and self.risorse["cibo"] > 0:
+            print(f"🔄 DEBUG: Cibo ottenuto! Era {cibo_prima}, ora {self.risorse['cibo']} - Pulsante Nutri Gatto ora funzionerà")
             
         # Bonus esperienza
         exp_precedente = self.esperienza
@@ -1640,16 +1980,24 @@ class AvventuraEpica:
         # Progressione area - controllo boss
         if area in self.progressione_area:
             # Controlla se il boss dell'area è stato sbloccato per la prima volta
-            if (self.progressione_area[area] >= 100 and 
-                area not in self.boss_notifications_mostrate):
+            if self.progressione_area[area] >= 100:
                 boss_sconfitto = self.controlla_boss_sconfitto(area)
-                if boss_sconfitto and self.sblocca_prossima_area():
-                    testo += f"\n🎆 Hai sbloccato una nuova area!"
-                elif not boss_sconfitto:
+                print(f"🔔 DEBUG: Progressione 100 raggiunta - Boss sconfitto: {boss_sconfitto}, Notifica mostrata: {area in self.boss_notifications_mostrate}")
+                
+                # Se il boss non è sconfitto e non abbiamo ancora mostrato la notifica
+                if not boss_sconfitto and area not in self.boss_notifications_mostrate:
+                    print(f"🔔 DEBUG: Mostrando notifica boss per {area}")
                     # Mostra notifica sblocco boss solo una volta
                     self.boss_notifications_mostrate.add(area)
                     self.mostra_notifica_boss_sbloccato(area)
                     testo += f"\n Devi prima sconfiggere il boss di quest'area per procedere!"
+                elif boss_sconfitto and self.sblocca_prossima_area():
+                    testo += f"\n🎆 Hai sbloccato una nuova area!"
+                    
+            # Only update page if we're not showing a dialog
+            if self.progressione_area[area] >= 100 and area in self.boss_notifications_mostrate:
+                # Don't update page immediately after showing dialog to avoid conflicts
+                pass
         else:
             print(f"⚠️ Area non trovata in progressione_area: {area}")
             
@@ -1667,8 +2015,14 @@ class AvventuraEpica:
         if not self.gioco_iniziato or not self.gatto_attivo:
             return
             
-        # Usa cibo disponibile (la funzione appare solo se c'è cibo > 0)
-        if self.risorse["cibo"] >= 5:
+        # Controlla se c'è cibo disponibile
+        if self.risorse["cibo"] == 0:
+            self.haptic_feedback("warning")
+            self.aggiorna_storia("🍽️ Non hai cibo per nutrire il gatto!")
+            # Mostra vista pulita con suggerimenti
+            self.page.go("/cibo_insufficiente")
+            return
+        elif self.risorse["cibo"] >= 5:
             self.risorse["cibo"] -= 5
             energia_recuperata = 50
             testo = f" {self.gatto_attivo} condivide il cibo con te!\n"
@@ -1701,6 +2055,12 @@ class AvventuraEpica:
         self.haptic_feedback("success")
         self.aggiorna_storia(testo)
         self.aggiorna_stats_incrementali()
+        
+        # Log del cambio stato cibo
+        if self.risorse["cibo"] == 0:
+            print(f"🔄 DEBUG: Cibo finito! Pulsante Nutri Gatto darà errore se premuto")
+        else:
+            print(f"🔄 DEBUG: Cibo rimasto: {self.risorse['cibo']}, pulsante funzionante")
         
     def consuma_cibo(self, e):
         """Consuma cibo per recuperare energia e HP"""
@@ -1918,6 +2278,10 @@ class AvventuraEpica:
             
         self.aggiorna_stats(stats)
         
+        # Forza aggiornamento interfaccia combattimento se siamo in combattimento
+        if hasattr(self, 'in_combattimento') and self.in_combattimento and hasattr(self, 'page') and self.page.route == "/combattimento":
+            self.aggiorna_info_combattimento()
+        
     # LOGICA PULSANTI DINAMICI
     
     def azioni_incrementali_possibili(self):
@@ -1932,8 +2296,8 @@ class AvventuraEpica:
         azioni.append(("Consuma Cibo", self.consuma_cibo, "Mangia per recuperare HP e un po' di energia"))
         azioni.append(("Bevi Acqua", self.bevi_acqua, "Bevi per bonus temporanei"))
             
-        # Azioni gatto - disponibile solo se hai un gatto attivo E cibo
-        if self.gatto_attivo and self.risorse["cibo"] > 0:
+        # Azioni gatto - disponibile solo se hai un gatto attivo (sempre presente)
+        if self.gatto_attivo:
             azioni.append(("Nutri Gatto", self.nutri_gatto, "Nutri il tuo gatto compagno per recuperare energia"))
         
         # Rinomina gatto se ne hai uno attivo (sempre disponibile)
@@ -1947,9 +2311,6 @@ class AvventuraEpica:
         if self.risorse["legno"] >= 20 or self.risorse["pietra"] >= 15:
             azioni.append(("Costruisci", self.costruisci, "Costruisci strutture utili"))
             
-        # Cambia area se ne hai sbloccate altre
-        if len(self.aree_sbloccate) > 1:
-            azioni.append(("Cambia Area", self.menu_cambia_area, "Viaggia verso altre aree"))
             
         # Pulsante Boss se progressione >= 100 e boss non sconfitto
         if (self.progressione_area.get(self.area_attuale, 0) >= 100 and 
@@ -1980,7 +2341,7 @@ class AvventuraEpica:
             if self.pesce_raccolto >= 3:
                 azioni.append(("🐟 Nutri con Pesce", self.nutri_gatto_con_pesce, "Nutri gatto con pesce magico"))
                 
-        elif area == "🌌 Regno dei Sogni":
+        elif area == "🌌 Regno degli Incubi":
             # Azioni oniriche speciali
             if len(self.scelte_oniriche) < 3:  # Massimo 3 scelte oniriche
                 azioni.append(("Scelta Armonia", lambda e: self.azione_scelta_onirica("armonia"), "Porta armonia nel regno"))
@@ -2163,8 +2524,16 @@ class AvventuraEpica:
                 self.page.views.append(vista)
                 self.analizza_accessibilita(vista)
             case "/gioco":
+                # Sincronizza oro e monete sempre prima di mostrare il gioco
+                self.oro = self.monete
+                
                 if len(self.page.views) > 0 and self.page.views[-1].route == "/gioco":
-                    print(f"🎮 DEBUG: Vista /gioco già presente, non duplico")
+                    print(f"🎮 DEBUG: Vista /gioco già presente, aggiorno stats")
+                    # Aggiorna le stats nella vista esistente se disponibili
+                    if hasattr(self, 'area_stats') and self.area_stats:
+                        valore_stats = f" Statistiche Giocatore:\n Livello {self.livello} •  {self.vita}/{self.vita_massima} HP •  {self.monete} monete\n Attacco: {self.calcola_attacco_totale()} •  Difesa: {self.calcola_difesa_totale()}\n EXP: {self.esperienza}/{self.esperienza_necessaria}"
+                        self.area_stats.value = valore_stats
+                        self.page.update()
                 else:
                     vista = self.crea_vista_gioco()
                     self.page.views.append(vista)
@@ -2213,6 +2582,18 @@ class AvventuraEpica:
                 vista = self.crea_vista_salvataggio_conferma()
                 self.page.views.append(vista)
                 self.analizza_accessibilita(vista)
+            case "/energia_insufficiente":
+                vista = self.crea_vista_energia_insufficiente()
+                self.page.views.append(vista)
+                self.analizza_accessibilita(vista)
+            case "/cibo_insufficiente":
+                vista = self.crea_vista_cibo_insufficiente()
+                self.page.views.append(vista)
+                self.analizza_accessibilita(vista)
+            case "/boss_notification":
+                vista = self.crea_vista_boss_notification()
+                self.page.views.append(vista)
+                self.analizza_accessibilita(vista)
             case _:
                 vista = self.crea_vista_menu_principale()
                 self.page.views.append(vista)
@@ -2224,6 +2605,9 @@ class AvventuraEpica:
     def torna_indietro(self, e=None):
         print(f"🔙 Torna indietro - Views: {len(self.page.views)}")
 
+        # Sincronizza oro e monete prima di tornare indietro
+        self.oro = self.monete
+        
         if len(self.page.views) > 1:
             self.page.views.pop()
             previous_route = self.page.views[-1].route if len(self.page.views) > 0 else "/"
@@ -2232,6 +2616,7 @@ class AvventuraEpica:
         else:
             self.page.views.clear()
             self.page.go("/gioco" if self.gioco_iniziato else "/")
+
 
         self.haptic_feedback("light")
 
@@ -2438,6 +2823,7 @@ class AvventuraEpica:
             )
             pulsanti_gioco.append(pulsante_incrementale)
 
+
         # Pulsante cambio area
         if len(self.aree_sbloccate) > 1:
             pulsante_aree = ft.ElevatedButton(
@@ -2487,7 +2873,7 @@ class AvventuraEpica:
 
         # Pulsante boss
         if (self.area_attuale in self.boss_aree and 
-            self.boss_aree[self.area_attuale]["nome"] not in self.boss_sconfitti and
+            not self.controlla_boss_sconfitto(self.area_attuale) and
             self.progressione_area.get(self.area_attuale, 0) >= 100):
             pulsante_boss = ft.ElevatedButton(
                 text="Combatti Boss dell'Area!",
@@ -2858,18 +3244,6 @@ class AvventuraEpica:
             )
             pulsanti_gioco.append(pulsante_incrementale)
         
-        # Pulsante cambio area - variabile locale
-        if len(self.aree_sbloccate) > 1:
-            pulsante_aree = ft.ElevatedButton(
-                text="Cambia Area",
-                on_click=lambda e: self.page.go("/aree"),
-                width=280,
-                height=50,
-                bgcolor=ft.Colors.BLUE_600,
-                color=ft.Colors.WHITE,
-                tooltip="Scegli area da esplorare"
-            )
-            pulsanti_gioco.append(pulsante_aree)
         
         # Pulsanti di navigazione - variabili locali
         pulsante_combattimento = ft.ElevatedButton(
@@ -2906,7 +3280,7 @@ class AvventuraEpica:
         
         # Pulsante boss - variabile locale
         if (self.area_attuale in self.boss_aree and 
-            self.boss_aree[self.area_attuale]["nome"] not in self.boss_sconfitti and
+            not self.controlla_boss_sconfitto(self.area_attuale) and
             self.progressione_area.get(self.area_attuale, 0) >= 100):
             pulsante_boss = ft.ElevatedButton(
                 text="Combatti Boss dell'Area!",
@@ -3724,13 +4098,28 @@ class AvventuraEpica:
         # Crea contenuto negozio direttamente qui (come fa inventario)
         self.testo_monete_negozio = ft.Text(f"Monete disponibili: {self.monete}", size=16, color=ft.Colors.AMBER_400)
         
-        # Create shop items localmente
-        oggetti_negozio = [
-            {"nome": "Pozione Vita", "prezzo": 50, "descrizione": "Ripristina 30 HP"},
-            {"nome": "Spada di Ferro", "prezzo": 200, "descrizione": "Attacco +10"},
-            {"nome": "Armatura di Cuoio", "prezzo": 150, "descrizione": "Difesa +5"},
-            {"nome": "Anello della Fortuna", "prezzo": 300, "descrizione": "Esperienza +20%"}
-        ]
+        # Create shop items localmente - Material Progression System
+        # Items available based on current area or progression level
+        oggetti_negozio = []
+        
+        # Get items from current area shop, or default to basic items
+        if self.area_attuale in self.negozi:
+            for nome, info in self.negozi[self.area_attuale].items():
+                oggetti_negozio.append({
+                    "nome": nome,
+                    "prezzo": info["prezzo"],
+                    "descrizione": info["descrizione"],
+                    "tipo": info["tipo"]
+                })
+        else:
+            # Fallback to basic items if area doesn't have a shop
+            oggetti_negozio = [
+                {"nome": "Pozione Vita", "prezzo": 50, "descrizione": "Ripristina 30 HP", "tipo": "pozione"},
+                {"nome": "Spada di Legno", "prezzo": 150, "descrizione": "+3 danno - Arma basilare", "tipo": "arma"},
+                {"nome": "Scudo di Legno", "prezzo": 100, "descrizione": "+2 difesa - Protezione base", "tipo": "scudo"},
+                {"nome": "Armatura di Cuoio", "prezzo": 200, "descrizione": "+2 difesa - Protezione leggera", "tipo": "armatura"},
+                {"nome": "Anello della Fortuna", "prezzo": 300, "descrizione": "Esperienza +20%", "tipo": "accessorio"}
+            ]
         
         oggetti_controls = []
         for oggetto in oggetti_negozio:
@@ -3790,14 +4179,53 @@ class AvventuraEpica:
         """Gestisce l'acquisto di un oggetto dal negozio"""
         prezzo = oggetto['prezzo']
         nome = oggetto['nome']
+        tipo = oggetto.get('tipo', 'oggetto')
         
         if self.monete >= prezzo:
             self.monete -= prezzo
             
-            # Aggiungi oggetto all'inventario (semplificato)
-            if nome not in self.inventario:
-                self.inventario[nome] = 0
-            self.inventario[nome] += 1
+            # Handle equipment items (auto-equip weapons, shields, armor)
+            if tipo == "arma":
+                # If player has a weapon, add old weapon to inventory
+                if hasattr(self, 'arma_equipaggiata') and self.arma_equipaggiata:
+                    if self.arma_equipaggiata not in self.inventario:
+                        self.inventario[self.arma_equipaggiata] = 0
+                    self.inventario[self.arma_equipaggiata] += 1
+                    self.aggiorna_storia(f"⚔️ {self.arma_equipaggiata} spostata nell'inventario")
+                
+                # Equip new weapon
+                self.arma_equipaggiata = nome
+                self.aggiorna_storia(f"⚔️ {nome} equipaggiata!")
+                
+            elif tipo == "scudo":
+                # If player has a shield, add old shield to inventory
+                if hasattr(self, 'scudo_equipaggiato') and self.scudo_equipaggiato:
+                    if self.scudo_equipaggiato not in self.inventario:
+                        self.inventario[self.scudo_equipaggiato] = 0
+                    self.inventario[self.scudo_equipaggiato] += 1
+                    self.aggiorna_storia(f"🛡️ {self.scudo_equipaggiato} spostato nell'inventario")
+                
+                # Equip new shield
+                self.scudo_equipaggiato = nome
+                self.aggiorna_storia(f"🛡️ {nome} equipaggiato!")
+                
+            elif tipo == "armatura":
+                # If player has armor, add old armor to inventory
+                if hasattr(self, 'armatura_equipaggiata') and self.armatura_equipaggiata:
+                    if self.armatura_equipaggiata not in self.inventario:
+                        self.inventario[self.armatura_equipaggiata] = 0
+                    self.inventario[self.armatura_equipaggiata] += 1
+                    self.aggiorna_storia(f"🛡️ {self.armatura_equipaggiata} spostata nell'inventario")
+                
+                # Equip new armor
+                self.armatura_equipaggiata = nome
+                self.aggiorna_storia(f"🛡️ {nome} equipaggiata!")
+                
+            else:
+                # Regular items go to inventory
+                if nome not in self.inventario:
+                    self.inventario[nome] = 0
+                self.inventario[nome] += 1
             
             self.aggiorna_storia(f"💰 Hai acquistato {nome} per {prezzo} monete!")
             self.haptic_feedback("success")
@@ -4191,7 +4619,7 @@ class AvventuraEpica:
     
     def controlla_e_ripristina_audio(self):
         """Controlla se audio e musica sono attivi e li ripristina se necessario"""
-        if not self.audio_abilitato or not self.gioco_iniziato:
+        if not self.audio_abilitato or not self.gioco_iniziato or self.in_battaglia:
             return
             
         print("🎵 DEBUG: Controllo stato audio...")
@@ -4213,13 +4641,6 @@ class AvventuraEpica:
                 print(f"🎵 DEBUG: Ripristino audio ambiente: {self.area_attuale}")
                 self.cambia_suono_ambiente_area(self.area_attuale)
                 
-            # Controlla se il heartbeat dovrebbe essere attivo
-            if hasattr(self, 'vita') and hasattr(self, 'vita_massima'):
-                percentuale_vita = (self.vita / self.vita_massima) * 100
-                if percentuale_vita <= 20 and self.vita > 0 and not self.heartbeat_attivo:
-                    print("🎵 DEBUG: Ripristino heartbeat per vita bassa")
-                    self.attiva_heartbeat()
-                    
         except Exception as e:
             print(f"🎵 ERROR: Errore nel controllo audio: {e}")
     
@@ -4246,28 +4667,9 @@ class AvventuraEpica:
     
     def avvia_controllo_audio_periodico(self):
         """Avvia il controllo periodico dell'audio ogni 10 secondi"""
-        import threading
-        import time
-        
-        def controllo_ciclico():
-            while hasattr(self, 'app_in_foreground') and self.app_in_foreground:
-                try:
-                    # Controlla solo se l'app è attiva e il gioco è iniziato
-                    if self.app_in_foreground and getattr(self, 'gioco_iniziato', False):
-                        self.controlla_e_ripristina_audio()
-                    
-                    # Aspetta 10 secondi prima del prossimo controllo
-                    time.sleep(10)
-                    
-                except Exception as e:
-                    print(f"🎵 ERROR: Errore nel controllo periodico audio: {e}")
-                    time.sleep(10)  # Continua comunque dopo un errore
-        
-        # Avvia il thread del controllo ciclico
-        thread = threading.Thread(target=controllo_ciclico)
-        thread.daemon = True
-        thread.start()
-        print("🎵 DEBUG: Controllo audio periodico avviato")
+        # DISABILITATO - causava sovrapposizioni audio
+        print("🎵 DEBUG: Controllo audio periodico disabilitato per evitare sovrapposizioni")
+        pass
     
     def crea_vista_gestione_reliquie(self):
         """Crea la vista per gestire le reliquie"""
@@ -4352,11 +4754,115 @@ class AvventuraEpica:
             self.cambia_area(area_scelta)
         self.torna_indietro()
     
+    def aggiorna_interfaccia_dinamica(self):
+        """Aggiorna l'interfaccia quando cambiano le condizioni dei pulsanti dinamici"""
+        if hasattr(self, 'page') and self.page.route == "/gioco":
+            print(f"🔄 DEBUG: Refresh interfaccia - route: {self.page.route}")
+            # Evita loop infiniti usando un flag temporaneo
+            if not getattr(self, '_refreshing_ui', False):
+                self._refreshing_ui = True
+                try:
+                    # Usa un thread per evitare blocchi dell'interfaccia
+                    import threading
+                    def aggiorna_in_background():
+                        import time
+                        time.sleep(0.1)  # Piccola pausa per evitare conflitti
+                        try:
+                            print("🔄 DEBUG: Navigazione sicura al gioco...")
+                            self.page.go("/gioco")
+                            print("🔄 DEBUG: Aggiornamento completato")
+                        except Exception as e:
+                            print(f"🔄 ERRORE: Navigazione fallita: {e}")
+                        finally:
+                            time.sleep(0.2)
+                            self._refreshing_ui = False
+                    
+                    thread = threading.Thread(target=aggiorna_in_background)
+                    thread.daemon = True
+                    thread.start()
+                    
+                except Exception as e:
+                    print(f"🔄 ERRORE: Aggiornamento fallito: {e}")
+                    self._refreshing_ui = False
+            else:
+                print(f"🔄 DEBUG: Refresh già in corso, evito loop infinito")
+    
+    def seleziona_mostro_villaggio(self):
+        """Seleziona un mostro casuale per il Villaggio"""
+        import random
+        mostri_villaggio = [
+            {"nome": "👨‍🌾 Contadino Arrabbiato", "hp": 70, "attacco": 8, "verso": "Basta con questi intrusi!", "audio_canale": "effetto_mostro_1"},
+            {"nome": "🐗 Cinghiale Affamato", "hp": 90, "attacco": 12, "verso": "Oink oink!", "audio_canale": "effetto_mostro_2"},
+            {"nome": "🐂 Toro Scatenato", "hp": 110, "attacco": 15, "verso": "Moooo!", "audio_canale": "effetto_mostro_3"},
+            {"nome": "🐴 Cavallo Pazzo", "hp": 85, "attacco": 10, "verso": "Neigh!", "audio_canale": "effetto_mostro_4"},
+            {"nome": "🐐 Capra Indemoniata", "hp": 80, "attacco": 11, "verso": "Beeeh!", "audio_canale": "effetto_mostro_5"}
+        ]
+        return random.choice(mostri_villaggio)
+    
+    def seleziona_mostro_cantina(self):
+        """Seleziona un mostro casuale per la Cantina"""
+        import random
+        mostri_cantina = [
+            {"nome": "🕷️ Ragno Peloso", "hp": 95, "attacco": 13, "verso": "Hiss!", "audio_canale": "effetto_cantina_ragno"},
+            {"nome": "🦇 Sciame di Pipistrelli", "hp": 80, "attacco": 11, "verso": "Screech!", "audio_canale": "effetto_cantina_pipistrelli"},
+            {"nome": "🟢 Muffa Vivente", "hp": 110, "attacco": 9, "verso": "Blurp!", "audio_canale": "effetto_cantina_muffa"},
+            {"nome": "🪲 Insetto Carapace", "hp": 105, "attacco": 14, "verso": "Click!", "audio_canale": "effetto_cantina_insetto"},
+            {"nome": "🟣 Melma Posseduta", "hp": 100, "attacco": 12, "verso": "Gloop!", "audio_canale": "effetto_cantina_melma"}
+        ]
+        return random.choice(mostri_cantina)
+    
+    def riproduci_verso_mostro(self, canale_audio):
+        """Riproduce il verso del mostro usando il canale specificato"""
+        try:
+            if canale_audio == "effetto_mostro_1":
+                self.effetto_mostro_1.play()
+            elif canale_audio == "effetto_mostro_2":
+                self.effetto_mostro_2.play()
+            elif canale_audio == "effetto_mostro_3":
+                self.effetto_mostro_3.play()
+            elif canale_audio == "effetto_mostro_4":
+                self.effetto_mostro_4.play()
+            elif canale_audio == "effetto_mostro_5":
+                self.effetto_mostro_5.play()
+            elif canale_audio == "effetto_cantina_ragno":
+                self.effetto_cantina_ragno.play()
+            elif canale_audio == "effetto_cantina_pipistrelli":
+                self.effetto_cantina_pipistrelli.play()
+            elif canale_audio == "effetto_cantina_muffa":
+                self.effetto_cantina_muffa.play()
+            elif canale_audio == "effetto_cantina_insetto":
+                self.effetto_cantina_insetto.play()
+            elif canale_audio == "effetto_cantina_melma":
+                self.effetto_cantina_melma.play()
+            print(f"🔊 Riprodotto verso mostro: {canale_audio}")
+        except Exception as e:
+            print(f"🔊 Errore riproduzione verso mostro {canale_audio}: {e}")
+    
+    def riproduci_verso_boss(self, nome_boss):
+        """Riproduce il verso del boss specifico"""
+        try:
+            if nome_boss == "🐕 Cane Randagio":
+                self.effetto_boss_1.play()
+                print(f"🔊 Riprodotto verso boss: {nome_boss}")
+            elif nome_boss == "🕷️ Regina dei Ragni":
+                self.effetto_boss_regina_ragni.play()
+                print(f"🔊 Riprodotto verso boss: {nome_boss}")
+            # Qui si possono aggiungere altri boss in futuro
+        except Exception as e:
+            print(f"🔊 Errore riproduzione verso boss {nome_boss}: {e}")
+    
     def inizia_combattimento(self, e):
         """Inizia un nuovo combattimento"""
+        print("🎮 DEBUG: inizia_combattimento chiamato!")
+        print(f"🎮 DEBUG: Area attuale: {self.area_attuale}")
+        print(f"🎮 DEBUG: Energia: {self.risorse['energia']}")
+        print(f"🎮 DEBUG: Vita: {self.vita}")
+        
         if self.risorse["energia"] < 20:
             self.haptic_feedback("warning")
             self.aggiorna_storia("❌ Non hai abbastanza energia per combattere! (servono 20)")
+            # Mostra vista pulita con suggerimenti
+            self.page.go("/energia_insufficiente")
             return
             
         if self.vita <= 10:
@@ -4366,8 +4872,8 @@ class AvventuraEpica:
         
         # Dati mostri per area
         mostri_area = {
-            "Villaggio": {"nome": "Topo Gigante", "hp": 80, "attacco": 10, "verso": "Squeak!"},
-            "🏠 Cantina": {"nome": "Ragno Peloso", "hp": 100, "attacco": 14, "verso": "Hiss!"},
+            "Villaggio": self.seleziona_mostro_villaggio(),
+            "🏠 Cantina": self.seleziona_mostro_cantina(),
             "🚰 Fogne": {"nome": "Ratto delle Fogne", "hp": 120, "attacco": 18, "verso": "Screech!"},
             "🌀 Labirinto Antico": {"nome": "Guardiano di Pietra", "hp": 140, "attacco": 22, "verso": "Rumble!"},
             "❄️ Area Innevata": {"nome": "Lupo Gelido", "hp": 160, "attacco": 26, "verso": "Howl!"},
@@ -4386,13 +4892,22 @@ class AvventuraEpica:
         
         self.mostro_attuale = mostri_area.get(self.area_attuale, {"nome": "Mostro Sconosciuto", "hp": 20, "attacco": 5, "verso": "Grrr!"})
         self.hp_mostro_attuale = self.mostro_attuale["hp"]
-        self.in_combattimento = True
         self.round_combattimento = 1
         self.risorse["energia"] -= 20
         
-        # Avvia musica battaglia
+        # Avvia musica battaglia PRIMA di settare in_combattimento
         if self.audio_abilitato:
             self.avvia_musica_battaglia("normale")
+            
+            # Riproduci verso del mostro
+            if "audio_canale" in self.mostro_attuale:
+                self.riproduci_verso_mostro(self.mostro_attuale["audio_canale"])
+        
+        # Setta in_combattimento DOPO aver avviato la musica
+        self.in_combattimento = True
+        
+        # Aggiorna interfaccia dopo consumo energia
+        self.aggiorna_info_combattimento()
         
         messaggio_log = f"Incontri un {self.mostro_attuale['nome']}!\n{self.mostro_attuale['verso']}\n\nIl combattimento inizia!"
         self.haptic_feedback("medium")
@@ -4442,6 +4957,9 @@ class AvventuraEpica:
             self.ferma_heartbeat()  # Ferma heartbeat quando vinci
             messaggio += f"🎉 Hai sconfitto il {self.mostro_attuale['nome']}!\n"
             
+            # Controlla se era un boss
+            is_boss = self.mostro_attuale.get("tipo") == "boss"
+            
             # Ricompense
             oro_guadagnato = self.mostro_attuale["attacco"] * 5
             exp_guadagnata = self.mostro_attuale["hp"] // 5
@@ -4451,30 +4969,48 @@ class AvventuraEpica:
             
             # Controlla livello dopo esperienza guadagnata
             testo_livello = self.gestisci_livello()
+            livello_aumentato = bool(testo_livello)
             if testo_livello:
                 messaggio += f"\n{testo_livello}"
             
             # Controlla sblocco gatti
             self.controlla_sblocco_gatti()
             
-            # Progressione area per combattimento vinto
-            if self.area_attuale in self.progressione_area:
-                self.progressione_area[self.area_attuale] += 1
-                print(f" Progressione {self.area_attuale}: {self.progressione_area[self.area_attuale]}")
-                
-                # Controlla se il boss dell'area è stato sbloccato per la prima volta
-                if (self.progressione_area[self.area_attuale] >= 100 and 
-                    self.area_attuale not in self.boss_notifications_mostrate):
-                    boss_sconfitto = self.controlla_boss_sconfitto(self.area_attuale)
-                    if not boss_sconfitto:
-                        # Mostra notifica sblocco boss solo una volta
-                        self.boss_notifications_mostrate.add(self.area_attuale)
-                        self.mostra_notifica_boss_sbloccato(self.area_attuale)
-                        messaggio += f"\n Devi prima sconfiggere il boss di quest'area per procedere!"
+            # Gestione specifica per boss sconfitto
+            if is_boss:
+                # Aggiungi boss alla lista dei boss sconfitti
+                if self.area_attuale not in self.boss_sconfitti:
+                    self.boss_sconfitti.append(self.area_attuale)
+                    messaggio += f"\n🏆 Boss dell'area {self.area_attuale} sconfitto!"
+                    
+                    # Sblocca la prossima area
+                    self.sblocca_prossima_area()
+                    messaggio += f"\n🗺️ Nuova area sbloccata!"
+                    
+                    # Salva il gioco dopo aver sconfitto il boss
+                    self.salva_gioco(None)
+            else:
+                # Progressione area per combattimento normale
+                if self.area_attuale in self.progressione_area:
+                    self.progressione_area[self.area_attuale] += 1
+                    print(f" Progressione {self.area_attuale}: {self.progressione_area[self.area_attuale]}")
+                    
+                    # Controlla se il boss dell'area è stato sbloccato per la prima volta
+                    if (self.progressione_area[self.area_attuale] >= 100 and 
+                        self.area_attuale not in self.boss_notifications_mostrate):
+                        boss_sconfitto = self.controlla_boss_sconfitto(self.area_attuale)
+                        if not boss_sconfitto:
+                            # Mostra notifica sblocco boss solo una volta
+                            self.boss_notifications_mostrate.add(self.area_attuale)
+                            self.mostra_notifica_boss_sbloccato(self.area_attuale)
+                            messaggio += f"\n Devi prima sconfiggere il boss di quest'area per procedere!"
             
             messaggio += f" +{oro_guadagnato} oro\n +{exp_guadagnata} esperienza"
             
             if self.audio_abilitato:
+                # Sequenza audio: prima level up (se c'è stato), poi vittoria
+                if livello_aumentato:
+                    self.riproduci_effetto("livello")
                 self.riproduci_effetto("vittoria")
                 self.termina_musica_battaglia()
             
@@ -5597,11 +6133,11 @@ class AvventuraEpica:
         
         # Progressione area
         progressione = self.progressione_area[area]
-        testo += f" Progressione area: {progressione}/20\n"
+        testo += f" Progressione area: {progressione}/100\n"
         
-        if progressione < 10:
+        if progressione < 50:
             testo += f"Continua ad esplorare per sbloccare nuove aree!\n"
-        elif progressione < 20:
+        elif progressione < 100:
             testo += f"🎆 Stai per sbloccare qualcosa di speciale!\n"
         else:
             testo += f"✨ Area completamente esplorata!\n"
@@ -5732,33 +6268,30 @@ class AvventuraEpica:
         
     def controlla_boss_sconfitto(self, area):
         """Controlla se il boss dell'area attuale è stato sconfitto"""
-        # Mappa aree ai boss (basata sui boss_aree esistenti)
-        boss_aree_mappa = {
-            "Villaggio": "🐕 Cane Randagio",
-            "🏠 Cantina": "🕷️ Ragno Gigante", 
-            "🚰 Fogne": "🐀 Re dei Ratti",
-            "🌀 Labirinto Antico": "🏺 Guardiano Antico",
-            "❄️ Area Innevata": "🐺 Lupo Gelido",
-            "🌿 Giungla Selvaggia": "🐍 Serpente Gigante",
-            "🌲 Bosco Profondo": "🐻 Orso Gigante",
-            "⚰️ Cimitero": "💀 Scheletro Re",
-            "🏚️ Casa degli Orrori": "👻 Custode Nightmare",
-            "🏭 Fabbrica Abbandonata": "🤖 Robot Boss",
-            "⛏️ Miniera Profonda": "⛏️ Golem di Ferro",
-            "🌙 Cripta Maledetta": "🧙‍♂️ Lich Antico",
-            "🌊 Mare": "🐙 Kraken Gigante",
-            "🏔️ Montagna Sacra": "🦅 Fenice Antica",
-            "🌋 Vulcano Attivo": "Signore del Fuoco",
-            "👑 Palazzo Finale": "👑 Imperatore Oscuro"
-        }
-        
-        # Se l'area ha un boss, controlla se è sconfitto
-        if area in boss_aree_mappa:
-            boss_nome = boss_aree_mappa[area]
-            return boss_nome in self.boss_sconfitti
+        # Usa il dizionario boss_aree reale invece di una mappa separata
+        if area in self.boss_aree:
+            boss_nome = self.boss_aree[area]["nome"]
+            # Controlla sia il nome del boss che il nome dell'area per compatibilità
+            is_defeated = boss_nome in self.boss_sconfitti or area in self.boss_sconfitti
+            print(f"🔍 DEBUG: Boss check - Area: {area}, Boss: {boss_nome}, Sconfitto: {is_defeated}")
+            print(f"🔍 DEBUG: Lista boss sconfitti: {self.boss_sconfitti}")
+            return is_defeated
         
         # Se l'area non ha boss, è sempre "sconfitto"
+        print(f"🔍 DEBUG: Area {area} non ha boss definito")
         return True
+        
+    def verifica_e_correggi_stato_boss(self):
+        """Verifica e corregge lo stato delle notifiche boss dopo il caricamento"""
+        for area in self.aree_sbloccate:
+            if (area in self.boss_aree and 
+                self.progressione_area.get(area, 0) >= 100 and
+                area in self.boss_notifications_mostrate and
+                not self.controlla_boss_sconfitto(area)):
+                # Se il boss non è stato sconfitto ma la notifica è marcata come mostrata,
+                # rimuovi la marcatura per permettere che la notifica riappaia
+                print(f"🔧 DEBUG: Rimuovo notifica mostrata per area {area} con boss non sconfitto")
+                self.boss_notifications_mostrate.discard(area)
 
     def combatti_mostri(self, e):
         """Reindirizza alla nuova schermata di combattimento"""
@@ -5772,10 +6305,14 @@ class AvventuraEpica:
         
         def battaglia_con_narrazione():
             try:
-                # Dati mostri per area
+                # Dati mostri per area - versione narrativa (attacco ridotto)
+                mostro_villaggio = self.seleziona_mostro_villaggio()
+                mostro_villaggio["attacco"] = max(3, mostro_villaggio["attacco"] - 5)  # Riduce attacco per modalità narrativa
+                mostro_cantina = self.seleziona_mostro_cantina()
+                mostro_cantina["attacco"] = max(3, mostro_cantina["attacco"] - 5)  # Riduce attacco per modalità narrativa
                 mostri_area = {
-                    "Villaggio": {"nome": "Topo Gigante", "hp": 80, "attacco": 3, "verso": "Squeak!"},
-                    "🏠 Cantina": {"nome": "Ragno Peloso", "hp": 100, "attacco": 4, "verso": "Hiss!"},
+                    "Villaggio": mostro_villaggio,
+                    "🏠 Cantina": mostro_cantina,
                     "🚰 Fogne": {"nome": "Ratto delle Fogne", "hp": 120, "attacco": 5, "verso": "Screech!"},
                     "🌀 Labirinto Antico": {"nome": "Guardiano di Pietra", "hp": 140, "attacco": 6, "verso": "Rumble!"},
                     "❄️ Area Innevata": {"nome": "Lupo Gelido", "hp": 160, "attacco": 7, "verso": "Howl!"},
@@ -6139,6 +6676,10 @@ class AvventuraEpica:
             self.avvia_musica_battaglia("boss_finale")
         else:
             self.avvia_musica_battaglia("boss")
+        
+        # 🔊 Riproduci verso del boss
+        if self.audio_abilitato:
+            self.riproduci_verso_boss(nome_boss)
             
         # Inizia combattimento vero contro il boss - naviga alla schermata combattimento
         self.page.go("/combattimento")
@@ -6349,49 +6890,29 @@ class AvventuraEpica:
         
     def mostra_notifica_boss_sbloccato(self, area):
         """Mostra notifica quando il boss dell'area viene sbloccato"""
+        print(f"🔔 DEBUG: Mostrando notifica boss per area: {area}")
+        
         if area not in self.boss_aree:
+            print(f"❌ DEBUG: Area {area} non trovata in boss_aree")
             return
             
         boss_info = self.boss_aree[area]
         nome_boss = boss_info["nome"]
+        print(f"🔔 DEBUG: Boss trovato: {nome_boss}")
         
-        # Crea dialog di notifica
-        def affronta_boss_ora(e):
-            dialog.open = False
-            self.page.update()
-            self.combatti_boss(e)
-            
-        def non_ora(e):
-            dialog.open = False
-            self.page.update()
         
-        dialog = ft.AlertDialog(
-            title=ft.Text("Boss Sbloccato!", size=20, weight=ft.FontWeight.BOLD),
-            content=ft.Text(f"Hai sbloccato il boss {nome_boss}!\n\nVuoi affrontarlo ora?", size=16),
-            actions=[
-                ft.TextButton(
-                    text="Affronta Ora!",
-                    on_click=affronta_boss_ora,
-                    style=ft.ButtonStyle(
-                        bgcolor=ft.Colors.RED_600,
-                        color=ft.Colors.WHITE
-                    )
-                ),
-                ft.TextButton(
-                    text="❌ Non Ora",
-                    on_click=non_ora,
-                    style=ft.ButtonStyle(
-                        bgcolor=ft.Colors.GREY_600,
-                        color=ft.Colors.WHITE
-                    )
-                )
-            ],
-            actions_alignment=ft.MainAxisAlignment.CENTER
-        )
+        print(f"🔔 DEBUG: Creando notifica boss per: {nome_boss}")
         
-        self.page.dialog = dialog
-        dialog.open = True
-        self.page.update()
+        # Save boss info for the notification view
+        self.boss_corrente_notifica = {
+            "area": area,
+            "nome": nome_boss,
+            "info": boss_info
+        }
+        
+        # Navigate to boss notification view (like save confirmation)
+        self.page.go("/boss_notification")
+        print(f"🔔 DEBUG: Navigato a boss notification view")
         
     def calcola_livello_minimo_boss(self, area):
         """Calcola il livello minimo richiesto per sconfiggere il boss dell'area"""
@@ -7180,7 +7701,7 @@ class AvventuraEpica:
             negozio = self.negozi.get(self.area_attuale, {})
             info = negozio.get(nome_oggetto, {"descrizione": "Oggetto misterioso"})
             
-            # Auto-equipaggia armi e armature, altrimenti metti in inventario
+            # Auto-equipaggia armi, scudi e armature, altrimenti metti in inventario
             if info["tipo"] == "arma":
                 # Se hai già un'arma, metti quella vecchia nell'inventario
                 if self.equipaggiamento["arma"]:
@@ -7190,6 +7711,15 @@ class AvventuraEpica:
                     else:
                         self.inventario[vecchia_arma] = 1
                 self.equipaggiamento["arma"] = nome_oggetto
+            elif info["tipo"] == "scudo":
+                # Se hai già uno scudo, metti quello vecchio nell'inventario
+                if self.equipaggiamento.get("scudo"):
+                    vecchio_scudo = self.equipaggiamento["scudo"]
+                    if vecchio_scudo in self.inventario:
+                        self.inventario[vecchio_scudo] += 1
+                    else:
+                        self.inventario[vecchio_scudo] = 1
+                self.equipaggiamento["scudo"] = nome_oggetto
             elif info["tipo"] == "armatura":
                 # Se hai già un'armatura, metti quella vecchia nell'inventario
                 if self.equipaggiamento["armatura"]:
@@ -7266,10 +7796,41 @@ class AvventuraEpica:
             nome_oggetto, info = min(oggetti_acquistabili, key=lambda x: x[1]["prezzo"])
             
             self.monete -= info["prezzo"]
-            if nome_oggetto in self.inventario:
-                self.inventario[nome_oggetto] += 1
+            
+            # Handle equipment items (auto-equip weapons, shields, armor)
+            if info["tipo"] == "arma":
+                # Se hai già un'arma, metti quella vecchia nell'inventario
+                if self.equipaggiamento["arma"]:
+                    vecchia_arma = self.equipaggiamento["arma"]
+                    if vecchia_arma in self.inventario:
+                        self.inventario[vecchia_arma] += 1
+                    else:
+                        self.inventario[vecchia_arma] = 1
+                self.equipaggiamento["arma"] = nome_oggetto
+            elif info["tipo"] == "scudo":
+                # Se hai già uno scudo, metti quello vecchio nell'inventario
+                if self.equipaggiamento.get("scudo"):
+                    vecchio_scudo = self.equipaggiamento["scudo"]
+                    if vecchio_scudo in self.inventario:
+                        self.inventario[vecchio_scudo] += 1
+                    else:
+                        self.inventario[vecchio_scudo] = 1
+                self.equipaggiamento["scudo"] = nome_oggetto
+            elif info["tipo"] == "armatura":
+                # Se hai già un'armatura, metti quella vecchia nell'inventario
+                if self.equipaggiamento.get("armatura"):
+                    vecchia_armatura = self.equipaggiamento["armatura"]
+                    if vecchia_armatura in self.inventario:
+                        self.inventario[vecchia_armatura] += 1
+                    else:
+                        self.inventario[vecchia_armatura] = 1
+                self.equipaggiamento["armatura"] = nome_oggetto
             else:
-                self.inventario[nome_oggetto] = 1
+                # Regular items go to inventory
+                if nome_oggetto in self.inventario:
+                    self.inventario[nome_oggetto] += 1
+                else:
+                    self.inventario[nome_oggetto] = 1
             
             testo = f"✅ Acquistato: {nome_oggetto}\n"
             testo += f" Costo: {info['prezzo']} monete\n"
@@ -7385,7 +7946,10 @@ class AvventuraEpica:
             "aree_sbloccate": self.aree_sbloccate,
             "area_attuale": self.area_attuale,
             "progressione_area": self.progressione_area,
-            "pesce_raccolto": self.pesce_raccolto
+            "pesce_raccolto": self.pesce_raccolto,
+            # Boss tracking variables
+            "boss_notifications_mostrate": list(self.boss_notifications_mostrate),
+            "boss_sconfitti": self.boss_sconfitti
         }
         
         try:
@@ -7459,6 +8023,204 @@ class AvventuraEpica:
             ],
             bgcolor=ft.Colors.GREY_900
         )
+
+    def crea_vista_energia_insufficiente(self):
+        """Crea vista pulita per energia insufficiente"""
+        titolo = "Energia Insufficiente"
+        
+        # Costruisci il messaggio con suggerimenti
+        messaggio_base = f"Non hai abbastanza energia per combattere!\n\nEnergia attuale: {self.risorse['energia']}/20 necessari"
+        
+        suggerimenti = []
+        if self.gatto_attivo and self.risorse["cibo"] > 0:
+            suggerimenti.append("Nutri il tuo gatto per recuperare energia")
+        elif self.gatto_attivo and self.risorse["cibo"] == 0:
+            suggerimenti.append("Raccogli risorse per ottenere cibo")
+            suggerimenti.append("Nutri il gatto con il cibo ottenuto")
+        else:
+            suggerimenti.append("Ottieni un gatto compagno")
+            suggerimenti.append("Raccogli risorse per ottenere cibo")
+        
+        suggerimenti.append("Mangia del cibo per recuperare un po' di energia")
+        suggerimenti.append("Usa la funzione 'Riposa' se disponibile")
+        
+        messaggio_completo = messaggio_base + "\n\nCome recuperare energia:\n" + "\n".join(suggerimenti)
+        
+        content = ft.Column([
+            ft.Text(
+                titolo,
+                size=28,
+                weight=ft.FontWeight.BOLD,
+                text_align=ft.TextAlign.CENTER,
+                color=ft.Colors.AMBER_400
+            ),
+            ft.Container(height=20),
+            ft.Text(
+                messaggio_completo,
+                size=16,
+                text_align=ft.TextAlign.CENTER,
+                color=ft.Colors.WHITE
+            ),
+            ft.Container(height=30),
+            ft.ElevatedButton(
+                text="Torna al Combattimento",
+                on_click=lambda e: self.page.go("/combattimento"),
+                width=200,
+                height=50,
+                bgcolor=ft.Colors.BLUE_600,
+                color=ft.Colors.WHITE
+            )
+        ],
+        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+        alignment=ft.MainAxisAlignment.CENTER,
+        expand=True)
+        
+        return ft.View(
+            route="/energia_insufficiente",
+            controls=[
+                ft.Container(
+                    content=content,
+                    bgcolor=ft.Colors.GREY_900,
+                    padding=40,
+                    expand=True
+                )
+            ],
+            bgcolor=ft.Colors.GREY_900
+        )
+
+    def crea_vista_cibo_insufficiente(self):
+        """Crea vista pulita per cibo insufficiente"""
+        titolo = "Niente Cibo"
+        
+        # Messaggio personalizzato in base alla situazione
+        messaggio_base = "Non hai cibo per nutrire il tuo gatto!"
+        
+        suggerimenti = [
+            "Raccogli risorse per ottenere cibo",
+            "Visita il negozio per comprare cibo",
+            "Esplora altre aree per trovare risorse"
+        ]
+        
+        messaggio_completo = messaggio_base + "\n\nCome ottenere cibo:\n" + "\n".join(suggerimenti)
+        
+        content = ft.Column([
+            ft.Text(
+                titolo,
+                size=28,
+                weight=ft.FontWeight.BOLD,
+                text_align=ft.TextAlign.CENTER,
+                color=ft.Colors.ORANGE_400
+            ),
+            ft.Container(height=20),
+            ft.Text(
+                messaggio_completo,
+                size=16,
+                text_align=ft.TextAlign.CENTER,
+                color=ft.Colors.WHITE
+            ),
+            ft.Container(height=30),
+            ft.ElevatedButton(
+                text="Torna al Gioco",
+                on_click=lambda e: self.page.go("/gioco"),
+                width=200,
+                height=50,
+                bgcolor=ft.Colors.ORANGE_600,
+                color=ft.Colors.WHITE
+            )
+        ],
+        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+        alignment=ft.MainAxisAlignment.CENTER,
+        expand=True)
+        
+        return ft.View(
+            route="/cibo_insufficiente",
+            controls=[
+                ft.Container(
+                    content=content,
+                    bgcolor=ft.Colors.GREY_900,
+                    padding=40,
+                    expand=True
+                )
+            ],
+            bgcolor=ft.Colors.GREY_900
+        )
+
+    def crea_vista_boss_notification(self):
+        """Crea vista pulita di notifica boss sbloccato"""
+        # Get boss info from stored data
+        boss_info = getattr(self, 'boss_corrente_notifica', {})
+        nome_boss = boss_info.get('nome', 'Boss Sconosciuto')
+        area = boss_info.get('area', 'Area Sconosciuta')
+        
+        # Create content with Column layout
+        content = ft.Column([
+            ft.Text(
+                "🎯 Boss Sbloccato!",
+                size=32,
+                weight=ft.FontWeight.BOLD,
+                text_align=ft.TextAlign.CENTER,
+                color=ft.Colors.RED_400,
+                style=ft.TextThemeStyle.HEADLINE_MEDIUM
+            ),
+            ft.Text(
+                f"Hai sbloccato il boss {nome_boss}!",
+                size=20,
+                text_align=ft.TextAlign.CENTER,
+                color=ft.Colors.WHITE,
+                weight=ft.FontWeight.W_500
+            ),
+            ft.Text(
+                "Vuoi affrontarlo subito?",
+                size=18,
+                text_align=ft.TextAlign.CENTER,
+                color=ft.Colors.GREY_300
+            ),
+            ft.Row([
+                ft.ElevatedButton(
+                    text="⚔️ Affronta Ora!",
+                    on_click=self.affronta_boss_da_notifica,
+                    width=180,
+                    height=60,
+                    bgcolor=ft.Colors.RED_600,
+                    color=ft.Colors.WHITE,
+                    tooltip=f"Affronta {nome_boss} immediatamente"
+                ),
+                ft.ElevatedButton(
+                    text="❌ Più Tardi",
+                    on_click=lambda e: self.page.go("/gioco"),
+                    width=180,
+                    height=60,
+                    bgcolor=ft.Colors.GREY_600,
+                    color=ft.Colors.WHITE,
+                    tooltip="Torna al gioco, affronterai il boss più tardi"
+                )
+            ], 
+            spacing=20,
+            alignment=ft.MainAxisAlignment.CENTER)
+        ], 
+        spacing=40,
+        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+        alignment=ft.MainAxisAlignment.CENTER,
+        expand=True)
+        
+        # Return View with Container
+        return ft.View(
+            route="/boss_notification",
+            controls=[
+                ft.Container(
+                    content=content,
+                    bgcolor=ft.Colors.GREY_900,
+                    padding=40,
+                    expand=True
+                )
+            ],
+            bgcolor=ft.Colors.GREY_900
+        )
+        
+    def affronta_boss_da_notifica(self, e):
+        """Affronta il boss direttamente dalla notifica"""
+        # Inizia direttamente il combattimento del boss
+        self.combatti_boss(e)
 
     def mostra_dialog_salvataggio(self, successo, errore=None):
         """Mostra dialog di conferma salvataggio"""
@@ -7657,7 +8419,7 @@ class AvventuraEpica:
                 self.aggiorna_storia(f"\n🌌✨ PORTALE DEI SOGNI SBLOCCATO! ✨🌌\n"
                                    f"Il 5° gatto Nox si è risvegliato!\n"
                                    f"Hai {self.riavvolgimenti_disponibili} riavvolgimenti disponibili!\n"
-                                   f"🌌 Regno dei Sogni ora accessibile!")
+                                   f"🌌 Regno degli Incubi ora accessibile!")
     
     def controlla_sblocco_gatti(self):
         """Controlla se i gatti possono essere sbloccati in base alla progressione"""
@@ -7707,7 +8469,7 @@ class AvventuraEpica:
         return True
         
     def azione_scelta_onirica(self, scelta):
-        """Gestisce le scelte oniriche nel Regno dei Sogni"""
+        """Gestisce le scelte oniriche nel Regno degli Incubi"""
         self.scelte_oniriche.append(scelta)
         
         if scelta == "armonia":
@@ -7735,7 +8497,7 @@ class AvventuraEpica:
         self.aggiorna_descrizione_regno_sogni()
         
     def aggiorna_descrizione_regno_sogni(self):
-        """Aggiorna la descrizione del Regno dei Sogni in base alle scelte"""
+        """Aggiorna la descrizione del Regno degli Incubi in base alle scelte"""
         if self.forma_regno_sogni == "luminoso":
             descrizione = "Un regno onirico luminoso dove i sogni più belli prendono forma. I tuoi gatti sono euforici e l'energia positiva permea tutto. Il Dream Eternal appare come una creatura di pura luce."
         elif self.forma_regno_sogni == "oscuro":
@@ -7743,7 +8505,7 @@ class AvventuraEpica:
         else:  # neutrale
             descrizione = "Un regno onirico equilibrato dove sogni e incubi coesistono. Qui la realtà cambia forma secondo le tue scelte. Il Dream Eternal assume una forma cangiante, riflettendo la dualità del mondo."
             
-        self.descrizioni["🌌 Regno dei Sogni"] = descrizione
+        self.descrizioni["🌌 Regno degli Incubi"] = descrizione
         
     def usa_riavvolgimento_nox(self, e):
         """Usa l'abilità speciale di Nox per riavvolgere il tempo"""
@@ -7879,7 +8641,7 @@ class AvventuraEpica:
                 "🌲 Bosco Profondo": "🦌 Spirito del Bosco",
                 "🌊 Mare": "🧜‍♀️ Sirena Antica",
                 "⚰️ Cimitero": "👻 Fantasma Benevolo",
-                "🌌 Regno dei Sogni": "🌙 Mercante Onirico"
+                "🌌 Regno degli Incubi": "🌙 Mercante Onirico"
             }
             
             npc_nome = npc_nomi.get(area, "🔮 Mercante Misterioso")
@@ -8624,6 +9386,9 @@ class AvventuraEpica:
             self.posizione_giocatore = stato_gioco["posizione_giocatore"]
             self.hp_giocatore = stato_gioco["hp_giocatore"]
             self.hp_max = stato_gioco.get("hp_max", 100)
+            # Sincronizza le variabili legacy
+            self.vita = self.hp_giocatore
+            self.vita_massima = self.hp_max
             self.livello = stato_gioco.get("livello", 1)
             self.esperienza = stato_gioco.get("esperienza", 0)
             self.esperienza_prossimo_livello = stato_gioco.get("esperienza_prossimo_livello", 100)
@@ -8631,7 +9396,7 @@ class AvventuraEpica:
             self.difesa = stato_gioco.get("difesa", 0)
             self.monete = stato_gioco.get("monete", 100)
             self.inventario = stato_gioco.get("inventario", {})
-            self.equipaggiamento = stato_gioco.get("equipaggiamento", {"arma": None, "armatura": None, "accessorio": None})
+            self.equipaggiamento = stato_gioco.get("equipaggiamento", {"arma": None, "scudo": None, "armatura": None, "accessorio": None})
             self.effetti_temporanei = stato_gioco.get("effetti_temporanei", {})
             self.oggetti = stato_gioco["oggetti"]
             self.mostri = stato_gioco["mostri"]
@@ -8680,6 +9445,19 @@ class AvventuraEpica:
             if "pesce_raccolto" in stato_gioco:
                 self.pesce_raccolto = stato_gioco["pesce_raccolto"]
             
+            # Carica boss tracking variables
+            if "boss_notifications_mostrate" in stato_gioco:
+                self.boss_notifications_mostrate = set(stato_gioco["boss_notifications_mostrate"])
+            else:
+                self.boss_notifications_mostrate = set()  # Initialize empty set if not in save
+            if "boss_sconfitti" in stato_gioco:
+                self.boss_sconfitti = stato_gioco["boss_sconfitti"]
+            else:
+                self.boss_sconfitti = []  # Initialize empty list if not in save
+                
+            # Fix boss notification state if needed
+            self.verifica_e_correggi_stato_boss()
+            
             self.gioco_iniziato = True
             
             # Avvia il controllo audio periodico
@@ -8690,6 +9468,7 @@ class AvventuraEpica:
             
             if self.audio_abilitato:
                 self.cambia_musica_area(self.area_attuale)
+                self.cambia_suono_ambiente_area(self.area_attuale)
             
             self.haptic_feedback("success")
             self.aggiorna_storia("📂 Avventura caricata con successo!")
@@ -8757,8 +9536,17 @@ def main(page: ft.Page):
         # Controlla se la vita è già bassa all'inizio del combattimento boss
         self.controlla_vita_bassa()
         
+        # Controlla se la vita è bassa per attivare il heartbeat
+        self.controlla_vita_bassa()
+        
         # Aggiorna i pulsanti per mostrare le azioni di combattimento
         self.page.go("/combattimento")
+        
+        # Aggiorna interfaccia combattimento per mostrare i pulsanti
+        self.aggiorna_info_combattimento()
+        
+        # Forza aggiornamento della pagina
+        self.page.update()
 
     # Aggiungi il metodo alla classe
     AvventuraEpica.calcola_livello_minimo_boss = calcola_livello_minimo_boss
