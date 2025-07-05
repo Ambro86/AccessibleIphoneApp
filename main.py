@@ -76,10 +76,37 @@ class AvventuraEpica:
         try:
             if hasattr(self, 'log_file') and os.path.exists(self.log_file):
                 print(f"📱 DEBUG: File di log trovato: {self.log_file}")
-                # Su mobile, Flet può aprire il file per il download
-                self.page.launch_url(f"file://{self.log_file}")
-                self.aggiorna_storia("📱 File di log aperto. Su iPhone: Condividi > Salva su File")
-                print("📱 DEBUG: Comando launch_url eseguito")
+                
+                # Leggi il contenuto del file
+                with open(self.log_file, 'r', encoding='utf-8') as f:
+                    log_content = f.read()
+                
+                # Su iPhone usa il dialog di condivisione
+                if self.page.platform == ft.PagePlatform.IOS:
+                    # Crea un dialog con il contenuto del log
+                    dlg = ft.AlertDialog(
+                        title=ft.Text("Log Debug"),
+                        content=ft.Container(
+                            content=ft.Text(log_content, selectable=True),
+                            width=400,
+                            height=300,
+                            scroll=ft.ScrollMode.AUTO
+                        ),
+                        actions=[
+                            ft.TextButton("Copia", on_click=lambda _: self.copy_to_clipboard(log_content)),
+                            ft.TextButton("Chiudi", on_click=lambda _: self.close_dialog())
+                        ]
+                    )
+                    self.page.dialog = dlg
+                    dlg.open = True
+                    self.page.update()
+                    print("📱 DEBUG: Dialog mostrato su iPhone")
+                else:
+                    # Su altre piattaforme usa launch_url
+                    self.page.launch_url(f"file://{self.log_file}")
+                    print("📱 DEBUG: File aperto su desktop")
+                
+                self.aggiorna_storia("📱 Log debug disponibile")
             else:
                 print(f"📱 DEBUG: File di log non trovato. log_file={getattr(self, 'log_file', 'non esistente')}")
                 self.aggiorna_storia("❌ Nessun file di log trovato")
@@ -88,6 +115,22 @@ class AvventuraEpica:
             import traceback
             traceback.print_exc()
             self.aggiorna_storia("❌ Errore nell'apertura del log")
+    
+    def copy_to_clipboard(self, text):
+        """Copia il testo negli appunti"""
+        try:
+            self.page.set_clipboard(text)
+            self.aggiorna_storia("📋 Log copiato negli appunti")
+            self.close_dialog()
+        except Exception as e:
+            print(f"Errore copia: {e}")
+            self.aggiorna_storia("❌ Errore nella copia")
+    
+    def close_dialog(self):
+        """Chiude il dialog"""
+        if self.page.dialog:
+            self.page.dialog.open = False
+            self.page.update()
 
     def analizza_accessibilita(self, view):
         return  # DEBUG TEMPORANEAMENTE DISABILITATO
@@ -3557,7 +3600,7 @@ class AvventuraEpica:
             titolo,
             ft.Container(
                 content=ft.Column(impostazioni_controls, spacing=15),
-                height=500,
+                height=417,
                 bgcolor=ft.Colors.GREY_800,
                 border_radius=10,
                 padding=10
