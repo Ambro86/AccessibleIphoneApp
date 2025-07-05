@@ -26,13 +26,12 @@ class AvventuraEpica:
             # Crea file di log nella directory dell'app
             self.log_file = os.path.join(os.getcwd(), "debug_log.txt")
             
-            # Configura logging
+            # Configura logging - solo file, no console
             logging.basicConfig(
                 level=logging.DEBUG,
                 format='%(asctime)s - %(levelname)s - %(message)s',
                 handlers=[
-                    logging.FileHandler(self.log_file, mode='a'),
-                    logging.StreamHandler()  # Mantiene anche console
+                    logging.FileHandler(self.log_file, mode='a')
                 ]
             )
             
@@ -73,15 +72,21 @@ class AvventuraEpica:
     
     def scarica_log_debug(self, e):
         """Permette di scaricare il file di log per debugging iPhone"""
+        print("📱 DEBUG: Pulsante scarica log cliccato")
         try:
             if hasattr(self, 'log_file') and os.path.exists(self.log_file):
+                print(f"📱 DEBUG: File di log trovato: {self.log_file}")
                 # Su mobile, Flet può aprire il file per il download
                 self.page.launch_url(f"file://{self.log_file}")
                 self.aggiorna_storia("📱 File di log aperto. Su iPhone: Condividi > Salva su File")
+                print("📱 DEBUG: Comando launch_url eseguito")
             else:
+                print(f"📱 DEBUG: File di log non trovato. log_file={getattr(self, 'log_file', 'non esistente')}")
                 self.aggiorna_storia("❌ Nessun file di log trovato")
         except Exception as e:
-            print(f"Errore apertura log: {e}")
+            print(f"❌ ERRORE apertura log: {e}")
+            import traceback
+            traceback.print_exc()
             self.aggiorna_storia("❌ Errore nell'apertura del log")
 
     def analizza_accessibilita(self, view):
@@ -2543,7 +2548,7 @@ class AvventuraEpica:
         return False
     def crea_ui(self):
         """Crea l'interfaccia utente principale usando page.views per VoiceOver"""
-        self.page.title = "🏰 Avventura Epica - Accessibile"
+        self.page.title = "Avventura Epica - Accessibile"
         self.page.scroll = ft.ScrollMode.AUTO
         self.page.theme_mode = ft.ThemeMode.DARK
         
@@ -2641,9 +2646,17 @@ class AvventuraEpica:
                     self.page.views.append(vista)
                     self.analizza_accessibilita(vista)
             case "/impostazioni":
-                vista = self.crea_vista_impostazioni()
-                self.page.views.append(vista)
-                self.analizza_accessibilita(vista)
+                print("🔧 DEBUG: Navigando verso /impostazioni")
+                try:
+                    vista = self.crea_vista_impostazioni()
+                    print("🔧 DEBUG: Vista impostazioni creata con successo")
+                    self.page.views.append(vista)
+                    self.analizza_accessibilita(vista)
+                    print("🔧 DEBUG: Vista impostazioni aggiunta alla pagina")
+                except Exception as e:
+                    print(f"❌ ERRORE creazione vista impostazioni: {e}")
+                    import traceback
+                    traceback.print_exc()
             case "/info":
                 vista = self.crea_vista_info()
                 self.page.views.append(vista)
@@ -3515,13 +3528,14 @@ class AvventuraEpica:
         )
         
         # Pulsante scarica log per iPhone
+        print("🔧 DEBUG: Creando pulsante scarica log")
         download_log_btn = ft.ElevatedButton(
             "Scarica Log Debug",
             on_click=self.scarica_log_debug,
             width=200,
-            bgcolor=ft.Colors.ORANGE_600,
             tooltip="Scarica file di log per debugging iPhone"
         )
+        print("🔧 DEBUG: Pulsante scarica log creato")
         
         impostazioni_controls = [
             ft.Text("Audio", size=16, weight=ft.FontWeight.BOLD),
@@ -3543,7 +3557,7 @@ class AvventuraEpica:
             titolo,
             ft.Container(
                 content=ft.Column(impostazioni_controls, spacing=15),
-                height=400,
+                height=500,
                 bgcolor=ft.Colors.GREY_800,
                 border_radius=10,
                 padding=10
