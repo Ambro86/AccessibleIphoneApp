@@ -1,0 +1,45 @@
+Da prove fatte, flet se l'height supera i 400 px, inserisce un elemento vuoto prima del titolo.
+
+1. Ridurre spacing e padding
+
+  - Spacing tra pulsanti da 20px a 10px
+  - Padding container da 10px a 5px
+  - Altezza pulsanti da 40px a 30-35px
+  - Guadagni ~50-80px di spazio extra
+
+  2. Layout a griglia 2x2
+
+  - Invece di colonna verticale, usa ft.Row con 2 pulsanti per riga
+  - 4 pulsanti diventano 2 righe invece di 4
+  - Dimezza l'altezza necessaria per i pulsanti
+  - Pulsanti più larghi ma layout più compatto
+
+  3. Container nidificato con scroll interno
+
+  - Container principale 400px fisso
+  - Container interno scrollabile SOLO per la lista pulsanti
+  - Titolo e monete fuori dal container scrollabile
+  - VoiceOver vede container principale stabile
+
+  4. Lista compatta con ListTile
+
+  - Usa ft.ListTile invece di ft.ElevatedButton
+  - Altezza per elemento ~25-30px invece di 40px+spacing
+  - Design più compatto, più oggetti visibili
+  - Azione su tap del tile
+
+  5. Paginazione oggetti
+
+  - Mostra max 3-4 oggetti per "pagina"
+  - Aggiungi frecce "◀ Precedente" / "Successivo ▶"
+  - Container sempre 400px, contenuto varia
+  - Ideale per negozi con molti oggetti
+
+  6. Accordion/Collapsible
+
+  - Raggruppa oggetti per categoria (Armi, Cibo, Pozioni)
+  - Sezioni espandibili/comprimibili
+  - Mostra solo categorie, espandi per vedere oggetti
+  - Sfrutta altezza dinamicamente
+
+  Il Layout a griglia è probabilmente la soluzione più elegante per 4 oggetti!

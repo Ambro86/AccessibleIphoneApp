@@ -70,9 +70,9 @@ class AvventuraEpica:
         except:
             print(f"AUDIO: {message}")
     
-    def scarica_log_debug(self, e):
-        """Permette di scaricare il file di log per debugging iPhone"""
-        print("📱 DEBUG: Pulsante scarica log cliccato")
+    def copia_log_debug(self, e):
+        """Copia il log di debug negli appunti"""
+        print("📱 DEBUG: Pulsante copia log cliccato")
         try:
             if hasattr(self, 'log_file') and os.path.exists(self.log_file):
                 print(f"📱 DEBUG: File di log trovato: {self.log_file}")
@@ -81,52 +81,19 @@ class AvventuraEpica:
                 with open(self.log_file, 'r', encoding='utf-8') as f:
                     log_content = f.read()
                 
-                # Controlla piattaforma e usa metodo appropriato
-                print(f"📱 DEBUG: Piattaforma rilevata: {self.page.platform}")
-                print(f"📱 DEBUG: Platform name: {self.page.platform.name if hasattr(self.page.platform, 'name') else 'unknown'}")
+                # Copia negli appunti
+                self.page.set_clipboard(log_content)
+                self.aggiorna_storia("📋 Log debug copiato negli appunti!")
+                print("📱 DEBUG: Log copiato negli appunti con successo")
                 
-                # Usa dialog per tutte le piattaforme mobile (iOS, Android) + fallback sicuro
-                if (hasattr(self.page, 'platform') and 
-                    (self.page.platform == ft.PagePlatform.IOS or 
-                     self.page.platform == ft.PagePlatform.ANDROID or
-                     str(self.page.platform).lower() in ['ios', 'android', 'mobile'])):
-                    
-                    print("📱 DEBUG: Usando dialog per piattaforma mobile")
-                    # Crea un dialog con il contenuto del log
-                    dlg = ft.AlertDialog(
-                        title=ft.Text("Log Debug"),
-                        content=ft.Container(
-                            content=ft.Text(log_content[:5000] + "..." if len(log_content) > 5000 else log_content, 
-                                           selectable=True, size=12),
-                            width=350,
-                            height=400,
-                            scroll=ft.ScrollMode.AUTO
-                        ),
-                        actions=[
-                            ft.TextButton("Copia Tutto", on_click=lambda _: self.copy_to_clipboard(log_content)),
-                            ft.TextButton("Condividi", on_click=lambda _: self.share_log_content(log_content)),
-                            ft.TextButton("Chiudi", on_click=lambda _: self.close_dialog())
-                        ]
-                    )
-                    self.page.dialog = dlg
-                    dlg.open = True
-                    self.page.update()
-                    print("📱 DEBUG: Dialog mostrato per mobile")
-                else:
-                    print("📱 DEBUG: Usando launch_url per desktop")
-                    # Su desktop usa launch_url
-                    self.page.launch_url(f"file://{self.log_file}")
-                    print("📱 DEBUG: File aperto su desktop")
-                
-                self.aggiorna_storia("📱 Log debug disponibile")
             else:
                 print(f"📱 DEBUG: File di log non trovato. log_file={getattr(self, 'log_file', 'non esistente')}")
                 self.aggiorna_storia("❌ Nessun file di log trovato")
         except Exception as e:
-            print(f"❌ ERRORE apertura log: {e}")
+            print(f"❌ ERRORE copia log: {e}")
             import traceback
             traceback.print_exc()
-            self.aggiorna_storia("❌ Errore nell'apertura del log")
+            self.aggiorna_storia("❌ Errore nella copia del log")
     
     def copy_to_clipboard(self, text):
         """Copia il testo negli appunti"""
@@ -3602,10 +3569,10 @@ class AvventuraEpica:
         # Pulsante scarica log per iPhone
         print("🔧 DEBUG: Creando pulsante scarica log")
         download_log_btn = ft.ElevatedButton(
-            "Scarica Log Debug",
-            on_click=self.scarica_log_debug,
+            "Copia Debug",
+            on_click=self.copia_log_debug,
             width=200,
-            tooltip="Scarica file di log per debugging iPhone"
+            tooltip="Copia il log di debug negli appunti"
         )
         print("🔧 DEBUG: Pulsante scarica log creato")
         
@@ -4353,7 +4320,9 @@ class AvventuraEpica:
                     border_radius=10,
                     padding=10,
                     width=160,
-                    height=120
+                    height=120,
+                    data=f"shop_item_{i}",
+                    tooltip=f"{oggetto['nome']}: {oggetto['descrizione']} - {oggetto['prezzo']} monete"
                 )
                 row_items.append(oggetto_card)
             
@@ -4380,7 +4349,9 @@ class AvventuraEpica:
                     border_radius=10,
                     padding=10,
                     width=160,
-                    height=120
+                    height=120,
+                    data=f"shop_item_{i+1}",
+                    tooltip=f"{oggetto['nome']}: {oggetto['descrizione']} - {oggetto['prezzo']} monete"
                 )
                 row_items.append(oggetto_card)
             
