@@ -12,6 +12,10 @@ class AvventuraEpica:
         self.versione = "1.0.0" 
         self.autore   = "Ambrogio Riili"
         self.app_inizializzata = False  # Flag per evitare suoni durante init
+        
+        # Gestione eventi per audio session iOS
+        self.page.on_blur = self.on_page_blur
+        self.page.on_focus = self.on_page_focus
         self.setup_logging()
         self.log_info("App inizializzata")
         self.inizializza_gioco()
@@ -962,6 +966,7 @@ class AvventuraEpica:
         self.haptic_abilitato = True
         self.volume_musica = 0.3
         self.volume_effetti = 0.7
+        self.volume_ambiente = 0.21
         self.turno = 0
         
         # 🗺️ Sistema legacy compatibilità (per funzioni vecchie)
@@ -1075,55 +1080,287 @@ class AvventuraEpica:
         self.turno = 0
         
     def crea_audio_system(self):
-        """Sistema audio con supporto OGG"""
-        # Musica di default (villaggio)
-        self.musica_sottofondo = fa.Audio(
-            src="assets/music/villaggio.ogg",
-            autoplay=False,
-            volume=self.volume_musica,
-            balance=0,
-            on_state_changed=lambda e: print(f"🎵 Stato: {e.data}"),
-            on_loaded=lambda _: print("🎵 Musica caricata")
-        )
+        """Sistema audio con gestione errori iOS"""
+        # Inizializza gestione audio session iOS
+        self.audio_session_interrupting = False
+        self.audio_session_suspended = False
         
-        # Canali dedicati fissi - SISTEMA SEMPLICE CHE FUNZIONA
-        self.effetto_gatto = fa.Audio(
-            src="assets/music/effetto_gatto_attacco.mp3",
-            autoplay=False,
-            volume=self.volume_effetti,
-            balance=0
-        )
+        # Musica di default (villaggio) con gestione errori
+        try:
+            self.musica_sottofondo = fa.Audio(
+                src="assets/music/villaggio.mp3",
+                autoplay=False,
+                volume=self.volume_musica,
+                balance=0,
+                on_state_changed=lambda e: self.handle_audio_state_change("musica", e),
+                on_loaded=lambda _: self.log_audio("Musica villaggio caricata")
+            )
+        except Exception as e:
+            self.log_error(f"Errore creazione musica villaggio: {e}")
+            self.musica_sottofondo = None
+            
+        # Crea tutti gli effetti audio
+        self.crea_effetti_audio()
+    
+    def crea_audio_sicuro(self, nome, src, **kwargs):
+        """Crea un oggetto Audio con gestione errori per iPhone"""
+        try:
+            default_kwargs = {
+                'autoplay': False,
+                'volume': self.volume_effetti,
+                'balance': 0
+            }
+            default_kwargs.update(kwargs)
+            
+            audio = fa.Audio(src=src, **default_kwargs)
+            self.log_audio(f"Audio {nome} creato con successo: {src}")
+            return audio
+        except Exception as e:
+            self.log_error(f"Errore creazione audio {nome} ({src}): {e}")
+            return None
+    
+    def crea_effetti_audio(self):
+        """Crea tutti gli effetti audio con gestione errori"""
+        # Effetti principali
+        self.effetto_gatto = self.crea_audio_sicuro("gatto_attacco", "assets/music/effetto_gatto_attacco.mp3")
+        self.effetto_vittoria = self.crea_audio_sicuro("vittoria", "assets/music/effetto_vittoria.mp3")
+        self.effetto_sconfitta = self.crea_audio_sicuro("sconfitta", "assets/music/effetto_sconfitta.mp3")
         
-        self.effetto_vittoria = fa.Audio(
-            src="assets/music/effetto_vittoria.mp3",
-            autoplay=False,
-            volume=self.volume_effetti,
-            balance=0
-        )
+        # Livello up con debug speciale
+        self.effetto_livello = self.crea_audio_sicuro("livello", "assets/music/effetto_livello_up.mp3", 
+                                                      on_state_changed=self.debug_audio_state)
+        self.effetto_livello_backup = self.crea_audio_sicuro("livello_backup", "assets/music/effetto_livello_up.mp3")
         
-        self.effetto_sconfitta = fa.Audio(
-            src="assets/music/effetto_sconfitta.mp3",
-            autoplay=False,
-            volume=self.volume_effetti,
-            balance=0
-        )
+        # Effetti raccolta (IMPORTANTI per il fix!)
+        self.effetto_raccolta = self.crea_audio_sicuro("raccolta", "assets/music/effetto_raccolta.mp3")
+        self.effetto_gatto_raccolta = self.crea_audio_sicuro("gatto_raccolta", "assets/music/effetto_gatto_raccolta.mp3")
         
-        # Canale dedicato per level up - SEPARATO e PRIORITARIO
-        self.effetto_livello = fa.Audio(
-            src="assets/music/effetto_livello_up.mp3",
-            autoplay=False,
-            volume=self.volume_effetti,
-            balance=0,
-            on_state_changed=self.debug_audio_state
-        )
+        # Altri effetti
+        self.effetto_monete = self.crea_audio_sicuro("monete", "assets/music/effetto_monete.mp3")
+        self.effetto_mangiare = self.crea_audio_sicuro("mangiare", "assets/music/effetto_mangiare.mp3")
+        self.effetto_bere_pozione = self.crea_audio_sicuro("bere_pozione", "assets/music/effetto_bere_pozione.mp3")
+        self.effetto_bere_acqua = self.crea_audio_sicuro("bere_acqua", "assets/music/effetto_bere_acqua.mp3")
+        self.effetto_fusa = self.crea_audio_sicuro("fusa", "assets/music/effetto_fusa.mp3")
         
-        # Canale di backup per livello up (se quello principale fallisce)
-        self.effetto_livello_backup = fa.Audio(
-            src="assets/music/effetto_livello_up.mp3",
-            autoplay=False,
-            volume=self.volume_effetti,
-            balance=0
-        )
+        # Heartbeat con loop handler speciale
+        self.effetto_heartbeat = self.crea_audio_sicuro("heartbeat", "assets/music/effetto_heartbeat.mp3",
+                                                        playback_rate=1.6,
+                                                        on_state_changed=self.heartbeat_loop_handler)
+        
+        
+        # Sistema ambiente - canale dedicato
+        self.audio_ambiente = self.crea_audio_sicuro("ambiente", "assets/music/ambient_villaggio_uccelli.mp3",
+                                                     volume=self.volume_ambiente)
+        
+        # Inizializza mappe e variabili di stato
+        self.inizializza_audio_maps_e_stato()
+        
+        # Aggiungi tutto alla page overlay
+        self.finalizza_audio_system()
+    
+    def inizializza_audio_maps_e_stato(self):
+        """Inizializza mappe audio e stato"""
+        # Definizioni per battaglia e aree
+        self.musica_battaglia = "assets/music/battaglia.mp3"
+        self.musica_battaglia_boss = "assets/music/battaglia_boss.mp3"
+        self.musica_battaglia_boss_finale = "assets/music/battaglia_boss_finale.mp3"
+        
+        # Mappe dei suoni per area
+        self.musiche_aree = {
+            "Villaggio": "assets/music/villaggio.mp3",
+            "🌲 Bosco": "assets/music/bosco.mp3",
+            "🏔️ Montagna": "assets/music/montagna_sacra.mp3",
+            "⚰️ Cimitero": "assets/music/cimitero.mp3",
+            "🏰 Palazzo": "assets/music/palazzo_finale.mp3",
+            "🧊 Area Innevata": "assets/music/area_innevata.mp3",
+            "🌊 Mare Ghiacciato": "assets/music/mare.mp3",
+            "🌋 Vulcano": "assets/music/vulcano.mp3",
+            "💎 Cripta": "assets/music/cripta.mp3",
+            "🐀 Fogne": "assets/music/fogne.mp3",
+            "⛏️ Miniera": "assets/music/miniera.mp3",
+            "🏭 Fabbrica": "assets/music/fabbrica.mp3",
+            "🏺 Cantina": "assets/music/cantina.mp3",
+            "🌿 Giungla": "assets/music/giungla.mp3",
+            "🌀 Labirinto": "assets/music/labirinto.mp3",
+            "💭 Regno dei Sogni": "assets/music/regno_sogni.mp3",
+            "😱 Regno degli Incubi": "assets/music/regno_incubi.mp3",
+            "👹 Casa degli Orrori": "assets/music/casa_orrori.mp3"
+        }
+        
+        self.suoni_ambiente_aree = {
+            "Villaggio": "assets/music/ambient_villaggio_uccelli.mp3",
+            "🌲 Bosco": "assets/music/ambient_bosco_foglie.mp3",
+            "🏔️ Montagna": "assets/music/ambient_montagna_vento.mp3",
+            "⚰️ Cimitero": "assets/music/ambient_cimitero_spettri.mp3",
+            "🏰 Palazzo": "assets/music/ambient_palazzo_eco.mp3",
+            "🧊 Area Innevata": "assets/music/ambient_neve_vento.mp3",
+            "🌊 Mare Ghiacciato": "assets/music/ambient_mare_onde.mp3",
+            "🌋 Vulcano": "assets/music/ambient_vulcano_lava.mp3",
+            "💎 Cripta": "assets/music/ambient_cripta_magia.mp3",
+            "🐀 Fogne": "assets/music/ambient_fogne_topi.mp3",
+            "⛏️ Miniera": "assets/music/ambient_miniera_picconate.mp3",
+            "🏭 Fabbrica": "assets/music/ambient_fabbrica_macchinari.mp3",
+            "🏺 Cantina": "assets/music/ambient_cantina_gocce.mp3",
+            "🌿 Giungla": "assets/music/ambient_giungla_animali.mp3",
+            "🌀 Labirinto": "assets/music/ambient_labirinto_vento.mp3",
+            "💭 Regno dei Sogni": "assets/music/ambient_sogni_magia.mp3",
+            "😱 Regno degli Incubi": "assets/music/ambient_incubi.mp3",
+            "👹 Casa degli Orrori": "assets/music/ambient_orrori_porta.mp3"
+        }
+        
+        # Suoni specifici
+        self.suoni_cantina_mobbing = [
+            "assets/music/effetto_cantina_ragno.mp3",
+            "assets/music/effetto_cantina_pipistrelli.mp3",
+            "assets/music/effetto_cantina_muffa.mp3",
+            "assets/music/effetto_cantina_insetto.mp3",
+            "assets/music/effetto_cantina_melma.mp3"
+        ]
+        
+        self.suoni_mostri = [
+            "assets/music/effetto_mostro_1.mp3",
+            "assets/music/effetto_mostro_2.mp3",
+            "assets/music/effetto_mostro_3.mp3",
+            "assets/music/effetto_mostro_4.mp3",
+            "assets/music/effetto_mostro_5.mp3"
+        ]
+        
+        self.suoni_boss = {
+            "🏺 Cantina": "assets/music/effetto_cantina_ragno.mp3",
+            "Regina Ragni": "assets/music/effetto_boss_regina_ragni.mp3",
+            "Boss Generico": "assets/music/effetto_boss_1.mp3"
+        }
+        
+        # Stato audio
+        self.heartbeat_attivo = False
+        self.in_battaglia = False
+        self.musica_area_precedente = ""
+        self.ultimo_canale_usato = None
+        self.ambiente_src_attuale = None
+        self.audio_priority_attivo = False
+        self.ambiente_playing = False
+        self.musica_attuale = ""
+        self.suono_ambiente_attuale = ""
+    
+    def finalizza_audio_system(self):
+        """Aggiunge tutti gli oggetti audio alla page overlay"""
+        audio_objects = [obj for obj in [
+            self.musica_sottofondo,
+            self.effetto_gatto,
+            self.effetto_vittoria,
+            self.effetto_sconfitta,
+            self.effetto_livello,
+            self.effetto_livello_backup,
+            self.effetto_raccolta,
+            self.effetto_gatto_raccolta,
+            self.effetto_monete,
+            self.effetto_mangiare,
+            self.effetto_bere_pozione,
+            self.effetto_bere_acqua,
+            self.effetto_fusa,
+            self.effetto_heartbeat,
+            self.audio_ambiente
+        ] if obj is not None]
+        
+        self.page.overlay.extend(audio_objects)
+        self.log_audio(f"Sistema audio inizializzato con {len(audio_objects)} oggetti audio")
+    
+    def haptic_feedback(self, tipo="light"):
+        """Feedback aptico"""
+        if not self.haptic_abilitato:
+            return
+            
+        try:
+            if hasattr(self.page, 'haptic_feedback'):
+                self.page.haptic_feedback(tipo)
+            else:
+                js_code = f"""
+                if (navigator.vibrate) {{
+                    const patterns = {{
+                        'light': [50],
+                        'medium': [100], 
+                        'heavy': [200],
+                        'success': [100, 50, 100],
+                        'warning': [150, 100, 150],
+                        'error': [200, 100, 200, 100, 200]
+                    }};
+                    navigator.vibrate(patterns['{tipo}'] || [50]);
+                }}
+                """
+                self.page.evaluate_js(js_code)
+        except Exception:
+            pass
+            
+    def on_musica_state_changed(self, e):
+        """Loop musica"""
+        self.log_audio(f"Stato musica cambiato: {e.data}")
+        print(f"🎵 Stato musica cambiato: {e.data}")
+        
+        if e.data == "completed" and self.audio_abilitato:
+            self.log_audio("Musica completata - Riavvio loop")
+            self.musica_sottofondo.play()
+        elif e.data == "playing":
+            self.log_audio("Musica in riproduzione!")
+            print("🎵 Musica in riproduzione!")
+        elif e.data == "paused":
+            self.log_audio("Musica in pausa")
+            print("🎵 Musica in pausa")
+    
+    
+    def cambia_musica_area(self, area):
+        """Cambia musica con sistema robusto"""
+        self.log_audio(f"Cambio musica richiesto per area: {area}")
+        
+        if not self.audio_abilitato or area not in self.musiche_aree:
+            self.log_audio(f"Cambio musica saltato - Audio: {self.audio_abilitato}, Area valida: {area in self.musiche_aree}")
+            return
+            
+        # Non cambiare musica se si è in battaglia
+        if self.in_battaglia:
+            self.log_audio("Cambio musica saltato - In battaglia")
+            return
+            
+        file_musica = self.musiche_aree[area]
+        
+        if self.musica_attuale == file_musica:
+            self.log_audio(f"Musica già attiva: {file_musica}")
+            return
+            
+        # Debug per capire il problema
+        self.log_audio(f"Tentativo di caricare: {file_musica}")
+        self.log_audio(f"Directory corrente: {os.getcwd()}")
+        self.log_audio(f"File esiste: {os.path.exists(file_musica)}")
+        
+        try:
+            # Ferma la musica attuale prima di cambiare
+            if hasattr(self, 'musica_sottofondo') and self.musica_sottofondo:
+                self.musica_sottofondo.pause()
+                self.page.overlay.remove(self.musica_sottofondo)
+            
+            # Crea nuova istanza con gestione errori
+            self.musica_sottofondo = self.crea_audio_sicuro("musica_sottofondo", file_musica,
+                                                           volume=self.volume_musica,
+                                                           autoplay=True,
+                                                           on_state_changed=lambda e: self.handle_audio_state_change("musica", e))
+            
+            if self.musica_sottofondo:
+                self.page.overlay.append(self.musica_sottofondo)
+                self.musica_attuale = file_musica
+                self.log_audio(f"Musica cambiata con successo: {file_musica}")
+            
+        except Exception as e:
+            self.log_error(f"Errore cambio musica: {e}")
+            # Fallback: riprova con la musica di default
+            try:
+                default_music = "assets/music/villaggio.mp3"
+                self.musica_sottofondo = self.crea_audio_sicuro("musica_sottofondo", default_music,
+                                                               volume=self.volume_musica,
+                                                               autoplay=True)
+                if self.musica_sottofondo:
+                    self.page.overlay.append(self.musica_sottofondo)
+                    self.log_audio("Fallback alla musica di default completato")
+            except Exception as e2:
+                self.log_error(f"Anche fallback fallito: {e2}")
         
         self.effetto_raccolta = fa.Audio(
             src="assets/music/effetto_raccolta.mp3",
@@ -1628,103 +1865,249 @@ class AvventuraEpica:
                 self.cambia_suono_ambiente_area(self.area_attuale)
         
     def riproduci_effetto(self, effetto):
-        """Sistema canali dedicati fissi - SEMPLICE E FUNZIONANTE"""
+        """Sistema canali dedicati fissi con fix per iPhone"""
         # Evita suoni durante l'inizializzazione dell'app o quando l'app non è attiva
         if not getattr(self, 'app_inizializzata', False) or not getattr(self, 'app_in_foreground', True):
-            print(f"🎵 DEBUG: Suono bloccato - app_inizializzata: {getattr(self, 'app_inizializzata', False)}, app_in_foreground: {getattr(self, 'app_in_foreground', True)}")
+            self.log_audio(f"Suono bloccato - app_inizializzata: {getattr(self, 'app_inizializzata', False)}, app_in_foreground: {getattr(self, 'app_in_foreground', True)}")
             return
         
         if not self.audio_abilitato:
+            self.log_audio("Audio disabilitato")
             return
         
-        # Usa canali dedicati fissi per ogni effetto
-        if effetto == "gatto_attacco" or effetto == "attacco":
-            self.effetto_gatto.play()
-        elif effetto == "vittoria":
-            self.effetto_vittoria.play()
-        elif effetto == "sconfitta":
-            self.effetto_sconfitta.play()
-        elif effetto == "livello":
-            print(f"🎵 DEBUG: Riproducendo effetto livello up")
-            try:
-                # Ferma temporaneamente musica di sottofondo per dare priorità al level up
-                if hasattr(self, 'musica_sottofondo'):
-                    print(f"🎵 DEBUG: Pausing background music for level up")
-                    self.musica_sottofondo.pause()
-                
-                # Ferma altri effetti per dare priorità al level up
-                if hasattr(self, 'effetto_raccolta'):
-                    self.effetto_raccolta.pause()
-                if hasattr(self, 'effetto_gatto_raccolta'):
-                    self.effetto_gatto_raccolta.pause()
-                if hasattr(self, 'audio_ambiente'):
-                    self.audio_ambiente.pause()
+        self.log_audio(f"Riproduci effetto: {effetto}")
+        
+        # Usa canali dedicati fissi per ogni effetto con gestione errori iOS
+        try:
+            if effetto == "gatto_attacco" or effetto == "attacco":
+                self.log_audio("Riproduzione effetto gatto attacco")
+                self.effetto_gatto.play()
+            elif effetto == "vittoria":
+                self.log_audio("Riproduzione effetto vittoria")
+                self.effetto_vittoria.play()
+            elif effetto == "sconfitta":
+                self.log_audio("Riproduzione effetto sconfitta")
+                self.effetto_sconfitta.play()
+            elif effetto == "livello":
+                print(f"🎵 DEBUG: Riproducendo effetto livello up")
+                try:
+                    # Ferma temporaneamente musica di sottofondo per dare priorità al level up
+                    if hasattr(self, 'musica_sottofondo'):
+                        print(f"🎵 DEBUG: Pausing background music for level up")
+                        self.musica_sottofondo.pause()
                     
-                # Aumenta volume temporaneamente per il level up
-                volume_originale = self.volume_effetti
-                self.effetto_livello.volume = min(1.0, volume_originale + 0.3)
+                    # Ferma altri effetti per dare priorità al level up
+                    if hasattr(self, 'effetto_raccolta'):
+                        self.effetto_raccolta.pause()
+                    if hasattr(self, 'effetto_gatto_raccolta'):
+                        self.effetto_gatto_raccolta.pause()
+                    if hasattr(self, 'audio_ambiente'):
+                        self.audio_ambiente.pause()
+                        
+                    # Aumenta volume temporaneamente per il level up
+                    volume_originale = self.volume_effetti
+                    self.effetto_livello.volume = min(1.0, volume_originale + 0.3)
+                        
+                    # Test se il file esiste prima di riprodurre
+                    import os
+                    file_path = "assets/music/effetto_livello_up.mp3"
+                    print(f"🎵 DEBUG: File exists: {os.path.exists(file_path)}")
+                    print(f"🎵 DEBUG: File size: {os.path.getsize(file_path) if os.path.exists(file_path) else 'N/A'} bytes")
+                    print(f"🎵 DEBUG: Audio src: {self.effetto_livello.src}")
+                    print(f"🎵 DEBUG: Audio volume: {self.effetto_livello.volume}")
+                    print(f"🎵 DEBUG: Audio state before play: {getattr(self.effetto_livello, 'state', 'unknown')}")
                     
-                # Test se il file esiste prima di riprodurre
-                import os
-                file_path = "assets/music/effetto_livello_up.mp3"
-                print(f"🎵 DEBUG: File exists: {os.path.exists(file_path)}")
-                print(f"🎵 DEBUG: File size: {os.path.getsize(file_path) if os.path.exists(file_path) else 'N/A'} bytes")
-                print(f"🎵 DEBUG: Audio src: {self.effetto_livello.src}")
-                print(f"🎵 DEBUG: Audio volume: {self.effetto_livello.volume}")
-                print(f"🎵 DEBUG: Audio state before play: {getattr(self.effetto_livello, 'state', 'unknown')}")
+                    # Riproduci level up su canale prioritario
+                    self.effetto_livello.play()
+                    print(f"🎵 DEBUG: Effetto livello play() chiamato con volume aumentato")
+                    print(f"🎵 DEBUG: Audio state after play: {getattr(self.effetto_livello, 'state', 'unknown')}")
+                    
+                    # Ripristina audio dopo 3 secondi (durata tipica del suono level up)
+                    import threading
+                    def ripristina_audio_dopo_levelup():
+                        import time
+                        time.sleep(3)  # Aspetta che il suono finisca
+                        try:
+                            # Ripristina volume normale
+                            self.effetto_livello.volume = volume_originale
+                            # Riavvia musica e ambiente se non in combattimento
+                            if not getattr(self, 'in_combattimento', False):
+                                if hasattr(self, 'musica_sottofondo'):
+                                    self.musica_sottofondo.play()
+                                if hasattr(self, 'audio_ambiente'):
+                                    self.audio_ambiente.play()
+                            print(f"🎵 DEBUG: Audio ripristinato dopo level up")
+                        except Exception as e:
+                            print(f"🎵 ERROR: Errore ripristino audio dopo level up: {e}")
+                    
+                    thread = threading.Thread(target=ripristina_audio_dopo_levelup)
+                    thread.daemon = True
+                    thread.start()
                 
-                # Riproduci level up su canale prioritario
-                self.effetto_livello.play()
-                print(f"🎵 DEBUG: Effetto livello play() chiamato con volume aumentato")
-                print(f"🎵 DEBUG: Audio state after play: {getattr(self.effetto_livello, 'state', 'unknown')}")
-                
-                # Ripristina audio dopo 3 secondi (durata tipica del suono level up)
-                import threading
-                def ripristina_audio_dopo_levelup():
-                    import time
-                    time.sleep(3)  # Aspetta che il suono finisca
+                except Exception as e:
+                    print(f"🎵 ERROR: Errore riproduzione livello: {e}")
+                    # Usa canale backup
                     try:
-                        # Ripristina volume normale
-                        self.effetto_livello.volume = volume_originale
-                        # Riavvia musica e ambiente se non in combattimento
-                        if not getattr(self, 'in_combattimento', False):
-                            if hasattr(self, 'musica_sottofondo'):
-                                self.musica_sottofondo.play()
-                            if hasattr(self, 'audio_ambiente'):
-                                self.audio_ambiente.play()
-                        print(f"🎵 DEBUG: Audio ripristinato dopo level up")
-                    except Exception as e:
-                        print(f"🎵 ERROR: Errore ripristino audio dopo level up: {e}")
-                
-                thread = threading.Thread(target=ripristina_audio_dopo_levelup)
+                        self.effetto_livello_backup.volume = min(1.0, self.volume_effetti + 0.3)
+                        self.effetto_livello_backup.play()
+                        print(f"🎵 DEBUG: Usando canale backup per livello up con volume aumentato")
+                    except Exception as e2:
+                        print(f"🎵 ERROR: Anche backup fallito: {e2}")
+            elif effetto == "raccogli":
+                self.log_audio("Riproduzione effetto raccolta")
+                self.effetto_raccolta.play()
+            elif effetto == "gatto_raccolta":
+                self.log_audio("Riproduzione effetto gatto raccolta")
+                self.effetto_gatto_raccolta.play()
+            elif effetto == "monete":
+                self.log_audio("Riproduzione effetto monete")
+                self.effetto_monete.play()
+            elif effetto == "mangiare" or effetto == "mangia" or effetto == "cibo":
+                self.log_audio("Riproduzione effetto mangiare")
+                self.effetto_mangiare.play()
+            elif effetto == "bere_pozione" or effetto == "pozione":
+                self.log_audio("Riproduzione effetto bere pozione")
+                self.effetto_bere_pozione.play()
+            elif effetto == "bere_acqua" or effetto == "acqua" or effetto == "bere":
+                self.log_audio("Riproduzione effetto bere acqua")
+                self.effetto_bere_acqua.play()
+            elif effetto == "fusa" or effetto == "gatto_felice" or effetto == "purr":
+                self.log_audio("Riproduzione effetto fusa")
+                self.effetto_fusa.play()
+            elif effetto == "heartbeat" or effetto == "vita_bassa" or effetto == "battito":
+                self.log_audio("Riproduzione effetto heartbeat")
+                self.effetto_heartbeat.play()
+            else:
+                self.log_audio(f"Effetto sconosciuto: {effetto}")
+        except Exception as e:
+            self.log_error(f"Errore riproduzione effetto '{effetto}': {e}")
+            # Su iPhone, riprova dopo un breve delay per gestire interruzioni audio session
+            import threading
+            import time
+            def riprova_audio():
+                time.sleep(0.1)
+                try:
+                    if effetto == "raccogli":
+                        self.effetto_raccolta.play()
+                    elif effetto == "gatto_raccolta":
+                        self.effetto_gatto_raccolta.play()
+                    self.log_audio(f"Riproduzione effetto '{effetto}' riuscita al secondo tentativo")
+                except Exception as e2:
+                    self.log_error(f"Secondo tentativo fallito per effetto '{effetto}': {e2}")
+            
+            if effetto in ["raccogli", "gatto_raccolta"]:
+                thread = threading.Thread(target=riprova_audio)
                 thread.daemon = True
                 thread.start()
-                
+    
+    def handle_audio_session_interruption(self, interrupted=True):
+        """Gestisce interruzioni audio session iOS (dettatura, chiamate, ecc.)"""
+        if interrupted:
+            self.log_audio("Audio session interrotta (probabilmente dettatura iOS)")
+            self.audio_session_interrupting = True
+            self.audio_session_suspended = True
+            
+            # Pausa tutti gli audio attivi
+            try:
+                if hasattr(self, 'musica_sottofondo') and self.musica_sottofondo:
+                    self.musica_sottofondo.pause()
+                if hasattr(self, 'audio_ambiente') and self.audio_ambiente:
+                    self.audio_ambiente.pause()
             except Exception as e:
-                print(f"🎵 ERROR: Errore riproduzione livello: {e}")
-                # Usa canale backup
+                self.log_error(f"Errore pausing audio durante interruzione: {e}")
+        else:
+            self.log_audio("Audio session ripristinata dopo interruzione")
+            self.audio_session_interrupting = False
+            
+            # Riprendi audio dopo un delay per stabilizzare la sessione
+            import threading
+            import time
+            def riprendi_audio_dopo_interruzione():
+                time.sleep(0.5)  # Delay per stabilizzare la sessione audio
                 try:
-                    self.effetto_livello_backup.volume = min(1.0, self.volume_effetti + 0.3)
-                    self.effetto_livello_backup.play()
-                    print(f"🎵 DEBUG: Usando canale backup per livello up con volume aumentato")
-                except Exception as e2:
-                    print(f"🎵 ERROR: Anche backup fallito: {e2}")
-        elif effetto == "raccogli":
-            self.effetto_raccolta.play()
-        elif effetto == "gatto_raccolta":
-            self.effetto_gatto_raccolta.play()
-        elif effetto == "monete":
-            self.effetto_monete.play()
-        elif effetto == "mangiare" or effetto == "mangia" or effetto == "cibo":
-            self.effetto_mangiare.play()
-        elif effetto == "bere_pozione" or effetto == "pozione":
-            self.effetto_bere_pozione.play()
-        elif effetto == "bere_acqua" or effetto == "acqua" or effetto == "bere":
-            self.effetto_bere_acqua.play()
-        elif effetto == "fusa" or effetto == "gatto_felice" or effetto == "purr":
-            self.effetto_fusa.play()
-        elif effetto == "heartbeat" or effetto == "vita_bassa" or effetto == "battito":
-            self.effetto_heartbeat.play()
+                    self.audio_session_suspended = False
+                    # Riprendi musica se non in combattimento
+                    if not getattr(self, 'in_combattimento', False):
+                        if hasattr(self, 'musica_sottofondo') and self.musica_sottofondo:
+                            self.musica_sottofondo.play()
+                        if hasattr(self, 'audio_ambiente') and self.audio_ambiente:
+                            self.audio_ambiente.play()
+                    self.log_audio("Audio ripristinato completamente dopo interruzione")
+                except Exception as e:
+                    self.log_error(f"Errore ripristino audio dopo interruzione: {e}")
+            
+            thread = threading.Thread(target=riprendi_audio_dopo_interruzione)
+            thread.daemon = True
+            thread.start()
+    
+    def check_and_resume_audio_if_needed(self):
+        """Controlla e ripristina audio se sospeso da interruzioni"""
+        if self.audio_session_suspended and not self.audio_session_interrupting:
+            self.log_audio("Tentativo di ripristino audio da sospensione")
+            self.handle_audio_session_interruption(interrupted=False)
+    
+    def on_page_blur(self, e):
+        """Gestisce quando l'app perde il focus (possibile dettatura)"""
+        self.log_audio("App perde focus - possibile dettatura")
+        self.app_in_foreground = False
+        # Metti in pausa l'audio preventivamente per iOS
+        try:
+            if hasattr(self, 'musica_sottofondo') and self.musica_sottofondo:
+                self.musica_sottofondo.pause()
+            if hasattr(self, 'audio_ambiente') and self.audio_ambiente:
+                self.audio_ambiente.pause()
+        except Exception as ex:
+            self.log_error(f"Errore pausa audio on blur: {ex}")
+    
+    def on_page_focus(self, e):
+        """Gestisce quando l'app ritorna in focus (dopo dettatura)"""
+        self.log_audio("App torna in focus - controllo ripristino audio")
+        self.app_in_foreground = True
+        
+        # Usa timer per controllare ripristino audio dopo focus
+        import threading
+        import time
+        def ripristina_audio_focus():
+            time.sleep(0.3)  # Aspetta stabilizzazione
+            try:
+                if not getattr(self, 'in_combattimento', False):
+                    if hasattr(self, 'musica_sottofondo') and self.musica_sottofondo:
+                        self.musica_sottofondo.play()
+                        self.log_audio("Musica ripristinata dopo focus")
+                    if hasattr(self, 'audio_ambiente') and self.audio_ambiente:
+                        self.audio_ambiente.play()
+                        self.log_audio("Audio ambiente ripristinato dopo focus")
+                self.audio_session_suspended = False
+            except Exception as ex:
+                self.log_error(f"Errore ripristino audio on focus: {ex}")
+        
+        thread = threading.Thread(target=ripristina_audio_focus)
+        thread.daemon = True
+        thread.start()
+    
+    def handle_audio_state_change(self, audio_type, e):
+        """Gestisce cambi di stato audio con logging dettagliato"""
+        state = getattr(e, 'data', 'unknown')
+        self.log_audio(f"{audio_type} cambia stato: {state}")
+        
+        if state == "error":
+            self.log_error(f"Errore audio {audio_type}: possibile problema file o iOS session")
+            # Su iPhone, l'errore potrebbe essere temporaneo - riprova dopo un delay
+            if audio_type in ["musica", "ambiente"]:
+                import threading
+                import time
+                def riprova_dopo_errore():
+                    time.sleep(1.0)
+                    try:
+                        if audio_type == "musica" and hasattr(self, 'musica_sottofondo') and self.musica_sottofondo:
+                            self.musica_sottofondo.play()
+                            self.log_audio("Musica riprovata dopo errore")
+                    except Exception as ex:
+                        self.log_error(f"Riprova {audio_type} fallita: {ex}")
+                
+                thread = threading.Thread(target=riprova_dopo_errore)
+                thread.daemon = True
+                thread.start()
     
     def debug_audio_state(self, e):
         """Debug per stati audio del level up"""
@@ -2148,6 +2531,10 @@ class AvventuraEpica:
             print(f"⚠️ Area non trovata in progressione_area: {area}")
             
         self.haptic_feedback("success")
+        
+        # Controlla e ripristina audio se necessario (per iOS dopo dettatura)
+        self.check_and_resume_audio_if_needed()
+        
         # Effetto diverso se ha gatto da raccolta attivo
         if self.gatto_attivo and self.gatti[self.gatto_attivo]["abilita"] in ["raccolta", "raccolta_suprema"]:
             self.riproduci_effetto("gatto_raccolta")
@@ -3595,11 +3982,11 @@ class AvventuraEpica:
         content = ft.Column([
             titolo,
             ft.Container(
-                content=ft.Column(impostazioni_controls, spacing=15),
-                height=500,
+                content=ft.Row(wrap=True, scroll="always", expand=True, controls=impostazioni_controls),
                 bgcolor=ft.Colors.GREY_800,
                 border_radius=10,
-                padding=10
+                padding=10,
+                expand=True
             ),
             self.crea_pulsante_indietro()
         ], scroll=ft.ScrollMode.AUTO, spacing=30, expand=True)
@@ -4321,8 +4708,7 @@ class AvventuraEpica:
                     padding=10,
                     width=160,
                     height=120,
-                    data=f"shop_item_{i}",
-                    tooltip=f"{oggetto['nome']}: {oggetto['descrizione']} - {oggetto['prezzo']} monete"
+                    data=f"shop_item_{i}"
                 )
                 row_items.append(oggetto_card)
             
@@ -4350,8 +4736,7 @@ class AvventuraEpica:
                     padding=10,
                     width=160,
                     height=120,
-                    data=f"shop_item_{i+1}",
-                    tooltip=f"{oggetto['nome']}: {oggetto['descrizione']} - {oggetto['prezzo']} monete"
+                    data=f"shop_item_{i+1}"
                 )
                 row_items.append(oggetto_card)
             
