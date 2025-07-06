@@ -3600,7 +3600,7 @@ class AvventuraEpica:
             titolo,
             ft.Container(
                 content=ft.Column(impostazioni_controls, spacing=15),
-                height=417,
+                height=430,
                 bgcolor=ft.Colors.GREY_800,
                 border_radius=10,
                 padding=10
@@ -4329,7 +4329,7 @@ class AvventuraEpica:
             titolo,
             ft.Container(
                 content=ft.Column(negozio_controls, spacing=20),
-                height=400,
+                height=480,
                 bgcolor=ft.Colors.GREY_800,
                 border_radius=10,
                 padding=10
@@ -4370,6 +4370,7 @@ class AvventuraEpica:
                 
                 # Equip new weapon
                 self.arma_equipaggiata = nome
+                print(f"⚔️ DEBUG: {nome} equipaggiata automaticamente (non va in inventario)")
                 self.aggiorna_storia(f"⚔️ {nome} equipaggiata!")
                 
             elif tipo == "scudo":
@@ -4398,9 +4399,11 @@ class AvventuraEpica:
                 
             else:
                 # Regular items go to inventory
+                print(f"🎒 DEBUG: Aggiungendo {nome} all'inventario (tipo: {tipo})")
                 if nome not in self.inventario:
                     self.inventario[nome] = 0
                 self.inventario[nome] += 1
+                print(f"🎒 DEBUG: Inventario dopo acquisto: {self.inventario}")
             
             self.aggiorna_storia(f"💰 Hai acquistato {nome} per {prezzo} monete!")
             self.haptic_feedback("success")
@@ -6155,6 +6158,23 @@ class AvventuraEpica:
             self.effetto_raccolta.volume = self.volume_effetti
             self.effetto_gatto_raccolta.volume = self.volume_effetti
             self.effetto_monete.volume = self.volume_effetti
+            self.effetto_mangiare.volume = self.volume_effetti
+            self.effetto_bere_pozione.volume = self.volume_effetti
+            self.effetto_bere_acqua.volume = self.volume_effetti
+            self.effetto_fusa.volume = self.volume_effetti
+            self.effetto_heartbeat.volume = self.volume_effetti
+            self.effetto_mostro_1.volume = self.volume_effetti
+            self.effetto_mostro_2.volume = self.volume_effetti
+            self.effetto_mostro_3.volume = self.volume_effetti
+            self.effetto_mostro_4.volume = self.volume_effetti
+            self.effetto_mostro_5.volume = self.volume_effetti
+            self.effetto_cantina_ragno.volume = self.volume_effetti
+            self.effetto_cantina_pipistrelli.volume = self.volume_effetti
+            self.effetto_cantina_muffa.volume = self.volume_effetti
+            self.effetto_cantina_insetto.volume = self.volume_effetti
+            self.effetto_cantina_melma.volume = self.volume_effetti
+            self.effetto_boss_1.volume = self.volume_effetti
+            self.effetto_boss_regina_ragni.volume = self.volume_effetti
         
         # Aggiorna label se esiste (per compatibilità con vecchi menu)
         if hasattr(self, 'volume_effetti_label'):
@@ -7601,6 +7621,71 @@ class AvventuraEpica:
         self.aggiorna_storia(testo)
         # Aggiorna i pulsanti dopo uso oggetto
         self.crea_menu_inventario()
+    
+    def usa_oggetto_inventario(self, nome_oggetto):
+        """Usa un oggetto specifico dall'inventario"""
+        print(f"🎒 DEBUG: Tentativo di usare {nome_oggetto}")
+        
+        if nome_oggetto not in self.inventario or self.inventario[nome_oggetto] <= 0:
+            self.aggiorna_storia(f"❌ Non hai {nome_oggetto} nell'inventario!")
+            return
+        
+        # Rimuovi oggetto dall'inventario
+        self.inventario[nome_oggetto] -= 1
+        if self.inventario[nome_oggetto] <= 0:
+            del self.inventario[nome_oggetto]
+        
+        testo = f"✅ Usi {nome_oggetto}!"
+        
+        # Effetti degli oggetti
+        if "Pozione Vita" in nome_oggetto:
+            guarigione = 50
+            self.hp_giocatore = min(self.hp_max, self.hp_giocatore + guarigione)
+            if hasattr(self, 'vita'):
+                self.vita = self.hp_giocatore
+            testo += f" Ripristini {guarigione} HP!"
+            if self.audio_abilitato:
+                self.riproduci_effetto("bere_pozione")
+        elif "Pane" in nome_oggetto:
+            guarigione = 15
+            self.hp_giocatore = min(self.hp_max, self.hp_giocatore + guarigione)
+            if hasattr(self, 'vita'):
+                self.vita = self.hp_giocatore
+            testo += f" Ripristini {guarigione} HP!"
+            if self.audio_abilitato:
+                self.riproduci_effetto("mangiare")
+        elif "Mela" in nome_oggetto:
+            guarigione = 10
+            self.hp_giocatore = min(self.hp_max, self.hp_giocatore + guarigione)
+            if hasattr(self, 'vita'):
+                self.vita = self.hp_giocatore
+            testo += f" Ripristini {guarigione} HP!"
+            if self.audio_abilitato:
+                self.riproduci_effetto("mangiare")
+        elif "Pozione Forza" in nome_oggetto:
+            self.effetti_temporanei["forza"] = 3
+            testo += f" +10 attacco per 3 turni!"
+            if self.audio_abilitato:
+                self.riproduci_effetto("bere_pozione")
+        else:
+            testo += f" Ma non succede nulla di particolare."
+        
+        self.haptic_feedback("success")
+        self.aggiorna_storia(testo)
+        
+        # Aggiorna la vista inventario
+        self.page.go("/inventario")
+        
+    def equipaggia_oggetto_inventario(self, nome_oggetto):
+        """Equipaggia un oggetto dall'inventario"""
+        print(f"🎒 DEBUG: Tentativo di equipaggiare {nome_oggetto}")
+        
+        if nome_oggetto not in self.inventario or self.inventario[nome_oggetto] <= 0:
+            self.aggiorna_storia(f"❌ Non hai {nome_oggetto} nell'inventario!")
+            return
+        
+        # Per ora solo messaggio informativo
+        self.aggiorna_storia(f"⚔️ {nome_oggetto} non può essere equipaggiato da qui. Usa il menu equipaggiamento principale.")
         
     def mostra_negozio_dettagliato(self):
         """Mostra dettagli negozio"""
