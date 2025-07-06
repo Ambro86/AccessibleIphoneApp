@@ -85,10 +85,16 @@ class AvventuraEpica:
                 with open(self.log_file, 'r', encoding='utf-8') as f:
                     log_content = f.read()
                 
-                # Copia negli appunti
-                self.page.set_clipboard(log_content)
-                self.aggiorna_storia("📋 Log debug copiato negli appunti!")
-                print("📱 DEBUG: Log copiato negli appunti con successo")
+                # Prova prima con set_clipboard
+                try:
+                    self.page.set_clipboard(log_content)
+                    self.aggiorna_storia("📋 Log debug copiato negli appunti!")
+                    print("📱 DEBUG: Log copiato negli appunti con successo")
+                except Exception as clipboard_error:
+                    print(f"📱 DEBUG: Clipboard fallito: {clipboard_error}")
+                    
+                    # Fallback: mostra il log in un dialog selezionabile
+                    self.mostra_log_dialog(log_content)
                 
             else:
                 print(f"📱 DEBUG: File di log non trovato. log_file={getattr(self, 'log_file', 'non esistente')}")
@@ -98,6 +104,41 @@ class AvventuraEpica:
             import traceback
             traceback.print_exc()
             self.aggiorna_storia("❌ Errore nella copia del log")
+    
+    def mostra_log_dialog(self, log_content):
+        """Mostra il log in un dialog selezionabile per iPhone"""
+        def chiudi_dialog(e):
+            dialog.open = False
+            self.page.update()
+        
+        # Limita il contenuto per evitare dialog troppo grandi
+        if len(log_content) > 5000:
+            log_content = log_content[-5000:] + "\n...(ultimi 5000 caratteri)"
+        
+        dialog = ft.AlertDialog(
+            title=ft.Text("📋 Log Debug"),
+            content=ft.Container(
+                content=ft.TextField(
+                    value=log_content,
+                    multiline=True,
+                    read_only=True,
+                    max_lines=20,
+                    expand=True
+                ),
+                width=400,
+                height=400
+            ),
+            actions=[
+                ft.TextButton("Chiudi", on_click=chiudi_dialog)
+            ],
+            actions_alignment=ft.MainAxisAlignment.END
+        )
+        
+        self.page.dialog = dialog
+        dialog.open = True
+        self.page.update()
+        
+        self.aggiorna_storia("📋 Log mostrato in dialog - tieni premuto per selezionare")
     
     def copy_to_clipboard(self, text):
         """Copia il testo negli appunti"""
@@ -3982,11 +4023,15 @@ class AvventuraEpica:
         content = ft.Column([
             titolo,
             ft.Container(
-                content=ft.Row(wrap=True, scroll="always", expand=True, controls=impostazioni_controls),
+                content=ft.ListView(
+                    controls=impostazioni_controls,
+                    spacing=15,
+                    auto_scroll=True
+                ),
+                height=400,
                 bgcolor=ft.Colors.GREY_800,
                 border_radius=10,
-                padding=10,
-                expand=True
+                padding=10
             ),
             self.crea_pulsante_indietro()
         ], scroll=ft.ScrollMode.AUTO, spacing=30, expand=True)
@@ -6572,33 +6617,31 @@ class AvventuraEpica:
     def cambia_volume_effetti(self, e):
         """Cambia volume effetti"""
         self.volume_effetti = e.control.value
-        # Aggiorna volume di tutti i canali effetti
-        if hasattr(self, 'effetto_gatto'):
-            self.effetto_gatto.volume = self.volume_effetti
-            self.effetto_vittoria.volume = self.volume_effetti
-            self.effetto_sconfitta.volume = self.volume_effetti
-            self.effetto_livello.volume = self.volume_effetti
-            self.effetto_livello_backup.volume = self.volume_effetti
-            self.effetto_raccolta.volume = self.volume_effetti
-            self.effetto_gatto_raccolta.volume = self.volume_effetti
-            self.effetto_monete.volume = self.volume_effetti
-            self.effetto_mangiare.volume = self.volume_effetti
-            self.effetto_bere_pozione.volume = self.volume_effetti
-            self.effetto_bere_acqua.volume = self.volume_effetti
-            self.effetto_fusa.volume = self.volume_effetti
-            self.effetto_heartbeat.volume = self.volume_effetti
-            self.effetto_mostro_1.volume = self.volume_effetti
-            self.effetto_mostro_2.volume = self.volume_effetti
-            self.effetto_mostro_3.volume = self.volume_effetti
-            self.effetto_mostro_4.volume = self.volume_effetti
-            self.effetto_mostro_5.volume = self.volume_effetti
-            self.effetto_cantina_ragno.volume = self.volume_effetti
-            self.effetto_cantina_pipistrelli.volume = self.volume_effetti
-            self.effetto_cantina_muffa.volume = self.volume_effetti
-            self.effetto_cantina_insetto.volume = self.volume_effetti
-            self.effetto_cantina_melma.volume = self.volume_effetti
-            self.effetto_boss_1.volume = self.volume_effetti
-            self.effetto_boss_regina_ragni.volume = self.volume_effetti
+        
+        # Lista di tutti gli effetti audio
+        effetti_audio = [
+            'effetto_gatto', 'effetto_vittoria', 'effetto_sconfitta', 
+            'effetto_livello', 'effetto_livello_backup', 'effetto_raccolta',
+            'effetto_gatto_raccolta', 'effetto_monete', 'effetto_mangiare',
+            'effetto_bere_pozione', 'effetto_bere_acqua', 'effetto_fusa',
+            'effetto_heartbeat', 'effetto_mostro_1', 'effetto_mostro_2',
+            'effetto_mostro_3', 'effetto_mostro_4', 'effetto_mostro_5',
+            'effetto_cantina_ragno', 'effetto_cantina_pipistrelli',
+            'effetto_cantina_muffa', 'effetto_cantina_insetto',
+            'effetto_cantina_melma', 'effetto_boss_1', 'effetto_boss_regina_ragni'
+        ]
+        
+        # Aggiorna volume di tutti gli effetti che esistono e non sono None
+        for nome_effetto in effetti_audio:
+            if hasattr(self, nome_effetto):
+                effetto = getattr(self, nome_effetto)
+                if effetto is not None:
+                    try:
+                        effetto.volume = self.volume_effetti
+                    except Exception as e:
+                        self.log_error(f"Errore aggiornamento volume {nome_effetto}: {e}")
+        
+        self.log_audio(f"Volume effetti aggiornato a {int(self.volume_effetti * 100)}%")
         
         # Aggiorna label se esiste (per compatibilità con vecchi menu)
         if hasattr(self, 'volume_effetti_label'):
