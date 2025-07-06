@@ -3600,7 +3600,7 @@ class AvventuraEpica:
             titolo,
             ft.Container(
                 content=ft.Column(impostazioni_controls, spacing=15),
-                height=430,
+                height=500,
                 bgcolor=ft.Colors.GREY_800,
                 border_radius=10,
                 padding=10
