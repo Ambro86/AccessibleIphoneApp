@@ -81,28 +81,40 @@ class AvventuraEpica:
                 with open(self.log_file, 'r', encoding='utf-8') as f:
                     log_content = f.read()
                 
-                # Su iPhone usa il dialog di condivisione
-                if self.page.platform == ft.PagePlatform.IOS:
+                # Controlla piattaforma e usa metodo appropriato
+                print(f"📱 DEBUG: Piattaforma rilevata: {self.page.platform}")
+                print(f"📱 DEBUG: Platform name: {self.page.platform.name if hasattr(self.page.platform, 'name') else 'unknown'}")
+                
+                # Usa dialog per tutte le piattaforme mobile (iOS, Android) + fallback sicuro
+                if (hasattr(self.page, 'platform') and 
+                    (self.page.platform == ft.PagePlatform.IOS or 
+                     self.page.platform == ft.PagePlatform.ANDROID or
+                     str(self.page.platform).lower() in ['ios', 'android', 'mobile'])):
+                    
+                    print("📱 DEBUG: Usando dialog per piattaforma mobile")
                     # Crea un dialog con il contenuto del log
                     dlg = ft.AlertDialog(
                         title=ft.Text("Log Debug"),
                         content=ft.Container(
-                            content=ft.Text(log_content, selectable=True),
-                            width=400,
-                            height=300,
+                            content=ft.Text(log_content[:5000] + "..." if len(log_content) > 5000 else log_content, 
+                                           selectable=True, size=12),
+                            width=350,
+                            height=400,
                             scroll=ft.ScrollMode.AUTO
                         ),
                         actions=[
-                            ft.TextButton("Copia", on_click=lambda _: self.copy_to_clipboard(log_content)),
+                            ft.TextButton("Copia Tutto", on_click=lambda _: self.copy_to_clipboard(log_content)),
+                            ft.TextButton("Condividi", on_click=lambda _: self.share_log_content(log_content)),
                             ft.TextButton("Chiudi", on_click=lambda _: self.close_dialog())
                         ]
                     )
                     self.page.dialog = dlg
                     dlg.open = True
                     self.page.update()
-                    print("📱 DEBUG: Dialog mostrato su iPhone")
+                    print("📱 DEBUG: Dialog mostrato per mobile")
                 else:
-                    # Su altre piattaforme usa launch_url
+                    print("📱 DEBUG: Usando launch_url per desktop")
+                    # Su desktop usa launch_url
                     self.page.launch_url(f"file://{self.log_file}")
                     print("📱 DEBUG: File aperto su desktop")
                 
@@ -125,6 +137,23 @@ class AvventuraEpica:
         except Exception as e:
             print(f"Errore copia: {e}")
             self.aggiorna_storia("❌ Errore nella copia")
+    
+    def share_log_content(self, text):
+        """Condividi il contenuto del log"""
+        try:
+            # Su mobile, prova a usare il sistema di condivisione nativo
+            if hasattr(self.page, 'share'):
+                self.page.share(text, subject="Debug Log - Avventura Epica")
+                self.aggiorna_storia("📤 Log condiviso")
+            else:
+                # Fallback: copia negli appunti
+                self.copy_to_clipboard(text)
+                self.aggiorna_storia("📋 Log copiato negli appunti (condivisione non disponibile)")
+            self.close_dialog()
+        except Exception as e:
+            print(f"Errore condivisione: {e}")
+            # Fallback finale: copia negli appunti
+            self.copy_to_clipboard(text)
     
     def close_dialog(self):
         """Chiude il dialog"""
@@ -4296,43 +4325,82 @@ class AvventuraEpica:
                 {"nome": "Anello della Fortuna", "prezzo": 300, "descrizione": "Esperienza +20%", "tipo": "accessorio"}
             ]
         
-        oggetti_controls = []
-        for oggetto in oggetti_negozio:
-            pulsante_acquista = ft.ElevatedButton(
-                text="Acquista",
-                on_click=lambda e, obj=oggetto: self.acquista_oggetto_negozio(obj),
-                bgcolor=ft.Colors.GREEN_600,
-                color=ft.Colors.WHITE,
-                tooltip=f"Acquista {oggetto['nome']}: {oggetto['descrizione']}"
-            )
+        # Crea griglia 2x2 per gli oggetti
+        oggetti_rows = []
+        for i in range(0, len(oggetti_negozio), 2):  # Prendi 2 oggetti alla volta
+            row_items = []
             
-            oggetto_card = ft.Container(
-                content=ft.Column([
-                    ft.Text(oggetto['nome'], size=18, weight=ft.FontWeight.BOLD),
-                    ft.Text(oggetto['descrizione'], size=14),
-                    ft.Text(f"Prezzo: {oggetto['prezzo']} monete", size=12, color=ft.Colors.AMBER_400),
-                    pulsante_acquista
-                ], spacing=5),
-                bgcolor=ft.Colors.GREY_800,
-                border_radius=10,
-                padding=15,
-                margin=5
-            )
-            oggetti_controls.append(oggetto_card)
+            # Primo oggetto della riga
+            if i < len(oggetti_negozio):
+                oggetto = oggetti_negozio[i]
+                pulsante_acquista = ft.ElevatedButton(
+                    text="Acquista",
+                    on_click=lambda e, obj=oggetto: self.acquista_oggetto_negozio(obj),
+                    bgcolor=ft.Colors.GREEN_600,
+                    color=ft.Colors.WHITE,
+                    tooltip=f"Acquista {oggetto['nome']}: {oggetto['descrizione']}",
+                    width=140
+                )
+                
+                oggetto_card = ft.Container(
+                    content=ft.Column([
+                        ft.Text(oggetto['nome'], size=16, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER),
+                        ft.Text(oggetto['descrizione'], size=12, text_align=ft.TextAlign.CENTER),
+                        ft.Text(f"{oggetto['prezzo']} monete", size=11, color=ft.Colors.AMBER_400, text_align=ft.TextAlign.CENTER),
+                        pulsante_acquista
+                    ], spacing=5, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
+                    bgcolor=ft.Colors.GREY_700,
+                    border_radius=10,
+                    padding=10,
+                    width=160,
+                    height=120
+                )
+                row_items.append(oggetto_card)
+            
+            # Secondo oggetto della riga
+            if i + 1 < len(oggetti_negozio):
+                oggetto = oggetti_negozio[i + 1]
+                pulsante_acquista = ft.ElevatedButton(
+                    text="Acquista",
+                    on_click=lambda e, obj=oggetto: self.acquista_oggetto_negozio(obj),
+                    bgcolor=ft.Colors.GREEN_600,
+                    color=ft.Colors.WHITE,
+                    tooltip=f"Acquista {oggetto['nome']}: {oggetto['descrizione']}",
+                    width=140
+                )
+                
+                oggetto_card = ft.Container(
+                    content=ft.Column([
+                        ft.Text(oggetto['nome'], size=16, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER),
+                        ft.Text(oggetto['descrizione'], size=12, text_align=ft.TextAlign.CENTER),
+                        ft.Text(f"{oggetto['prezzo']} monete", size=11, color=ft.Colors.AMBER_400, text_align=ft.TextAlign.CENTER),
+                        pulsante_acquista
+                    ], spacing=5, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
+                    bgcolor=ft.Colors.GREY_700,
+                    border_radius=10,
+                    padding=10,
+                    width=160,
+                    height=120
+                )
+                row_items.append(oggetto_card)
+            
+            # Crea riga con gli oggetti
+            if row_items:
+                oggetti_rows.append(ft.Row(row_items, spacing=15, alignment=ft.MainAxisAlignment.CENTER))
         
         negozio_controls = [
             self.testo_monete_negozio,
-            ft.Column(oggetti_controls, spacing=10)
+            ft.Column(oggetti_rows, spacing=15)
         ]
         
         content = ft.Column([
             titolo,
             ft.Container(
-                content=ft.Column(negozio_controls, spacing=20),
-                height=480,
+                content=ft.Column(negozio_controls, spacing=10),
+                height=400,
                 bgcolor=ft.Colors.GREY_800,
                 border_radius=10,
-                padding=10
+                padding=5
             ),
             self.crea_pulsante_indietro()
         ], scroll=ft.ScrollMode.AUTO, spacing=30, expand=True)
