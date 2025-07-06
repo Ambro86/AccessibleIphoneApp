@@ -998,6 +998,12 @@ class AvventuraEpica:
         self.oro = 100  # Alias per compatibilità
         self.inventario = {}
         self.equipaggiamento = {"arma": None, "scudo": None, "armatura": None, "accessorio": None}
+        
+        # Equipment attributes for statistics display and shop
+        self.arma_equipaggiata = None
+        self.scudo_equipaggiato = None
+        self.armatura_equipaggiata = None
+        
         self.effetti_temporanei = {}
         self.contenuto_storia_corrente = None  # Per preservare il contenuto della storia
         self.app_in_foreground = True  # Stato dell'app (foreground/background)
@@ -1117,6 +1123,12 @@ class AvventuraEpica:
         self.monete = 100
         self.inventario = {}
         self.equipaggiamento = {"arma": None, "scudo": None, "armatura": None, "accessorio": None}
+        
+        # Reset equipment attributes
+        self.arma_equipaggiata = None
+        self.scudo_equipaggiato = None
+        self.armatura_equipaggiata = None
+        
         self.effetti_temporanei = {}
         self.turno = 0
         
@@ -1192,6 +1204,30 @@ class AvventuraEpica:
         # Sistema ambiente - canale dedicato
         self.audio_ambiente = self.crea_audio_sicuro("ambiente", "assets/music/ambient_villaggio_uccelli.mp3",
                                                      volume=self.volume_ambiente)
+        
+        # Canali dedicati per suoni dei mostri
+        print("🔊 DEBUG: Creazione effetti mostri...")
+        self.effetto_mostro_1 = self.crea_audio_sicuro("mostro_1", "assets/music/effetto_mostro_1.mp3")
+        print(f"🔊 DEBUG: effetto_mostro_1 = {self.effetto_mostro_1}")
+        self.effetto_mostro_2 = self.crea_audio_sicuro("mostro_2", "assets/music/effetto_mostro_2.mp3")
+        print(f"🔊 DEBUG: effetto_mostro_2 = {self.effetto_mostro_2}")
+        self.effetto_mostro_3 = self.crea_audio_sicuro("mostro_3", "assets/music/effetto_mostro_3.mp3")
+        print(f"🔊 DEBUG: effetto_mostro_3 = {self.effetto_mostro_3}")
+        self.effetto_mostro_4 = self.crea_audio_sicuro("mostro_4", "assets/music/effetto_mostro_4.mp3")
+        print(f"🔊 DEBUG: effetto_mostro_4 = {self.effetto_mostro_4}")
+        self.effetto_mostro_5 = self.crea_audio_sicuro("mostro_5", "assets/music/effetto_mostro_5.mp3")
+        print(f"🔊 DEBUG: effetto_mostro_5 = {self.effetto_mostro_5}")
+        
+        # Canali dedicati per mostri della Cantina
+        self.effetto_cantina_ragno = self.crea_audio_sicuro("cantina_ragno", "assets/music/effetto_cantina_ragno.mp3")
+        self.effetto_cantina_pipistrelli = self.crea_audio_sicuro("cantina_pipistrelli", "assets/music/effetto_cantina_pipistrelli.mp3")
+        self.effetto_cantina_muffa = self.crea_audio_sicuro("cantina_muffa", "assets/music/effetto_cantina_muffa.mp3")
+        self.effetto_cantina_insetto = self.crea_audio_sicuro("cantina_insetto", "assets/music/effetto_cantina_insetto.mp3")
+        self.effetto_cantina_melma = self.crea_audio_sicuro("cantina_melma", "assets/music/effetto_cantina_melma.mp3")
+        
+        # Canali dedicati per boss
+        self.effetto_boss_1 = self.crea_audio_sicuro("boss_1", "assets/music/effetto_boss_1.mp3")
+        self.effetto_boss_regina_ragni = self.crea_audio_sicuro("boss_regina_ragni", "assets/music/effetto_boss_regina_ragni.mp3")
         
         # Inizializza mappe e variabili di stato
         self.inizializza_audio_maps_e_stato()
@@ -1300,7 +1336,19 @@ class AvventuraEpica:
             self.effetto_bere_acqua,
             self.effetto_fusa,
             self.effetto_heartbeat,
-            self.audio_ambiente
+            self.audio_ambiente,
+            self.effetto_mostro_1,
+            self.effetto_mostro_2,
+            self.effetto_mostro_3,
+            self.effetto_mostro_4,
+            self.effetto_mostro_5,
+            self.effetto_cantina_ragno,
+            self.effetto_cantina_pipistrelli,
+            self.effetto_cantina_muffa,
+            self.effetto_cantina_insetto,
+            self.effetto_cantina_melma,
+            self.effetto_boss_1,
+            self.effetto_boss_regina_ragni
         ] if obj is not None]
         
         self.page.overlay.extend(audio_objects)
@@ -1478,125 +1526,6 @@ class AvventuraEpica:
             on_state_changed=lambda e: print(f"🌿 Ambiente: {e.data}"),
             on_loaded=lambda _: print("🌿 Suono ambiente caricato")
         )
-        
-        # Canali dedicati per suoni dei mostri
-        self.effetto_mostro_1 = fa.Audio(
-            src="assets/music/effetto_mostro_1.mp3",
-            autoplay=False,
-            volume=self.volume_effetti,
-            balance=0
-        )
-        
-        self.effetto_mostro_2 = fa.Audio(
-            src="assets/music/effetto_mostro_2.mp3",
-            autoplay=False,
-            volume=self.volume_effetti,
-            balance=0
-        )
-        
-        self.effetto_mostro_3 = fa.Audio(
-            src="assets/music/effetto_mostro_3.mp3",
-            autoplay=False,
-            volume=self.volume_effetti,
-            balance=0
-        )
-        
-        self.effetto_mostro_4 = fa.Audio(
-            src="assets/music/effetto_mostro_4.mp3",
-            autoplay=False,
-            volume=self.volume_effetti,
-            balance=0
-        )
-        
-        self.effetto_mostro_5 = fa.Audio(
-            src="assets/music/effetto_mostro_5.mp3",
-            autoplay=False,
-            volume=self.volume_effetti,
-            balance=0
-        )
-        
-        # Canali dedicati per mostri della Cantina
-        self.effetto_cantina_ragno = fa.Audio(
-            src="assets/music/effetto_cantina_ragno.mp3",
-            autoplay=False,
-            volume=self.volume_effetti,
-            balance=0
-        )
-        
-        self.effetto_cantina_pipistrelli = fa.Audio(
-            src="assets/music/effetto_cantina_pipistrelli.mp3",
-            autoplay=False,
-            volume=self.volume_effetti,
-            balance=0
-        )
-        
-        self.effetto_cantina_muffa = fa.Audio(
-            src="assets/music/effetto_cantina_muffa.mp3",
-            autoplay=False,
-            volume=self.volume_effetti,
-            balance=0
-        )
-        
-        self.effetto_cantina_insetto = fa.Audio(
-            src="assets/music/effetto_cantina_insetto.mp3",
-            autoplay=False,
-            volume=self.volume_effetti,
-            balance=0
-        )
-        
-        self.effetto_cantina_melma = fa.Audio(
-            src="assets/music/effetto_cantina_melma.mp3",
-            autoplay=False,
-            volume=self.volume_effetti,
-            balance=0
-        )
-        
-        # Canali dedicati per boss
-        self.effetto_boss_1 = fa.Audio(
-            src="assets/music/effetto_boss_1.mp3",
-            autoplay=False,
-            volume=self.volume_effetti,
-            balance=0
-        )
-        
-        self.effetto_boss_regina_ragni = fa.Audio(
-            src="assets/music/effetto_boss_regina_ragni.mp3",
-            autoplay=False,
-            volume=self.volume_effetti,
-            balance=0
-        )
-        
-        self.musica_attuale = ""
-        self.suono_ambiente_attuale = ""
-        self.page.overlay.extend([
-            self.musica_sottofondo,
-            self.effetto_gatto,
-            self.effetto_vittoria,
-            self.effetto_sconfitta,
-            self.effetto_livello,
-            self.effetto_livello_backup,
-            self.effetto_raccolta,
-            self.effetto_gatto_raccolta,
-            self.effetto_monete,
-            self.effetto_mangiare,
-            self.effetto_bere_pozione,
-            self.effetto_bere_acqua,
-            self.effetto_fusa,
-            self.effetto_heartbeat,
-            self.audio_ambiente,
-            self.effetto_mostro_1,
-            self.effetto_mostro_2,
-            self.effetto_mostro_3,
-            self.effetto_mostro_4,
-            self.effetto_mostro_5,
-            self.effetto_cantina_ragno,
-            self.effetto_cantina_pipistrelli,
-            self.effetto_cantina_muffa,
-            self.effetto_cantina_insetto,
-            self.effetto_cantina_melma,
-            self.effetto_boss_1,
-            self.effetto_boss_regina_ragni
-        ])
         
     def haptic_feedback(self, tipo="light"):
         """Feedback aptico"""
@@ -2591,11 +2520,38 @@ class AvventuraEpica:
             
         # Controlla se c'è cibo disponibile
         if self.risorse["cibo"] == 0:
-            self.haptic_feedback("warning")
-            self.aggiorna_storia("🍽️ Non hai cibo per nutrire il gatto!")
-            # Mostra vista pulita con suggerimenti
-            self.page.go("/cibo_insufficiente")
-            return
+            # SITUAZIONE DI EMERGENZA: Se non hai né cibo né energia, il gatto aiuta gratis UNA VOLTA
+            if self.risorse["energia"] <= 10:
+                # Gatto condivide le sue riserve di emergenza
+                energia_recuperata = 30
+                testo = f"🆘 EMERGENZA! {self.gatto_attivo} condivide le sue riserve segrete!\n"
+                testo += "⚡ Il tuo gatto ti ha salvato dalla situazione impossibile!\n"
+                
+                self.risorse["energia"] = min(100, self.risorse["energia"] + energia_recuperata)
+                testo += f"⚡ Energia recuperata: +{energia_recuperata} (ora: {self.risorse['energia']}/100)\n"
+                
+                # Aggiorna gatto (anche in emergenza è felice di aiutare)
+                gatto = self.gatti[self.gatto_attivo]
+                gatto["felicita"] = min(100, gatto["felicita"] + 10)  # Meno del normale
+                testo += f"😊 {self.gatto_attivo} è felice di averti aiutato! Felicità: {gatto['felicita']}/100\n"
+                testo += "🔄 Ora puoi raccogliere risorse per ottenere cibo!"
+                
+                # EFFETTI AUDIO E FEEDBACK
+                self.haptic_feedback("success")
+                if self.audio_abilitato:
+                    # Effetto speciale per emergenza
+                    self.riproduci_effetto("fusa")  # Audio del gatto che aiuta
+                
+                self.aggiorna_storia(testo)
+                self.aggiorna_stats_incrementali()
+                return
+            else:
+                # Situazione normale: hai energia ma non cibo
+                self.haptic_feedback("warning")
+                self.aggiorna_storia("🍽️ Non hai cibo per nutrire il gatto!")
+                # Mostra vista pulita con suggerimenti (come prima)
+                self.page.go("/cibo_insufficiente")
+                return
         elif self.risorse["cibo"] >= 5:
             self.risorse["cibo"] -= 5
             energia_recuperata = 50
@@ -2637,7 +2593,7 @@ class AvventuraEpica:
             print(f"🔄 DEBUG: Cibo rimasto: {self.risorse['cibo']}, pulsante funzionante")
         
     def consuma_cibo(self, e):
-        """Consuma cibo per recuperare energia e HP"""
+        """Consuma cibo per recuperare solo HP"""
         if not self.gioco_iniziato:
             return
             
@@ -2645,20 +2601,20 @@ class AvventuraEpica:
             # Mangia quello che hai disponibile
             cibo_disponibile = self.risorse["cibo"]
             if cibo_disponibile == 0:
-                self.aggiorna_storia("🍽️ Non hai cibo! Vai a raccogliere risorse.")
                 self.haptic_feedback("warning")
+                self.aggiorna_storia("🍽️ Non hai cibo!")
+                # Mostra vista pulita con suggerimenti (come nutri gatto)
+                self.page.go("/cibo_insufficiente")
                 return
             # Usa tutto il cibo disponibile con efficacia ridotta
             self.risorse["cibo"] = 0
             efficacia = cibo_disponibile / 10  # Efficacia proporzionale al cibo disponibile
-            energia_recuperata = int(15 * efficacia)  # Ridotta energia
-            hp_recuperati_massimi = int(35 * efficacia)  # Più HP
+            hp_recuperati_massimi = int(45 * efficacia)  # Solo HP, aumentato
         else:
             self.risorse["cibo"] -= 10
-            energia_recuperata = 15  # Ridotta energia
-            hp_recuperati_massimi = 35  # Più HP
+            hp_recuperati_massimi = 45  # Solo HP, aumentato
             
-        self.risorse["energia"] = min(100, self.risorse["energia"] + energia_recuperata)
+        # SOLO HP, niente energia
         hp_recuperati = min(hp_recuperati_massimi, self.hp_max - self.hp_giocatore)
         self.hp_giocatore = min(self.hp_max, self.hp_giocatore + hp_recuperati)
         
@@ -2668,10 +2624,9 @@ class AvventuraEpica:
         
         testo = f"🍽️ Consumi cibo per curarti:\n"
         if hp_recuperati > 0:
-            testo += f"❤️ HP recuperati: +{hp_recuperati} (ora: {self.hp_giocatore}/{self.hp_max})\n"
+            testo += f"❤️ HP recuperati: +{hp_recuperati} (ora: {self.hp_giocatore}/{self.hp_max})"
         else:
-            testo += f"❤️ HP già al massimo ({self.hp_giocatore}/{self.hp_max})\n"
-        testo += f"⚡ Energia: +{energia_recuperata} (ora: {self.risorse['energia']}/100)"
+            testo += f"❤️ HP già al massimo ({self.hp_giocatore}/{self.hp_max})"
             
         self.haptic_feedback("success")
         self.riproduci_effetto("mangiare")
@@ -2687,8 +2642,10 @@ class AvventuraEpica:
             # Bevi quello che hai disponibile
             acqua_disponibile = self.risorse["acqua"]
             if acqua_disponibile == 0:
-                self.aggiorna_storia("💧 Non hai acqua! Vai a raccogliere risorse.")
                 self.haptic_feedback("warning")
+                self.aggiorna_storia("💧 Non hai acqua!")
+                # Mostra vista pulita con suggerimenti (come nutri gatto)
+                self.page.go("/acqua_insufficiente")
                 return
             # Usa tutta l'acqua disponibile con efficacia ridotta
             self.risorse["acqua"] = 0
@@ -2797,6 +2754,20 @@ class AvventuraEpica:
         stats += f"Risorse:\n"
         for risorsa, quantita in self.risorse.items():
             stats += f"• {risorsa.title()}: {quantita}.\n"
+        
+        # Sezione equipaggiamento
+        equipaggiamento = []
+        if hasattr(self, 'arma_equipaggiata') and self.arma_equipaggiata:
+            equipaggiamento.append(f"⚔️ Arma: {self.arma_equipaggiata}")
+        if hasattr(self, 'scudo_equipaggiato') and self.scudo_equipaggiato:
+            equipaggiamento.append(f"🛡️ Scudo: {self.scudo_equipaggiato}")
+        if hasattr(self, 'armatura_equipaggiata') and self.armatura_equipaggiata:
+            equipaggiamento.append(f"🛡️ Armatura: {self.armatura_equipaggiata}")
+        
+        if equipaggiamento:
+            stats += f"\nEquipaggiamento:\n"
+            for item in equipaggiamento:
+                stats += f"• {item}.\n"
             
         if self.gatto_attivo:
             gatto = self.gatti[self.gatto_attivo]
@@ -2867,7 +2838,7 @@ class AvventuraEpica:
         azioni.append(("Raccogli Risorse", self.raccogli_risorse, "Raccogli risorse nell'area attuale"))
         
         # Azioni cibo e acqua sempre disponibili
-        azioni.append(("Consuma Cibo", self.consuma_cibo, "Mangia per recuperare HP e un po' di energia"))
+        azioni.append(("Consuma Cibo", self.consuma_cibo, "Mangia per recuperare HP"))
         azioni.append(("Bevi Acqua", self.bevi_acqua, "Bevi per bonus temporanei"))
             
         # Azioni gatto - disponibile solo se hai un gatto attivo (sempre presente)
@@ -3037,7 +3008,7 @@ class AvventuraEpica:
         )
         
         self.area_storia = ft.TextField(
-            value="🎮 Benvenuto nell'Avventura Incrementale!\n Compagni gatti con abilità speciali\n Raccogli risorse e costruisci\n Combatti mostri e sali di livello\n🍽️ Gestisci cibo e acqua per energia\n🎵 Audio immersivo e feedback aptico\n\nPremi 'Inizia Avventura' per cominciare!",
+            value="🎮 Benvenuto nell'Avventura Incrementale!\n Compagni gatti con abilità speciali\n Raccogli risorse e costruisci\n Combatti mostri e sali di livello\n🍽️ Gestisci cibo per HP e nutri gatti per energia\n🎵 Audio immersivo e feedback aptico\n\nPremi 'Inizia Avventura' per cominciare!",
             multiline=True,
             read_only=True,
             expand=True,
@@ -3103,11 +3074,9 @@ class AvventuraEpica:
                 
                 if len(self.page.views) > 0 and self.page.views[-1].route == "/gioco":
                     print(f"🎮 DEBUG: Vista /gioco già presente, aggiorno stats")
-                    # Aggiorna le stats nella vista esistente se disponibili
+                    # Aggiorna le stats complete con la funzione corretta
                     if hasattr(self, 'area_stats') and self.area_stats:
-                        valore_stats = f" Statistiche Giocatore:\n Livello {self.livello} •  {self.vita}/{self.vita_massima} HP •  {self.monete} monete\n Attacco: {self.calcola_attacco_totale()} •  Difesa: {self.calcola_difesa_totale()}\n EXP: {self.esperienza}/{self.esperienza_necessaria}"
-                        self.area_stats.value = valore_stats
-                        self.page.update()
+                        self.aggiorna_stats_incrementali()  # Usa la funzione completa invece di quella parziale
                 else:
                     vista = self.crea_vista_gioco()
                     self.page.views.append(vista)
@@ -3170,6 +3139,10 @@ class AvventuraEpica:
                 self.analizza_accessibilita(vista)
             case "/cibo_insufficiente":
                 vista = self.crea_vista_cibo_insufficiente()
+                self.page.views.append(vista)
+                self.analizza_accessibilita(vista)
+            case "/acqua_insufficiente":
+                vista = self.crea_vista_acqua_insufficiente()
                 self.page.views.append(vista)
                 self.analizza_accessibilita(vista)
             case "/energia_esaurita":
@@ -3339,7 +3312,7 @@ class AvventuraEpica:
         )
 
         # Ottieni i valori attuali dalle variabili globali se esistono
-        valore_storia_default = "🎮 Benvenuto nell'Avventura Incrementale!\n Compagni gatti con abilità speciali\n Raccogli risorse e costruisci\n Combatti mostri e sali di livello\n🍽️ Gestisci cibo e acqua per energia\n🎵 Audio immersivo e feedback aptico\n\nPremi 'Inizia Avventura' per cominciare!"
+        valore_storia_default = "🎮 Benvenuto nell'Avventura Incrementale!\n Compagni gatti con abilità speciali\n Raccogli risorse e costruisci\n Combatti mostri e sali di livello\n🍽️ Gestisci cibo per HP e nutri gatti per energia\n🎵 Audio immersivo e feedback aptico\n\nPremi 'Inizia Avventura' per cominciare!"
         
         # Usa il contenuto memorizzato se esiste, altrimenti usa il default
         if hasattr(self, 'contenuto_storia_corrente') and self.contenuto_storia_corrente:
@@ -3778,7 +3751,7 @@ class AvventuraEpica:
         )
         
         # Ottieni i valori attuali dalle variabili globali se esistono
-        valore_storia = "🎮 Benvenuto nell'Avventura Incrementale!\n Compagni gatti con abilità speciali\n Raccogli risorse e costruisci\n Combatti mostri e sali di livello\n🍽️ Gestisci cibo e acqua per energia\n🎵 Audio immersivo e feedback aptico\n\nPremi 'Inizia Avventura' per cominciare!"
+        valore_storia = "🎮 Benvenuto nell'Avventura Incrementale!\n Compagni gatti con abilità speciali\n Raccogli risorse e costruisci\n Combatti mostri e sali di livello\n🍽️ Gestisci cibo per HP e nutri gatti per energia\n🎵 Audio immersivo e feedback aptico\n\nPremi 'Inizia Avventura' per cominciare!"
         if hasattr(self, 'area_storia') and self.area_storia and hasattr(self.area_storia, 'value'):
             valore_storia = self.area_storia.value
         
@@ -3976,7 +3949,7 @@ class AvventuraEpica:
         )
         
         # Slider volume effetti per tab
-        self.volume_effetti_label_tab = ft.Text(f"Volume Effetti: {int(self.volume_effetti * 100)}%")
+        self.volume_effetti_label_tab = ft.Text(f"Volume Effetti e Ambiente: {int(self.volume_effetti * 100)}%")
         slider_volume_effetti = ft.Slider(
             min=0,
             max=1,
@@ -4034,7 +4007,7 @@ class AvventuraEpica:
                 padding=10
             ),
             self.crea_pulsante_indietro()
-        ], scroll=ft.ScrollMode.AUTO, spacing=30, expand=True)
+        ], scroll=ft.ScrollMode.AUTO, spacing=30)
         
         return ft.View(
             "/impostazioni",
@@ -4251,7 +4224,7 @@ class AvventuraEpica:
         
         # Crea TUTTI i pulsanti e salva i riferimenti
         self.btn_cerca_mostri = ft.ElevatedButton(
-            text="Cerca Mostri",
+            text="🔍 Cerca Mostri",
             on_click=self.inizia_combattimento,
             width=250,
             height=50,
@@ -4263,7 +4236,7 @@ class AvventuraEpica:
         )
         
         self.btn_attacca = ft.ElevatedButton(
-            text="Attacca",
+            text="⚔️ Attacca",
             on_click=self.attacca_mostro,
             width=250,
             height=50,
@@ -4274,7 +4247,7 @@ class AvventuraEpica:
         )
         
         self.btn_difendi = ft.ElevatedButton(
-            text="Difendi",
+            text="🛡️ Difendi",
             on_click=self.difendi_combattimento,
             width=250,
             height=50,
@@ -4285,7 +4258,7 @@ class AvventuraEpica:
         )
         
         self.btn_cura = ft.ElevatedButton(
-            text=f"Cura ({oggetti_curativi})",
+            text=f"💊 Cura ({oggetti_curativi})",
             on_click=self.usa_pozione_combattimento,
             width=250,
             height=50,
@@ -4297,7 +4270,7 @@ class AvventuraEpica:
         )
         
         self.btn_fuggi = ft.ElevatedButton(
-            text="Fuggi",
+            text="🏃 Fuggi",
             on_click=self.fuggi_combattimento,
             width=250,
             height=50,
@@ -4309,7 +4282,7 @@ class AvventuraEpica:
         
         # Pulsante combattimento automatico
         self.btn_auto_combat = ft.ElevatedButton(
-            text="Attiva Auto-Combat" if not self.combattimento_automatico else "Disattiva Auto-Combat",
+            text="🤖 Auto" if not self.combattimento_automatico else "🛑 Stop Auto",
             on_click=self.toggle_combattimento_automatico,
             width=250,
             height=50,
@@ -4431,78 +4404,122 @@ class AvventuraEpica:
             semantics_label="Storia del combattimento"
         )
         
-        # Container per la storia del combattimento
-        historia_container = ft.Container(
-            content=self.historia_combattimento,
-            bgcolor=ft.Colors.GREY_800,
-            border_radius=10,
-            padding=15,
-            height=150,
-            border=ft.border.all(2, ft.Colors.RED_400)
-        )
         
         # Pulsanti di combattimento - SEMPRE DISPONIBILI (come nel gioco principale)
         pulsanti_combattimento = self.crea_pulsanti_combattimento_completi()
         
-        # Pulsanti di navigazione (come nel gioco principale)
-        pulsanti_navigazione = [
-            ft.ElevatedButton(
-                text="Torna al Gioco",
-                on_click=lambda e: self.page.go("/gioco"),
-                width=280,
-                height=50,
-                bgcolor=ft.Colors.BLUE_600,
-                color=ft.Colors.WHITE,
-                tooltip="Torna alla schermata principale"
-            ),
-            ft.ElevatedButton(
-                text="Gestisci Gatti",
-                on_click=lambda e: self.page.go("/gatti"),
-                width=280,
-                height=50,
-                bgcolor=ft.Colors.PINK_600,
-                color=ft.Colors.WHITE,
-                tooltip="Gestisci i tuoi gatti"
-            ),
-            ft.ElevatedButton(
-                text="Negozio",
-                on_click=lambda e: self.page.go("/negozio"),
-                width=280,
-                height=50,
-                bgcolor=ft.Colors.ORANGE_600,
-                color=ft.Colors.WHITE,
-                tooltip="Visita il negozio"
-            )
-        ]
         
-        # Layout principale - NUOVO DESIGN
+        # Organizza pulsanti combattimento in griglia 2x3 (come negozio)
+        pulsanti_rows = []
+        for i in range(0, len(pulsanti_combattimento), 2):  # Prendi 2 pulsanti alla volta
+            row_buttons = []
+            
+            # Primo pulsante della riga
+            if i < len(pulsanti_combattimento):
+                btn1 = pulsanti_combattimento[i]
+                btn1.width = 140  # Più stretti per stare affiancati
+                row_buttons.append(btn1)
+            
+            # Secondo pulsante della riga (se esiste)
+            if i + 1 < len(pulsanti_combattimento):
+                btn2 = pulsanti_combattimento[i + 1]
+                btn2.width = 140  # Più stretti per stare affiancati
+                row_buttons.append(btn2)
+            
+            if row_buttons:
+                pulsanti_rows.append(
+                    ft.Row(row_buttons, 
+                        alignment=ft.MainAxisAlignment.CENTER, 
+                        spacing=15
+                    )
+                )
+        
+        # Layout principale - DESIGN MODERNO A GRIGLIA
         content = ft.Column([
             self.debug_widget_combat,
-            combattenti_container,
-            historia_container,
             
-            # Sezione azioni di combattimento
+            # Sezione combattenti (già esistente)
+            combattenti_container,
+            
+            # Sezione storia in stile moderno 
             ft.Container(
                 content=ft.Column([
-                    ft.Text("Azioni di Combattimento", size=18, weight=ft.FontWeight.BOLD, color=ft.Colors.RED_300, text_align=ft.TextAlign.CENTER),
-                    ft.Column(pulsanti_combattimento, horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=10)
-                ], spacing=15),
+                    ft.Text("📜 Storia del Combattimento", 
+                        size=16, 
+                        weight=ft.FontWeight.BOLD, 
+                        color=ft.Colors.AMBER_300,
+                        text_align=ft.TextAlign.CENTER
+                    ),
+                    self.historia_combattimento
+                ], spacing=10),
                 bgcolor=ft.Colors.GREY_800,
-                border_radius=10,
-                padding=15,
-                border=ft.border.all(2, ft.Colors.RED_400)
+                border_radius=15,
+                padding=20,
+                margin=10,
+                height=160
             ),
             
-            # Sezione navigazione
+            # Sezione azioni in griglia moderna
             ft.Container(
                 content=ft.Column([
-                    ft.Text("Navigazione", size=18, weight=ft.FontWeight.BOLD, color=ft.Colors.BLUE_300, text_align=ft.TextAlign.CENTER),
-                    ft.Column(pulsanti_navigazione, horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=10)
+                    ft.Text("⚔️ Azioni di Combattimento", 
+                        size=16, 
+                        weight=ft.FontWeight.BOLD, 
+                        color=ft.Colors.RED_300,
+                        text_align=ft.TextAlign.CENTER
+                    ),
+                    ft.Column(pulsanti_rows, spacing=15)
                 ], spacing=15),
                 bgcolor=ft.Colors.GREY_800,
-                border_radius=10,
-                padding=15,
-                border=ft.border.all(2, ft.Colors.BLUE_400)
+                border_radius=15,
+                padding=20,
+                margin=10,
+                height=400
+            ),
+            
+            # Sezione navigazione modernizzata
+            ft.Container(
+                content=ft.Column([
+                    ft.Text("🧭 Navigazione", 
+                        size=16, 
+                        weight=ft.FontWeight.BOLD, 
+                        color=ft.Colors.BLUE_300,
+                        text_align=ft.TextAlign.CENTER
+                    ),
+                    ft.Row([
+                        ft.ElevatedButton(
+                            text="🎮 Gioco",
+                            on_click=lambda e: self.page.go("/gioco"),
+                            width=90,
+                            height=45,
+                            bgcolor=ft.Colors.BLUE_600,
+                            color=ft.Colors.WHITE,
+                            tooltip="Torna alla schermata principale"
+                        ),
+                        ft.ElevatedButton(
+                            text="🐱 Gatti", 
+                            on_click=lambda e: self.page.go("/gatti"),
+                            width=90,
+                            height=45,
+                            bgcolor=ft.Colors.PINK_600,
+                            color=ft.Colors.WHITE,
+                            tooltip="Gestisci i tuoi gatti"
+                        ),
+                        ft.ElevatedButton(
+                            text="🛒 Shop",
+                            on_click=lambda e: self.page.go("/negozio"),
+                            width=90,
+                            height=45,
+                            bgcolor=ft.Colors.ORANGE_600,
+                            color=ft.Colors.WHITE,
+                            tooltip="Visita il negozio"
+                        )
+                    ], alignment=ft.MainAxisAlignment.CENTER, spacing=15)
+                ], spacing=15),
+                bgcolor=ft.Colors.GREY_800,
+                border_radius=15,
+                padding=20,
+                margin=10
             )
         ], spacing=20, expand=True, scroll=ft.ScrollMode.AUTO)
         
@@ -5198,43 +5215,59 @@ class AvventuraEpica:
                 self.torna_indietro()
             
             rinomina_controls = [
-                ft.Text(f"Rinomina: {gatto_info['emoji']} {gatto_info['nome']}", size=18, text_align=ft.TextAlign.CENTER),
-                campo_nuovo_nome_locale,
+                ft.Container(
+                    content=ft.Text(f"Rinomina: {gatto_info['emoji']} {gatto_info['nome']}", 
+                        size=18, 
+                        text_align=ft.TextAlign.CENTER,
+                        color=ft.Colors.AMBER_300
+                    ),
+                    bgcolor=ft.Colors.PURPLE_900,
+                    padding=15,
+                    border_radius=10,
+                    margin=5
+                ),
+                ft.Container(
+                    content=campo_nuovo_nome_locale,
+                    padding=10
+                ),
                 ft.Row([
                     ft.ElevatedButton(
-                        text="Conferma Rinomina",
+                        text="✅ Conferma",
                         on_click=conferma_rinomina,
-                        width=300,
-                        height=60,
+                        width=150,
+                        height=50,
                         bgcolor=ft.Colors.GREEN_600,
                         color=ft.Colors.WHITE,
                         tooltip="Conferma il nuovo nome per il gatto"
-                    )
-                ], alignment=ft.MainAxisAlignment.CENTER),
-                ft.Row([
+                    ),
                     ft.ElevatedButton(
-                        text="Annulla",
+                        text="❌ Annulla",
                         on_click=lambda e: self.torna_indietro(),
-                        width=200,
+                        width=150,
                         height=50,
                         bgcolor=ft.Colors.RED_600,
                         color=ft.Colors.WHITE,
                         tooltip="Annulla la rinomina"
                     )
-                ], alignment=ft.MainAxisAlignment.CENTER)
+                ], alignment=ft.MainAxisAlignment.CENTER, spacing=20)
             ]
         
         content = ft.Column([
             titolo,
             ft.Container(
-                content=ft.Column(rinomina_controls, spacing=25, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
+                content=ft.Column(rinomina_controls, 
+                    spacing=25, 
+                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                    scroll=ft.ScrollMode.AUTO
+                ),
                 height=400,
                 bgcolor=ft.Colors.GREY_800,
-                border_radius=10,
-                padding=10
+                border_radius=15,
+                padding=20,
+                margin=10
             ),
             self.crea_pulsante_indietro()
-        ], scroll=ft.ScrollMode.AUTO, spacing=30, expand=True)
+        ], spacing=20, expand=True)
         
         return ft.View(
             "/rinomina_gatto",
@@ -5461,27 +5494,27 @@ class AvventuraEpica:
     def riproduci_verso_mostro(self, canale_audio):
         """Riproduce il verso del mostro usando il canale specificato"""
         try:
-            if canale_audio == "effetto_mostro_1":
-                self.effetto_mostro_1.play()
-            elif canale_audio == "effetto_mostro_2":
-                self.effetto_mostro_2.play()
-            elif canale_audio == "effetto_mostro_3":
-                self.effetto_mostro_3.play()
-            elif canale_audio == "effetto_mostro_4":
-                self.effetto_mostro_4.play()
-            elif canale_audio == "effetto_mostro_5":
-                self.effetto_mostro_5.play()
-            elif canale_audio == "effetto_cantina_ragno":
-                self.effetto_cantina_ragno.play()
-            elif canale_audio == "effetto_cantina_pipistrelli":
-                self.effetto_cantina_pipistrelli.play()
-            elif canale_audio == "effetto_cantina_muffa":
-                self.effetto_cantina_muffa.play()
-            elif canale_audio == "effetto_cantina_insetto":
-                self.effetto_cantina_insetto.play()
-            elif canale_audio == "effetto_cantina_melma":
-                self.effetto_cantina_melma.play()
-            print(f"🔊 Riprodotto verso mostro: {canale_audio}")
+            # Mappa canali audio ai loro attributi
+            audio_map = {
+                "effetto_mostro_1": self.effetto_mostro_1,
+                "effetto_mostro_2": self.effetto_mostro_2,
+                "effetto_mostro_3": self.effetto_mostro_3,
+                "effetto_mostro_4": self.effetto_mostro_4,
+                "effetto_mostro_5": self.effetto_mostro_5,
+                "effetto_cantina_ragno": getattr(self, 'effetto_cantina_ragno', None),
+                "effetto_cantina_pipistrelli": getattr(self, 'effetto_cantina_pipistrelli', None),
+                "effetto_cantina_muffa": getattr(self, 'effetto_cantina_muffa', None),
+                "effetto_cantina_insetto": getattr(self, 'effetto_cantina_insetto', None),
+                "effetto_cantina_melma": getattr(self, 'effetto_cantina_melma', None)
+            }
+            
+            audio_obj = audio_map.get(canale_audio)
+            if audio_obj is not None:
+                audio_obj.play()
+                print(f"🔊 Riprodotto verso mostro: {canale_audio}")
+            else:
+                print(f"🔊 Audio mostro non disponibile: {canale_audio}")
+                
         except Exception as e:
             print(f"🔊 Errore riproduzione verso mostro {canale_audio}: {e}")
     
@@ -5521,20 +5554,20 @@ class AvventuraEpica:
         mostri_area = {
             "Villaggio": self.seleziona_mostro_villaggio(),
             "🏠 Cantina": self.seleziona_mostro_cantina(),
-            "🚰 Fogne": {"nome": "Ratto delle Fogne", "hp": 120, "attacco": 18, "verso": "Screech!"},
-            "🌀 Labirinto Antico": {"nome": "Guardiano di Pietra", "hp": 140, "attacco": 22, "verso": "Rumble!"},
-            "❄️ Area Innevata": {"nome": "Lupo Gelido", "hp": 160, "attacco": 26, "verso": "Howl!"},
-            "🌿 Giungla Selvaggia": {"nome": "Serpente Velenoso", "hp": 180, "attacco": 30, "verso": "Ssss!"},
-            "🌲 Bosco Profondo": {"nome": "Orso Bruno", "hp": 200, "attacco": 34, "verso": "Roar!"},
-            "⚰️ Cimitero": {"nome": "Scheletro Errante", "hp": 220, "attacco": 38, "verso": "Clatter!"},
-            "🏚️ Casa degli Orrori": {"nome": "Fantasma Tormentato", "hp": 240, "attacco": 42, "verso": "Woooo!"},
-            "🏭 Fabbrica Abbandonata": {"nome": "Robot Malfunzionante", "hp": 260, "attacco": 46, "verso": "Beep-Error!"},
-            "⛏️ Miniera Profonda": {"nome": "Golem di Ferro", "hp": 280, "attacco": 50, "verso": "Clang!"},
-            "🌙 Cripta Maledetta": {"nome": "Lich Minore", "hp": 300, "attacco": 54, "verso": "Necro!"},
-            "🌊 Mare": {"nome": "Kraken Giovane", "hp": 320, "attacco": 58, "verso": "Splash!"},
-            "🏔️ Montagna Sacra": {"nome": "Drago di Montagna", "hp": 340, "attacco": 62, "verso": "Roooar!"},
-            "🌋 Vulcano Attivo": {"nome": "Elementale del Fuoco", "hp": 360, "attacco": 66, "verso": "Flame!"},
-            "👑 Palazzo Finale": {"nome": "Guardia Reale", "hp": 380, "attacco": 70, "verso": "En garde!"}
+            "🚰 Fogne": {"nome": "Ratto delle Fogne", "hp": 120, "attacco": 18, "verso": "Screech!", "audio_canale": "effetto_mostro_1"},
+            "🌀 Labirinto Antico": {"nome": "Guardiano di Pietra", "hp": 140, "attacco": 22, "verso": "Rumble!", "audio_canale": "effetto_mostro_2"},
+            "❄️ Area Innevata": {"nome": "Lupo Gelido", "hp": 160, "attacco": 26, "verso": "Howl!", "audio_canale": "effetto_mostro_3"},
+            "🌿 Giungla Selvaggia": {"nome": "Serpente Velenoso", "hp": 180, "attacco": 30, "verso": "Ssss!", "audio_canale": "effetto_mostro_4"},
+            "🌲 Bosco Profondo": {"nome": "Orso Bruno", "hp": 200, "attacco": 34, "verso": "Roar!", "audio_canale": "effetto_mostro_5"},
+            "⚰️ Cimitero": {"nome": "Scheletro Errante", "hp": 220, "attacco": 38, "verso": "Clatter!", "audio_canale": "effetto_mostro_1"},
+            "🏚️ Casa degli Orrori": {"nome": "Fantasma Tormentato", "hp": 240, "attacco": 42, "verso": "Woooo!", "audio_canale": "effetto_mostro_2"},
+            "🏭 Fabbrica Abbandonata": {"nome": "Robot Malfunzionante", "hp": 260, "attacco": 46, "verso": "Beep-Error!", "audio_canale": "effetto_mostro_3"},
+            "⛏️ Miniera Profonda": {"nome": "Golem di Ferro", "hp": 280, "attacco": 50, "verso": "Clang!", "audio_canale": "effetto_mostro_4"},
+            "🌙 Cripta Maledetta": {"nome": "Lich Minore", "hp": 300, "attacco": 54, "verso": "Necro!", "audio_canale": "effetto_mostro_5"},
+            "🌊 Mare": {"nome": "Kraken Giovane", "hp": 320, "attacco": 58, "verso": "Splash!", "audio_canale": "effetto_mostro_1"},
+            "🏔️ Montagna Sacra": {"nome": "Drago di Montagna", "hp": 340, "attacco": 62, "verso": "Roooar!", "audio_canale": "effetto_mostro_2"},
+            "🌋 Vulcano Attivo": {"nome": "Elementale del Fuoco", "hp": 360, "attacco": 66, "verso": "Flame!", "audio_canale": "effetto_mostro_3"},
+            "👑 Palazzo Finale": {"nome": "Guardia Reale", "hp": 380, "attacco": 70, "verso": "En garde!", "audio_canale": "effetto_mostro_4"}
         }
         
         self.mostro_attuale = mostri_area.get(self.area_attuale, {"nome": "Mostro Sconosciuto", "hp": 20, "attacco": 5, "verso": "Grrr!"})
@@ -5655,10 +5688,11 @@ class AvventuraEpica:
             messaggio += f" +{oro_guadagnato} oro\n +{exp_guadagnata} esperienza"
             
             if self.audio_abilitato:
-                # Sequenza audio: prima level up (se c'è stato), poi vittoria
+                # Audio: solo level up se è salito di livello, altrimenti vittoria
                 if livello_aumentato:
                     self.riproduci_effetto("livello")
-                self.riproduci_effetto("vittoria")
+                else:
+                    self.riproduci_effetto("vittoria")
                 self.termina_musica_battaglia()
             
             self.haptic_feedback("success")
@@ -5789,9 +5823,18 @@ class AvventuraEpica:
         self.inventario[oggetto_da_usare] -= 1
         if self.inventario[oggetto_da_usare] <= 0:
             del self.inventario[oggetto_da_usare]
-            
+        
+        # Salva HP prima della cura
+        hp_prima_cura = self.vita
+        
+        # Applica cura
         self.vita = min(self.vita_massima, self.vita + cura)
         self.hp_giocatore = self.vita
+        
+        # Salva HP dopo la cura  
+        hp_dopo_cura = self.vita
+        cura_effettiva = hp_dopo_cura - hp_prima_cura
+        
         self.controlla_vita_bassa()  # Controlla se fermare heartbeat dopo guarigione
         self.aggiorna_stats_incrementali()  # Aggiorna statistiche dopo guarigione
         
@@ -5804,7 +5847,10 @@ class AvventuraEpica:
         self.vita -= danno_mostro
         self.hp_giocatore = self.vita
         
-        messaggio = f"Round {self.round_combattimento}:\nUsi {oggetto_da_usare} e recuperi {cura} vita!\n💥 Il {self.mostro_attuale['nome']} ti attacca per {danno_mostro} danni!\n"
+        # Messaggio chiaro con HP prima/dopo
+        messaggio = f"Round {self.round_combattimento}:\n"
+        messaggio += f"💊 Usi {oggetto_da_usare}: {hp_prima_cura} → {hp_dopo_cura} HP (+{cura_effettiva})\n"
+        messaggio += f"💥 {self.mostro_attuale['nome']} attacca: {hp_dopo_cura} → {self.vita} HP (-{danno_mostro})\n"
         
         if self.vita <= 0:
             # Player defeated - end combat immediately
@@ -6618,7 +6664,10 @@ class AvventuraEpica:
         """Cambia volume effetti"""
         self.volume_effetti = e.control.value
         
-        # Lista di tutti gli effetti audio
+        # Aggiorna anche volume ambiente (proporzionale agli effetti)
+        self.volume_ambiente = self.volume_effetti * 0.3  # Ambiente più basso degli effetti
+        
+        # Lista di tutti gli effetti audio (incluso ambiente)
         effetti_audio = [
             'effetto_gatto', 'effetto_vittoria', 'effetto_sconfitta', 
             'effetto_livello', 'effetto_livello_backup', 'effetto_raccolta',
@@ -6628,7 +6677,8 @@ class AvventuraEpica:
             'effetto_mostro_3', 'effetto_mostro_4', 'effetto_mostro_5',
             'effetto_cantina_ragno', 'effetto_cantina_pipistrelli',
             'effetto_cantina_muffa', 'effetto_cantina_insetto',
-            'effetto_cantina_melma', 'effetto_boss_1', 'effetto_boss_regina_ragni'
+            'effetto_cantina_melma', 'effetto_boss_1', 'effetto_boss_regina_ragni',
+            'audio_ambiente'  # Includi anche l'ambiente
         ]
         
         # Aggiorna volume di tutti gli effetti che esistono e non sono None
@@ -6649,7 +6699,7 @@ class AvventuraEpica:
         
         # Aggiorna label nella tab se esiste  
         if hasattr(self, 'volume_effetti_label_tab'):
-            self.volume_effetti_label_tab.value = f"Volume Effetti: {int(self.volume_effetti * 100)}%"
+            self.volume_effetti_label_tab.value = f"Volume Effetti e Ambiente: {int(self.volume_effetti * 100)}%"
         
         self.page.update()
         
@@ -8656,6 +8706,10 @@ class AvventuraEpica:
             "monete": self.monete,
             "inventario": self.inventario,
             "equipaggiamento": self.equipaggiamento,
+            # Individual equipment attributes
+            "arma_equipaggiata": getattr(self, 'arma_equipaggiata', None),
+            "scudo_equipaggiato": getattr(self, 'scudo_equipaggiato', None),
+            "armatura_equipaggiata": getattr(self, 'armatura_equipaggiata', None),
             "effetti_temporanei": self.effetti_temporanei,
             "oggetti": self.oggetti,
             "mostri": self.mostri,
@@ -8768,7 +8822,7 @@ class AvventuraEpica:
             suggerimenti.append("Ottieni un gatto compagno")
             suggerimenti.append("Raccogli risorse per ottenere cibo")
         
-        suggerimenti.append("Mangia del cibo per recuperare un po' di energia")
+        suggerimenti.append("Nutri il gatto per recuperare energia")
         suggerimenti.append("Usa la funzione 'Riposa' se disponibile")
         
         messaggio_completo = messaggio_base + "\n\nCome recuperare energia:\n" + "\n".join(suggerimenti)
@@ -8872,6 +8926,63 @@ class AvventuraEpica:
             bgcolor=ft.Colors.GREY_900
         )
 
+    def crea_vista_acqua_insufficiente(self):
+        """Crea vista pulita per acqua insufficiente"""
+        titolo = "Niente Acqua"
+        
+        # Messaggio personalizzato per l'acqua
+        messaggio_base = "Non hai acqua per ottenere bonus temporanei!"
+        
+        suggerimenti = [
+            "Raccogli risorse per ottenere acqua",
+            "Visita il negozio per comprare acqua",
+            "Esplora altre aree per trovare risorse"
+        ]
+        
+        messaggio_completo = messaggio_base + "\n\nCome ottenere acqua:\n" + "\n".join(suggerimenti)
+        
+        content = ft.Column([
+            ft.Text(
+                titolo,
+                size=28,
+                weight=ft.FontWeight.BOLD,
+                text_align=ft.TextAlign.CENTER,
+                color=ft.Colors.BLUE_400
+            ),
+            ft.Container(height=20),
+            ft.Text(
+                messaggio_completo,
+                size=16,
+                text_align=ft.TextAlign.CENTER,
+                color=ft.Colors.WHITE
+            ),
+            ft.Container(height=30),
+            ft.ElevatedButton(
+                text="Torna al Gioco",
+                on_click=lambda e: self.page.go("/gioco"),
+                width=200,
+                height=50,
+                bgcolor=ft.Colors.BLUE_600,
+                color=ft.Colors.WHITE
+            )
+        ],
+        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+        alignment=ft.MainAxisAlignment.CENTER,
+        expand=True)
+        
+        return ft.View(
+            route="/acqua_insufficiente",
+            controls=[
+                ft.Container(
+                    content=content,
+                    bgcolor=ft.Colors.GREY_900,
+                    padding=40,
+                    expand=True
+                )
+            ],
+            bgcolor=ft.Colors.GREY_900
+        )
+
     def crea_vista_energia_esaurita(self):
         """Crea vista pulita per energia esaurita"""
         titolo = "Energia Esaurita"
@@ -8882,7 +8993,6 @@ class AvventuraEpica:
         suggerimenti = [
             "Nutri il tuo gatto per recuperare energia",
             "Raccogli risorse quando avrai un po' di energia",
-            "Mangia del cibo per recuperare energia",
             "Usa la funzione 'Riposa' se disponibile"
         ]
         
@@ -10182,6 +10292,12 @@ class AvventuraEpica:
             self.monete = stato_gioco.get("monete", 100)
             self.inventario = stato_gioco.get("inventario", {})
             self.equipaggiamento = stato_gioco.get("equipaggiamento", {"arma": None, "scudo": None, "armatura": None, "accessorio": None})
+            
+            # Load individual equipment attributes (with backwards compatibility)
+            self.arma_equipaggiata = stato_gioco.get("arma_equipaggiata", None)
+            self.scudo_equipaggiato = stato_gioco.get("scudo_equipaggiato", None)
+            self.armatura_equipaggiata = stato_gioco.get("armatura_equipaggiata", None)
+            
             self.effetti_temporanei = stato_gioco.get("effetti_temporanei", {})
             self.oggetti = stato_gioco["oggetti"]
             self.mostri = stato_gioco["mostri"]

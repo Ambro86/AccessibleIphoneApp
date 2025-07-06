@@ -43,3 +43,73 @@ Da prove fatte, flet se l'height supera i 400 px, inserisce un elemento vuoto pr
   - Sfrutta altezza dinamicamente
 
   Il Layout a griglia è probabilmente la soluzione più elegante per 4 oggetti!
+  
+  
+  
+  ancora altre soluzioni
+  
+● Hai ragione! Stai già usando ListView nelle impostazioni (riga 3943), ma il problema persiste. Analizziamo la
+  struttura:
+
+  Column([
+      titolo,                    # ← Titolo
+      Container(                 # ← PROBLEMA: Container + ListView + expand=True
+          content=ListView(...),  # ← ListView dentro Container
+          height=400,
+      ),
+      pulsante_indietro()
+  ], expand=True)               # ← PROBLEMA: expand=True sulla Column principale
+
+  Il Problema Specifico
+
+  Il bug VoiceOver viene dalla combinazione:
+  - Column con expand=True
+  - Container che wrappa il ListView
+  - Struttura nidificata che confonde VoiceOver
+
+  Soluzioni Specifiche per le Impostazioni
+
+  1. Rimuovi expand=True dalla Column principale
+
+  content = ft.Column([
+      titolo,
+      ft.Container(...),
+      self.crea_pulsante_indietro()
+  ], scroll=ft.ScrollMode.AUTO, spacing=30)  # ← RIMUOVI expand=True
+
+  2. ListView diretto senza Container wrapper
+
+  content = ft.Column([
+      titolo,
+      ft.ListView(              # ← Diretto, senza Container
+          controls=impostazioni_controls,
+          height=400,
+          spacing=15,
+          auto_scroll=True
+      ),
+      self.crea_pulsante_indietro()
+  ], spacing=30)
+
+  3. Struttura completamente piatta
+
+  def crea_vista_impostazioni(self):
+      return ft.View("/impostazioni", controls=[
+          ft.Column([
+              titolo,
+              *impostazioni_controls,    # ← Spread diretto
+              self.crea_pulsante_indietro()
+          ],
+          spacing=15,
+          scroll=ft.ScrollMode.AUTO,
+          height=500)                   # ← Height fisso invece di expand
+      ])
+
+  Test Rapido
+
+  Prova prima solo rimuovendo expand=True:
+  ], scroll=ft.ScrollMode.AUTO, spacing=30)  # Rimuovi expand=True
+
+  Se persiste, prova la struttura piatta che elimina tutti i contenitori nidificati che confondono VoiceOver.
+
+  Il problema è che VoiceOver interpreta i layer di Container+ListView+expand come elementi di layout separati,
+  creando "buchi" nella navigazione.
