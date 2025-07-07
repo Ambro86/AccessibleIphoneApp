@@ -821,22 +821,20 @@ class AvventuraEpica:
         self.negozi = {
             "Villaggio": {
                 # Material 1 - Legno (Wood)
-                "Pane": {"prezzo": 60, "tipo": "cibo", "descrizione": "Ripristina 15 HP"},
+                "Acciuga": {"prezzo": 60, "tipo": "cibo", "descrizione": "Ripristina 15 HP"},
                 "Spada di Legno": {"prezzo": 150, "tipo": "arma", "descrizione": "+3 danno - Arma basilare"},
                 "Scudo di Legno": {"prezzo": 100, "tipo": "scudo", "descrizione": "+2 difesa - Protezione base"},
                 "Armatura di Cuoio": {"prezzo": 200, "tipo": "armatura", "descrizione": "+2 difesa - Protezione leggera"}
             },
             "🏠 Cantina": {
                 # Material 2 - Pietra (Stone)
-                "Pozione Vita": {"prezzo": 300, "tipo": "pozione", "descrizione": "Ripristina 50 HP"},
-                "Pozione Forza": {"prezzo": 450, "tipo": "pozione", "descrizione": "+10 danno per 3 turni"},
+                "Sardina": {"prezzo": 90, "tipo": "cibo", "descrizione": "Ripristina 25 HP"},
                 "Spada di Pietra": {"prezzo": 400, "tipo": "arma", "descrizione": "+5 danno - Arma primitiva"},
                 "Scudo di Pietra": {"prezzo": 300, "tipo": "scudo", "descrizione": "+3 difesa - Protezione solida"},
                 "Anello Magico": {"prezzo": 1200, "tipo": "accessorio", "descrizione": "+2 HP per turno"}
             },
             "🚰 Fogne": {
                 # Material 3 - Rame (Copper)
-                "Mela": {"prezzo": 330, "tipo": "cibo", "descrizione": "Ripristina 10 HP"},
                 "Spada di Rame": {"prezzo": 800, "tipo": "arma", "descrizione": "+8 danno - Primo metallo"},
                 "Scudo di Rame": {"prezzo": 600, "tipo": "scudo", "descrizione": "+5 difesa - Protezione metallica"},
                 "Mappa": {"prezzo": 360, "tipo": "oggetto", "descrizione": "Mostra tutte le aree"}
@@ -1188,6 +1186,9 @@ class AvventuraEpica:
         self.effetto_raccolta = self.crea_audio_sicuro("raccolta", "assets/music/effetto_raccolta.mp3")
         self.effetto_gatto_raccolta = self.crea_audio_sicuro("gatto_raccolta", "assets/music/effetto_gatto_raccolta.mp3")
         
+        # Effetto gatto mangia pesce - canale dedicato
+        self.effetto_gatto_mangia_pesce = self.crea_audio_sicuro("gatto_mangia_pesce", "assets/music/effetto_gatto_mangia_pesce.mp3")
+        
         # Altri effetti
         self.effetto_monete = self.crea_audio_sicuro("monete", "assets/music/effetto_monete.mp3")
         self.effetto_mangiare = self.crea_audio_sicuro("mangiare", "assets/music/effetto_mangiare.mp3")
@@ -1330,6 +1331,7 @@ class AvventuraEpica:
             self.effetto_livello_backup,
             self.effetto_raccolta,
             self.effetto_gatto_raccolta,
+            self.effetto_gatto_mangia_pesce,
             self.effetto_monete,
             self.effetto_mangiare,
             self.effetto_bere_pozione,
@@ -1929,6 +1931,9 @@ class AvventuraEpica:
             elif effetto == "gatto_raccolta":
                 self.log_audio("Riproduzione effetto gatto raccolta")
                 self.effetto_gatto_raccolta.play()
+            elif effetto == "gatto_mangia_pesce" or effetto == "gatto_pesce":
+                self.log_audio("Riproduzione effetto gatto mangia pesce")
+                self.effetto_gatto_mangia_pesce.play()
             elif effetto == "monete":
                 self.log_audio("Riproduzione effetto monete")
                 self.effetto_monete.play()
@@ -2334,6 +2339,16 @@ class AvventuraEpica:
         # Questi saranno calcolati nel contesto specifico del combattimento
             
         return attacco
+    
+    def sincronizza_equipaggiamento(self):
+        """Sincronizza i due sistemi di equipaggiamento"""
+        # Sync from individual attributes to equipment dictionary
+        if hasattr(self, 'arma_equipaggiata') and self.arma_equipaggiata:
+            self.equipaggiamento["arma"] = self.arma_equipaggiata
+        if hasattr(self, 'scudo_equipaggiato') and self.scudo_equipaggiato:
+            self.equipaggiamento["scudo"] = self.scudo_equipaggiato
+        if hasattr(self, 'armatura_equipaggiata') and self.armatura_equipaggiata:
+            self.equipaggiamento["armatura"] = self.armatura_equipaggiata
         
     def calcola_difesa_totale(self):
         """Calcola difesa con equipaggiamento e effetti"""
@@ -2341,6 +2356,11 @@ class AvventuraEpica:
         if self.equipaggiamento["armatura"]:
             if "Armatura" in self.equipaggiamento["armatura"]:
                 difesa += 3
+        
+        # Bonus scudo
+        if self.equipaggiamento["scudo"]:
+            if "Scudo" in self.equipaggiamento["scudo"]:
+                difesa += 2
                 
         # Effetti temporanei
         if "idratazione" in self.effetti_temporanei:
@@ -2960,7 +2980,7 @@ class AvventuraEpica:
     def oggetti_usabili(self):
         """Restituisce True se ci sono oggetti usabili nell'inventario"""
         for oggetto in self.inventario:
-            if any(keyword in oggetto for keyword in ["Pozione", "Pane", "Mela", "erba"]):
+            if any(keyword in oggetto for keyword in ["Acciuga", "Sardina"]):
                 return True
         return False
     
@@ -4854,8 +4874,9 @@ class AvventuraEpica:
                     self.inventario[self.arma_equipaggiata] += 1
                     self.aggiorna_storia(f"⚔️ {self.arma_equipaggiata} spostata nell'inventario")
                 
-                # Equip new weapon
+                # Equip new weapon - sync both systems
                 self.arma_equipaggiata = nome
+                self.equipaggiamento["arma"] = nome
                 print(f"⚔️ DEBUG: {nome} equipaggiata automaticamente (non va in inventario)")
                 self.aggiorna_storia(f"⚔️ {nome} equipaggiata!")
                 
@@ -4867,8 +4888,9 @@ class AvventuraEpica:
                     self.inventario[self.scudo_equipaggiato] += 1
                     self.aggiorna_storia(f"🛡️ {self.scudo_equipaggiato} spostato nell'inventario")
                 
-                # Equip new shield
+                # Equip new shield - sync both systems
                 self.scudo_equipaggiato = nome
+                self.equipaggiamento["scudo"] = nome
                 self.aggiorna_storia(f"🛡️ {nome} equipaggiato!")
                 
             elif tipo == "armatura":
@@ -4879,8 +4901,9 @@ class AvventuraEpica:
                     self.inventario[self.armatura_equipaggiata] += 1
                     self.aggiorna_storia(f"🛡️ {self.armatura_equipaggiata} spostata nell'inventario")
                 
-                # Equip new armor
+                # Equip new armor - sync both systems
                 self.armatura_equipaggiata = nome
+                self.equipaggiamento["armatura"] = nome
                 self.aggiorna_storia(f"🛡️ {nome} equipaggiata!")
                 
             else:
@@ -5062,10 +5085,91 @@ class AvventuraEpica:
             color=ft.Colors.CYAN_400
         )
         
-        # Lista oggetti inventario
+        # Sezione equipaggiamento
         oggetti_controls = []
         
-        if not self.inventario:
+        # Aggiungi titolo equipaggiamento
+        oggetti_controls.append(
+            ft.Text(
+                "🗡️ Equipaggiamento Attuale",
+                size=18,
+                weight=ft.FontWeight.BOLD,
+                color=ft.Colors.AMBER_400
+            )
+        )
+        
+        # Mostra equipaggiamento attuale
+        equipaggiato_qualcosa = False
+        if hasattr(self, 'arma_equipaggiata') and self.arma_equipaggiata:
+            equipaggiato_qualcosa = True
+            oggetti_controls.append(
+                ft.Container(
+                    content=ft.Text(f"⚔️ {self.arma_equipaggiata} (EQUIPAGGIATA)", size=16, color=ft.Colors.GREEN_400),
+                    bgcolor=ft.Colors.GREEN_900,
+                    border_radius=10,
+                    padding=15,
+                    margin=5
+                )
+            )
+        
+        if hasattr(self, 'scudo_equipaggiato') and self.scudo_equipaggiato:
+            equipaggiato_qualcosa = True
+            oggetti_controls.append(
+                ft.Container(
+                    content=ft.Text(f"🛡️ {self.scudo_equipaggiato} (EQUIPAGGIATO)", size=16, color=ft.Colors.BLUE_400),
+                    bgcolor=ft.Colors.BLUE_900,
+                    border_radius=10,
+                    padding=15,
+                    margin=5
+                )
+            )
+        
+        if hasattr(self, 'armatura_equipaggiata') and self.armatura_equipaggiata:
+            equipaggiato_qualcosa = True
+            oggetti_controls.append(
+                ft.Container(
+                    content=ft.Text(f"🛡️ {self.armatura_equipaggiata} (EQUIPAGGIATA)", size=16, color=ft.Colors.PURPLE_400),
+                    bgcolor=ft.Colors.PURPLE_900,
+                    border_radius=10,
+                    padding=15,
+                    margin=5
+                )
+            )
+        
+        if not equipaggiato_qualcosa:
+            oggetti_controls.append(
+                ft.Text(
+                    "Nessun equipaggiamento",
+                    size=14,
+                    color=ft.Colors.GREY_500
+                )
+            )
+        
+        # Aggiungi titolo inventario
+        oggetti_controls.append(
+            ft.Container(height=20)  # Spaziatura
+        )
+        oggetti_controls.append(
+            ft.Text(
+                "🎒 Inventario",
+                size=18,
+                weight=ft.FontWeight.BOLD,
+                color=ft.Colors.CYAN_400
+            )
+        )
+        
+        # Lista oggetti inventario + equipaggiati
+        oggetti_totali = dict(self.inventario) if self.inventario else {}
+        
+        # Aggiungi oggetti equipaggiati all'inventario virtuale
+        if hasattr(self, 'arma_equipaggiata') and self.arma_equipaggiata:
+            oggetti_totali[self.arma_equipaggiata] = oggetti_totali.get(self.arma_equipaggiata, 0)
+        if hasattr(self, 'scudo_equipaggiato') and self.scudo_equipaggiato:
+            oggetti_totali[self.scudo_equipaggiato] = oggetti_totali.get(self.scudo_equipaggiato, 0)
+        if hasattr(self, 'armatura_equipaggiata') and self.armatura_equipaggiata:
+            oggetti_totali[self.armatura_equipaggiata] = oggetti_totali.get(self.armatura_equipaggiata, 0)
+        
+        if not oggetti_totali:
             oggetti_controls.append(
                 ft.Text(
                     "Inventario vuoto",
@@ -5075,31 +5179,75 @@ class AvventuraEpica:
                 )
             )
         else:
-            for oggetto, quantita in self.inventario.items():
+            for oggetto, quantita in oggetti_totali.items():
+                # Controlla se l'oggetto è equipaggiato
+                equipaggiato = False
+                if (hasattr(self, 'arma_equipaggiata') and self.arma_equipaggiata == oggetto) or \
+                   (hasattr(self, 'scudo_equipaggiato') and self.scudo_equipaggiato == oggetto) or \
+                   (hasattr(self, 'armatura_equipaggiata') and self.armatura_equipaggiata == oggetto):
+                    equipaggiato = True
+                
+                # Determina testo e azione del pulsante equipaggia
+                if equipaggiato:
+                    testo_equipaggia = "Disequipaggia"
+                    colore_equipaggia = ft.Colors.RED_600
+                    tooltip_equipaggia = f"Disequipaggia {oggetto}"
+                else:
+                    testo_equipaggia = "Equipaggia"
+                    colore_equipaggia = ft.Colors.BLUE_600
+                    tooltip_equipaggia = f"Equipaggia {oggetto}"
+                
+                # Determina se è equipaggiamento (non ha pulsante Usa)
+                is_equipaggiamento = ("Spada" in oggetto or "Scudo" in oggetto or "Armatura" in oggetto or 
+                                    "Arco" in oggetto or "Pugnale" in oggetto)
+                
+                # Crea riga con pulsanti appropriati
+                if is_equipaggiamento:
+                    # Solo pulsante equipaggia/disequipaggia per equipaggiamento
+                    content_row = ft.Row([
+                        ft.Text(f"{oggetto} (x{quantita})" + (" - EQUIPAGGIATO" if equipaggiato else ""), 
+                               size=16, expand=True, 
+                               color=ft.Colors.GREEN_400 if equipaggiato else ft.Colors.WHITE),
+                        ft.ElevatedButton(
+                            text=testo_equipaggia,
+                            on_click=self.crea_handler_equipaggia(oggetto),
+                            width=120,
+                            height=40,
+                            bgcolor=colore_equipaggia,
+                            color=ft.Colors.WHITE,
+                            tooltip=tooltip_equipaggia
+                        )
+                    ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN)
+                else:
+                    # Pulsanti Usa + Equipaggia per altri oggetti
+                    content_row = ft.Row([
+                        ft.Text(f"{oggetto} (x{quantita})" + (" - EQUIPAGGIATO" if equipaggiato else ""), 
+                               size=16, expand=True, 
+                               color=ft.Colors.GREEN_400 if equipaggiato else ft.Colors.WHITE),
+                        ft.ElevatedButton(
+                            text="Usa",
+                            on_click=self.crea_handler_usa(oggetto),
+                            width=80,
+                            height=40,
+                            bgcolor=ft.Colors.GREEN_600,
+                            color=ft.Colors.WHITE,
+                            tooltip=f"Usa {oggetto}"
+                        ),
+                        ft.ElevatedButton(
+                            text=testo_equipaggia,
+                            on_click=self.crea_handler_equipaggia(oggetto),
+                            width=120,
+                            height=40,
+                            bgcolor=colore_equipaggia,
+                            color=ft.Colors.WHITE,
+                            tooltip=tooltip_equipaggia
+                        )
+                    ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN)
+                
                 oggetti_controls.append(
                     ft.Container(
-                        content=ft.Row([
-                            ft.Text(f"{oggetto} (x{quantita})", size=16, expand=True),
-                            ft.ElevatedButton(
-                                text="Usa",
-                                on_click=lambda e, obj=oggetto: self.usa_oggetto_inventario(obj),
-                                width=80,
-                                height=40,
-                                bgcolor=ft.Colors.GREEN_600,
-                                color=ft.Colors.WHITE,
-                                tooltip=f"Usa {oggetto}"
-                            ),
-                            ft.ElevatedButton(
-                                text="Equipaggia",
-                                on_click=lambda e, obj=oggetto: self.equipaggia_oggetto_inventario(obj),
-                                width=100,
-                                height=40,
-                                bgcolor=ft.Colors.BLUE_600,
-                                color=ft.Colors.WHITE,
-                                tooltip=f"Equipaggia {oggetto}"
-                            )
-                        ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
-                        bgcolor=ft.Colors.GREY_800,
+                        content=content_row,
+                        bgcolor=ft.Colors.GREEN_800 if equipaggiato else ft.Colors.GREY_800,
                         border_radius=10,
                         padding=15,
                         margin=5
@@ -5805,16 +5953,13 @@ class AvventuraEpica:
         oggetto_da_usare = None
         cura = 0
         
-        # Priorità: Pozione Vita > Pane > Mela
-        if "Pozione Vita" in self.inventario and self.inventario["Pozione Vita"] > 0:
-            oggetto_da_usare = "Pozione Vita"
-            cura = 50
-        elif "Pane" in self.inventario and self.inventario["Pane"] > 0:
-            oggetto_da_usare = "Pane"
+        # Priorità oggetti HP: Sardina > Acciuga
+        if "Sardina" in self.inventario and self.inventario["Sardina"] > 0:
+            oggetto_da_usare = "Sardina"
+            cura = 25
+        elif "Acciuga" in self.inventario and self.inventario["Acciuga"] > 0:
+            oggetto_da_usare = "Acciuga"
             cura = 15
-        elif "Mela" in self.inventario and self.inventario["Mela"] > 0:
-            oggetto_da_usare = "Mela"
-            cura = 10
             
         if not oggetto_da_usare:
             return
@@ -5827,9 +5972,13 @@ class AvventuraEpica:
         # Salva HP prima della cura
         hp_prima_cura = self.vita
         
-        # Applica cura
-        self.vita = min(self.vita_massima, self.vita + cura)
-        self.hp_giocatore = self.vita
+        # Applica cura HP - usa hp_giocatore come principale
+        self.hp_giocatore = min(self.hp_max, self.hp_giocatore + cura)
+        # Sincronizza con vita per compatibilità
+        if hasattr(self, 'vita'):
+            self.vita = self.hp_giocatore
+        if hasattr(self, 'vita_massima'):
+            self.vita_massima = self.hp_max
         
         # Salva HP dopo la cura  
         hp_dopo_cura = self.vita
@@ -5840,46 +5989,18 @@ class AvventuraEpica:
         
         # Riproduci effetto sonoro
         if self.audio_abilitato:
-            self.riproduci_effetto("bere_pozione")
+            self.riproduci_effetto("gatto_mangia_pesce")
         
-        # Mostro attacca comunque
-        danno_mostro = max(1, self.mostro_attuale["attacco"] - self.calcola_difesa_totale())
-        self.vita -= danno_mostro
-        self.hp_giocatore = self.vita
-        
-        # Messaggio chiaro con HP prima/dopo
+        # Messaggio di guarigione senza attacco del mostro
         messaggio = f"Round {self.round_combattimento}:\n"
         messaggio += f"💊 Usi {oggetto_da_usare}: {hp_prima_cura} → {hp_dopo_cura} HP (+{cura_effettiva})\n"
-        messaggio += f"💥 {self.mostro_attuale['nome']} attacca: {hp_dopo_cura} → {self.vita} HP (-{danno_mostro})\n"
+        messaggio += f"🐱 Il gatto mangia il pesce rapidamente senza dare tempo al mostro di attaccare!"
         
-        if self.vita <= 0:
-            # Player defeated - end combat immediately
-            self.in_combattimento = False
-            self.combattimento_automatico = False  # Disattiva auto-combat
-            self.ferma_heartbeat()  # Ferma heartbeat quando perdi
-            messaggio += "💀 Sei stato sconfitto! Torni in città."
-            
-            if self.audio_abilitato:
-                self.riproduci_effetto("sconfitta")
-                self.termina_musica_battaglia()
-            
-            # Reset mostro dopo sconfitta
-            self.mostro_attuale = None
-            self.vita = 1  # Ripristina vita a 1 per continuare il gioco
-            self.hp_giocatore = 1
-            
-            self.haptic_feedback("heavy")
-            
-            # Exit combat and return to main game
-            self.aggiorna_storia(messaggio)
-            self.aggiorna_stats_incrementali()
-            self.page.go("/gioco")
-            return
-        else:
-            self.controlla_vita_bassa()
-            self.aggiorna_stats_incrementali()  # Aggiorna statistiche dopo attacco post-pozione
-            self.haptic_feedback("light")
+        self.controlla_vita_bassa()
+        self.aggiorna_stats_incrementali()
+        self.haptic_feedback("light")
         
+        self.aggiorna_storia(messaggio)
         self.round_combattimento += 1
         # Non ricreare l'intera schermata, solo aggiornare le info
         self.aggiorna_info_combattimento()
@@ -6818,6 +6939,9 @@ class AvventuraEpica:
         """Inizia nuova avventura"""
         self.reset_gioco()
         self.gioco_iniziato = True
+        
+        # Sync equipment systems
+        self.sincronizza_equipaggiamento()
         
         if self.audio_abilitato:
             self.cambia_musica_area("Villaggio")
@@ -8089,7 +8213,7 @@ class AvventuraEpica:
         for oggetto, quantita in self.inventario.items():
             if quantita <= 0:
                 continue
-            if any(keyword in oggetto for keyword in ["Pozione", "Pane", "Mela", "erba"]):
+            if any(keyword in oggetto for keyword in ["Acciuga", "Sardina"]):
                 oggetto_usato = oggetto
                 break
                 
@@ -8115,12 +8239,6 @@ class AvventuraEpica:
         elif "Pozione Forza" in oggetto_usato:
             self.effetti_temporanei["forza"] = 3
             testo += f"💪 +10 attacco per 3 turni!"
-        elif "Pane" in oggetto_usato:
-            guarigione = 15
-            self.hp_giocatore = min(self.hp_max, self.hp_giocatore + guarigione)
-            if hasattr(self, 'vita'):
-                self.vita = self.hp_giocatore
-            testo += f"🍞 Ripristini {guarigione} HP!"
         elif "Mela" in oggetto_usato:
             guarigione = 10
             self.hp_giocatore = min(self.hp_max, self.hp_giocatore + guarigione)
@@ -8163,14 +8281,6 @@ class AvventuraEpica:
             testo += f" Ripristini {guarigione} HP!"
             if self.audio_abilitato:
                 self.riproduci_effetto("bere_pozione")
-        elif "Pane" in nome_oggetto:
-            guarigione = 15
-            self.hp_giocatore = min(self.hp_max, self.hp_giocatore + guarigione)
-            if hasattr(self, 'vita'):
-                self.vita = self.hp_giocatore
-            testo += f" Ripristini {guarigione} HP!"
-            if self.audio_abilitato:
-                self.riproduci_effetto("mangiare")
         elif "Mela" in nome_oggetto:
             guarigione = 10
             self.hp_giocatore = min(self.hp_max, self.hp_giocatore + guarigione)
@@ -8179,6 +8289,22 @@ class AvventuraEpica:
             testo += f" Ripristini {guarigione} HP!"
             if self.audio_abilitato:
                 self.riproduci_effetto("mangiare")
+        elif "Acciuga" in nome_oggetto:
+            guarigione = 15
+            self.hp_giocatore = min(self.hp_max, self.hp_giocatore + guarigione)
+            if hasattr(self, 'vita'):
+                self.vita = self.hp_giocatore
+            testo += f" Ripristini {guarigione} HP!"
+            if self.audio_abilitato:
+                self.riproduci_effetto("gatto_mangia_pesce")
+        elif "Sardina" in nome_oggetto:
+            guarigione = 25
+            self.hp_giocatore = min(self.hp_max, self.hp_giocatore + guarigione)
+            if hasattr(self, 'vita'):
+                self.vita = self.hp_giocatore
+            testo += f" Ripristini {guarigione} HP!"
+            if self.audio_abilitato:
+                self.riproduci_effetto("gatto_mangia_pesce")
         elif "Pozione Forza" in nome_oggetto:
             self.effetti_temporanei["forza"] = 3
             testo += f" +10 attacco per 3 turni!"
@@ -8193,16 +8319,152 @@ class AvventuraEpica:
         # Aggiorna la vista inventario
         self.page.go("/inventario")
         
+    def ricostruisci_inventario(self):
+        """Ricostruisce completamente la vista inventario"""
+        print("🔄 DEBUG: Ricostruendo inventario...")
+        # Forza l'aggiornamento andando prima al gioco e poi all'inventario
+        self.page.go("/gioco")
+        self.page.update()
+        # Piccola pausa per permettere l'aggiornamento
+        import time
+        time.sleep(0.1)
+        self.page.go("/inventario")
+        self.page.update()
+        print("🔄 DEBUG: Inventario ricostruito!")
+    
+    def crea_handler_usa(self, nome_oggetto):
+        """Crea un handler per usare oggetti che cattura correttamente il nome dell'oggetto"""
+        def handler(e):
+            self.usa_oggetto_inventario(nome_oggetto)
+        return handler
+    
+    def crea_handler_equipaggia(self, nome_oggetto):
+        """Crea un handler per l'equipaggiamento che cattura correttamente il nome dell'oggetto"""
+        def handler(e):
+            self.equipaggia_oggetto_inventario(nome_oggetto)
+        return handler
+    
     def equipaggia_oggetto_inventario(self, nome_oggetto):
-        """Equipaggia un oggetto dall'inventario"""
-        print(f"🎒 DEBUG: Tentativo di equipaggiare {nome_oggetto}")
+        """Equipaggia o disequipaggia un oggetto dall'inventario"""
+        print(f"🎒 DEBUG: Tentativo di equipaggiare/disequipaggiare {nome_oggetto}")
         
-        if nome_oggetto not in self.inventario or self.inventario[nome_oggetto] <= 0:
-            self.aggiorna_storia(f"❌ Non hai {nome_oggetto} nell'inventario!")
-            return
+        # Controlla se l'oggetto è già equipaggiato
+        equipaggiato = False
+        tipo_equipaggiamento = None
         
-        # Per ora solo messaggio informativo
-        self.aggiorna_storia(f"⚔️ {nome_oggetto} non può essere equipaggiato da qui. Usa il menu equipaggiamento principale.")
+        print(f"🔍 DEBUG: Controllo equipaggiamento per {nome_oggetto}")
+        print(f"🔍 DEBUG: arma_equipaggiata = {getattr(self, 'arma_equipaggiata', 'None')}")
+        print(f"🔍 DEBUG: scudo_equipaggiato = {getattr(self, 'scudo_equipaggiato', 'None')}")
+        
+        if hasattr(self, 'arma_equipaggiata') and self.arma_equipaggiata == nome_oggetto:
+            equipaggiato = True
+            tipo_equipaggiamento = "arma"
+            print(f"🔍 DEBUG: {nome_oggetto} è EQUIPAGGIATO come arma")
+        elif hasattr(self, 'scudo_equipaggiato') and self.scudo_equipaggiato == nome_oggetto:
+            equipaggiato = True
+            tipo_equipaggiamento = "scudo"
+            print(f"🔍 DEBUG: {nome_oggetto} è EQUIPAGGIATO come scudo")
+        elif hasattr(self, 'armatura_equipaggiata') and self.armatura_equipaggiata == nome_oggetto:
+            equipaggiato = True
+            tipo_equipaggiamento = "armatura"
+            print(f"🔍 DEBUG: {nome_oggetto} è EQUIPAGGIATO come armatura")
+        else:
+            print(f"🔍 DEBUG: {nome_oggetto} NON è equipaggiato")
+        
+        if equipaggiato:
+            # DISEQUIPAGGIA - metti l'oggetto nell'inventario
+            if tipo_equipaggiamento == "arma":
+                self.arma_equipaggiata = None
+                self.equipaggiamento["arma"] = None
+                # Aggiungi all'inventario
+                if nome_oggetto not in self.inventario:
+                    self.inventario[nome_oggetto] = 0
+                self.inventario[nome_oggetto] += 1
+                self.aggiorna_storia(f"⚔️ {nome_oggetto} disequipaggiata e messa nell'inventario!")
+            elif tipo_equipaggiamento == "scudo":
+                self.scudo_equipaggiato = None
+                self.equipaggiamento["scudo"] = None
+                # Aggiungi all'inventario
+                if nome_oggetto not in self.inventario:
+                    self.inventario[nome_oggetto] = 0
+                self.inventario[nome_oggetto] += 1
+                self.aggiorna_storia(f"🛡️ {nome_oggetto} disequipaggiato e messo nell'inventario!")
+            elif tipo_equipaggiamento == "armatura":
+                self.armatura_equipaggiata = None
+                self.equipaggiamento["armatura"] = None
+                # Aggiungi all'inventario
+                if nome_oggetto not in self.inventario:
+                    self.inventario[nome_oggetto] = 0
+                self.inventario[nome_oggetto] += 1
+                self.aggiorna_storia(f"🛡️ {nome_oggetto} disequipaggiata e messa nell'inventario!")
+            
+            # Aggiorna statistiche 
+            self.aggiorna_stats_incrementali()
+            # Ricostruisci completamente la vista inventario
+            self.ricostruisci_inventario()
+            
+        else:
+            # EQUIPAGGIA - controlla se c'è nell'inventario
+            if nome_oggetto not in self.inventario or self.inventario[nome_oggetto] <= 0:
+                self.aggiorna_storia(f"❌ Non hai {nome_oggetto} nell'inventario!")
+                return
+            
+            # Determina tipo di equipaggiamento
+            if "Spada" in nome_oggetto or "Arco" in nome_oggetto or "Pugnale" in nome_oggetto:
+                # Se ha già un'arma, mettila in inventario
+                if hasattr(self, 'arma_equipaggiata') and self.arma_equipaggiata:
+                    if self.arma_equipaggiata not in self.inventario:
+                        self.inventario[self.arma_equipaggiata] = 0
+                    self.inventario[self.arma_equipaggiata] += 1
+                
+                # Rimuovi dalla inventario e equipaggia
+                self.inventario[nome_oggetto] -= 1
+                if self.inventario[nome_oggetto] <= 0:
+                    del self.inventario[nome_oggetto]
+                
+                self.arma_equipaggiata = nome_oggetto
+                self.equipaggiamento["arma"] = nome_oggetto
+                self.aggiorna_storia(f"⚔️ {nome_oggetto} equipaggiata!")
+                
+            elif "Scudo" in nome_oggetto:
+                # Se ha già uno scudo, mettilo in inventario
+                if hasattr(self, 'scudo_equipaggiato') and self.scudo_equipaggiato:
+                    if self.scudo_equipaggiato not in self.inventario:
+                        self.inventario[self.scudo_equipaggiato] = 0
+                    self.inventario[self.scudo_equipaggiato] += 1
+                
+                # Rimuovi dalla inventario e equipaggia
+                self.inventario[nome_oggetto] -= 1
+                if self.inventario[nome_oggetto] <= 0:
+                    del self.inventario[nome_oggetto]
+                
+                self.scudo_equipaggiato = nome_oggetto
+                self.equipaggiamento["scudo"] = nome_oggetto
+                self.aggiorna_storia(f"🛡️ {nome_oggetto} equipaggiato!")
+                
+            elif "Armatura" in nome_oggetto:
+                # Se ha già un'armatura, mettila in inventario
+                if hasattr(self, 'armatura_equipaggiata') and self.armatura_equipaggiata:
+                    if self.armatura_equipaggiata not in self.inventario:
+                        self.inventario[self.armatura_equipaggiata] = 0
+                    self.inventario[self.armatura_equipaggiata] += 1
+                
+                # Rimuovi dalla inventario e equipaggia
+                self.inventario[nome_oggetto] -= 1
+                if self.inventario[nome_oggetto] <= 0:
+                    del self.inventario[nome_oggetto]
+                
+                self.armatura_equipaggiata = nome_oggetto
+                self.equipaggiamento["armatura"] = nome_oggetto
+                self.aggiorna_storia(f"🛡️ {nome_oggetto} equipaggiata!")
+            else:
+                self.aggiorna_storia(f"❌ {nome_oggetto} non è equipaggiabile!")
+                return
+            
+            # Aggiorna statistiche 
+            self.aggiorna_stats_incrementali()
+            # Ricostruisci completamente la vista inventario
+            self.ricostruisci_inventario()
         
     def mostra_negozio_dettagliato(self):
         """Mostra dettagli negozio"""
@@ -8328,7 +8590,7 @@ class AvventuraEpica:
     def conta_oggetti_curativi(self):
         """Conta il numero totale di oggetti curativi nell'inventario"""
         totale = 0
-        oggetti_curativi = ["Pozione Vita", "Pane", "Mela"]
+        oggetti_curativi = ["Acciuga", "Sardina"]
         
         for oggetto in oggetti_curativi:
             if oggetto in self.inventario:
@@ -8422,23 +8684,24 @@ class AvventuraEpica:
             del self.inventario[nome_oggetto]
             
         # Effetti dell'oggetto
-        if "Pane" in nome_oggetto:
-            cura = 15
-            self.hp_giocatore = min(self.hp_max, self.hp_giocatore + cura)
-            testo = f"🍞 Hai mangiato {nome_oggetto} e recuperato {cura} HP!"
         elif "Mela" in nome_oggetto:
             cura = 10
             self.hp_giocatore = min(self.hp_max, self.hp_giocatore + cura)
             testo = f"🍎 Hai mangiato {nome_oggetto} e recuperato {cura} HP!"
-        elif "Pozione Vita" in nome_oggetto:
-            cura = 50
+        elif "Acciuga" in nome_oggetto:
+            cura = 15
             self.hp_giocatore = min(self.hp_max, self.hp_giocatore + cura)
-            testo = f"🧪 Hai bevuto {nome_oggetto} e recuperato {cura} HP!"
-        elif "Pozione Forza" in nome_oggetto:
-            self.effetti_temporanei["forza"] = 3
-            testo = f"💪 Hai bevuto {nome_oggetto}! +10 attacco per 3 turni!"
+            testo = f"🐟 Hai mangiato {nome_oggetto} e recuperato {cura} HP!"
+        elif "Sardina" in nome_oggetto:
+            cura = 25
+            self.hp_giocatore = min(self.hp_max, self.hp_giocatore + cura)
+            testo = f"🐟 Hai mangiato {nome_oggetto} e recuperato {cura} HP!"
         else:
             testo = f"✅ Hai usato {nome_oggetto}!"
+        
+        # Effetto audio per pesci
+        if self.audio_abilitato and ("Acciuga" in nome_oggetto or "Sardina" in nome_oggetto):
+            self.riproduci_effetto("gatto_mangia_pesce")
             
         self.aggiorna_storia(testo)
         self.aggiorna_stats_incrementali()
@@ -10297,6 +10560,9 @@ class AvventuraEpica:
             self.arma_equipaggiata = stato_gioco.get("arma_equipaggiata", None)
             self.scudo_equipaggiato = stato_gioco.get("scudo_equipaggiato", None)
             self.armatura_equipaggiata = stato_gioco.get("armatura_equipaggiata", None)
+            
+            # Sync equipment systems for existing save files
+            self.sincronizza_equipaggiamento()
             
             self.effetti_temporanei = stato_gioco.get("effetti_temporanei", {})
             self.oggetti = stato_gioco["oggetti"]
