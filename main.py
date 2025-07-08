@@ -16,6 +16,10 @@ class AvventuraEpica:
         # Gestione eventi per audio session iOS
         self.page.on_blur = self.on_page_blur
         self.page.on_focus = self.on_page_focus
+        
+        # Fix per iOS: Audio deve essere attivato dall'utente
+        self.audio_ios_attivato = False
+        
         self.setup_logging()
         self.log_info("App inizializzata")
         self.inizializza_gioco()
@@ -1429,9 +1433,12 @@ class AvventuraEpica:
                 self.page.overlay.remove(self.musica_sottofondo)
             
             # Crea nuova istanza con gestione errori
+            # Fix iOS: Solo autoplay se l'audio è stato attivato dall'utente
+            should_autoplay = self.should_autoplay_audio()
+            
             self.musica_sottofondo = self.crea_audio_sicuro("musica_sottofondo", file_musica,
                                                            volume=self.volume_musica,
-                                                           autoplay=True,
+                                                           autoplay=should_autoplay,
                                                            on_state_changed=lambda e: self.handle_audio_state_change("musica", e))
             
             if self.musica_sottofondo:
@@ -1444,9 +1451,12 @@ class AvventuraEpica:
             # Fallback: riprova con la musica di default
             try:
                 default_music = "assets/music/villaggio.mp3"
+                # Fix iOS: Solo autoplay se l'audio è stato attivato dall'utente
+                should_autoplay = self.should_autoplay_audio()
+                
                 self.musica_sottofondo = self.crea_audio_sicuro("musica_sottofondo", default_music,
                                                                volume=self.volume_musica,
-                                                               autoplay=True)
+                                                               autoplay=should_autoplay)
                 if self.musica_sottofondo:
                     self.page.overlay.append(self.musica_sottofondo)
                     self.log_audio("Fallback alla musica di default completato")
@@ -1616,11 +1626,14 @@ class AvventuraEpica:
             self.page.overlay.remove(self.musica_sottofondo)
         
         # Caricamento audio semplificato (autoplay gestisce l'avvio)
+        # Fix iOS: Solo autoplay se l'audio è stato attivato dall'utente
+        should_autoplay = self.should_autoplay_audio()
+        
         try:
             print(f"🎵 Creazione Audio object con: {file_musica}")
             self.musica_sottofondo = fa.Audio(
                 src=file_musica,
-                autoplay=True,
+                autoplay=should_autoplay,
                 volume=self.volume_musica,
                 balance=0,
                 playback_rate=1.0,
@@ -1639,10 +1652,13 @@ class AvventuraEpica:
             
             try:
                 # Fallback con percorso assoluto
+                # Fix iOS: Solo autoplay se l'audio è stato attivato dall'utente
+                should_autoplay = self.should_autoplay_audio()
                 percorso_completo = os.path.abspath(file_musica)
+                
                 self.musica_sottofondo = fa.Audio(
                     src=f"file://{percorso_completo}",
-                    autoplay=True,
+                    autoplay=should_autoplay,
                     volume=self.volume_musica,
                     balance=0,
                     on_state_changed=self.on_musica_state_changed,
@@ -1685,11 +1701,14 @@ class AvventuraEpica:
             self.page.overlay.remove(self.audio_ambiente)
         
         # Caricamento audio ambientale
+        # Fix iOS: Solo autoplay se l'audio è stato attivato dall'utente
+        should_autoplay = self.should_autoplay_audio()
+        
         try:
             print(f"🌿 Creazione Audio ambiente con: {file_ambiente}")
             self.audio_ambiente = fa.Audio(
                 src=file_ambiente,
-                autoplay=True,
+                autoplay=should_autoplay,
                 volume=self.volume_effetti * 0.3,  # Volume più basso per ambiente
                 balance=0,
                 playback_rate=1.0,
@@ -1712,10 +1731,13 @@ class AvventuraEpica:
             print(f"❌ Errore caricamento audio ambiente: {e}")
             try:
                 # Fallback con percorso assoluto
+                # Fix iOS: Solo autoplay se l'audio è stato attivato dall'utente
+                should_autoplay = self.should_autoplay_audio()
                 percorso_completo = os.path.abspath(file_ambiente)
+                
                 self.audio_ambiente = fa.Audio(
                     src=f"file://{percorso_completo}",
-                    autoplay=True,
+                    autoplay=should_autoplay,
                     volume=self.volume_effetti * 0.3,
                     balance=0,
                     on_state_changed=lambda e: self.on_ambiente_state_changed(e),
@@ -1845,6 +1867,11 @@ class AvventuraEpica:
         
         if not self.audio_abilitato:
             self.log_audio("Audio disabilitato")
+            return
+        
+        # Fix iOS: Audio deve essere attivato dall'utente prima
+        if not getattr(self, 'audio_ios_attivato', False):
+            self.log_audio("Audio iOS non ancora attivato dall'utente")
             return
         
         self.log_audio(f"Riproduci effetto: {effetto}")
@@ -2197,9 +2224,12 @@ class AvventuraEpica:
                 pass
         
         try:
+            # Fix iOS: Solo autoplay se l'audio è stato attivato dall'utente
+            should_autoplay = self.should_autoplay_audio()
+            
             self.musica_battaglia_canale = fa.Audio(
                 src=file_musica,
-                autoplay=True,
+                autoplay=should_autoplay,
                 volume=self.volume_musica,
                 balance=0,
                 playback_rate=1.0,
@@ -2296,9 +2326,12 @@ class AvventuraEpica:
             self.page.overlay.remove(self.musica_sottofondo)
         
         try:
+            # Fix iOS: Solo autoplay se l'audio è stato attivato dall'utente
+            should_autoplay = self.should_autoplay_audio()
+            
             self.musica_sottofondo = fa.Audio(
                 src=file_musica,
-                autoplay=True,
+                autoplay=should_autoplay,
                 volume=self.volume_musica,
                 balance=0,
                 playback_rate=1.0,
@@ -3987,6 +4020,9 @@ class AvventuraEpica:
             tooltip="Riproduci un suono di test"
         )
         
+        # L'audio ora si attiva automaticamente quando si inizia/carica il gioco
+        # Non serve più l'avviso iOS
+        
         # Pulsante scarica log per iPhone
         print("🔧 DEBUG: Creando pulsante scarica log")
         download_log_btn = ft.ElevatedButton(
@@ -4005,13 +4041,17 @@ class AvventuraEpica:
             self.volume_effetti_label_tab,
             slider_volume_effetti,
             test_audio_btn,
+        ]
+        
+        # L'audio si attiva automaticamente, non serve più l'avviso
+        impostazioni_controls.extend([
             ft.Divider(),
             ft.Text("Debug", size=16, weight=ft.FontWeight.BOLD),
             download_log_btn,
             ft.Divider(),
             ft.Text("Feedback", size=16, weight=ft.FontWeight.BOLD),
             toggle_haptic,
-        ]
+        ])
         
         content = ft.Column([
             titolo,
@@ -6833,10 +6873,43 @@ class AvventuraEpica:
         self.cambia_volume_effetti(e)
             
     def testa_audio(self, e):
-        """Testa audio"""
+        """Testa audio e attiva audio iOS"""
         if self.audio_abilitato:
+            # Su iOS, il primo audio deve essere attivato dall'utente
+            if not self.audio_ios_attivato:
+                self.audio_ios_attivato = True
+                self.log_audio("Audio iOS attivato dall'utente")
+            
             self.riproduci_effetto("vittoria")
             self.haptic_feedback("success")
+            
+            # Se l'audio è appena stato attivato e siamo in gioco, riavvia l'audio
+            if getattr(self, 'gioco_iniziato', False) and hasattr(self, 'area_attuale'):
+                self.riavvia_audio_area()
+    
+    def riavvia_audio_area(self):
+        """Riavvia audio dell'area corrente dopo attivazione iOS"""
+        try:
+            if hasattr(self, 'area_attuale'):
+                self.log_audio(f"Riavviando audio per area: {self.area_attuale}")
+                
+                # Riavvia musica di sottofondo se non in combattimento
+                if not getattr(self, 'in_combattimento', False):
+                    if hasattr(self, 'musica_sottofondo') and self.musica_sottofondo:
+                        self.musica_sottofondo.play()
+                        self.log_audio("Musica di sottofondo riavviata")
+                
+                # Riavvia audio ambiente
+                if hasattr(self, 'audio_ambiente') and self.audio_ambiente:
+                    self.audio_ambiente.play()
+                    self.log_audio("Audio ambiente riavviato")
+                    
+        except Exception as e:
+            self.log_error(f"Errore riavvio audio area: {e}")
+    
+    def should_autoplay_audio(self):
+        """Helper per decidere se l'audio può essere riprodotto automaticamente su iOS"""
+        return getattr(self, 'audio_ios_attivato', False)
         
     def torna_menu_principale(self, e):
         """Torna al menu principale"""
@@ -6937,6 +7010,11 @@ class AvventuraEpica:
         
     def inizia_gioco(self, e):
         """Inizia nuova avventura"""
+        # Attiva automaticamente l'audio iOS quando l'utente inizia il gioco
+        if not getattr(self, 'audio_ios_attivato', False):
+            self.audio_ios_attivato = True
+            self.log_audio("Audio iOS attivato automaticamente all'avvio del gioco")
+        
         self.reset_gioco()
         self.gioco_iniziato = True
         
@@ -10532,6 +10610,11 @@ class AvventuraEpica:
 
     def carica_gioco(self, e):
         """Caricamento completo"""
+        # Attiva automaticamente l'audio iOS quando l'utente carica il gioco
+        if not getattr(self, 'audio_ios_attivato', False):
+            self.audio_ios_attivato = True
+            self.log_audio("Audio iOS attivato automaticamente al caricamento del gioco")
+        
         if not os.path.exists("avventura_epica_save.json"):
             self.aggiorna_storia("❌ Nessun salvataggio trovato!")
             return
