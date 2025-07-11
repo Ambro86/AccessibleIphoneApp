@@ -1,3 +1,4 @@
+# IMPORTANTE: Non usare mai emoticon in questo file - causano errori di encoding su Windows
 import flet as ft
 import flet_audio as fa
 import json
@@ -39,7 +40,7 @@ class AvventuraEpica:
                 level=logging.DEBUG,
                 format='%(asctime)s - %(levelname)s - %(message)s',
                 handlers=[
-                    logging.FileHandler(self.log_file, mode='a')
+                    logging.FileHandler(self.log_file, mode='a', encoding='utf-8')
                 ]
             )
             
@@ -179,7 +180,7 @@ class AvventuraEpica:
 
     def analizza_accessibilita(self, view):
         return  # DEBUG TEMPORANEAMENTE DISABILITATO
-        print(f"\n🔍 ========== ANALISI ACCESSIBILITÀ ==========\n🎯 VIEW: {view.route}\n📱 PIATTAFORMA: {self.page.platform}")
+        print(f"\n🔍 ========== ANALISI ACCESSIBILITÀ ==========\nVIEW: {view.route}\n📱 PIATTAFORMA: {self.page.platform}")
         
         # Statistiche generali
         problemi_totali = []
@@ -201,13 +202,13 @@ class AvventuraEpica:
                 if isinstance(problema, dict):
                     print(f"\n   {i}. 📍 POSIZIONE: {problema['path']}")
                     print(f"      🏷️  TIPO: {problema['tipo']} - {problema['descrizione']}")
-                    print(f"      🔧 SOLUZIONE: {problema['raccomandazione']}")
+                    print(f"      SOLUZIONE: {problema['raccomandazione']}")
                     print(f"      ♿ PERCHÉ: {problema['impatto_accessibilita']}")
                 else:
                     print(f"   {i}. {problema}")
-            print(f"\n🎯 PRIORITÀ: Risolvi questi problemi per migliorare l'accessibilità della view '{view.route}'")
+            print(f"\nPRIORITÀ: Risolvi questi problemi per migliorare l'accessibilità della view '{view.route}'")
         else:
-            print(f"✅ OTTIMO: Nessun problema di accessibilità rilevato!")
+            print(f"OTTIMO: Nessun problema di accessibilità rilevato!")
         
         print(f"\n🔍 ========================================\n")
         
@@ -259,7 +260,7 @@ class AvventuraEpica:
             }
             problemi.append(problema)
             print(f"⚠️  {path} → {type(control).__name__}: {problema['descrizione']}")
-            print(f"🔧 SOLUZIONE: {raccomandazione}")
+            print(f"SOLUZIONE: {raccomandazione}")
             print(f"♿ IMPATTO: {problema['impatto_accessibilita']}")
         
         # Verifica problemi di accessibilità aggiuntivi
@@ -311,7 +312,7 @@ class AvventuraEpica:
                 }
                 problemi.append(problema)
                 print(f"💡 {path} → {type(control).__name__}: Manca tooltip")
-                print(f"🔧 SOLUZIONE: {problema['raccomandazione']}")
+                print(f"SOLUZIONE: {problema['raccomandazione']}")
         
         # Verifica immagini senza semantics
         if isinstance(control, ft.Image):
@@ -325,7 +326,7 @@ class AvventuraEpica:
                 }
                 problemi.append(problema)
                 print(f"🖼️  {path} → Image: Manca semantics_label")
-                print(f"🔧 SOLUZIONE: {problema['raccomandazione']}")
+                print(f"SOLUZIONE: {problema['raccomandazione']}")
         
         # Verifica testi troppo piccoli
         if isinstance(control, ft.Text):
@@ -340,7 +341,7 @@ class AvventuraEpica:
                 }
                 problemi.append(problema)
                 print(f"📏 {path} → Text: Dimensione troppo piccola ({size}px)")
-                print(f"🔧 SOLUZIONE: {problema['raccomandazione']}")
+                print(f"SOLUZIONE: {problema['raccomandazione']}")
     
     def _conta_elementi(self, control):
         """Conta il numero totale di elementi UI"""
@@ -606,7 +607,7 @@ class AvventuraEpica:
                 "rarita": "epico",
                 "origine": "mare_profondo"
             },
-            "🗡️ Lama Spettrale": {
+            "Lama Spettrale": {
                 "tipo": "passivo",
                 "effetto": "danno_fantasmi",
                 "valore": 20,
@@ -790,7 +791,7 @@ class AvventuraEpica:
             "🛤️ Strada": "🥾 stivali da viaggio",
             "🌊 Lago": "🎣 canna da pesca magica",
             "⛰️ Caverna": "💎 gemma brillante",
-            "🗡️ Arena": " scudo del campione",
+            "Arena": " scudo del campione",
             "🏪 Mercato": "",  # Niente oggetti, solo negozi
             "🌳 Foresta": "🌿 erba medicinale",
             "Vulcano": "essenza di fuoco",
@@ -810,7 +811,7 @@ class AvventuraEpica:
             "🛤️ Strada": {"nome": "🏴‍☠️ Bandito", "hp": 20, "attacco": 10, "livello": 2, "exp": 30},
             "🌊 Lago": {"nome": "🐙 Kraken", "hp": 35, "attacco": 18, "livello": 3, "exp": 60},
             "⛰️ Caverna": {"nome": "🐻 Orso delle Caverne", "hp": 30, "attacco": 14, "livello": 2, "exp": 40},
-            "🗡️ Arena": {"nome": " Gladiatore", "hp": 45, "attacco": 20, "livello": 4, "exp": 80},
+            "Arena": {"nome": " Gladiatore", "hp": 45, "attacco": 20, "livello": 4, "exp": 80},
             "🏪 Mercato": None,  # Sicuro
             "🌳 Foresta": {"nome": "🧚‍♀️ Spirito Oscuro", "hp": 28, "attacco": 16, "livello": 3, "exp": 45},
             "Vulcano": {"nome": "Elementale di Fuoco", "hp": 50, "attacco": 25, "livello": 5, "exp": 100},
@@ -997,7 +998,6 @@ class AvventuraEpica:
         self.attacco_base = 15
         self.difesa = 0
         self.monete = 100
-        self.oro = 100  # Alias per compatibilità
         self.inventario = {}
         self.equipaggiamento = {"arma": None, "scudo": None, "armatura": None, "accessorio": None}
         
@@ -1444,7 +1444,13 @@ class AvventuraEpica:
             if self.musica_sottofondo:
                 self.page.overlay.append(self.musica_sottofondo)
                 self.musica_attuale = file_musica
-                self.log_audio(f"Musica cambiata con successo: {file_musica}")
+                
+                # Se autoplay è disabilitato, attiva manualmente la musica
+                if not should_autoplay:
+                    self.musica_sottofondo.play()
+                    self.log_audio(f"Musica attivata manualmente: {file_musica}")
+                else:
+                    self.log_audio(f"Musica cambiata con successo: {file_musica}")
             
         except Exception as e:
             self.log_error(f"Errore cambio musica: {e}")
@@ -1644,7 +1650,7 @@ class AvventuraEpica:
             self.page.update()
             
             self.musica_attuale = file_musica
-            print(f"✅ Audio caricato con successo: {file_musica}")
+            print(f"Audio caricato con successo: {file_musica}")
             
         except Exception as e:
             print(f"❌ Errore caricamento audio: {e}")
@@ -1668,7 +1674,7 @@ class AvventuraEpica:
                 self.page.overlay.append(self.musica_sottofondo)
                 self.page.update()
                 self.musica_attuale = file_musica
-                print(f"✅ Audio caricato con file://: {percorso_completo}")
+                print(f"Audio caricato con file://: {percorso_completo}")
                 
             except Exception as e2:
                 print(f"❌ Errore anche con file://: {e2}")
@@ -1725,7 +1731,13 @@ class AvventuraEpica:
                 print(f"⚠️ Warning: page.update() fallito (normale se chiamato da thread): {e_update}")
             
             self.suono_ambiente_attuale = file_ambiente
-            print(f"✅ Audio ambiente caricato con successo: {file_ambiente}")
+            
+            # Se autoplay è disabilitato, attiva manualmente l'audio ambiente
+            if not should_autoplay:
+                self.audio_ambiente.play()
+                print(f"Audio ambiente attivato manualmente: {file_ambiente}")
+            else:
+                print(f"Audio ambiente caricato con successo: {file_ambiente}")
             
         except Exception as e:
             print(f"❌ Errore caricamento audio ambiente: {e}")
@@ -1753,7 +1765,13 @@ class AvventuraEpica:
                     print(f"⚠️ Warning: page.update() fallback fallito: {e_update}")
                     
                 self.suono_ambiente_attuale = file_ambiente
-                print(f"✅ Audio ambiente caricato con file://: {percorso_completo}")
+                
+                # Se autoplay è disabilitato, attiva manualmente l'audio ambiente (fallback)
+                if not should_autoplay:
+                    self.audio_ambiente.play()
+                    print(f"Audio ambiente attivato manualmente (fallback): {percorso_completo}")
+                else:
+                    print(f"Audio ambiente caricato con file://: {percorso_completo}")
                 
             except Exception as e2:
                 print(f"❌ Errore anche con file:// per ambiente: {e2}")
@@ -1786,12 +1804,12 @@ class AvventuraEpica:
             return
             
         # Cerca pozione vita nell'inventario
-        if "🧪 Pozione Vita" in self.inventario:
-            self.inventario.remove("🧪 Pozione Vita")
+        if "Pozione Vita" in self.inventario:
+            self.inventario.remove("Pozione Vita")
             hp_recuperati = min(50, self.hp_max - self.hp_giocatore)
             self.hp_giocatore = min(self.hp_max, self.hp_giocatore + hp_recuperati)
             
-            testo = f"🧪 Usi Pozione Vita:\n"
+            testo = f"Usi Pozione Vita:\n"
             testo += f" HP recuperati: +{hp_recuperati}\n"
             testo += f" HP attuali: {self.hp_giocatore}/{self.hp_max}"
             
@@ -2123,9 +2141,9 @@ class AvventuraEpica:
                 except Exception as ex:
                     print(f"🎵 ERROR: Anche backup ha fallito: {ex}")
             elif e.data == "playing":
-                print(f"🎵 DEBUG: ✅ LEVEL UP AUDIO CONFERMATO IN RIPRODUZIONE!")
+                print(f"🎵 DEBUG: LEVEL UP AUDIO CONFERMATO IN RIPRODUZIONE!")
             elif e.data == "completed":
-                print(f"🎵 DEBUG: ✅ LEVEL UP AUDIO COMPLETATO!")
+                print(f"🎵 DEBUG: LEVEL UP AUDIO COMPLETATO!")
     
     def heartbeat_loop_handler(self, e):
         """Gestisce il loop del heartbeat quando finisce"""
@@ -2238,7 +2256,7 @@ class AvventuraEpica:
             
             self.page.overlay.append(self.musica_battaglia_canale)
             self.page.update()
-            print(f"✅ Musica battaglia caricata su canale dedicato: {file_musica}")
+            print(f"Musica battaglia caricata su canale dedicato: {file_musica}")
         except Exception as e:
             print(f"❌ Errore caricamento musica battaglia: {e}")
     
@@ -2342,7 +2360,7 @@ class AvventuraEpica:
             self.page.update()
             
             self.musica_attuale = file_musica
-            print(f"✅ Musica battaglia caricata: {file_musica}")
+            print(f"Musica battaglia caricata: {file_musica}")
             
         except Exception as e:
             print(f"❌ Errore caricamento musica battaglia: {e}")
@@ -2523,7 +2541,7 @@ class AvventuraEpica:
             prog_precedente = self.progressione_area[area]
             self.progressione_area[area] += 1
             prog_attuale = self.progressione_area[area]
-            testo += f"\n🏆 Progressione {area}: {prog_precedente} → {prog_attuale}/100"
+            testo += f"\nProgressione {area}: {prog_precedente} → {prog_attuale}/100"
             print(f" Progressione {area}: {prog_attuale}")
         
         # Aggiorna debug widget
@@ -2578,10 +2596,10 @@ class AvventuraEpica:
                 # Gatto condivide le sue riserve di emergenza
                 energia_recuperata = 30
                 testo = f"🆘 EMERGENZA! {self.gatto_attivo} condivide le sue riserve segrete!\n"
-                testo += "⚡ Il tuo gatto ti ha salvato dalla situazione impossibile!\n"
+                testo += "Il tuo gatto ti ha salvato dalla situazione impossibile!\n"
                 
                 self.risorse["energia"] = min(100, self.risorse["energia"] + energia_recuperata)
-                testo += f"⚡ Energia recuperata: +{energia_recuperata} (ora: {self.risorse['energia']}/100)\n"
+                testo += f"Energia recuperata: +{energia_recuperata} (ora: {self.risorse['energia']}/100)\n"
                 
                 # Aggiorna gatto (anche in emergenza è felice di aiutare)
                 gatto = self.gatti[self.gatto_attivo]
@@ -2619,7 +2637,7 @@ class AvventuraEpica:
         
         # Recupera energia per il giocatore
         self.risorse["energia"] = min(100, self.risorse["energia"] + energia_recuperata)
-        testo += f"⚡ Energia recuperata: +{energia_recuperata} (ora: {self.risorse['energia']}/100)\n"
+        testo += f"Energia recuperata: +{energia_recuperata} (ora: {self.risorse['energia']}/100)\n"
         
         # Aggiorna gatto
         gatto = self.gatti[self.gatto_attivo]
@@ -2677,9 +2695,9 @@ class AvventuraEpica:
         
         testo = f"🍽️ Consumi cibo per curarti:\n"
         if hp_recuperati > 0:
-            testo += f"❤️ HP recuperati: +{hp_recuperati} (ora: {self.hp_giocatore}/{self.hp_max})"
+            testo += f"HP recuperati: +{hp_recuperati} (ora: {self.hp_giocatore}/{self.hp_max})"
         else:
-            testo += f"❤️ HP già al massimo ({self.hp_giocatore}/{self.hp_max})"
+            testo += f"HP già al massimo ({self.hp_giocatore}/{self.hp_max})"
             
         self.haptic_feedback("success")
         self.riproduci_effetto("mangiare")
@@ -2723,7 +2741,7 @@ class AvventuraEpica:
         """Sblocca nuova area basata sulla progressione"""
         aree_disponibili = [
             "🌲 Bosco", "🏔️ Montagna", "🏰 Castello", "🛤️ Strada",
-            "🌊 Lago", "⛰️ Caverna", "🗡️ Arena", "🏪 Mercato",
+            "🌊 Lago", "⛰️ Caverna", "Arena", "🏪 Mercato",
             "🌳 Foresta", "Vulcano", "❄️ Ghiacciai", "🏝️ Isola",
             "🏜️ Deserto", "🌙 Cripta", "👑 Palazzo"
         ]
@@ -2813,9 +2831,9 @@ class AvventuraEpica:
         if hasattr(self, 'arma_equipaggiata') and self.arma_equipaggiata:
             equipaggiamento.append(f"⚔️ Arma: {self.arma_equipaggiata}")
         if hasattr(self, 'scudo_equipaggiato') and self.scudo_equipaggiato:
-            equipaggiamento.append(f"🛡️ Scudo: {self.scudo_equipaggiato}")
+            equipaggiamento.append(f"Scudo: {self.scudo_equipaggiato}")
         if hasattr(self, 'armatura_equipaggiata') and self.armatura_equipaggiata:
-            equipaggiamento.append(f"🛡️ Armatura: {self.armatura_equipaggiata}")
+            equipaggiamento.append(f"Armatura: {self.armatura_equipaggiata}")
         
         if equipaggiamento:
             stats += f"\nEquipaggiamento:\n"
@@ -3101,9 +3119,6 @@ class AvventuraEpica:
             self.hp_giocatore = self.vita
         if hasattr(self, 'hp_max'):
             self.vita_massima = self.hp_max
-        # Sincronizza oro
-        if hasattr(self, 'monete'):
-            self.oro = self.monete
         # Sincronizza esperienza
         if hasattr(self, 'esperienza_prossimo_livello'):
             self.esperienza_necessaria = self.esperienza_prossimo_livello
@@ -3122,8 +3137,6 @@ class AvventuraEpica:
                 self.page.views.append(vista)
                 self.analizza_accessibilita(vista)
             case "/gioco":
-                # Sincronizza oro e monete sempre prima di mostrare il gioco
-                self.oro = self.monete
                 
                 if len(self.page.views) > 0 and self.page.views[-1].route == "/gioco":
                     print(f"🎮 DEBUG: Vista /gioco già presente, aggiorno stats")
@@ -3135,13 +3148,13 @@ class AvventuraEpica:
                     self.page.views.append(vista)
                     self.analizza_accessibilita(vista)
             case "/impostazioni":
-                print("🔧 DEBUG: Navigando verso /impostazioni")
+                print("DEBUG: Navigando verso /impostazioni")
                 try:
                     vista = self.crea_vista_impostazioni()
-                    print("🔧 DEBUG: Vista impostazioni creata con successo")
+                    print("DEBUG: Vista impostazioni creata con successo")
                     self.page.views.append(vista)
                     self.analizza_accessibilita(vista)
-                    print("🔧 DEBUG: Vista impostazioni aggiunta alla pagina")
+                    print("DEBUG: Vista impostazioni aggiunta alla pagina")
                 except Exception as e:
                     print(f"❌ ERRORE creazione vista impostazioni: {e}")
                     import traceback
@@ -3217,8 +3230,6 @@ class AvventuraEpica:
     def torna_indietro(self, e=None):
         print(f"🔙 Torna indietro - Views: {len(self.page.views)}")
 
-        # Sincronizza oro e monete prima di tornare indietro
-        self.oro = self.monete
         
         if len(self.page.views) > 1:
             self.page.views.pop()
@@ -3550,7 +3561,7 @@ class AvventuraEpica:
         self.debug_widget_level = debug_widget.content.controls[0]
         
         # Debug log
-        print(f"🔧 Debug widget created: Level={self.livello}, EXP={self.esperienza}/{self.esperienza_prossimo_livello}, Area Progress={self.progressione_area.get(self.area_attuale, 0)}/100")
+        print(f"Debug widget created: Level={self.livello}, EXP={self.esperienza}/{self.esperienza_prossimo_livello}, Area Progress={self.progressione_area.get(self.area_attuale, 0)}/100")
 
         # Content principale (con pulsante indietro in fondo)
         content = ft.Column([
@@ -4020,18 +4031,28 @@ class AvventuraEpica:
             tooltip="Riproduci un suono di test"
         )
         
+        # Pulsante per riattivare l'audio quando si blocca su iOS
+        riattiva_audio_btn = ft.ElevatedButton(
+            "Riattiva Audio iOS",
+            on_click=self.riattiva_audio_ios,
+            width=200,
+            bgcolor=ft.colors.ORANGE_700,
+            color=ft.colors.WHITE,
+            tooltip="Forza la riattivazione dell'audio su iPhone"
+        )
+        
         # L'audio ora si attiva automaticamente quando si inizia/carica il gioco
         # Non serve più l'avviso iOS
         
         # Pulsante scarica log per iPhone
-        print("🔧 DEBUG: Creando pulsante scarica log")
+        print("DEBUG: Creando pulsante scarica log")
         download_log_btn = ft.ElevatedButton(
             "Copia Debug",
             on_click=self.copia_log_debug,
             width=200,
             tooltip="Copia il log di debug negli appunti"
         )
-        print("🔧 DEBUG: Pulsante scarica log creato")
+        print("DEBUG: Pulsante scarica log creato")
         
         impostazioni_controls = [
             ft.Text("Audio", size=16, weight=ft.FontWeight.BOLD),
@@ -4041,6 +4062,7 @@ class AvventuraEpica:
             self.volume_effetti_label_tab,
             slider_volume_effetti,
             test_audio_btn,
+            riattiva_audio_btn,
         ]
         
         # L'audio si attiva automaticamente, non serve più l'avviso
@@ -4307,7 +4329,7 @@ class AvventuraEpica:
         )
         
         self.btn_difendi = ft.ElevatedButton(
-            text="🛡️ Difendi",
+            text="Difendi",
             on_click=self.difendi_combattimento,
             width=250,
             height=50,
@@ -4318,7 +4340,7 @@ class AvventuraEpica:
         )
         
         self.btn_cura = ft.ElevatedButton(
-            text=f"💊 Cura ({oggetti_curativi})",
+            text=f"Cura ({oggetti_curativi})",
             on_click=self.usa_pozione_combattimento,
             width=250,
             height=50,
@@ -4330,7 +4352,7 @@ class AvventuraEpica:
         )
         
         self.btn_fuggi = ft.ElevatedButton(
-            text="🏃 Fuggi",
+            text="Fuggi",
             on_click=self.fuggi_combattimento,
             width=250,
             height=50,
@@ -4504,7 +4526,7 @@ class AvventuraEpica:
             # Sezione storia in stile moderno 
             ft.Container(
                 content=ft.Column([
-                    ft.Text("📜 Storia del Combattimento", 
+                    ft.Text("Storia del Combattimento", 
                         size=16, 
                         weight=ft.FontWeight.BOLD, 
                         color=ft.Colors.AMBER_300,
@@ -4801,74 +4823,37 @@ class AvventuraEpica:
                 {"nome": "Anello della Fortuna", "prezzo": 300, "descrizione": "Esperienza +20%", "tipo": "accessorio"}
             ]
         
-        # Crea griglia 2x2 per gli oggetti
-        oggetti_rows = []
-        for i in range(0, len(oggetti_negozio), 2):  # Prendi 2 oggetti alla volta
-            row_items = []
+        # Crea lista verticale per accessibilità VoiceOver
+        oggetti_lista = []
+        for i, oggetto in enumerate(oggetti_negozio):
+            pulsante_acquista = ft.ElevatedButton(
+                text="Acquista",
+                on_click=lambda e, obj=oggetto: self.acquista_oggetto_negozio(obj),
+                bgcolor=ft.Colors.GREEN_600,
+                color=ft.Colors.WHITE,
+                tooltip=f"Acquista {oggetto['nome']}: {oggetto['descrizione']}",
+                width=140
+            )
             
-            # Primo oggetto della riga
-            if i < len(oggetti_negozio):
-                oggetto = oggetti_negozio[i]
-                pulsante_acquista = ft.ElevatedButton(
-                    text="Acquista",
-                    on_click=lambda e, obj=oggetto: self.acquista_oggetto_negozio(obj),
-                    bgcolor=ft.Colors.GREEN_600,
-                    color=ft.Colors.WHITE,
-                    tooltip=f"Acquista {oggetto['nome']}: {oggetto['descrizione']}",
-                    width=140
-                )
-                
-                oggetto_card = ft.Container(
-                    content=ft.Column([
-                        ft.Text(oggetto['nome'], size=16, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER),
-                        ft.Text(oggetto['descrizione'], size=12, text_align=ft.TextAlign.CENTER),
-                        ft.Text(f"{oggetto['prezzo']} monete", size=11, color=ft.Colors.AMBER_400, text_align=ft.TextAlign.CENTER),
-                        pulsante_acquista
-                    ], spacing=5, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
-                    bgcolor=ft.Colors.GREY_700,
-                    border_radius=10,
-                    padding=10,
-                    width=160,
-                    height=120,
-                    data=f"shop_item_{i}"
-                )
-                row_items.append(oggetto_card)
-            
-            # Secondo oggetto della riga
-            if i + 1 < len(oggetti_negozio):
-                oggetto = oggetti_negozio[i + 1]
-                pulsante_acquista = ft.ElevatedButton(
-                    text="Acquista",
-                    on_click=lambda e, obj=oggetto: self.acquista_oggetto_negozio(obj),
-                    bgcolor=ft.Colors.GREEN_600,
-                    color=ft.Colors.WHITE,
-                    tooltip=f"Acquista {oggetto['nome']}: {oggetto['descrizione']}",
-                    width=140
-                )
-                
-                oggetto_card = ft.Container(
-                    content=ft.Column([
-                        ft.Text(oggetto['nome'], size=16, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER),
-                        ft.Text(oggetto['descrizione'], size=12, text_align=ft.TextAlign.CENTER),
-                        ft.Text(f"{oggetto['prezzo']} monete", size=11, color=ft.Colors.AMBER_400, text_align=ft.TextAlign.CENTER),
-                        pulsante_acquista
-                    ], spacing=5, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
-                    bgcolor=ft.Colors.GREY_700,
-                    border_radius=10,
-                    padding=10,
-                    width=160,
-                    height=120,
-                    data=f"shop_item_{i+1}"
-                )
-                row_items.append(oggetto_card)
-            
-            # Crea riga con gli oggetti
-            if row_items:
-                oggetti_rows.append(ft.Row(row_items, spacing=15, alignment=ft.MainAxisAlignment.CENTER))
+            oggetto_card = ft.Container(
+                content=ft.Column([
+                    ft.Text(oggetto['nome'], size=16, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER),
+                    ft.Text(oggetto['descrizione'], size=12, text_align=ft.TextAlign.CENTER),
+                    ft.Text(f"{oggetto['prezzo']} monete", size=11, color=ft.Colors.AMBER_400, text_align=ft.TextAlign.CENTER),
+                    pulsante_acquista
+                ], spacing=5, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
+                bgcolor=ft.Colors.GREY_700,
+                border_radius=10,
+                padding=10,
+                width=300,
+                height=120,
+                data=f"shop_item_{i}"
+            )
+            oggetti_lista.append(oggetto_card)
         
         negozio_controls = [
             self.testo_monete_negozio,
-            ft.Column(oggetti_rows, spacing=15)
+            ft.Column(oggetti_lista, spacing=15)
         ]
         
         content = ft.Column([
@@ -4926,12 +4911,12 @@ class AvventuraEpica:
                     if self.scudo_equipaggiato not in self.inventario:
                         self.inventario[self.scudo_equipaggiato] = 0
                     self.inventario[self.scudo_equipaggiato] += 1
-                    self.aggiorna_storia(f"🛡️ {self.scudo_equipaggiato} spostato nell'inventario")
+                    self.aggiorna_storia(f"{self.scudo_equipaggiato} spostato nell'inventario")
                 
                 # Equip new shield - sync both systems
                 self.scudo_equipaggiato = nome
                 self.equipaggiamento["scudo"] = nome
-                self.aggiorna_storia(f"🛡️ {nome} equipaggiato!")
+                self.aggiorna_storia(f"{nome} equipaggiato!")
                 
             elif tipo == "armatura":
                 # If player has armor, add old armor to inventory
@@ -4939,12 +4924,12 @@ class AvventuraEpica:
                     if self.armatura_equipaggiata not in self.inventario:
                         self.inventario[self.armatura_equipaggiata] = 0
                     self.inventario[self.armatura_equipaggiata] += 1
-                    self.aggiorna_storia(f"🛡️ {self.armatura_equipaggiata} spostata nell'inventario")
+                    self.aggiorna_storia(f"{self.armatura_equipaggiata} spostata nell'inventario")
                 
                 # Equip new armor - sync both systems
                 self.armatura_equipaggiata = nome
                 self.equipaggiamento["armatura"] = nome
-                self.aggiorna_storia(f"🛡️ {nome} equipaggiata!")
+                self.aggiorna_storia(f"{nome} equipaggiata!")
                 
             else:
                 # Regular items go to inventory
@@ -4954,7 +4939,7 @@ class AvventuraEpica:
                 self.inventario[nome] += 1
                 print(f"🎒 DEBUG: Inventario dopo acquisto: {self.inventario}")
             
-            self.aggiorna_storia(f"💰 Hai acquistato {nome} per {prezzo} monete!")
+            self.aggiorna_storia(f"Hai acquistato {nome} per {prezzo} monete!")
             self.haptic_feedback("success")
             if self.audio_abilitato:
                 self.riproduci_effetto("monete")
@@ -5131,7 +5116,7 @@ class AvventuraEpica:
         # Aggiungi titolo equipaggiamento
         oggetti_controls.append(
             ft.Text(
-                "🗡️ Equipaggiamento Attuale",
+                "Equipaggiamento Attuale",
                 size=18,
                 weight=ft.FontWeight.BOLD,
                 color=ft.Colors.AMBER_400
@@ -5144,7 +5129,7 @@ class AvventuraEpica:
             equipaggiato_qualcosa = True
             oggetti_controls.append(
                 ft.Container(
-                    content=ft.Text(f"⚔️ {self.arma_equipaggiata} (EQUIPAGGIATA)", size=16, color=ft.Colors.GREEN_400),
+                    content=ft.Text(f"{self.arma_equipaggiata} (EQUIPAGGIATA)", size=16, color=ft.Colors.GREEN_400),
                     bgcolor=ft.Colors.GREEN_900,
                     border_radius=10,
                     padding=15,
@@ -5156,7 +5141,7 @@ class AvventuraEpica:
             equipaggiato_qualcosa = True
             oggetti_controls.append(
                 ft.Container(
-                    content=ft.Text(f"🛡️ {self.scudo_equipaggiato} (EQUIPAGGIATO)", size=16, color=ft.Colors.BLUE_400),
+                    content=ft.Text(f"{self.scudo_equipaggiato} (EQUIPAGGIATO)", size=16, color=ft.Colors.BLUE_400),
                     bgcolor=ft.Colors.BLUE_900,
                     border_radius=10,
                     padding=15,
@@ -5168,7 +5153,7 @@ class AvventuraEpica:
             equipaggiato_qualcosa = True
             oggetti_controls.append(
                 ft.Container(
-                    content=ft.Text(f"🛡️ {self.armatura_equipaggiata} (EQUIPAGGIATA)", size=16, color=ft.Colors.PURPLE_400),
+                    content=ft.Text(f"{self.armatura_equipaggiata} (EQUIPAGGIATA)", size=16, color=ft.Colors.PURPLE_400),
                     bgcolor=ft.Colors.PURPLE_900,
                     border_radius=10,
                     padding=15,
@@ -5191,7 +5176,7 @@ class AvventuraEpica:
         )
         oggetti_controls.append(
             ft.Text(
-                "🎒 Inventario",
+                "Inventario",
                 size=18,
                 weight=ft.FontWeight.BOLD,
                 color=ft.Colors.CYAN_400
@@ -5420,7 +5405,7 @@ class AvventuraEpica:
                 ),
                 ft.Row([
                     ft.ElevatedButton(
-                        text="✅ Conferma",
+                        text="Conferma",
                         on_click=conferma_rinomina,
                         width=150,
                         height=50,
@@ -5542,7 +5527,7 @@ class AvventuraEpica:
     def crea_vista_gestione_reliquie(self):
         """Crea la vista per gestire le reliquie"""
         titolo = ft.Text(
-            "🔮 Gestione Reliquie", 
+            "Gestione Reliquie", 
             size=24, 
             weight=ft.FontWeight.BOLD, 
             text_align=ft.TextAlign.CENTER,
@@ -5554,9 +5539,9 @@ class AvventuraEpica:
         
         for slot, oggetto in self.equipaggiamento.items():
             slot_nome = {
-                "arma": "🗡️ Arma",
-                "armatura": "🛡️ Armatura", 
-                "accessorio": "💍 Accessorio"
+                "arma": "Arma",
+                "armatura": "Armatura", 
+                "accessorio": "Accessorio"
             }.get(slot, slot)
             
             if oggetto:
@@ -5831,8 +5816,7 @@ class AvventuraEpica:
             # Ricompense
             oro_guadagnato = self.mostro_attuale["attacco"] * 5
             exp_guadagnata = self.mostro_attuale["hp"] // 5
-            self.oro += oro_guadagnato
-            self.monete = self.oro
+            self.monete += oro_guadagnato
             self.esperienza += exp_guadagnata
             
             # Controlla livello dopo esperienza guadagnata
@@ -5849,7 +5833,7 @@ class AvventuraEpica:
                 # Aggiungi boss alla lista dei boss sconfitti
                 if self.area_attuale not in self.boss_sconfitti:
                     self.boss_sconfitti.append(self.area_attuale)
-                    messaggio += f"\n🏆 Boss dell'area {self.area_attuale} sconfitto!"
+                    messaggio += f"\nBoss dell'area {self.area_attuale} sconfitto!"
                     
                     # Sblocca la prossima area
                     self.sblocca_prossima_area()
@@ -5911,7 +5895,7 @@ class AvventuraEpica:
                 self.in_combattimento = False
                 self.combattimento_automatico = False  # Disattiva auto-combat
                 self.ferma_heartbeat()  # Ferma heartbeat quando perdi
-                messaggio += "\n💀 Sei stato sconfitto! Torni in città."
+                messaggio += "\nSei stato sconfitto! Torni in città."
                 
                 if self.audio_abilitato:
                     self.riproduci_effetto("sconfitta")
@@ -5957,7 +5941,7 @@ class AvventuraEpica:
             self.in_combattimento = False
             self.combattimento_automatico = False  # Disattiva auto-combat
             self.ferma_heartbeat()  # Ferma heartbeat quando perdi
-            messaggio += "💀 Sei stato sconfitto! Torni in città."
+            messaggio += "Sei stato sconfitto! Torni in città."
             
             if self.audio_abilitato:
                 self.riproduci_effetto("sconfitta")
@@ -6033,7 +6017,7 @@ class AvventuraEpica:
         
         # Messaggio di guarigione senza attacco del mostro
         messaggio = f"Round {self.round_combattimento}:\n"
-        messaggio += f"💊 Usi {oggetto_da_usare}: {hp_prima_cura} → {hp_dopo_cura} HP (+{cura_effettiva})\n"
+        messaggio += f"Usi {oggetto_da_usare}: {hp_prima_cura} → {hp_dopo_cura} HP (+{cura_effettiva})\n"
         messaggio += f"🐱 Il gatto mangia il pesce rapidamente senza dare tempo al mostro di attaccare!"
         
         self.controlla_vita_bassa()
@@ -6055,7 +6039,7 @@ class AvventuraEpica:
             self.in_combattimento = False
             self.combattimento_automatico = False  # Disattiva auto-combat
             self.ferma_heartbeat()  # Ferma heartbeat quando fuggi
-            messaggio = f"🏃 Sei riuscito a fuggire dal {self.mostro_attuale['nome']}!"
+            messaggio = f"Sei riuscito a fuggire dal {self.mostro_attuale['nome']}!"
             
             if self.audio_abilitato:
                 self.termina_musica_battaglia()
@@ -6076,7 +6060,7 @@ class AvventuraEpica:
                 self.in_combattimento = False
                 self.combattimento_automatico = False  # Disattiva auto-combat
                 self.ferma_heartbeat()  # Ferma heartbeat quando perdi
-                messaggio += "💀 Sei stato sconfitto! Torni in città."
+                messaggio += "Sei stato sconfitto! Torni in città."
                 
                 if self.audio_abilitato:
                     self.riproduci_effetto("sconfitta")
@@ -6516,7 +6500,7 @@ class AvventuraEpica:
         if self.oggetti_usabili():
             pulsanti_inventario.append(
                 ft.ElevatedButton(
-                    "🧪 Usa Oggetto", 
+                    "Usa Oggetto", 
                     on_click=self.usa_oggetto, 
                     width=200, 
                     height=50, 
@@ -6604,7 +6588,7 @@ class AvventuraEpica:
         for nome_oggetto, info in negozio.items():
             disponibile = self.monete >= info["prezzo"]
             colore = ft.Colors.GREEN_600 if disponibile else ft.Colors.RED_600
-            testo_prezzo = f"💰 {info['prezzo']}"
+            testo_prezzo = f"{info['prezzo']} monete"
             tooltip_text = f"{info['descrizione']} - Costo: {info['prezzo']} monete"
             
             if not disponibile:
@@ -6910,6 +6894,53 @@ class AvventuraEpica:
     def should_autoplay_audio(self):
         """Helper per decidere se l'audio può essere riprodotto automaticamente su iOS"""
         return getattr(self, 'audio_ios_attivato', False)
+    
+    def sblocca_audio_ios(self):
+        """Prova a sbloccare l'audio iOS riproducendo un suono breve a volume basso"""
+        try:
+            self.log_audio("Tentativo di sblocco audio iOS...")
+            
+            # Riproduce un suono di vittoria a volume molto basso per "svegliare" iOS
+            if hasattr(self, 'effetto_vittoria') and self.effetto_vittoria:
+                volume_originale = self.effetto_vittoria.volume
+                self.effetto_vittoria.volume = 0.01  # Volume molto basso
+                self.effetto_vittoria.play()
+                
+                # Ripristina il volume dopo un momento
+                import threading
+                import time
+                def ripristina_volume():
+                    time.sleep(0.5)
+                    try:
+                        self.effetto_vittoria.volume = volume_originale
+                        self.log_audio("Audio iOS sbloccato con successo")
+                    except:
+                        pass
+                
+                thread = threading.Thread(target=ripristina_volume)
+                thread.daemon = True
+                thread.start()
+                
+        except Exception as e:
+            self.log_error(f"Errore sblocco audio iOS: {e}")
+    
+    def riattiva_audio_ios(self, e):
+        """Riattiva forzatamente l'audio iOS quando si blocca"""
+        self.log_audio("Riattivazione forzata audio iOS richiesta dall'utente")
+        
+        # Forza la riattivazione
+        self.audio_ios_attivato = True
+        
+        # Prova a sbloccare l'audio
+        self.sblocca_audio_ios()
+        
+        # Riavvia l'audio dell'area corrente se siamo in gioco
+        if getattr(self, 'gioco_iniziato', False) and hasattr(self, 'area_attuale'):
+            self.riavvia_audio_area()
+        
+        # Feedback all'utente
+        self.haptic_feedback("success")
+        self.riproduci_effetto("vittoria")
         
     def torna_menu_principale(self, e):
         """Torna al menu principale"""
@@ -7004,16 +7035,19 @@ class AvventuraEpica:
             self.debug_widget_progress.value = f"Area: {self.progressione_area.get(self.area_attuale, 0)}/100"
             
             # Debug log
-            print(f"🔧 Debug widget updated: Level={self.livello}, EXP={self.esperienza}/{self.esperienza_prossimo_livello}, Area Progress={self.progressione_area.get(self.area_attuale, 0)}/100")
+            print(f"Debug widget updated: Level={self.livello}, EXP={self.esperienza}/{self.esperienza_prossimo_livello}, Area Progress={self.progressione_area.get(self.area_attuale, 0)}/100")
             
             self.page.update()
         
     def inizia_gioco(self, e):
         """Inizia nuova avventura"""
         # Attiva automaticamente l'audio iOS quando l'utente inizia il gioco
-        if not getattr(self, 'audio_ios_attivato', False):
-            self.audio_ios_attivato = True
-            self.log_audio("Audio iOS attivato automaticamente all'avvio del gioco")
+        # Forza sempre l'attivazione per gestire i riavvii iOS
+        self.audio_ios_attivato = True
+        self.log_audio("Audio iOS attivato/riattivato all'avvio del gioco")
+        
+        # Prova a "sbloccare" l'audio iOS riproducendo un suono silenzioso
+        self.sblocca_audio_ios()
         
         self.reset_gioco()
         self.gioco_iniziato = True
@@ -7204,7 +7238,7 @@ class AvventuraEpica:
                 not self.controlla_boss_sconfitto(area)):
                 # Se il boss non è stato sconfitto ma la notifica è marcata come mostrata,
                 # rimuovi la marcatura per permettere che la notifica riappaia
-                print(f"🔧 DEBUG: Rimuovo notifica mostrata per area {area} con boss non sconfitto")
+                print(f"DEBUG: Rimuovo notifica mostrata per area {area} con boss non sconfitto")
                 self.boss_notifications_mostrate.discard(area)
 
     def combatti_mostri(self, e):
@@ -7261,7 +7295,7 @@ class AvventuraEpica:
                 time.sleep(2)
                 
                 self.aggiorna_storia(f"👹 Appare un {nome_mostro}!")
-                self.aggiorna_storia(f"💀 '{verso_mostro}' - grida il mostro!")
+                self.aggiorna_storia(f"'{verso_mostro}' - grida il mostro!")
                 time.sleep(2)
                 
                 turno = 1
@@ -7281,7 +7315,7 @@ class AvventuraEpica:
                         
                     hp_mostro -= danno
                     
-                    self.aggiorna_storia(f"🗡️ {gatto['nome']} attacca per {danno} danni!")
+                    self.aggiorna_storia(f"{gatto['nome']} attacca per {danno} danni!")
                     if random.choice([True, False]):
                         self.aggiorna_storia(f" '{random.choice(['Miao!', 'Hiss!', 'Purr!'])}' - verso di battaglia!")
                     
@@ -7351,7 +7385,7 @@ class AvventuraEpica:
                     self.termina_musica_battaglia()
                     
                     # Sconfitta
-                    self.aggiorna_storia(f"\n💀 SCONFITTA!")
+                    self.aggiorna_storia(f"\nSCONFITTA!")
                     self.aggiorna_storia(f"😿 {gatto['nome']} e tu siete stati sopraffatti...")
                     
                     # Effetto sconfitta SUBITO
@@ -7556,7 +7590,7 @@ class AvventuraEpica:
         
         # Controlla se il boss è già stato sconfitto
         if nome_boss in self.boss_sconfitti:
-            self.aggiorna_storia(f"✅ Hai già sconfitto {nome_boss}!")
+            self.aggiorna_storia(f"Hai già sconfitto {nome_boss}!")
             return
             
         # Controlla requisiti speciali
@@ -7865,10 +7899,66 @@ class AvventuraEpica:
                 # Controlla sblocco gatti dopo nuova area
                 self.controlla_sblocco_gatti()
                 
-                self.aggiorna_storia(f"\n🎆 NUOVA AREA SBLOCCATA: {prossima_area}!")
-                self.page.update()  # Refresh UI to show new area button immediately
+                # Mostra finestra pulita per sblocco area
+                self.mostra_dialog_area_sbloccata(prossima_area)
                 return True
         return False
+        
+    def mostra_dialog_area_sbloccata(self, nome_area):
+        """Mostra finestra pulita per notifica sblocco area"""
+        def chiudi_dialog(e):
+            self.dialog_area_sbloccata.open = False
+            self.page.update()
+        
+        self.dialog_area_sbloccata = ft.AlertDialog(
+            modal=True,
+            title=ft.Text(
+                "Nuova Area Sbloccata!",
+                size=24,
+                weight=ft.FontWeight.BOLD,
+                text_align=ft.TextAlign.CENTER,
+                color=ft.Colors.GOLD
+            ),
+            content=ft.Column([
+                ft.Text(
+                    "🎆",
+                    size=48,
+                    text_align=ft.TextAlign.CENTER
+                ),
+                ft.Text(
+                    f"Hai sbloccato: {nome_area}",
+                    size=18,
+                    text_align=ft.TextAlign.CENTER,
+                    color=ft.Colors.WHITE,
+                    weight=ft.FontWeight.BOLD
+                ),
+                ft.Text(
+                    "Usa il pulsante 'Cambia Area' per accedervi!",
+                    size=16,
+                    text_align=ft.TextAlign.CENTER,
+                    color=ft.Colors.GREY_300
+                )
+            ], spacing=20, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
+            actions=[
+                ft.ElevatedButton(
+                    text="Continua",
+                    on_click=chiudi_dialog,
+                    bgcolor=ft.Colors.GOLD,
+                    color=ft.Colors.BLACK,
+                    width=120,
+                    height=40
+                )
+            ],
+            actions_alignment=ft.MainAxisAlignment.CENTER,
+            bgcolor=ft.Colors.GREY_900,
+            title_padding=20,
+            content_padding=20,
+            actions_padding=20
+        )
+        
+        self.page.dialog = self.dialog_area_sbloccata
+        self.dialog_area_sbloccata.open = True
+        self.page.update()
         
     def pesca_nel_mare(self, e):
         """Pesca nel mare per ottenere pesce magico per i gatti"""
@@ -8084,7 +8174,7 @@ class AvventuraEpica:
         
         # Mostra incrementi nell'interfaccia
         testo += f"\n✨ +1 EXP ({exp_precedente} → {self.esperienza})"
-        testo += f"\n🏆 Progressione {self.area_attuale}: {prog_precedente} → {prog_attuale}/100"
+        testo += f"\nProgressione {self.area_attuale}: {prog_precedente} → {prog_attuale}/100"
         
         self.gestisci_livello()
         
@@ -8175,12 +8265,12 @@ class AvventuraEpica:
             self.oggetti[stanza_attuale] = ""
             
             # Monete bonus per oggetti speciali
-            if "💎" in oggetto or "👑" in oggetto:
+            if "Cristallo" in oggetto or "Corona" in oggetto or "Diamante" in oggetto:
                 bonus = random.randint(20, 50)
                 self.monete += bonus
-                testo = f"✅ Hai raccolto: {oggetto}!\n Bonus: +{bonus} monete!"
+                testo = f"Hai raccolto: {oggetto}!\n Bonus: +{bonus} monete!"
             else:
-                testo = f"✅ Hai raccolto: {oggetto}!"
+                testo = f"Hai raccolto: {oggetto}!"
                 
             self.haptic_feedback("success")
             if self.audio_abilitato:
@@ -8213,7 +8303,7 @@ class AvventuraEpica:
             testo += "📦 Inventario vuoto.\n"
             
         testo += f"\n === EQUIPAGGIAMENTO ===\n"
-        testo += f"🗡️ Arma: {self.equipaggiamento['arma'] or 'Nessuna'}\n"
+        testo += f"Arma: {self.equipaggiamento['arma'] or 'Nessuna'}\n"
         testo += f" Armatura: {self.equipaggiamento['armatura'] or 'Nessuna'}\n" 
         testo += f"💍 Accessorio: {self.equipaggiamento['accessorio'] or 'Nessuno'}\n"
         
@@ -8267,7 +8357,7 @@ class AvventuraEpica:
             if self.inventario[oggetto] <= 0:
                 del self.inventario[oggetto]
             
-            testo += f"✅ Equipaggiato: {oggetto} ({tipo})\n"
+            testo += f"Equipaggiato: {oggetto} ({tipo})\n"
             testo += f" Nuovo attacco: {self.calcola_attacco_totale()}\n"
             testo += f" Nuova difesa: {self.calcola_difesa_totale()}"
             
@@ -8304,7 +8394,7 @@ class AvventuraEpica:
         if self.inventario[oggetto_usato] <= 0:
             del self.inventario[oggetto_usato]
         
-        testo = f"🧪 Usi: {oggetto_usato}\n"
+        testo = f"Usi: {oggetto_usato}\n"
         
         # Effetti oggetti
         if "Pozione Vita" in oggetto_usato:
@@ -8348,7 +8438,7 @@ class AvventuraEpica:
         if self.inventario[nome_oggetto] <= 0:
             del self.inventario[nome_oggetto]
         
-        testo = f"✅ Usi {nome_oggetto}!"
+        testo = f"Usi {nome_oggetto}!"
         
         # Effetti degli oggetti
         if "Pozione Vita" in nome_oggetto:
@@ -8466,7 +8556,7 @@ class AvventuraEpica:
                 if nome_oggetto not in self.inventario:
                     self.inventario[nome_oggetto] = 0
                 self.inventario[nome_oggetto] += 1
-                self.aggiorna_storia(f"🛡️ {nome_oggetto} disequipaggiato e messo nell'inventario!")
+                self.aggiorna_storia(f"{nome_oggetto} disequipaggiato e messo nell'inventario!")
             elif tipo_equipaggiamento == "armatura":
                 self.armatura_equipaggiata = None
                 self.equipaggiamento["armatura"] = None
@@ -8474,7 +8564,7 @@ class AvventuraEpica:
                 if nome_oggetto not in self.inventario:
                     self.inventario[nome_oggetto] = 0
                 self.inventario[nome_oggetto] += 1
-                self.aggiorna_storia(f"🛡️ {nome_oggetto} disequipaggiata e messa nell'inventario!")
+                self.aggiorna_storia(f"{nome_oggetto} disequipaggiata e messa nell'inventario!")
             
             # Aggiorna statistiche 
             self.aggiorna_stats_incrementali()
@@ -8518,7 +8608,7 @@ class AvventuraEpica:
                 
                 self.scudo_equipaggiato = nome_oggetto
                 self.equipaggiamento["scudo"] = nome_oggetto
-                self.aggiorna_storia(f"🛡️ {nome_oggetto} equipaggiato!")
+                self.aggiorna_storia(f"{nome_oggetto} equipaggiato!")
                 
             elif "Armatura" in nome_oggetto:
                 # Se ha già un'armatura, mettila in inventario
@@ -8534,7 +8624,7 @@ class AvventuraEpica:
                 
                 self.armatura_equipaggiata = nome_oggetto
                 self.equipaggiamento["armatura"] = nome_oggetto
-                self.aggiorna_storia(f"🛡️ {nome_oggetto} equipaggiata!")
+                self.aggiorna_storia(f"{nome_oggetto} equipaggiata!")
             else:
                 self.aggiorna_storia(f"❌ {nome_oggetto} non è equipaggiabile!")
                 return
@@ -8562,7 +8652,7 @@ class AvventuraEpica:
         for nome, info in negozio.items():
             disponibile = "✅" if self.monete >= info["prezzo"] else "❌"
             testo += f"{disponibile} {nome} - {info['prezzo']} monete\n"
-            testo += f"   📝 {info['descrizione']}\n\n"
+            testo += f"   {info['descrizione']}\n\n"
             
         self.aggiorna_storia(testo)
         
@@ -8714,9 +8804,9 @@ class AvventuraEpica:
         if self.inventario[nome_oggetto] <= 0:
             del self.inventario[nome_oggetto]
             
-        testo = f"✅ {nome_oggetto} equipaggiato!\n"
-        testo += f"🗡️ Attacco: {self.calcola_attacco_totale()}\n"
-        testo += f"🛡️ Difesa: {self.calcola_difesa_totale()}"
+        testo = f"{nome_oggetto} equipaggiato!\n"
+        testo += f"Attacco: {self.calcola_attacco_totale()}\n"
+        testo += f"Difesa: {self.calcola_difesa_totale()}"
         
         self.aggiorna_storia(testo)
         self.aggiorna_stats_incrementali()
@@ -8744,8 +8834,8 @@ class AvventuraEpica:
         self.equipaggiamento[slot_trovato] = None
         
         testo = f"❌ {nome_oggetto} disequipaggiato!\n"
-        testo += f"🗡️ Attacco: {self.calcola_attacco_totale()}\n"
-        testo += f"🛡️ Difesa: {self.calcola_difesa_totale()}"
+        testo += f"Attacco: {self.calcola_attacco_totale()}\n"
+        testo += f"Difesa: {self.calcola_difesa_totale()}"
         
         self.aggiorna_storia(testo)
         self.aggiorna_stats_incrementali()
@@ -8775,7 +8865,7 @@ class AvventuraEpica:
             self.hp_giocatore = min(self.hp_max, self.hp_giocatore + cura)
             testo = f"🐟 Hai mangiato {nome_oggetto} e recuperato {cura} HP!"
         else:
-            testo = f"✅ Hai usato {nome_oggetto}!"
+            testo = f"Hai usato {nome_oggetto}!"
         
         # Effetto audio per pesci
         if self.audio_abilitato and ("Acciuga" in nome_oggetto or "Sardina" in nome_oggetto):
@@ -8802,7 +8892,7 @@ class AvventuraEpica:
         """Compra un oggetto specifico dal negozio"""
         print(f"🛒 DEBUG: Tentativo acquisto {nome_oggetto} per {prezzo} monete")
         print(f"🎮 DEBUG: gioco_iniziato = {self.gioco_iniziato}")
-        print(f"💰 DEBUG: monete attuali = {self.monete}")
+        print(f"DEBUG: monete attuali = {self.monete}")
         
         if not self.gioco_iniziato:
             print("❌ DEBUG: Gioco non iniziato!")
@@ -8863,17 +8953,17 @@ class AvventuraEpica:
                 else:
                     self.inventario[nome_oggetto] = 1
             
-            testo = f"✅ Acquistato: {nome_oggetto}\n"
-            testo += f"💰 Costo: {prezzo} monete\n"
-            testo += f"📝 {info['descrizione']}\n"
+            testo = f"Acquistato: {nome_oggetto}\n"
+            testo += f"Costo: {prezzo} monete\n"
+            testo += f"{info['descrizione']}\n"
             
             # Mostra se equipaggiato automaticamente
             if info["tipo"] in ["arma", "armatura", "accessorio"]:
-                testo += f"⚡ Equipaggiato automaticamente!\n"
-                testo += f"🗡️ Attacco: {self.calcola_attacco_totale()}\n"
-                testo += f"🛡️ Difesa: {self.calcola_difesa_totale()}\n"
+                testo += f"Equipaggiato automaticamente!\n"
+                testo += f"Attacco: {self.calcola_attacco_totale()}\n"
+                testo += f"Difesa: {self.calcola_difesa_totale()}\n"
             
-            testo += f"💰 Monete rimaste: {self.monete}"
+            testo += f"Monete rimaste: {self.monete}"
             
             self.haptic_feedback("success")
             if self.audio_abilitato:
@@ -8950,9 +9040,9 @@ class AvventuraEpica:
                 else:
                     self.inventario[nome_oggetto] = 1
             
-            testo = f"✅ Acquistato: {nome_oggetto}\n"
+            testo = f"Acquistato: {nome_oggetto}\n"
             testo += f" Costo: {info['prezzo']} monete\n"
-            testo += f"📝 {info['descrizione']}\n"
+            testo += f"{info['descrizione']}\n"
             testo += f" Monete rimaste: {self.monete}"
             
             self.haptic_feedback("success")
@@ -9077,7 +9167,7 @@ class AvventuraEpica:
         try:
             with open("avventura_epica_save.json", "w") as file:
                 json.dump(stato_gioco, file, indent=2)
-            print("✅ DEBUG: Salvataggio completato con successo!")
+            print("DEBUG: Salvataggio completato con successo!")
             
             # Salva stato per la vista di conferma
             self.salvataggio_successo = True
@@ -9391,7 +9481,7 @@ class AvventuraEpica:
         # Create content with Column layout
         content = ft.Column([
             ft.Text(
-                "🎯 Boss Sbloccato!",
+                "Boss Sbloccato!",
                 size=32,
                 weight=ft.FontWeight.BOLD,
                 text_align=ft.TextAlign.CENTER,
@@ -9461,7 +9551,7 @@ class AvventuraEpica:
     def mostra_dialog_salvataggio(self, successo, errore=None):
         """Mostra dialog di conferma salvataggio"""
         if successo:
-            titolo = "✅ Partita Salvata"
+            titolo = "Partita Salvata"
             messaggio = "La tua avventura è stata salvata con successo!"
         else:
             titolo = "❌ Errore"
@@ -9794,7 +9884,7 @@ class AvventuraEpica:
             self.aggiorna_storia(f"✨ RELIQUIA OTTENUTA! ✨\n\n"
                                f"{rarita_colore} {nome_reliquia}\n"
                                f" {info_reliquia['descrizione']}\n"
-                               f"🎯 Rarità: {info_reliquia['rarita'].upper()}")
+                               f"Rarità: {info_reliquia['rarita'].upper()}")
                                
             self.haptic_feedback("success")
             self.riproduci_effetto("vittoria")
@@ -10087,9 +10177,9 @@ class AvventuraEpica:
                 testo += f"   ✨ EVOLUTO: {evoluzione['nome_evoluto']}\n"
                 
             if not gatto["nome_personalizzato"] and affinita < 50:
-                testo += f"   📝 Puoi dare un nome personalizzato! (+20 affinità)\n"
+                testo += f"   Puoi dare un nome personalizzato! (+20 affinità)\n"
                 
-            testo += f"   🎯 Abilità: {gatto['abilita']}\n\n"
+            testo += f"   Abilità: {gatto['abilita']}\n\n"
             
         # Suggerimenti per aumentare affinità
         testo += " COME AUMENTARE L'AFFINITÀ:\n"
@@ -10226,7 +10316,7 @@ class AvventuraEpica:
         
         # Mostra incrementi nell'interfaccia
         testo += f"\n✨ +1 EXP ({exp_precedente} → {self.esperienza})"
-        testo += f"\n🏆 Progressione {self.area_attuale}: {prog_precedente} → {prog_attuale}/100"
+        testo += f"\nProgressione {self.area_attuale}: {prog_precedente} → {prog_attuale}/100"
         
         self.gestisci_livello()
             
@@ -10249,7 +10339,7 @@ class AvventuraEpica:
         monete_tech = random.randint(40, 80)
         self.monete += monete_tech
         
-        testo = f"🔧 Ripari con successo un automa!\n"
+        testo = f"Ripari con successo un automa!\n"
         testo += f"⚙️ +{componenti} componenti di ferro\n"
         testo += f" +{monete_tech} monete tecnologiche"
         
@@ -10266,7 +10356,7 @@ class AvventuraEpica:
         
         # Mostra incrementi nell'interfaccia
         testo += f"\n✨ +1 EXP ({exp_precedente} → {self.esperienza})"
-        testo += f"\n🏆 Progressione {self.area_attuale}: {prog_precedente} → {prog_attuale}/100"
+        testo += f"\nProgressione {self.area_attuale}: {prog_precedente} → {prog_attuale}/100"
         
         self.gestisci_livello()
             
@@ -10315,7 +10405,7 @@ class AvventuraEpica:
         
         # Mostra incrementi nell'interfaccia
         testo += f"\n✨ +1 EXP ({exp_precedente} → {self.esperienza})"
-        testo += f"\n🏆 Progressione {self.area_attuale}: {prog_precedente} → {prog_attuale}/100"
+        testo += f"\nProgressione {self.area_attuale}: {prog_precedente} → {prog_attuale}/100"
         
         self.gestisci_livello()
             
@@ -10611,9 +10701,12 @@ class AvventuraEpica:
     def carica_gioco(self, e):
         """Caricamento completo"""
         # Attiva automaticamente l'audio iOS quando l'utente carica il gioco
-        if not getattr(self, 'audio_ios_attivato', False):
-            self.audio_ios_attivato = True
-            self.log_audio("Audio iOS attivato automaticamente al caricamento del gioco")
+        # Forza sempre l'attivazione per gestire i riavvii iOS
+        self.audio_ios_attivato = True
+        self.log_audio("Audio iOS attivato/riattivato al caricamento del gioco")
+        
+        # Prova a "sbloccare" l'audio iOS riproducendo un suono silenzioso
+        self.sblocca_audio_ios()
         
         if not os.path.exists("avventura_epica_save.json"):
             self.aggiorna_storia("❌ Nessun salvataggio trovato!")
