@@ -19,7 +19,7 @@ jobs:
           
       - name: Install Python dependencies
         run: |
-          pip install ./flet-0.28.3-py3-none-any.whl
+          pip install flet==0.28.3
           pip install -r requirements.txt
           
       - name: Install Flutter
