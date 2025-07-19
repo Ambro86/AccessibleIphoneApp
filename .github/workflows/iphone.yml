@@ -44,7 +44,9 @@ jobs:
             --build-number ${{ github.run_number }} \
             --org "com.ambrogio.riili" \
             --company "Ambrogio Riili" \
-            --flutter-build-args=--profile
+            --flutter-build-args=--profile \
+            --info-plist "UIAccessibilityEnabled=True" \
+            --info-plist "UIAccessibilityTraits=True"
             
       - name: Convert xcarchive to IPA
         run: |
