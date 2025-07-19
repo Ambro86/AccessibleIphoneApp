@@ -32,14 +32,25 @@ jobs:
           echo "APP_ENV=prod" > .env
           echo "VERSION=${{ github.run_number }}" >> .env
           echo "BUILD=${{ github.run_number }}" >> .env
-          echo "is_mobile=1" >> .env
+          # Rimosso is_mobile - gestisci nel codice con platform detection
           
       # NUOVO: Pulisci cache Flutter e dipendenze
       - name: Clean Flutter cache
         run: |
-          cd build
-          flutter clean || true
-          flutter pub cache clean || true
+          # Pulisci cache Flutter globale
+          flutter pub cache clean -f || true
+          
+          # Se esiste una directory build, puliscila
+          if [ -d "build" ]; then
+            echo "Cleaning existing build directory..."
+            rm -rf build
+          fi
+          
+          # Se Flet ha già creato struttura iOS, puliscila
+          if [ -d "ios" ]; then
+            echo "Found iOS directory, cleaning..."
+            cd ios && flutter clean && cd .. || true
+          fi
           
       - name: Build IPA with Flet
         run: |
