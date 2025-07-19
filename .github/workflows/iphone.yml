@@ -44,11 +44,7 @@ jobs:
             --build-number ${{ github.run_number }} \
             --org "com.ambrogio.riili" \
             --company "Ambrogio Riili" \
-            --flutter-build-args=--debug \
-            --flutter-build-args=--split-debug-info=debug_info \
-            --flutter-build-args=--obfuscate \
-            --info-plist "UIAccessibilityEnabled=True" \
-            --info-plist "UIAccessibilityTraits=True"
+            --flutter-build-args=--debug
             
       - name: Convert xcarchive to IPA
         run: |
