@@ -36,31 +36,43 @@ jobs:
       # OPZIONE 1: Build con JIT invece di AOT (più simile a debug)
       - name: Build IPA with JIT compilation
         run: |
-          # Crea prima il progetto Flutter con sintassi corretta
-          flet create . --project "avventura-epica" --description "Avventura Epica RPG"
+          # Prima dobbiamo far generare la struttura iOS da Flet
+          echo "🔧 Generando struttura progetto iOS..."
           
-          # Modifica il bundle identifier nel progetto iOS
-          cd ios
+          # Usa flet build per generare la struttura (poi lo interrompiamo)
+          timeout 30 flet build ipa --project "avventura-epica" --company "Ambrogio Riili" || true
           
-          # Usa sed per modificare il bundle identifier
+          # Ora dovremmo avere la directory build/ios
+          if [ ! -d "build/ios" ]; then
+            echo "❌ Directory ios non trovata dopo flet build"
+            echo "📁 Contenuto directory corrente:"
+            ls -la
+            echo "📁 Contenuto build/:"
+            ls -la build/ || echo "build/ non esiste"
+            exit 1
+          fi
+          
+          cd build/ios
+          
+          # Modifica il bundle identifier
           find . -name "*.pbxproj" -exec sed -i '' 's/com.example.avventuraEpica/com.ambrogio.riili.avventura-epica/g' {} \;
           
-          # Modifica Info.plist per aggiungere il display name corretto
+          # Modifica Info.plist per aggiungere display name e accessibilità
           if [ -f "Runner/Info.plist" ]; then
+            echo "📝 Modificando Info.plist..."
             /usr/libexec/PlistBuddy -c "Set :CFBundleDisplayName 'Avventura Epica'" Runner/Info.plist
             /usr/libexec/PlistBuddy -c "Set :CFBundleName 'Avventura Epica'" Runner/Info.plist
-            
-            # Aggiungi flag di accessibilità PRIMA del build
             /usr/libexec/PlistBuddy -c "Add :UIAccessibilityEnabled bool YES" Runner/Info.plist 2>/dev/null || \
             /usr/libexec/PlistBuddy -c "Set :UIAccessibilityEnabled YES" Runner/Info.plist
           fi
           
-          # Build con configurazione custom che preserva i simboli
+          # Build con configurazione custom
+          echo "🏗️ Building con xcodebuild..."
           xcodebuild -workspace Runner.xcworkspace \
             -scheme Runner \
             -configuration Release \
             -sdk iphoneos \
-            -archivePath ../build/ipa/Runner.xcarchive \
+            -archivePath ../../build/ipa/Runner.xcarchive \
             -allowProvisioningUpdates \
             GCC_OPTIMIZATION_LEVEL=0 \
             SWIFT_OPTIMIZATION_LEVEL="-Onone" \
