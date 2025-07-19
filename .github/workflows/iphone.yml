@@ -73,10 +73,7 @@ jobs:
           # Inserisci la chiave accessibilità se non presente
           if ! grep -q "<key>UIAccessibilityEnabled</key>" "$INFO_PLIST"; then
             echo "🛠️ Aggiungo UIAccessibilityEnabled a Info.plist"
-            sed -i '' '/<dict>/a\
-  <key>UIAccessibilityEnabled</key>\
-  <true/>
-' "$INFO_PLIST"
+            /usr/libexec/PlistBuddy -c "Add :UIAccessibilityEnabled bool true" "$INFO_PLIST" || echo "ℹ️ UIAccessibilityEnabled già presente o errore gestito"
           else
             echo "ℹ️ UIAccessibilityEnabled già presente"
           fi
