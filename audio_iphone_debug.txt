@@ -1,0 +1,58 @@
+DIAGNOSI PROBLEMA AUDIO IPHONE - Debug Report
+==============================================
+
+SITUAZIONE ATTUALE:
+✅ Gli oggetti audio vengono creati correttamente (28 oggetti audio inizializzati)
+✅ L'audio è abilitato nelle impostazioni (audio_abilitato = True)
+✅ I volumi sono configurati correttamente (musica: 0.3, effetti: 0.7, ambiente: 0.21)
+✅ Il codice di attivazione iOS funziona (audio_ios_attivato viene impostato a True)
+✅ Gli audio passano allo stato "playing" (visibile nei log)
+❌ L'audio non è udibile sui dispositivi iPhone fisici
+
+ANALISI DEL LOG:
+1. Sistema audio inizializzato correttamente: "Sistema audio inizializzato con 28 oggetti audio"
+2. Musica villaggio caricata: "Musica villaggio caricata"
+3. Audio in stato playing: "state_changed playing" per effetto raccolta
+4. Autoplay configurato correttamente su alcuni elementi quando iOS è attivato
+
+POSSIBILI CAUSE:
+1. POLICY AUDIO iOS STRICT: iOS richiede interazione utente diretta per ogni sessione audio
+2. FLET_AUDIO LIMITAZIONI: Il modulo flet_audio potrebbe non gestire correttamente le policy iOS
+3. AUDIO SESSION MANAGEMENT: iOS potrebbe richiedere configurazione audio session specifica
+4. DEVICE SILENT MODE: L'iPhone potrebbe essere in modalità silenziosa
+
+TENTATIVI DI RISOLUZIONE IMPLEMENTATI:
+1. ✅ Attivazione audio al primo click (Inizia Gioco)
+2. ✅ Attivazione audio alle azioni incrementali (Raccogli Risorse)
+3. ✅ Attivazione audio al combattimento
+4. ✅ Funzione sblocca_audio_ios migliorata (riproduce musica + ambiente + effetto test)
+5. ✅ Funzione testa_audio aggressiva (riproduce multipli effetti)
+6. ✅ Logging dettagliato per debug
+7. ✅ Pulsante "Riattiva Audio iOS" nelle impostazioni
+
+PROSSIMI PASSI DA TESTARE:
+1. VERIFICA VOLUME FISICO: Controllare che il volume dell'iPhone sia alzato
+2. VERIFICA MODALITÀ SILENZIOSA: Disattivare la modalità silenziosa dell'iPhone
+3. VERIFICA BLUETOOTH: Disconnettere eventuali cuffie/speaker Bluetooth
+4. TEST PULSANTE "TESTA AUDIO": Premere il pulsante nelle impostazioni
+5. TEST "RIATTIVA AUDIO iOS": Premere questo pulsante se il primo non funziona
+
+CODICE KEY IMPLEMENTATO:
+- audio_ios_attivato flag globale
+- sblocca_audio_ios() con strategia aggressiva
+- Attivazione multipla in punti chiave dell'app
+- Logging dettagliato per tracciare il flusso audio
+
+NOTA IMPORTANTE:
+Se l'audio non funziona ancora dopo questi fix, il problema potrebbe essere:
+1. Limitazioni di flet_audio su iOS reale vs simulatore
+2. Policy audio iOS che richiedono configurazioni native specifiche
+3. Necessità di aggiornamento flet_audio per supporto iOS completo
+
+ISTRUZIONI TEST:
+1. Assicurarsi che l'iPhone NON sia in modalità silenziosa
+2. Alzare il volume fisico dell'iPhone
+3. Aprire l'app e premere "Inizia Gioco"  
+4. Se non si sente nulla, andare in Impostazioni → "Testa Audio"
+5. Se ancora non funziona, premere "Riattiva Audio iOS"
+6. Controllare il log per vedere i messaggi di debug audio

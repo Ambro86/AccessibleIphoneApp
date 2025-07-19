@@ -86,9 +86,18 @@ class AvventuraEpica:
             if hasattr(self, 'log_file') and os.path.exists(self.log_file):
                 print(f"📱 DEBUG: File di log trovato: {self.log_file}")
                 
-                # Leggi il contenuto del file
-                with open(self.log_file, 'r', encoding='utf-8') as f:
-                    log_content = f.read()
+                # Leggi il contenuto del file con gestione errori encoding
+                try:
+                    with open(self.log_file, 'r', encoding='utf-8') as f:
+                        log_content = f.read()
+                except UnicodeDecodeError:
+                    print("📱 DEBUG: Errore UTF-8, provo con encoding alternativo")
+                    try:
+                        with open(self.log_file, 'r', encoding='utf-8', errors='ignore') as f:
+                            log_content = f.read()
+                    except Exception:
+                        with open(self.log_file, 'r', encoding='latin-1') as f:
+                            log_content = f.read()
                 
                 # Prova prima con set_clipboard
                 try:
@@ -316,16 +325,16 @@ class AvventuraEpica:
         
         # Verifica immagini senza semantics
         if isinstance(control, ft.Image):
-            if not getattr(control, 'semantics_label', None):
+            if not getattr(control, 'tooltip', None):
                 problema = {
                     'path': path,
                     'tipo': 'Image',
-                    'descrizione': 'Manca semantics_label',
-                    'raccomandazione': 'Aggiungi semantics_label="Descrizione immagine"',
+                    'descrizione': 'Manca tooltip',
+                    'raccomandazione': 'Aggiungi tooltip="Descrizione immagine"',
                     'impatto_accessibilita': 'Screen reader non può descrivere l\'immagine agli utenti non vedenti'
                 }
                 problemi.append(problema)
-                print(f"🖼️  {path} → Image: Manca semantics_label")
+                print(f"🖼️  {path} → Image: Manca tooltip")
                 print(f"SOLUZIONE: {problema['raccomandazione']}")
         
         # Verifica testi troppo piccoli
@@ -2471,6 +2480,14 @@ class AvventuraEpica:
     
     def raccogli_risorse(self, e):
         """Raccolta risorse nell'area attuale"""
+        # Attiva audio iOS al primo click di qualsiasi azione
+        if not getattr(self, 'audio_ios_attivato', False):
+            self.audio_ios_attivato = True
+            self.log_audio("Audio iOS attivato da azione raccogli risorse")
+            # Avvia subito l'audio dell'area corrente
+            if hasattr(self, 'area_attuale'):
+                self.riavvia_audio_area()
+                
         if not self.gioco_iniziato:
             return
             
@@ -3104,6 +3121,22 @@ class AvventuraEpica:
     
     def inizia_o_continua_gioco(self, e):
         """Inizia nuovo gioco o continua se già iniziato"""
+        # Attiva audio iOS al primo click dell'utente
+        if not getattr(self, 'audio_ios_attivato', False):
+            self.audio_ios_attivato = True
+            self.log_audio("Audio iOS attivato dal pulsante Inizia Gioco")
+            # Debug dettagliato
+            self.log_audio(f"Audio abilitato globalmente: {getattr(self, 'audio_abilitato', 'Non definito')}")
+            self.log_audio(f"Volume musica: {getattr(self, 'volume_musica', 'Non definito')}")
+            self.log_audio(f"Volume effetti: {getattr(self, 'volume_effetti', 'Non definito')}")
+            # Prova a sbloccare immediatamente con approccio aggressivo
+            self.sblocca_audio_ios()
+            # Forza anche l'avvio della musica dell'area corrente
+            if hasattr(self, 'area_attuale') and self.area_attuale:
+                self.log_audio(f"Forzando audio per area: {self.area_attuale}")
+                self.cambia_musica_area(self.area_attuale)
+                self.cambia_suono_ambiente_area(self.area_attuale)
+            
         if not self.gioco_iniziato:
             # Nuovo gioco
             self.inizia_gioco(e)
@@ -3300,7 +3333,8 @@ class AvventuraEpica:
                 height=60,
                 bgcolor=ft.Colors.GREEN_700,
                 color=ft.Colors.WHITE,
-                tooltip="Inizia una nuova avventura o continua"
+                tooltip="Inizia una nuova avventura o continua",
+                autofocus=True
             ),
             ft.ElevatedButton(
                 text="Carica Gioco",
@@ -3395,12 +3429,14 @@ class AvventuraEpica:
             content=ft.Text(
                 valore_storia,
                 size=14,
-                color=ft.Colors.AMBER_100
+                color=ft.Colors.AMBER_100,
+                tooltip=f"Racconto dell'avventura: {valore_storia[:100]}..."
             ),
             bgcolor=ft.Colors.DEEP_PURPLE_900,
             border_radius=5,
             padding=10,
-            expand=True
+            expand=True,
+            tooltip="Area della storia - Eventi del gioco"
         )
 
         # Area statistiche come container con TextField readonly
@@ -3414,14 +3450,16 @@ class AvventuraEpica:
             color=ft.Colors.CYAN_100,
             border_color=ft.Colors.TRANSPARENT,
             focused_border_color=ft.Colors.TRANSPARENT,
-            bgcolor=ft.Colors.TRANSPARENT
+            bgcolor=ft.Colors.TRANSPARENT,
+            tooltip="Statistiche del personaggio - Livello, vita, attacco, difesa ed esperienza"
         )
 
         area_stats_locale = ft.Container(
             content=area_stats_textfield,
             bgcolor=ft.Colors.BLUE_GREY_900,
             border_radius=5,
-            padding=10
+            padding=10,
+            tooltip="Pannello delle statistiche del giocatore"
         )
 
         # Aggiorna i riferimenti globali per mantenere la sincronizzazione
@@ -3442,7 +3480,8 @@ class AvventuraEpica:
                 bgcolor=ft.Colors.GREEN_600,
                 color=ft.Colors.WHITE,
                 tooltip=tooltip,
-                key=f"azione_{i}_{testo.replace(' ', '_')}"
+                key=f"azione_{i}_{testo.replace(' ', '_')}",
+                autofocus=(i == 0)  # Focus sul primo pulsante
             )
             pulsanti_gioco.append(pulsante_incrementale)
 
@@ -3810,7 +3849,7 @@ class AvventuraEpica:
             weight=ft.FontWeight.BOLD, 
             text_align=ft.TextAlign.CENTER,
             color=ft.Colors.AMBER_400,
-            semantics_label="Avventura in corso",
+            tooltip="Avventura in corso",
             style=ft.TextThemeStyle.HEADLINE_MEDIUM
         )
         
@@ -4036,8 +4075,8 @@ class AvventuraEpica:
             "Riattiva Audio iOS",
             on_click=self.riattiva_audio_ios,
             width=200,
-            bgcolor=ft.colors.ORANGE_700,
-            color=ft.colors.WHITE,
+            bgcolor=ft.Colors.ORANGE_700,
+            color=ft.Colors.WHITE,
             tooltip="Forza la riattivazione dell'audio su iPhone"
         )
         
@@ -4075,30 +4114,21 @@ class AvventuraEpica:
             toggle_haptic,
         ])
         
-        content = ft.Column([
-            titolo,
-            ft.Container(
-                content=ft.ListView(
-                    controls=impostazioni_controls,
-                    spacing=15,
-                    auto_scroll=True
-                ),
-                height=400,
-                bgcolor=ft.Colors.GREY_800,
-                border_radius=10,
-                padding=10
-            ),
-            self.crea_pulsante_indietro()
-        ], scroll=ft.ScrollMode.AUTO, spacing=30)
-        
+        # Struttura piatta senza container nidificati per evitare crash iOS
         return ft.View(
             "/impostazioni",
             controls=[
                 ft.Container(
-                    content=content,
-                    bgcolor=ft.Colors.GREY_900,
+                    content=ft.Column([
+                        titolo,
+                        *impostazioni_controls,
+                        self.crea_pulsante_indietro()
+                    ],
+                    spacing=15,
+                    scroll=ft.ScrollMode.AUTO
+                    ),
                     padding=20,
-                    expand=True
+                    height=600
                 )
             ],
             bgcolor=ft.Colors.GREY_900
@@ -4314,7 +4344,8 @@ class AvventuraEpica:
             color=ft.Colors.WHITE,
             tooltip="Cerca mostri da combattere",
             disabled=self.in_combattimento,
-            visible=not self.in_combattimento  # Visibile solo se NON in combattimento
+            visible=not self.in_combattimento,  # Visibile solo se NON in combattimento
+            autofocus=True  # Focus automatico per VoiceOver
         )
         
         self.btn_attacca = ft.ElevatedButton(
@@ -4446,7 +4477,7 @@ class AvventuraEpica:
             weight=ft.FontWeight.BOLD, 
             text_align=ft.TextAlign.CENTER,
             color=ft.Colors.RED_400,
-            semantics_label="Arena di Combattimento"
+            tooltip="Arena di Combattimento"
         )
         
         # Debug widget per combat stats (come nel gioco principale)
@@ -4483,7 +4514,7 @@ class AvventuraEpica:
             size=16,
             color=ft.Colors.AMBER_200,
             text_align=ft.TextAlign.CENTER,
-            semantics_label="Storia del combattimento"
+            tooltip="Storia del combattimento"
         )
         
         
@@ -4636,7 +4667,7 @@ class AvventuraEpica:
                 size=18, 
                 text_align=ft.TextAlign.CENTER,
                 color=ft.Colors.ORANGE_300,
-                semantics_label=f"Nemico: {self.mostro_attuale['nome']}, Punti vita {self.hp_mostro_attuale} su {self.mostro_attuale['hp']}, Attacco {self.mostro_attuale['attacco']}"
+                tooltip=f"Nemico: {self.mostro_attuale['nome']}, Punti vita {self.hp_mostro_attuale} su {self.mostro_attuale['hp']}, Attacco {self.mostro_attuale['attacco']}"
             )
         else:
             self.info_mostro_combattimento = ft.Text(
@@ -4644,7 +4675,7 @@ class AvventuraEpica:
                 size=16, 
                 text_align=ft.TextAlign.CENTER,
                 color=ft.Colors.GREY_400,
-                semantics_label="Nessun nemico presente. Cerca mostri per iniziare una battaglia"
+                tooltip="Nessun nemico presente. Cerca mostri per iniziare una battaglia"
             )
         info_mostro = self.info_mostro_combattimento
         
@@ -4655,7 +4686,7 @@ class AvventuraEpica:
             size=18, 
             text_align=ft.TextAlign.CENTER,
             color=ft.Colors.GREEN_300,
-            semantics_label=f"Giocatore: {gatto_info['nome']}, Vita {self.vita} su {self.vita_massima}, Attacco {self.calcola_attacco_totale()}, Energia {self.risorse['energia']}"
+            tooltip=f"Giocatore: {gatto_info['nome']}, Vita {self.vita} su {self.vita_massima}, Attacco {self.calcola_attacco_totale()}, Energia {self.risorse['energia']}"
         )
         info_giocatore = self.info_giocatore_combattimento
         
@@ -5031,7 +5062,7 @@ class AvventuraEpica:
                     size=16,
                     text_align=ft.TextAlign.CENTER,
                     color=ft.Colors.GREY_400,
-                    semantics_label="Nessun gatto disponibile al momento. Continua a giocare per sbloccare nuovi gatti compagni."
+                    tooltip="Nessun gatto disponibile al momento. Continua a giocare per sbloccare nuovi gatti compagni."
                 )
             )
         
@@ -5706,6 +5737,12 @@ class AvventuraEpica:
     
     def inizia_combattimento(self, e):
         """Inizia un nuovo combattimento"""
+        # Attiva audio iOS al primo click di combattimento
+        if not getattr(self, 'audio_ios_attivato', False):
+            self.audio_ios_attivato = True
+            self.log_audio("Audio iOS attivato da inizia combattimento")
+            self.sblocca_audio_ios()
+            
         print("🎮 DEBUG: inizia_combattimento chiamato!")
         print(f"🎮 DEBUG: Area attuale: {self.area_attuale}")
         print(f"🎮 DEBUG: Energia: {self.risorse['energia']}")
@@ -6280,14 +6317,14 @@ class AvventuraEpica:
 
         self.container_pulsanti.controls.clear()
 
-        # Titolo con semantics_label
+        # Titolo con tooltip
         titolo_gioco = ft.Text(
             "Avventura in corso",
             size=24,
             weight=ft.FontWeight.BOLD,
             text_align=ft.TextAlign.CENTER,
             color=ft.Colors.RED_400,
-            semantics_label="Avventura in corso"
+            tooltip="Avventura in corso"
         )
 
         # Controlli locali: area storia e stats
@@ -6857,19 +6894,40 @@ class AvventuraEpica:
         self.cambia_volume_effetti(e)
             
     def testa_audio(self, e):
-        """Testa audio e attiva audio iOS"""
+        """Testa audio e attiva audio iOS con approccio aggressivo"""
+        # Forza sempre l'attivazione audio iOS
+        self.audio_ios_attivato = True
+        self.log_audio("Audio iOS forzato dall'utente tramite Testa Audio")
+        
         if self.audio_abilitato:
-            # Su iOS, il primo audio deve essere attivato dall'utente
-            if not self.audio_ios_attivato:
-                self.audio_ios_attivato = True
-                self.log_audio("Audio iOS attivato dall'utente")
+            # Strategia aggressiva: riproduci più effetti
+            self.log_audio("Tentativo riproduzione multipla per sbloccare audio iPhone")
             
+            # Riproduci effetto vittoria
             self.riproduci_effetto("vittoria")
+            
+            # Riproduci anche effetto raccolta a volume pieno
+            if hasattr(self, 'effetto_raccolta') and self.effetto_raccolta:
+                self.effetto_raccolta.volume = self.volume_effetti
+                self.effetto_raccolta.play()
+                self.log_audio("Effetto raccolta riprodotto a volume pieno")
+            
+            # Forza l'avvio di musica e ambiente
+            if hasattr(self, 'musica_sottofondo') and self.musica_sottofondo:
+                self.musica_sottofondo.play()
+                self.log_audio("Musica di sottofondo forzata")
+                
+            if hasattr(self, 'audio_ambiente') and self.audio_ambiente:
+                self.audio_ambiente.play()
+                self.log_audio("Audio ambiente forzato")
+            
             self.haptic_feedback("success")
             
-            # Se l'audio è appena stato attivato e siamo in gioco, riavvia l'audio
+            # Se siamo in gioco, riavvia tutto l'audio dell'area
             if getattr(self, 'gioco_iniziato', False) and hasattr(self, 'area_attuale'):
                 self.riavvia_audio_area()
+        else:
+            self.log_audio("Audio disabilitato nelle impostazioni")
     
     def riavvia_audio_area(self):
         """Riavvia audio dell'area corrente dopo attivazione iOS"""
@@ -6896,30 +6954,47 @@ class AvventuraEpica:
         return getattr(self, 'audio_ios_attivato', False)
     
     def sblocca_audio_ios(self):
-        """Prova a sbloccare l'audio iOS riproducendo un suono breve a volume basso"""
+        """Prova a sbloccare l'audio iOS attivando immediatamente la musica"""
         try:
-            self.log_audio("Tentativo di sblocco audio iOS...")
+            self.log_audio("Tentativo sblocco audio iOS")
             
-            # Riproduce un suono di vittoria a volume molto basso per "svegliare" iOS
-            if hasattr(self, 'effetto_vittoria') and self.effetto_vittoria:
-                volume_originale = self.effetto_vittoria.volume
-                self.effetto_vittoria.volume = 0.01  # Volume molto basso
-                self.effetto_vittoria.play()
-                
-                # Ripristina il volume dopo un momento
-                import threading
-                import time
-                def ripristina_volume():
-                    time.sleep(0.5)
-                    try:
-                        self.effetto_vittoria.volume = volume_originale
-                        self.log_audio("Audio iOS sbloccato con successo")
-                    except:
-                        pass
-                
-                thread = threading.Thread(target=ripristina_volume)
-                thread.daemon = True
-                thread.start()
+            # Su iOS, l'audio deve essere attivato da un'interazione utente
+            # Avviamo immediatamente la musica di sottofondo se esiste
+            if hasattr(self, 'musica_sottofondo') and self.musica_sottofondo:
+                try:
+                    self.musica_sottofondo.play()
+                    self.log_audio("Musica di sottofondo avviata per sbloccare audio iOS")
+                except Exception as play_error:
+                    self.log_error(f"Errore avvio musica per sblocco: {play_error}")
+            
+            # Avviamo anche l'audio ambiente se esiste
+            if hasattr(self, 'audio_ambiente') and self.audio_ambiente:
+                try:
+                    self.audio_ambiente.play()
+                    self.log_audio("Audio ambiente avviato per sbloccare audio iOS")
+                except Exception as play_error:
+                    self.log_error(f"Errore avvio audio ambiente per sblocco: {play_error}")
+                    
+            # Riproduci un effetto a basso volume per "test" del sistema
+            if hasattr(self, 'effetto_raccolta') and self.effetto_raccolta:
+                try:
+                    # Salva volume originale
+                    volume_originale = getattr(self.effetto_raccolta, 'volume', self.volume_effetti)
+                    self.effetto_raccolta.volume = 0.1  # Volume ridotto ma udibile
+                    self.effetto_raccolta.play()
+                    # Ripristina volume dopo un momento
+                    import threading
+                    import time
+                    def ripristina_volume():
+                        time.sleep(0.2)
+                        if hasattr(self, 'effetto_raccolta') and self.effetto_raccolta:
+                            self.effetto_raccolta.volume = volume_originale
+                    thread = threading.Thread(target=ripristina_volume)
+                    thread.daemon = True
+                    thread.start()
+                    self.log_audio("Effetto test riprodotto per sblocco audio iOS")
+                except Exception as play_error:
+                    self.log_error(f"Errore riproduzione effetto test: {play_error}")
                 
         except Exception as e:
             self.log_error(f"Errore sblocco audio iOS: {e}")
@@ -7047,7 +7122,16 @@ class AvventuraEpica:
         self.log_audio("Audio iOS attivato/riattivato all'avvio del gioco")
         
         # Prova a "sbloccare" l'audio iOS riproducendo un suono silenzioso
-        self.sblocca_audio_ios()
+        # Aggiungi un delay per assicurare che l'interazione utente sia registrata
+        import threading
+        import time
+        def sblocca_con_delay():
+            time.sleep(0.1)  # Piccolo delay per assicurare l'interazione utente
+            self.sblocca_audio_ios()
+        
+        thread = threading.Thread(target=sblocca_con_delay)
+        thread.daemon = True
+        thread.start()
         
         self.reset_gioco()
         self.gioco_iniziato = True
@@ -10706,7 +10790,16 @@ class AvventuraEpica:
         self.log_audio("Audio iOS attivato/riattivato al caricamento del gioco")
         
         # Prova a "sbloccare" l'audio iOS riproducendo un suono silenzioso
-        self.sblocca_audio_ios()
+        # Aggiungi un delay per assicurare che l'interazione utente sia registrata
+        import threading
+        import time
+        def sblocca_con_delay():
+            time.sleep(0.1)  # Piccolo delay per assicurare l'interazione utente
+            self.sblocca_audio_ios()
+        
+        thread = threading.Thread(target=sblocca_con_delay)
+        thread.daemon = True
+        thread.start()
         
         if not os.path.exists("avventura_epica_save.json"):
             self.aggiorna_storia("❌ Nessun salvataggio trovato!")
