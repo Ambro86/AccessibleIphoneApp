@@ -19,7 +19,7 @@ jobs:
           
       - name: Install Python dependencies
         run: |
-          pip install ./flet-0.28.3-py3-none-any.whl
+          pip install flet==0.28.3
           pip install -r requirements.txt
           
       - name: Install Flutter
@@ -44,7 +44,11 @@ jobs:
             --build-number ${{ github.run_number }} \
             --org "com.ambrogio.riili" \
             --company "Ambrogio Riili" \
-            --flutter-build-args=--release
+            --flutter-build-args=--debug \
+            --flutter-build-args=--split-debug-info=debug_info \
+            --flutter-build-args=--obfuscate \
+            --info-plist "UIAccessibilityEnabled=True" \
+            --info-plist "UIAccessibilityTraits=True"
             
       - name: Convert xcarchive to IPA
         run: |
