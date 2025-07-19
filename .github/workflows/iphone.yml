@@ -34,9 +34,20 @@ jobs:
           echo "BUILD=${{ github.run_number }}" >> .env
           echo "is_mobile=1" >> .env
           
+      # NUOVO: Pulisci cache Flutter e dipendenze
+      - name: Clean Flutter cache
+        run: |
+          cd build
+          flutter clean || true
+          flutter pub cache clean || true
           
       - name: Build IPA with Flet
         run: |
+          # MODIFICHE CHIAVE:
+          # 1. Rimuovi --flutter-build-args completamente per usare default
+          # 2. Aggiungi più info-plist per accessibilità
+          # 3. Usa --no-tree-shake-icons per evitare ottimizzazioni aggressive
+          
           flet build ipa \
             --project "avventura-epica" \
             --product "Avventura Epica" \
@@ -44,9 +55,91 @@ jobs:
             --build-number ${{ github.run_number }} \
             --org "com.ambrogio.riili" \
             --company "Ambrogio Riili" \
-            --flutter-build-args=--profile \
-            --info-plist "UIAccessibilityEnabled=True" \
-            --info-plist "UIAccessibilityTraits=True"
+            --info-plist "UIAccessibilityEnabled=YES" \
+            --info-plist "UIAccessibilityTraits=UIAccessibilityTraitAllowsDirectInteraction" \
+            --info-plist "CFBundleAllowMixedLocalizations=YES" \
+            --info-plist "UIViewControllerBasedStatusBarAppearance=NO" \
+            --flutter-build-args="--no-tree-shake-icons"
+            
+      # ALTERNATIVA 1: Prova con modalità debug-like ma ottimizzata
+      # - name: Build IPA with Debug-like settings
+      #   run: |
+      #     flet build ipa \
+      #       --project "avventura-epica" \
+      #       --product "Avventura Epica" \
+      #       --build-version "2.5.0" \
+      #       --build-number ${{ github.run_number }} \
+      #       --org "com.ambrogio.riili" \
+      #       --company "Ambrogio Riili" \
+      #       --flutter-build-args="--dart-define=FLUTTER_WEB_USE_SKIA=true --dart-define=FLUTTER_WEB_AUTO_DETECT=false"
+      
+      # ALTERNATIVA 2: Build con configurazione personalizzata
+      # - name: Custom Flutter Build
+      #   run: |
+      #     cd build
+      #     # Genera progetto Flutter se non esiste
+      #     if [ ! -d "ios" ]; then
+      #       flet create . --project "avventura-epica" --product "Avventura Epica"
+      #     fi
+      #     
+      #     # Modifica direttamente Runner.xcodeproj per accessibilità
+      #     cat > ios/Runner/Info.plist << 'EOF'
+      #     <?xml version="1.0" encoding="UTF-8"?>
+      #     <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+      #     <plist version="1.0">
+      #     <dict>
+      #       <key>UIAccessibilityEnabled</key>
+      #       <true/>
+      #       <key>UIAccessibilityTraits</key>
+      #       <array>
+      #         <string>UIAccessibilityTraitAllowsDirectInteraction</string>
+      #         <string>UIAccessibilityTraitUpdatesFrequently</string>
+      #       </array>
+      #       <key>CFBundleDevelopmentRegion</key>
+      #       <string>$(DEVELOPMENT_LANGUAGE)</string>
+      #       <key>CFBundleExecutable</key>
+      #       <string>$(EXECUTABLE_NAME)</string>
+      #       <key>CFBundleIdentifier</key>
+      #       <string>com.ambrogio.riili.avventura-epica</string>
+      #       <key>CFBundleInfoDictionaryVersion</key>
+      #       <string>6.0</string>
+      #       <key>CFBundleName</key>
+      #       <string>Avventura Epica</string>
+      #       <key>CFBundlePackageType</key>
+      #       <string>APPL</string>
+      #       <key>CFBundleShortVersionString</key>
+      #       <string>2.5.0</string>
+      #       <key>CFBundleSignature</key>
+      #       <string>????</string>
+      #       <key>CFBundleVersion</key>
+      #       <string>${{ github.run_number }}</string>
+      #       <key>LSRequiresIPhoneOS</key>
+      #       <true/>
+      #       <key>UILaunchStoryboardName</key>
+      #       <string>LaunchScreen</string>
+      #       <key>UIMainStoryboardFile</key>
+      #       <string>Main</string>
+      #       <key>UISupportedInterfaceOrientations</key>
+      #       <array>
+      #         <string>UIInterfaceOrientationPortrait</string>
+      #         <string>UIInterfaceOrientationLandscapeLeft</string>
+      #         <string>UIInterfaceOrientationLandscapeRight</string>
+      #       </array>
+      #       <key>UISupportedInterfaceOrientations~ipad</key>
+      #       <array>
+      #         <string>UIInterfaceOrientationPortrait</string>
+      #         <string>UIInterfaceOrientationPortraitUpsideDown</string>
+      #         <string>UIInterfaceOrientationLandscapeLeft</string>
+      #         <string>UIInterfaceOrientationLandscapeRight</string>
+      #       </array>
+      #       <key>CADisableMinimumFrameDurationOnPhone</key>
+      #       <true/>
+      #     </dict>
+      #     </plist>
+      #     EOF
+      #     
+      #     # Build con Flutter direttamente
+      #     flutter build ios --release --no-codesign
             
       - name: Convert xcarchive to IPA
         run: |
@@ -84,6 +177,18 @@ jobs:
           fi
           
           echo "✅ Trovato app file: $APP_FILE"
+          
+          # NUOVO: Verifica e modifica Info.plist nell'app bundle
+          INFO_PLIST="$APP_FILE/Info.plist"
+          if [ -f "$INFO_PLIST" ]; then
+            echo "📝 Modificando Info.plist nell'app bundle..."
+            /usr/libexec/PlistBuddy -c "Add :UIAccessibilityEnabled bool YES" "$INFO_PLIST" 2>/dev/null || \
+            /usr/libexec/PlistBuddy -c "Set :UIAccessibilityEnabled YES" "$INFO_PLIST"
+            
+            /usr/libexec/PlistBuddy -c "Add :UIAccessibilityTraits array" "$INFO_PLIST" 2>/dev/null || true
+            /usr/libexec/PlistBuddy -c "Add :UIAccessibilityTraits:0 string UIAccessibilityTraitAllowsDirectInteraction" "$INFO_PLIST" 2>/dev/null || true
+          fi
+          
           cp -r "$APP_FILE" build/ipa/Payload/
           
           cd build/ipa
@@ -114,6 +219,14 @@ jobs:
           
           echo "✅ Found app in payload: $APP_IN_PAYLOAD"
           
+          # NUOVO: Verifica Info.plist per accessibilità
+          INFO_PLIST="$APP_IN_PAYLOAD/Info.plist"
+          if [ -f "$INFO_PLIST" ]; then
+            echo "📋 Verificando impostazioni accessibilità in Info.plist:"
+            /usr/libexec/PlistBuddy -c "Print :UIAccessibilityEnabled" "$INFO_PLIST" 2>/dev/null || echo "UIAccessibilityEnabled non trovato"
+            /usr/libexec/PlistBuddy -c "Print :UIAccessibilityTraits" "$INFO_PLIST" 2>/dev/null || echo "UIAccessibilityTraits non trovato"
+          fi
+          
           echo "✅ IPA structure valid"
           echo "📱 App size: $(ls -lh AvventuraEpica.ipa | awk '{print $5}')"
           
@@ -125,4 +238,3 @@ jobs:
         with:
           name: AvventuraEpica-ios-lean
           path: build/ipa/*.ipa
- 
