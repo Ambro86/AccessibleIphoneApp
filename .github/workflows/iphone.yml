@@ -1,4 +1,5 @@
-name: Build iOS IPA (Ultra Simple)
+name: Build iOS IPA (Lean)
+
 on:
   push:
     branches: [master]
@@ -7,91 +8,116 @@ on:
 jobs:
   build:
     runs-on: macos-latest
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.13"
-          
+
       - name: Install Python dependencies
-        run: |
-          pip install flet==0.28.3
-          pip install -r requirements.txt
-          
+        run: pip install -r requirements.txt
+
       - name: Install Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: "3.22.1"
-          
+
       - name: Setup environment
         run: |
           echo "APP_ENV=prod" > .env
           echo "VERSION=${{ github.run_number }}" >> .env
           echo "BUILD=${{ github.run_number }}" >> .env
-          
+          echo "is_mobile=1" >> .env
+
       - name: Build IPA with Flet
         run: |
-          # Build standard con Flet
           flet build ipa \
             --project "avventura-epica" \
+            --product "Avventura Epica" \
             --build-version "2.5.0" \
             --build-number ${{ github.run_number }} \
-            --company "Ambrogio Riili"
-            
-      - name: Patch IPA for Accessibility
+            --org "com.ambrogio.riili" \
+            --company "Ambrogio Riili" \
+            --flutter-build-args=--release
+
+      - name: Convert xcarchive to IPA + Patch Info.plist
         run: |
-          echo "🔍 Cercando IPA generato..."
+          mkdir -p build/ipa/Payload
           
-          # Trova l'IPA
-          IPA_FILE=$(find build -name "*.ipa" -type f | head -1)
-          
-          if [ -z "$IPA_FILE" ]; then
-            echo "❌ Nessun file IPA trovato!"
-            echo "📁 Contenuto build/:"
-            find build -type f -name "*.ipa" || echo "Nessun IPA trovato"
+          # Trova l'xcarchive
+          XCARCHIVE_DIR=$(find build/ipa -name "*.xcarchive" -type d | head -1)
+          if [ -z "$XCARCHIVE_DIR" ]; then
+            echo "❌ Nessun file .xcarchive trovato!"
             exit 1
           fi
           
-          echo "✅ Trovato IPA: $IPA_FILE"
-          
-          # Crea directory temporanea per patch
-          mkdir -p temp_patch
-          cd temp_patch
-          
-          # Estrai IPA
-          unzip -q "../$IPA_FILE"
-          
-          # Trova e patcha Info.plist
-          APP_DIR=$(find Payload -name "*.app" -type d | head -1)
-          if [ -n "$APP_DIR" ]; then
-            INFO_PLIST="$APP_DIR/Info.plist"
-            if [ -f "$INFO_PLIST" ]; then
-              echo "📝 Patchando Info.plist per accessibilità..."
-              /usr/libexec/PlistBuddy -c "Add :UIAccessibilityEnabled bool YES" "$INFO_PLIST" 2>/dev/null || \
-              /usr/libexec/PlistBuddy -c "Set :UIAccessibilityEnabled YES" "$INFO_PLIST"
-              
-              # Verifica
-              echo "📋 Verifica patch:"
-              /usr/libexec/PlistBuddy -c "Print :UIAccessibilityEnabled" "$INFO_PLIST" || echo "Non trovato"
-            fi
+          # Trova il file .app
+          APP_FILE=$(find "$XCARCHIVE_DIR" -name "*.app" -type d | head -1)
+          if [ -z "$APP_FILE" ]; then
+            echo "❌ Nessun file .app trovato!"
+            exit 1
           fi
-          
-          # Ricrea IPA
-          zip -qr "../${IPA_FILE}.patched" Payload/
-          cd ..
-          mv "${IPA_FILE}.patched" "$IPA_FILE"
-          
-          # Pulisci
-          rm -rf temp_patch
-          
-          echo "✅ IPA patchato con successo"
-          
+
+          echo "✅ App trovato: $APP_FILE"
+
+          # Path al Info.plist
+          INFO_PLIST="$APP_FILE/Info.plist"
+
+          # Converti in XML leggibile
+          plutil -convert xml1 "$INFO_PLIST"
+
+          # Inserisci la chiave accessibilità se non presente
+          if ! grep -q "<key>UIAccessibilityEnabled</key>" "$INFO_PLIST"; then
+            echo "🛠️ Aggiungo UIAccessibilityEnabled a Info.plist"
+            sed -i '' '/<dict>/a\
+  <key>UIAccessibilityEnabled</key>\
+  <true/>
+' "$INFO_PLIST"
+          else
+            echo "ℹ️ UIAccessibilityEnabled già presente"
+          fi
+
+          # Riconverti in formato binario
+          plutil -convert binary1 "$INFO_PLIST"
+
+          # Crea IPA
+          cp -r "$APP_FILE" build/ipa/Payload/
+          cd build/ipa
+          zip -r AvventuraEpica.ipa Payload/
+          rm -rf Payload
+
+      - name: Validate IPA (quick check)
+        run: |
+          cd build/ipa
+
+          # Verifica esistenza IPA
+          if [ ! -f "AvventuraEpica.ipa" ]; then
+            echo "❌ IPA file not found"
+            exit 1
+          fi
+
+          # Estrai per controlli base
+          unzip -q AvventuraEpica.ipa
+
+          # Verifica struttura
+          APP_IN_PAYLOAD=$(find Payload/ -name "*.app" -type d | head -1)
+          if [ -z "$APP_IN_PAYLOAD" ]; then
+            echo "❌ Invalid IPA structure - no .app found in Payload"
+            ls -la Payload/
+            exit 1
+          fi
+
+          echo "✅ Found app in payload: $APP_IN_PAYLOAD"
+          echo "📱 App size: $(ls -lh AvventuraEpica.ipa | awk '{print $5}')"
+
+          rm -rf Payload
+
       - name: Upload IPA
         uses: actions/upload-artifact@v4
         with:
-          name: AvventuraEpica-ios
-          path: build/**/*.ipa
+          name: AvventuraEpica-ios-lean
+          path: build/ipa/*.ipa
