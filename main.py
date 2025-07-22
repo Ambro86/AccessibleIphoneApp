@@ -1169,15 +1169,26 @@ class AvventuraEpica:
     def crea_audio_sicuro(self, nome, src, **kwargs):
         """Crea un oggetto Audio con gestione errori per iPhone"""
         try:
+            # Solo musica e ambiente dovrebbero avere autoplay, non gli effetti
+            default_autoplay = False
+            if 'musica' in nome.lower() or 'ambiente' in nome.lower():
+                default_autoplay = True
+                
             default_kwargs = {
-                'autoplay': False,
+                'autoplay': default_autoplay,
                 'volume': self.volume_effetti,
                 'balance': 0
             }
             default_kwargs.update(kwargs)
             
             audio = fa.Audio(src=src, **default_kwargs)
-            self.log_audio(f"Audio {nome} creato con successo: {src}")
+            
+            # Assicura che il volume sia sempre impostato correttamente
+            if hasattr(audio, 'volume'):
+                volume = default_kwargs.get('volume', self.volume_effetti)
+                audio.volume = max(0.0, min(1.0, volume))  # Clamp tra 0 e 1
+                
+            self.log_audio(f"Audio {nome} creato con successo: {src} (volume: {audio.volume if hasattr(audio, 'volume') else 'N/A'}, autoplay: {default_kwargs['autoplay']})")
             return audio
         except Exception as e:
             self.log_error(f"Errore creazione audio {nome} ({src}): {e}")
@@ -1896,10 +1907,11 @@ class AvventuraEpica:
             self.log_audio("Audio disabilitato")
             return
         
-        # Fix iOS: Audio deve essere attivato dall'utente prima
+        # Fix iOS: Attiva automaticamente l'audio iOS se non ancora attivato
         if not getattr(self, 'audio_ios_attivato', False):
-            self.log_audio("Audio iOS non ancora attivato dall'utente")
-            return
+            self.log_audio("Audio iOS non ancora attivato - attivazione automatica")
+            self.audio_ios_attivato = True
+            self.sblocca_audio_ios()
         
         self.log_audio(f"Riproduci effetto: {effetto}")
         
@@ -2057,9 +2069,19 @@ class AvventuraEpica:
                     self.audio_session_suspended = False
                     # Riprendi musica se non in combattimento
                     if not getattr(self, 'in_combattimento', False):
+                        # Forza la riattivazione dell'audio iOS
+                        self.audio_ios_attivato = True
+                        
                         if hasattr(self, 'musica_sottofondo') and self.musica_sottofondo:
+                            # Assicura volume corretto prima di riprodurre
+                            if hasattr(self.musica_sottofondo, 'volume'):
+                                self.musica_sottofondo.volume = self.volume_musica
                             self.musica_sottofondo.play()
+                            
                         if hasattr(self, 'audio_ambiente') and self.audio_ambiente:
+                            # Assicura volume corretto prima di riprodurre
+                            if hasattr(self.audio_ambiente, 'volume'):
+                                self.audio_ambiente.volume = self.volume_effetti
                             self.audio_ambiente.play()
                     self.log_audio("Audio ripristinato completamente dopo interruzione")
                 except Exception as e:
@@ -6951,50 +6973,72 @@ class AvventuraEpica:
     
     def should_autoplay_audio(self):
         """Helper per decidere se l'audio può essere riprodotto automaticamente su iOS"""
-        return getattr(self, 'audio_ios_attivato', False)
+        # Su iOS, l'autoplay deve essere abilitato dopo la prima interazione utente
+        # Ritorna True solo se l'audio iOS è stato attivato o se non siamo su iOS
+        if self.page.platform == ft.PagePlatform.IOS:
+            return getattr(self, 'audio_ios_attivato', False)
+        return True
     
     def sblocca_audio_ios(self):
         """Prova a sbloccare l'audio iOS attivando immediatamente la musica"""
         try:
             self.log_audio("Tentativo sblocco audio iOS")
             
-            # Su iOS, l'audio deve essere attivato da un'interazione utente
-            # Avviamo immediatamente la musica di sottofondo se esiste
-            if hasattr(self, 'musica_sottofondo') and self.musica_sottofondo:
-                try:
-                    self.musica_sottofondo.play()
-                    self.log_audio("Musica di sottofondo avviata per sbloccare audio iOS")
-                except Exception as play_error:
-                    self.log_error(f"Errore avvio musica per sblocco: {play_error}")
+            # Imposta immediatamente il flag di attivazione
+            self.audio_ios_attivato = True
             
-            # Avviamo anche l'audio ambiente se esiste
-            if hasattr(self, 'audio_ambiente') and self.audio_ambiente:
+            # Su iOS, l'audio deve essere attivato da un'interazione utente
+            # Usa un delay minimo per assicurare che l'interazione sia registrata
+            import threading
+            import time
+            
+            def attiva_audio_con_delay():
                 try:
-                    self.audio_ambiente.play()
-                    self.log_audio("Audio ambiente avviato per sbloccare audio iOS")
-                except Exception as play_error:
-                    self.log_error(f"Errore avvio audio ambiente per sblocco: {play_error}")
+                    time.sleep(0.05)  # Delay minimo per iOS
                     
-            # Riproduci un effetto a basso volume per "test" del sistema
-            if hasattr(self, 'effetto_raccolta') and self.effetto_raccolta:
-                try:
-                    # Salva volume originale
-                    volume_originale = getattr(self.effetto_raccolta, 'volume', self.volume_effetti)
-                    self.effetto_raccolta.volume = 0.1  # Volume ridotto ma udibile
-                    self.effetto_raccolta.play()
-                    # Ripristina volume dopo un momento
-                    import threading
-                    import time
-                    def ripristina_volume():
-                        time.sleep(0.2)
-                        if hasattr(self, 'effetto_raccolta') and self.effetto_raccolta:
-                            self.effetto_raccolta.volume = volume_originale
-                    thread = threading.Thread(target=ripristina_volume)
-                    thread.daemon = True
-                    thread.start()
-                    self.log_audio("Effetto test riprodotto per sblocco audio iOS")
-                except Exception as play_error:
-                    self.log_error(f"Errore riproduzione effetto test: {play_error}")
+                    # Avvia immediatamente la musica di sottofondo se esiste
+                    if hasattr(self, 'musica_sottofondo') and self.musica_sottofondo:
+                        try:
+                            # Forza il volume e riproduci
+                            if not hasattr(self.musica_sottofondo, 'volume') or self.musica_sottofondo.volume == 0:
+                                self.musica_sottofondo.volume = self.volume_musica
+                            self.musica_sottofondo.play()
+                            self.log_audio("Musica di sottofondo avviata per sbloccare audio iOS")
+                        except Exception as play_error:
+                            self.log_error(f"Errore avvio musica per sblocco: {play_error}")
+                    
+                    # Avvia anche l'audio ambiente se esiste
+                    if hasattr(self, 'audio_ambiente') and self.audio_ambiente:
+                        try:
+                            # Forza il volume e riproduci
+                            if not hasattr(self.audio_ambiente, 'volume') or self.audio_ambiente.volume == 0:
+                                self.audio_ambiente.volume = self.volume_effetti
+                            self.audio_ambiente.play()
+                            self.log_audio("Audio ambiente avviato per sbloccare audio iOS")
+                        except Exception as play_error:
+                            self.log_error(f"Errore avvio audio ambiente per sblocco: {play_error}")
+                    
+                    # Test di tutti gli effetti audio per assicurare che siano pronti
+                    effetti_test = ['effetto_raccolta', 'effetto_vittoria', 'effetto_monete']
+                    for nome_effetto in effetti_test:
+                        if hasattr(self, nome_effetto):
+                            effetto = getattr(self, nome_effetto)
+                            if effetto:
+                                try:
+                                    # Pre-carica l'effetto senza riprodurlo
+                                    if hasattr(effetto, 'volume'):
+                                        effetto.volume = self.volume_effetti
+                                    self.log_audio(f"Effetto {nome_effetto} pronto")
+                                except Exception as e:
+                                    self.log_error(f"Errore preparazione {nome_effetto}: {e}")
+                                    
+                except Exception as e:
+                    self.log_error(f"Errore attivazione audio con delay: {e}")
+            
+            # Avvia in thread separato per non bloccare l'UI
+            thread = threading.Thread(target=attiva_audio_con_delay)
+            thread.daemon = True
+            thread.start()
                 
         except Exception as e:
             self.log_error(f"Errore sblocco audio iOS: {e}")
