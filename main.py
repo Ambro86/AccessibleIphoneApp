@@ -79,6 +79,17 @@ class AvventuraEpica:
         except:
             print(f"AUDIO: {message}")
     
+    def safe_play(self, audio: ft.Audio):
+        """Wrapper sicuro per la funzione play dell'audio su iOS"""
+        try:
+            audio.pause()
+            audio.src = audio.src
+            self.page.update()
+            audio.play()
+            self.log_audio(f"safe_play eseguito per audio: {audio.src}")
+        except Exception as e:
+            self.log_error(f"Errore in safe_play: {e}")
+    
     def copia_log_debug(self, e):
         """Copia il log di debug negli appunti"""
         print("📱 DEBUG: Pulsante copia log cliccato")
@@ -1413,7 +1424,7 @@ class AvventuraEpica:
         
         if e.data == "completed" and self.audio_abilitato:
             self.log_audio("Musica completata - Riavvio loop")
-            self.musica_sottofondo.play()
+            self.safe_play(self.musica_sottofondo)
         elif e.data == "playing":
             self.log_audio("Musica in riproduzione!")
             print("🎵 Musica in riproduzione!")
@@ -1467,7 +1478,7 @@ class AvventuraEpica:
                 
                 # Se autoplay è disabilitato, attiva manualmente la musica
                 if not should_autoplay:
-                    self.musica_sottofondo.play()
+                    self.safe_play(self.musica_sottofondo)
                     self.log_audio(f"Musica attivata manualmente: {file_musica}")
                 else:
                     self.log_audio(f"Musica cambiata con successo: {file_musica}")
@@ -1598,7 +1609,7 @@ class AvventuraEpica:
         
         if e.data == "completed" and self.audio_abilitato:
             self.log_audio("Musica completata - Riavvio loop")
-            self.musica_sottofondo.play()
+            self.safe_play(self.musica_sottofondo)
         elif e.data == "playing":
             self.log_audio("Musica in riproduzione!")
             print("🎵 Musica in riproduzione!")
@@ -1754,7 +1765,7 @@ class AvventuraEpica:
             
             # Se autoplay è disabilitato, attiva manualmente l'audio ambiente
             if not should_autoplay:
-                self.audio_ambiente.play()
+                self.safe_play(self.audio_ambiente)
                 print(f"Audio ambiente attivato manualmente: {file_ambiente}")
             else:
                 print(f"Audio ambiente caricato con successo: {file_ambiente}")
@@ -1788,7 +1799,7 @@ class AvventuraEpica:
                 
                 # Se autoplay è disabilitato, attiva manualmente l'audio ambiente (fallback)
                 if not should_autoplay:
-                    self.audio_ambiente.play()
+                    self.safe_play(self.audio_ambiente)
                     print(f"Audio ambiente attivato manualmente (fallback): {percorso_completo}")
                 else:
                     print(f"Audio ambiente caricato con file://: {percorso_completo}")
@@ -1804,7 +1815,7 @@ class AvventuraEpica:
         if e.data == "completed" and self.audio_abilitato:
             self.log_audio("Ambiente completato - Riavvio loop")
             # Loop infinito per suoni ambientali
-            self.audio_ambiente.play()
+            self.safe_play(self.audio_ambiente)
         elif e.data == "playing":
             self.log_audio("Ambiente in riproduzione!")
             print("🌿 Ambiente in riproduzione!")
@@ -1885,7 +1896,7 @@ class AvventuraEpica:
             if file_ambiente_richiesto and self.suono_ambiente_attuale == file_ambiente_richiesto:
                 # Stesso file, riprendi semplicemente la riproduzione
                 print(f"🌿 Ripresa suono ambiente esistente per: {self.area_attuale}")
-                self.audio_ambiente.play()
+                self.safe_play(self.audio_ambiente)
             else:
                 # File diverso, cambia completamente
                 print(f"🌿 Cambio suono ambiente per: {self.area_attuale}")
@@ -1919,13 +1930,13 @@ class AvventuraEpica:
         try:
             if effetto == "gatto_attacco" or effetto == "attacco":
                 self.log_audio("Riproduzione effetto gatto attacco")
-                self.effetto_gatto.play()
+                self.safe_play(self.effetto_gatto)
             elif effetto == "vittoria":
                 self.log_audio("Riproduzione effetto vittoria")
-                self.effetto_vittoria.play()
+                self.safe_play(self.effetto_vittoria)
             elif effetto == "sconfitta":
                 self.log_audio("Riproduzione effetto sconfitta")
-                self.effetto_sconfitta.play()
+                self.safe_play(self.effetto_sconfitta)
             elif effetto == "livello":
                 print(f"🎵 DEBUG: Riproducendo effetto livello up")
                 try:
@@ -1956,7 +1967,7 @@ class AvventuraEpica:
                     print(f"🎵 DEBUG: Audio state before play: {getattr(self.effetto_livello, 'state', 'unknown')}")
                     
                     # Riproduci level up su canale prioritario
-                    self.effetto_livello.play()
+                    self.safe_play(self.effetto_livello)
                     print(f"🎵 DEBUG: Effetto livello play() chiamato con volume aumentato")
                     print(f"🎵 DEBUG: Audio state after play: {getattr(self.effetto_livello, 'state', 'unknown')}")
                     
@@ -1971,9 +1982,9 @@ class AvventuraEpica:
                             # Riavvia musica e ambiente se non in combattimento
                             if not getattr(self, 'in_combattimento', False):
                                 if hasattr(self, 'musica_sottofondo'):
-                                    self.musica_sottofondo.play()
+                                    self.safe_play(self.musica_sottofondo)
                                 if hasattr(self, 'audio_ambiente'):
-                                    self.audio_ambiente.play()
+                                    self.safe_play(self.audio_ambiente)
                             print(f"🎵 DEBUG: Audio ripristinato dopo level up")
                         except Exception as e:
                             print(f"🎵 ERROR: Errore ripristino audio dopo level up: {e}")
@@ -1987,37 +1998,37 @@ class AvventuraEpica:
                     # Usa canale backup
                     try:
                         self.effetto_livello_backup.volume = min(1.0, self.volume_effetti + 0.3)
-                        self.effetto_livello_backup.play()
+                        self.safe_play(self.effetto_livello_backup)
                         print(f"🎵 DEBUG: Usando canale backup per livello up con volume aumentato")
                     except Exception as e2:
                         print(f"🎵 ERROR: Anche backup fallito: {e2}")
             elif effetto == "raccogli":
                 self.log_audio("Riproduzione effetto raccolta")
-                self.effetto_raccolta.play()
+                self.safe_play(self.effetto_raccolta)
             elif effetto == "gatto_raccolta":
                 self.log_audio("Riproduzione effetto gatto raccolta")
-                self.effetto_gatto_raccolta.play()
+                self.safe_play(self.effetto_gatto_raccolta)
             elif effetto == "gatto_mangia_pesce" or effetto == "gatto_pesce":
                 self.log_audio("Riproduzione effetto gatto mangia pesce")
-                self.effetto_gatto_mangia_pesce.play()
+                self.safe_play(self.effetto_gatto_mangia_pesce)
             elif effetto == "monete":
                 self.log_audio("Riproduzione effetto monete")
-                self.effetto_monete.play()
+                self.safe_play(self.effetto_monete)
             elif effetto == "mangiare" or effetto == "mangia" or effetto == "cibo":
                 self.log_audio("Riproduzione effetto mangiare")
-                self.effetto_mangiare.play()
+                self.safe_play(self.effetto_mangiare)
             elif effetto == "bere_pozione" or effetto == "pozione":
                 self.log_audio("Riproduzione effetto bere pozione")
-                self.effetto_bere_pozione.play()
+                self.safe_play(self.effetto_bere_pozione)
             elif effetto == "bere_acqua" or effetto == "acqua" or effetto == "bere":
                 self.log_audio("Riproduzione effetto bere acqua")
-                self.effetto_bere_acqua.play()
+                self.safe_play(self.effetto_bere_acqua)
             elif effetto == "fusa" or effetto == "gatto_felice" or effetto == "purr":
                 self.log_audio("Riproduzione effetto fusa")
-                self.effetto_fusa.play()
+                self.safe_play(self.effetto_fusa)
             elif effetto == "heartbeat" or effetto == "vita_bassa" or effetto == "battito":
                 self.log_audio("Riproduzione effetto heartbeat")
-                self.effetto_heartbeat.play()
+                self.safe_play(self.effetto_heartbeat)
             else:
                 self.log_audio(f"Effetto sconosciuto: {effetto}")
         except Exception as e:
@@ -2029,9 +2040,9 @@ class AvventuraEpica:
                 time.sleep(0.1)
                 try:
                     if effetto == "raccogli":
-                        self.effetto_raccolta.play()
+                        self.safe_play(self.effetto_raccolta)
                     elif effetto == "gatto_raccolta":
-                        self.effetto_gatto_raccolta.play()
+                        self.safe_play(self.effetto_gatto_raccolta)
                     self.log_audio(f"Riproduzione effetto '{effetto}' riuscita al secondo tentativo")
                 except Exception as e2:
                     self.log_error(f"Secondo tentativo fallito per effetto '{effetto}': {e2}")
@@ -2076,13 +2087,13 @@ class AvventuraEpica:
                             # Assicura volume corretto prima di riprodurre
                             if hasattr(self.musica_sottofondo, 'volume'):
                                 self.musica_sottofondo.volume = self.volume_musica
-                            self.musica_sottofondo.play()
+                            self.safe_play(self.musica_sottofondo)
                             
                         if hasattr(self, 'audio_ambiente') and self.audio_ambiente:
                             # Assicura volume corretto prima di riprodurre
                             if hasattr(self.audio_ambiente, 'volume'):
                                 self.audio_ambiente.volume = self.volume_effetti
-                            self.audio_ambiente.play()
+                            self.safe_play(self.audio_ambiente)
                     self.log_audio("Audio ripristinato completamente dopo interruzione")
                 except Exception as e:
                     self.log_error(f"Errore ripristino audio dopo interruzione: {e}")
@@ -2123,10 +2134,10 @@ class AvventuraEpica:
             try:
                 if not getattr(self, 'in_combattimento', False):
                     if hasattr(self, 'musica_sottofondo') and self.musica_sottofondo:
-                        self.musica_sottofondo.play()
+                        self.safe_play(self.musica_sottofondo)
                         self.log_audio("Musica ripristinata dopo focus")
                     if hasattr(self, 'audio_ambiente') and self.audio_ambiente:
-                        self.audio_ambiente.play()
+                        self.safe_play(self.audio_ambiente)
                         self.log_audio("Audio ambiente ripristinato dopo focus")
                 self.audio_session_suspended = False
             except Exception as ex:
@@ -2151,7 +2162,7 @@ class AvventuraEpica:
                     time.sleep(1.0)
                     try:
                         if audio_type == "musica" and hasattr(self, 'musica_sottofondo') and self.musica_sottofondo:
-                            self.musica_sottofondo.play()
+                            self.safe_play(self.musica_sottofondo)
                             self.log_audio("Musica riprovata dopo errore")
                     except Exception as ex:
                         self.log_error(f"Riprova {audio_type} fallita: {ex}")
@@ -2167,7 +2178,7 @@ class AvventuraEpica:
             if e.data == "error":
                 print(f"🎵 ERROR: Problema con audio livello up - provo backup")
                 try:
-                    self.effetto_livello_backup.play()
+                    self.safe_play(self.effetto_livello_backup)
                     print(f"🎵 DEBUG: Backup avviato per errore canale principale")
                 except Exception as ex:
                     print(f"🎵 ERROR: Anche backup ha fallito: {ex}")
@@ -2182,7 +2193,7 @@ class AvventuraEpica:
             # Se heartbeat deve continuare, riavvialo usando le variabili reali
             percentuale_vita = (self.hp_giocatore / self.hp_max) * 100
             if percentuale_vita <= 20 and self.hp_giocatore > 0:
-                self.effetto_heartbeat.play()
+                self.safe_play(self.effetto_heartbeat)
             else:
                 # Vita aumentata sopra il 20%, ferma heartbeat
                 self.heartbeat_attivo = False
@@ -2203,7 +2214,7 @@ class AvventuraEpica:
             print(f"🎵 DEBUG: Vita bassa rilevata! Percentuale: {percentuale_vita:.1f}%")
             if not self.heartbeat_attivo:
                 self.heartbeat_attivo = True
-                self.effetto_heartbeat.play()
+                self.safe_play(self.effetto_heartbeat)
                 print(f"🎵 DEBUG: Heartbeat attivato per la prima volta")
             else:
                 print(f"🎵 DEBUG: Heartbeat già attivo")
@@ -2228,7 +2239,7 @@ class AvventuraEpica:
             
         if not self.heartbeat_attivo:
             self.heartbeat_attivo = True
-            self.effetto_heartbeat.play()
+            self.safe_play(self.effetto_heartbeat)
             print("🎵 DEBUG: Heartbeat attivato per vita bassa")
     
     def avvia_musica_battaglia(self, tipo_battaglia="normale"):
@@ -2322,7 +2333,7 @@ class AvventuraEpica:
             # Riprendi musica normale
             if hasattr(self, 'musica_sottofondo') and self.musica_sottofondo:
                 try:
-                    self.musica_sottofondo.play()
+                    self.safe_play(self.musica_sottofondo)
                     print("🎵 Musica normale ripresa")
                 except:
                     # Se non riesce a riprendere, ricarica la musica dell'area
@@ -5736,7 +5747,7 @@ class AvventuraEpica:
             
             audio_obj = audio_map.get(canale_audio)
             if audio_obj is not None:
-                audio_obj.play()
+                self.safe_play(audio_obj)
                 print(f"🔊 Riprodotto verso mostro: {canale_audio}")
             else:
                 print(f"🔊 Audio mostro non disponibile: {canale_audio}")
@@ -5748,10 +5759,10 @@ class AvventuraEpica:
         """Riproduce il verso del boss specifico"""
         try:
             if nome_boss == "🐕 Cane Randagio":
-                self.effetto_boss_1.play()
+                self.safe_play(self.effetto_boss_1)
                 print(f"🔊 Riprodotto verso boss: {nome_boss}")
             elif nome_boss == "🕷️ Regina dei Ragni":
-                self.effetto_boss_regina_ragni.play()
+                self.safe_play(self.effetto_boss_regina_ragni)
                 print(f"🔊 Riprodotto verso boss: {nome_boss}")
             # Qui si possono aggiungere altri boss in futuro
         except Exception as e:
@@ -6931,16 +6942,16 @@ class AvventuraEpica:
             # Riproduci anche effetto raccolta a volume pieno
             if hasattr(self, 'effetto_raccolta') and self.effetto_raccolta:
                 self.effetto_raccolta.volume = self.volume_effetti
-                self.effetto_raccolta.play()
+                self.safe_play(self.effetto_raccolta)
                 self.log_audio("Effetto raccolta riprodotto a volume pieno")
             
             # Forza l'avvio di musica e ambiente
             if hasattr(self, 'musica_sottofondo') and self.musica_sottofondo:
-                self.musica_sottofondo.play()
+                self.safe_play(self.musica_sottofondo)
                 self.log_audio("Musica di sottofondo forzata")
                 
             if hasattr(self, 'audio_ambiente') and self.audio_ambiente:
-                self.audio_ambiente.play()
+                self.safe_play(self.audio_ambiente)
                 self.log_audio("Audio ambiente forzato")
             
             self.haptic_feedback("success")
@@ -6960,12 +6971,12 @@ class AvventuraEpica:
                 # Riavvia musica di sottofondo se non in combattimento
                 if not getattr(self, 'in_combattimento', False):
                     if hasattr(self, 'musica_sottofondo') and self.musica_sottofondo:
-                        self.musica_sottofondo.play()
+                        self.safe_play(self.musica_sottofondo)
                         self.log_audio("Musica di sottofondo riavviata")
                 
                 # Riavvia audio ambiente
                 if hasattr(self, 'audio_ambiente') and self.audio_ambiente:
-                    self.audio_ambiente.play()
+                    self.safe_play(self.audio_ambiente)
                     self.log_audio("Audio ambiente riavviato")
                     
         except Exception as e:
@@ -7002,7 +7013,7 @@ class AvventuraEpica:
                             # Forza il volume e riproduci
                             if not hasattr(self.musica_sottofondo, 'volume') or self.musica_sottofondo.volume == 0:
                                 self.musica_sottofondo.volume = self.volume_musica
-                            self.musica_sottofondo.play()
+                            self.safe_play(self.musica_sottofondo)
                             self.log_audio("Musica di sottofondo avviata per sbloccare audio iOS")
                         except Exception as play_error:
                             self.log_error(f"Errore avvio musica per sblocco: {play_error}")
@@ -7013,7 +7024,7 @@ class AvventuraEpica:
                             # Forza il volume e riproduci
                             if not hasattr(self.audio_ambiente, 'volume') or self.audio_ambiente.volume == 0:
                                 self.audio_ambiente.volume = self.volume_effetti
-                            self.audio_ambiente.play()
+                            self.safe_play(self.audio_ambiente)
                             self.log_audio("Audio ambiente avviato per sbloccare audio iOS")
                         except Exception as play_error:
                             self.log_error(f"Errore avvio audio ambiente per sblocco: {play_error}")
@@ -10813,7 +10824,7 @@ class AvventuraEpica:
                 if hasattr(self, 'musica_sottofondo') and self.musica_sottofondo:
                     print(f"🎵 Oggetto audio esistente: {self.musica_sottofondo}")
                     try:
-                        self.musica_sottofondo.play()
+                        self.safe_play(self.musica_sottofondo)
                         print("🎵 Forzata riproduzione audio esistente")
                     except Exception as play_error:
                         print(f"❌ Errore play esistente: {play_error}")
