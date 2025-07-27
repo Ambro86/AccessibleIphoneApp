@@ -71,7 +71,7 @@ jobs:
         EOF
     
     - name: Upload IPA as artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: Avventura-epica-unsigned
         path: build/ipa/*.ipa
@@ -79,7 +79,7 @@ jobs:
     
     - name: Upload build logs
       if: failure()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: build-logs
         path: |
