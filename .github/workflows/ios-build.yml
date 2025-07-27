@@ -38,15 +38,6 @@ jobs:
           CODE_SIGNING_REQUIRED=NO \
           CODE_SIGNING_ALLOWED=NO
     
-    - name: Export IPA (unsigned)
-      run: |
-        mkdir -p build/ipa
-        xcodebuild \
-          -exportArchive \
-          -archivePath "build/Avventura_epica.xcarchive" \
-          -exportPath "build/ipa" \
-          -exportOptionsPlist ExportOptions.plist
-    
     - name: Create ExportOptions.plist
       run: |
         cat > ExportOptions.plist << EOF
@@ -69,6 +60,15 @@ jobs:
         </dict>
         </plist>
         EOF
+    
+    - name: Export IPA (unsigned)
+      run: |
+        mkdir -p build/ipa
+        xcodebuild \
+          -exportArchive \
+          -archivePath "build/Avventura_epica.xcarchive" \
+          -exportPath "build/ipa" \
+          -exportOptionsPlist ExportOptions.plist
     
     - name: Upload IPA as artifact
       uses: actions/upload-artifact@v4
