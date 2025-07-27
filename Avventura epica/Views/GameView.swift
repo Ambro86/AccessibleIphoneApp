@@ -146,7 +146,7 @@ struct GameView: View {
         .sheet(isPresented: $showingCombat) {
             CombatView(gameManager: gameManager)
         }
-        .onChange(of: gameManager.isInCombat) { isInCombat in
+        .onChange(of: gameManager.isInCombat) { _, isInCombat in
             showingCombat = isInCombat
         }
     }

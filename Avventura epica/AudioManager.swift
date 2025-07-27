@@ -327,6 +327,10 @@ class AudioManager: ObservableObject {
         playSound("effetto_sconfitta", volume: 0.7)
     }
     
+    func playErrorSound() {
+        playSound("effetto_sconfitta", volume: 0.6)
+    }
+    
     func playLevelUpSound() {
         playSound("effetto_livello_up", volume: 0.9)
     }

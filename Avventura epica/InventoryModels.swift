@@ -8,11 +8,12 @@
 import Foundation
 
 // MARK: - Equipment Types
-enum EquipmentType: String, CaseIterable {
+enum EquipmentType: String, CaseIterable, Codable {
     case arma = "arma"
     case scudo = "scudo"
     case armatura = "armatura"
     case accessorio = "accessorio"
+    case consumabile = "consumabile"
     
     var displayName: String {
         switch self {
@@ -20,6 +21,7 @@ enum EquipmentType: String, CaseIterable {
         case .scudo: return "Scudo"
         case .armatura: return "Armatura"
         case .accessorio: return "Accessorio"
+        case .consumabile: return "Consumabile"
         }
     }
     
@@ -29,13 +31,14 @@ enum EquipmentType: String, CaseIterable {
         case .scudo: return "🛡️"
         case .armatura: return "🦺"
         case .accessorio: return "💍"
+        case .consumabile: return "🧪"
         }
     }
 }
 
 // MARK: - Equipment Item
 struct EquipmentItem: Identifiable, Codable {
-    let id = UUID()
+    var id = UUID()
     let nome: String
     let tipo: EquipmentType
     let prezzo: Int
@@ -59,7 +62,7 @@ struct EquipmentItem: Identifiable, Codable {
         if danno > 0 { stats.append("+\(danno) danno") }
         if difesa > 0 { stats.append("+\(difesa) difesa") }
         if let bonus = bonus { stats.append(bonus) }
-        return stats.joined(separator(", "))
+        return stats.joined(separator: ", ")
     }
     
     var emoji: String {
@@ -69,7 +72,7 @@ struct EquipmentItem: Identifiable, Codable {
 
 // MARK: - Inventory Item
 struct InventoryItem: Identifiable, Codable {
-    let id = UUID()
+    var id = UUID()
     let equipment: EquipmentItem
     var quantity: Int
     var isEquipped: Bool

@@ -8,7 +8,7 @@
 import Foundation
 
 // MARK: - Enums
-enum GameScreen {
+enum GameScreen: Codable {
     case mainMenu
     case game
     case cats
@@ -19,7 +19,7 @@ enum GameScreen {
     case info
 }
 
-enum CatAbility: String, CaseIterable {
+enum CatAbility: String, CaseIterable, Codable {
     case raccolta = "raccolta"
     case combattimento = "combattimento"
     case guarigione = "guarigione"
@@ -37,12 +37,12 @@ enum CatAbility: String, CaseIterable {
     }
 }
 
-enum RelicType: String {
+enum RelicType: String, Codable {
     case passivo = "passivo"
     case attivabile = "attivabile"
 }
 
-enum RelicRarity: String {
+enum RelicRarity: String, Codable {
     case comune = "comune"
     case raro = "raro"
     case epico = "epico"

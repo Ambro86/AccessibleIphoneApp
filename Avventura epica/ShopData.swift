@@ -480,8 +480,8 @@ extension GameManager {
                 tipo: .armatura,
                 prezzo: 12000,
                 descrizione: "Tecnologia futuristica",
-                difesa: 25,
                 danno: 5,
+                difesa: 25,
                 bonus: "+5 forza"
             ),
             "Armatura di Mithril": EquipmentItem(

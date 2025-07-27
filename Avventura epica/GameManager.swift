@@ -608,9 +608,9 @@ class GameManager: ObservableObject {
     func useCombatPotion() -> Bool {
         guard isInCombat,
               gameState.risorse.pozioni > 0,
-              let activeCatId = gameState.gatti[gameState.gattoAttivo]?.id else { return false }
+              var activeCat = gameState.gatti[gameState.gattoAttivo] else { return false }
         
-        let currentHP = gameState.gatti[activeCatId]?.fame ?? 0
+        let currentHP = activeCat.fame
         let maxHP = 100
         
         // Don't use if already at full health
@@ -619,7 +619,8 @@ class GameManager: ObservableObject {
         gameState.risorse.pozioni -= 1
         let healAmount = 50
         let newHP = min(maxHP, currentHP + healAmount)
-        gameState.gatti[activeCatId]?.fame = newHP
+        activeCat.fame = newHP
+        gameState.gatti[gameState.gattoAttivo] = activeCat
         
         logger.log("💊 Pozione usata in combattimento: \(currentHP) → \(newHP) HP")
         AudioManager.shared.playPotionUseSound()
@@ -636,9 +637,9 @@ class GameManager: ObservableObject {
     func useCombatFood() -> Bool {
         guard isInCombat,
               gameState.risorse.cibo > 0,
-              let activeCatId = gameState.gatti[gameState.gattoAttivo]?.id else { return false }
+              var activeCat = gameState.gatti[gameState.gattoAttivo] else { return false }
         
-        let currentHP = gameState.gatti[activeCatId]?.fame ?? 0
+        let currentHP = activeCat.fame
         let maxHP = 100
         
         // Don't use if already at full health
@@ -647,7 +648,8 @@ class GameManager: ObservableObject {
         gameState.risorse.cibo -= 1
         let healAmount = 15
         let newHP = min(maxHP, currentHP + healAmount)
-        gameState.gatti[activeCatId]?.fame = newHP
+        activeCat.fame = newHP
+        gameState.gatti[gameState.gattoAttivo] = activeCat
         
         logger.log("🍖 Cibo usato in combattimento: \(currentHP) → \(newHP) HP")
         AudioManager.shared.playEatingSound()
@@ -664,9 +666,9 @@ class GameManager: ObservableObject {
     func useCombatWater() -> Bool {
         guard isInCombat,
               gameState.risorse.acqua > 0,
-              let activeCatId = gameState.gatti[gameState.gattoAttivo]?.id else { return false }
+              var activeCat = gameState.gatti[gameState.gattoAttivo] else { return false }
         
-        let currentHP = gameState.gatti[activeCatId]?.fame ?? 0
+        let currentHP = activeCat.fame
         let maxHP = 100
         
         // Don't use if already at full health
@@ -675,7 +677,8 @@ class GameManager: ObservableObject {
         gameState.risorse.acqua -= 1
         let healAmount = 10
         let newHP = min(maxHP, currentHP + healAmount)
-        gameState.gatti[activeCatId]?.fame = newHP
+        activeCat.fame = newHP
+        gameState.gatti[gameState.gattoAttivo] = activeCat
         
         logger.log("💧 Acqua usata in combattimento: \(currentHP) → \(newHP) HP")
         AudioManager.shared.playDrinkingSound()
@@ -765,8 +768,8 @@ class GameManager: ObservableObject {
     
     // MARK: - Nutrition System
     func nutriGatto() -> (success: Bool, message: String) {
-        guard let activeCatId = gameState.gattoAttivo,
-              var activeCat = gameState.gatti[activeCatId] else {
+        guard !gameState.gattoAttivo.isEmpty,
+              var activeCat = gameState.gatti[gameState.gattoAttivo] else {
             return (false, "❌ Nessun gatto attivo!")
         }
         
@@ -779,7 +782,7 @@ class GameManager: ObservableObject {
                 
                 // Cat gets some happiness for helping
                 activeCat.felicita = min(100, activeCat.felicita + 10)
-                gameState.gatti[activeCatId] = activeCat
+                gameState.gatti[gameState.gattoAttivo] = activeCat
                 
                 AudioManager.shared.playCatPurrSound()
                 AudioManager.shared.hapticSuccess()
@@ -800,7 +803,7 @@ class GameManager: ObservableObject {
         }
         
         // Normal feeding
-        let ciboNecessario = gameState.risorse.cibo >= 5 ? 5 : gameState.risorse.cibo
+        _ = gameState.risorse.cibo >= 5 ? 5 : gameState.risorse.cibo
         let energiaRecuperata: Int
         let messaggio: String
         
@@ -822,7 +825,7 @@ class GameManager: ObservableObject {
         // Update cat stats
         activeCat.fame = min(100, activeCat.fame + 15)
         activeCat.felicita = min(100, activeCat.felicita + 20)
-        gameState.gatti[activeCatId] = activeCat
+        gameState.gatti[gameState.gattoAttivo] = activeCat
         
         // Bonus if cat is very happy
         var finalMessage = "\(messaggio)\nEnergia recuperata: +\(energiaRecuperata) (ora: \(gameState.risorse.energia)/100)\n"
@@ -844,8 +847,8 @@ class GameManager: ObservableObject {
     }
     
     func consumaCibo() -> (success: Bool, message: String) {
-        guard let activeCatId = gameState.gattoAttivo,
-              var activeCat = gameState.gatti[activeCatId] else {
+        guard !gameState.gattoAttivo.isEmpty,
+              var activeCat = gameState.gatti[gameState.gattoAttivo] else {
             return (false, "❌ Nessun gatto attivo!")
         }
         
@@ -868,7 +871,7 @@ class GameManager: ObservableObject {
         
         gameState.risorse.cibo -= ciboNecessario
         activeCat.fame = min(hpMax, currentHP + hpRecuperati)
-        gameState.gatti[activeCatId] = activeCat
+        gameState.gatti[gameState.gattoAttivo] = activeCat
         
         let message = """
         🍽️ \(activeCat.nome) consuma cibo per curarsi:
@@ -884,8 +887,8 @@ class GameManager: ObservableObject {
     }
     
     func beviAcqua() -> (success: Bool, message: String) {
-        guard let activeCatId = gameState.gattoAttivo,
-              var activeCat = gameState.gatti[activeCatId] else {
+        guard !gameState.gattoAttivo.isEmpty,
+              var activeCat = gameState.gatti[gameState.gattoAttivo] else {
             return (false, "❌ Nessun gatto attivo!")
         }
         
@@ -901,7 +904,7 @@ class GameManager: ObservableObject {
         
         // Water gives temporary bonuses (simplified - could be expanded)
         activeCat.felicita = min(100, activeCat.felicita + 10)
-        gameState.gatti[activeCatId] = activeCat
+        gameState.gatti[gameState.gattoAttivo] = activeCat
         
         let message = """
         💧 \(activeCat.nome) beve acqua rinfrescante:
@@ -970,10 +973,11 @@ class GameManager: ObservableObject {
     
     func useHealthPotion() {
         guard gameState.risorse.pozioni > 0,
-              let activeCatId = gameState.gatti[gameState.gattoAttivo]?.id else { return }
+              var activeCat = gameState.gatti[gameState.gattoAttivo] else { return }
         
         gameState.risorse.pozioni -= 1
-        gameState.gatti[activeCatId]?.fame = min(100, (gameState.gatti[activeCatId]?.fame ?? 0) + 50)
+        activeCat.fame = min(100, activeCat.fame + 50)
+        gameState.gatti[gameState.gattoAttivo] = activeCat
         
         logger.log("💊 Pozione usata")
         AudioManager.shared.playPotionUseSound()

@@ -16,7 +16,7 @@ struct ShopView: View {
     @State private var showingMessage = false
     
     var body: some View {
-        VStack(spacing: 20) {
+        return VStack(spacing: 20) {
             // Title - exactly as main.py
             Text("Negozio")
                 .font(.title)

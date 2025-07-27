@@ -21,7 +21,7 @@ struct SettingsView: View {
                 // Audio Settings Section - exactly as main.py
                 Section("🔊 Audio") {
                     Toggle("Audio Attivato", isOn: $gameManager.audioEnabled)
-                        .onChange(of: gameManager.audioEnabled) { value in
+                        .onChange(of: gameManager.audioEnabled) { _, value in
                             gameManager.gameState.audioAbilitato = value
                             gameManager.saveGame()
                         }
@@ -31,7 +31,7 @@ struct SettingsView: View {
                             .font(.subheadline)
                         
                         Slider(value: $musicVolume, in: 0...100, step: 10)
-                            .onChange(of: musicVolume) { value in
+                            .onChange(of: musicVolume) { _, value in
                                 AudioManager.shared.setMusicVolume(Float(value / 100.0))
                             }
                     }
@@ -41,7 +41,7 @@ struct SettingsView: View {
                             .font(.subheadline)
                         
                         Slider(value: $effectsVolume, in: 0...100, step: 10)
-                            .onChange(of: effectsVolume) { value in
+                            .onChange(of: effectsVolume) { _, value in
                                 AudioManager.shared.setSoundVolume(Float(value / 100.0))
                             }
                     }
@@ -60,7 +60,7 @@ struct SettingsView: View {
                 // Feedback Section - separate like main.py
                 Section("📳 Feedback") {
                     Toggle("Vibrazione Attivata", isOn: $gameManager.hapticEnabled)
-                        .onChange(of: gameManager.hapticEnabled) { value in
+                        .onChange(of: gameManager.hapticEnabled) { _, value in
                             gameManager.gameState.hapticAbilitato = value
                             gameManager.saveGame()
                         }
