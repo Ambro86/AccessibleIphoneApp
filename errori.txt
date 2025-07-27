@@ -1,57 +1,57 @@
-2025-07-27T14:10:30.5316600Z error: Couldn't load -exportOptionsPlist The file “ExportOptions.plist” couldn’t be opened because there is no such file.
-2025-07-27T14:10:30.5321660Z ** EXPORT FAILED **
-2025-07-27T14:10:30.5355240Z 
-2025-07-27T14:10:30.5355250Z 
-2025-07-27T14:10:30.5381430Z ##[error]Process completed with exit code 70.
-2025-07-27T14:10:30.5455330Z ##[group]Run actions/upload-artifact@v4
-2025-07-27T14:10:30.5455530Z with:
-2025-07-27T14:10:30.5455640Z   name: build-logs
-2025-07-27T14:10:30.5455780Z   path: build/
+2025-07-27T14:14:56.8944200Z error: exportArchive No Team Found in Archive
+2025-07-27T14:14:56.8945180Z ** EXPORT FAILED **
+2025-07-27T14:14:56.8947950Z 
+2025-07-27T14:14:56.8947950Z 
+2025-07-27T14:14:56.9017890Z ##[error]Process completed with exit code 70.
+2025-07-27T14:14:56.9112870Z ##[group]Run actions/upload-artifact@v4
+2025-07-27T14:14:56.9113140Z with:
+2025-07-27T14:14:56.9113300Z   name: build-logs
+2025-07-27T14:14:56.9113460Z   path: build/
 DerivedData/
 
-2025-07-27T14:10:30.5455930Z   retention-days: 7
-2025-07-27T14:10:30.5456060Z   if-no-files-found: warn
-2025-07-27T14:10:30.5456200Z   compression-level: 6
-2025-07-27T14:10:30.5456340Z   overwrite: false
-2025-07-27T14:10:30.5456510Z   include-hidden-files: false
-2025-07-27T14:10:30.5456650Z env:
-2025-07-27T14:10:30.5456790Z   MD_APPLE_SDK_ROOT: /Applications/Xcode_16.2.app
-2025-07-27T14:10:30.5456980Z ##[endgroup]
-2025-07-27T14:10:30.8076010Z Multiple search paths detected. Calculating the least common ancestor of all paths
-2025-07-27T14:10:30.8077190Z The least common ancestor is /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp. This will be the root directory of the artifact
-2025-07-27T14:10:30.8077710Z With the provided path, there will be 75 files uploaded
-2025-07-27T14:10:30.8080190Z Artifact name is valid!
-2025-07-27T14:10:30.8080370Z Root directory input is valid!
-2025-07-27T14:10:31.1274950Z Beginning upload of artifact content to blob storage
-2025-07-27T14:10:32.2945890Z Uploaded bytes 8388608
-2025-07-27T14:10:32.4950120Z Uploaded bytes 16777216
-2025-07-27T14:10:32.5651200Z Uploaded bytes 25165824
-2025-07-27T14:10:32.7726740Z Uploaded bytes 33554432
-2025-07-27T14:10:32.9219510Z Uploaded bytes 41943040
-2025-07-27T14:10:32.9289370Z Uploaded bytes 50331648
-2025-07-27T14:10:33.0489580Z Uploaded bytes 58720256
-2025-07-27T14:10:33.2255960Z Uploaded bytes 67108864
-2025-07-27T14:10:33.6228940Z Uploaded bytes 75497472
-2025-07-27T14:10:33.6969290Z Uploaded bytes 83886080
-2025-07-27T14:10:33.9200070Z Uploaded bytes 92274688
-2025-07-27T14:10:34.0693240Z Uploaded bytes 94224263
-2025-07-27T14:10:34.1676180Z Finished uploading artifact content to blob storage!
-2025-07-27T14:10:34.1682120Z SHA256 digest of uploaded artifact zip is 7c305b3a085f962973e8a47260a89821aabb8b2287904a445a69d1c6f68a6524
-2025-07-27T14:10:34.1685610Z Finalizing artifact upload
-2025-07-27T14:10:34.3223170Z Artifact build-logs.zip successfully finalized. Artifact ID 3624074241
-2025-07-27T14:10:34.3226030Z Artifact build-logs has been successfully uploaded! Final size is 94224263 bytes. Artifact ID is 3624074241
-2025-07-27T14:10:34.3260010Z Artifact download URL: https://github.com/Ambro86/AccessibleIphoneApp/actions/runs/16552002606/artifacts/3624074241
-2025-07-27T14:10:34.3601370Z Post job cleanup.
-2025-07-27T14:10:34.4635430Z [command]/opt/homebrew/bin/git version
-2025-07-27T14:10:34.4826050Z git version 2.50.1
-2025-07-27T14:10:34.4846090Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/6b640793-477e-4c38-993a-a4a9cb3247b7/.gitconfig'
-2025-07-27T14:10:34.4852540Z Temporarily overriding HOME='/Users/runner/work/_temp/6b640793-477e-4c38-993a-a4a9cb3247b7' before making global git config changes
-2025-07-27T14:10:34.4853130Z Adding repository directory to the temporary git global config as a safe directory
-2025-07-27T14:10:34.4860020Z [command]/opt/homebrew/bin/git config --global --add safe.directory /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp
-2025-07-27T14:10:34.4931220Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
-2025-07-27T14:10:34.4970440Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
-2025-07-27T14:10:34.5495230Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
-2025-07-27T14:10:34.5527090Z http.https://github.com/.extraheader
-2025-07-27T14:10:34.5535050Z [command]/opt/homebrew/bin/git config --local --unset-all http.https://github.com/.extraheader
-2025-07-27T14:10:34.5581000Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
-2025-07-27T14:10:34.6174870Z Cleaning up orphan processes
+2025-07-27T14:14:56.9113660Z   retention-days: 7
+2025-07-27T14:14:56.9113830Z   if-no-files-found: warn
+2025-07-27T14:14:56.9114020Z   compression-level: 6
+2025-07-27T14:14:56.9114190Z   overwrite: false
+2025-07-27T14:14:56.9114350Z   include-hidden-files: false
+2025-07-27T14:14:56.9114550Z env:
+2025-07-27T14:14:56.9115150Z   MD_APPLE_SDK_ROOT: /Applications/Xcode_16.2.app
+2025-07-27T14:14:56.9115380Z ##[endgroup]
+2025-07-27T14:14:57.3314810Z Multiple search paths detected. Calculating the least common ancestor of all paths
+2025-07-27T14:14:57.3315820Z The least common ancestor is /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp. This will be the root directory of the artifact
+2025-07-27T14:14:57.3316460Z With the provided path, there will be 75 files uploaded
+2025-07-27T14:14:57.3317060Z Artifact name is valid!
+2025-07-27T14:14:57.3317280Z Root directory input is valid!
+2025-07-27T14:14:57.5676700Z Beginning upload of artifact content to blob storage
+2025-07-27T14:14:58.5836130Z Uploaded bytes 8388608
+2025-07-27T14:14:58.8274720Z Uploaded bytes 16777216
+2025-07-27T14:14:59.0268370Z Uploaded bytes 25165824
+2025-07-27T14:14:59.1092040Z Uploaded bytes 33554432
+2025-07-27T14:14:59.3191880Z Uploaded bytes 41943040
+2025-07-27T14:14:59.6844420Z Uploaded bytes 50331648
+2025-07-27T14:14:59.9862740Z Uploaded bytes 58720256
+2025-07-27T14:15:00.2032490Z Uploaded bytes 67108864
+2025-07-27T14:15:00.6092230Z Uploaded bytes 75497472
+2025-07-27T14:15:00.9515030Z Uploaded bytes 83886080
+2025-07-27T14:15:01.1592730Z Uploaded bytes 92274688
+2025-07-27T14:15:01.2824600Z Uploaded bytes 94224263
+2025-07-27T14:15:01.3380840Z Finished uploading artifact content to blob storage!
+2025-07-27T14:15:01.3382380Z SHA256 digest of uploaded artifact zip is b17fd3eed171532b0cad572a243e345f8f4f94decc70f67bca0d460a16d23953
+2025-07-27T14:15:01.3383880Z Finalizing artifact upload
+2025-07-27T14:15:01.4464560Z Artifact build-logs.zip successfully finalized. Artifact ID 3624084364
+2025-07-27T14:15:01.4465190Z Artifact build-logs has been successfully uploaded! Final size is 94224263 bytes. Artifact ID is 3624084364
+2025-07-27T14:15:01.4477450Z Artifact download URL: https://github.com/Ambro86/AccessibleIphoneApp/actions/runs/16552039913/artifacts/3624084364
+2025-07-27T14:15:01.4692030Z Post job cleanup.
+2025-07-27T14:15:01.6557740Z [command]/opt/homebrew/bin/git version
+2025-07-27T14:15:01.6807520Z git version 2.50.1
+2025-07-27T14:15:01.6836640Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/89cd1541-b3ec-4939-ac81-8f82c07d29d5/.gitconfig'
+2025-07-27T14:15:01.6846350Z Temporarily overriding HOME='/Users/runner/work/_temp/89cd1541-b3ec-4939-ac81-8f82c07d29d5' before making global git config changes
+2025-07-27T14:15:01.6850520Z Adding repository directory to the temporary git global config as a safe directory
+2025-07-27T14:15:01.6860080Z [command]/opt/homebrew/bin/git config --global --add safe.directory /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp
+2025-07-27T14:15:01.6967710Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-07-27T14:15:01.7030460Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-07-27T14:15:01.8147400Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-07-27T14:15:01.8197690Z http.https://github.com/.extraheader
+2025-07-27T14:15:01.8214560Z [command]/opt/homebrew/bin/git config --local --unset-all http.https://github.com/.extraheader
+2025-07-27T14:15:01.8279950Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-07-27T14:15:01.9207420Z Cleaning up orphan processes

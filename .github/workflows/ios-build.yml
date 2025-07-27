@@ -51,6 +51,10 @@ jobs:
             <false/>
             <key>signingStyle</key>
             <string>manual</string>
+            <key>signingCertificate</key>
+            <string>-</string>
+            <key>provisioningProfiles</key>
+            <dict/>
             <key>stripSwiftSymbols</key>
             <true/>
             <key>uploadBitcode</key>
@@ -61,14 +65,29 @@ jobs:
         </plist>
         EOF
     
-    - name: Export IPA (unsigned)
+    - name: Create IPA from Archive
       run: |
-        mkdir -p build/ipa
-        xcodebuild \
-          -exportArchive \
-          -archivePath "build/Avventura_epica.xcarchive" \
-          -exportPath "build/ipa" \
-          -exportOptionsPlist ExportOptions.plist
+        mkdir -p build/ipa/Payload
+        
+        # Find the .app file in the archive
+        APP_PATH=$(find "build/Avventura_epica.xcarchive/Products/Applications" -name "*.app" | head -1)
+        
+        if [ -z "$APP_PATH" ]; then
+          echo "❌ No .app file found in archive"
+          exit 1
+        fi
+        
+        echo "✅ Found app: $APP_PATH"
+        
+        # Copy app to Payload folder
+        cp -r "$APP_PATH" build/ipa/Payload/
+        
+        # Create IPA
+        cd build/ipa
+        zip -r "Avventura_epica.ipa" Payload/
+        
+        echo "✅ IPA created successfully"
+        ls -la *.ipa
     
     - name: Upload IPA as artifact
       uses: actions/upload-artifact@v4
