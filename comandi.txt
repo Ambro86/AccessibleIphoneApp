@@ -1,0 +1,22 @@
+# Compilazione base
+xcodebuild -project "Avventura epica.xcodeproj" -scheme "Avventura epica" build
+
+  # Con più dettagli sugli errori
+  xcodebuild -project "Avventura epica.xcodeproj" -scheme "Avventura epica" build -verbose
+
+  # Solo per controllare errori Swift senza linkare
+  swiftc -parse-as-library -target arm64-apple-ios12.0 *.swift Views/*.swift
+
+  # Verifica sintassi veloce di un singolo file
+  xcrun swift -frontend -parse Views/ShopView.swift
+
+  Il primo comando è il più utile per vedere tutti gli errori di compilazione completi.
+
+╭──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ >                                                                                                                    │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+  ? for shortcuts                                                                                Bypassing Permissions
+
+
+
+
