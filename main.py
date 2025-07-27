@@ -79,16 +79,91 @@ class AvventuraEpica:
         except:
             print(f"AUDIO: {message}")
     
-    def safe_play(self, audio: ft.Audio):
-        """Wrapper sicuro per la funzione play dell'audio su iOS"""
+    def safe_play(self, audio):
+        """Wrapper sicuro per la riproduzione audio su iOS con tecniche avanzate"""
         try:
-            audio.pause()
-            audio.src = audio.src
-            self.page.update()
-            audio.play()
-            self.log_audio(f"safe_play eseguito per audio: {audio.src}")
+            if audio is None:
+                self.log_error("Audio è None in safe_play")
+                return
+                
+            # Assicurati che l'audio sia nell'overlay
+            if audio not in self.page.overlay:
+                self.page.overlay.append(audio)
+                self.page.update()
+            
+            # Tecnica per iPhone: multiple tentativi con delays
+            src = getattr(audio, 'src', 'unknown')
+            
+            # Primo tentativo: pause + reset src + play
+            try:
+                audio.pause()
+                original_src = audio.src
+                audio.src = ""  # Reset completo
+                self.page.update()
+                audio.src = original_src  # Riassegna
+                self.page.update()
+                audio.play()
+                self.log_audio(f"safe_play metodo 1 eseguito per: {src}")
+                return
+            except Exception as e1:
+                self.log_audio(f"safe_play metodo 1 fallito: {e1}")
+            
+            # Secondo tentativo: ricrea l'oggetto se possibile
+            try:
+                if hasattr(audio, 'volume'):
+                    volume = audio.volume
+                    autoplay = getattr(audio, 'autoplay', False)
+                    
+                    # Rimuovi dal overlay
+                    if audio in self.page.overlay:
+                        self.page.overlay.remove(audio)
+                    
+                    # Ricrea l'audio
+                    new_audio = fa.Audio(
+                        src=original_src,
+                        autoplay=False,  # Mai autoplay nei retry
+                        volume=volume,
+                        balance=0
+                    )
+                    
+                    # Copia le proprietà custom se esistono
+                    if hasattr(audio, 'audio_id'):
+                        new_audio.audio_id = audio.audio_id
+                    if hasattr(audio, 'is_raw_audio'):
+                        new_audio.is_raw_audio = audio.is_raw_audio
+                    
+                    self.page.overlay.append(new_audio)
+                    self.page.update()
+                    new_audio.play()
+                    
+                    # Sostituisci l'oggetto audio nell'istanza se possibile
+                    # (questo è un tentativo, potrebbe non funzionare sempre)
+                    self.log_audio(f"safe_play metodo 2 eseguito per: {src}")
+                    return
+                    
+            except Exception as e2:
+                self.log_audio(f"safe_play metodo 2 fallito: {e2}")
+            
+            # Terzo tentativo: semplice play senza reset
+            try:
+                audio.play()
+                self.log_audio(f"safe_play metodo 3 eseguito per: {src}")
+            except Exception as e3:
+                self.log_error(f"safe_play tutti i metodi falliti per {src}: {e3}")
+                
         except Exception as e:
-            self.log_error(f"Errore in safe_play: {e}")
+            self.log_error(f"Errore generale in safe_play: {e}")
+    
+    def safe_pause(self, audio):
+        """Wrapper sicuro per pause audio su iOS"""
+        try:
+            if audio is None:
+                return
+                
+            audio.pause()
+            self.log_audio(f"safe_pause eseguito per: {getattr(audio, 'src', 'unknown')}")
+        except Exception as e:
+            self.log_error(f"Errore in safe_pause: {e}")
     
     def copia_log_debug(self, e):
         """Copia il log di debug negli appunti"""
@@ -1161,45 +1236,49 @@ class AvventuraEpica:
         self.audio_session_suspended = False
         
         # Musica di default (villaggio) con gestione errori
-        try:
-            self.musica_sottofondo = fa.Audio(
-                src="assets/music/villaggio.mp3",
-                autoplay=False,
-                volume=self.volume_musica,
-                balance=0,
-                on_state_changed=lambda e: self.handle_audio_state_change("musica", e),
-                on_loaded=lambda _: self.log_audio("Musica villaggio caricata")
-            )
-        except Exception as e:
-            self.log_error(f"Errore creazione musica villaggio: {e}")
-            self.musica_sottofondo = None
+        self.musica_sottofondo = self.crea_audio_sicuro(
+            "musica_sottofondo_villaggio", 
+            "assets/music/villaggio.mp3",
+            volume=self.volume_musica,
+            on_state_changed=lambda e: self.handle_audio_state_change("musica", e)
+        )
             
         # Crea tutti gli effetti audio
         self.crea_effetti_audio()
     
     def crea_audio_sicuro(self, nome, src, **kwargs):
-        """Crea un oggetto Audio con gestione errori per iPhone"""
+        """Crea un oggetto Audio modificato con wrapper JavaScript per iPhone"""
         try:
             # Solo musica e ambiente dovrebbero avere autoplay, non gli effetti
             default_autoplay = False
             if 'musica' in nome.lower() or 'ambiente' in nome.lower():
                 default_autoplay = True
                 
+            volume = kwargs.get('volume', self.volume_effetti)
+            volume = max(0.0, min(1.0, volume))  # Clamp tra 0 e 1
+            
+            # Crea un oggetto fa.Audio standard ma con proprietà aggiuntive
             default_kwargs = {
                 'autoplay': default_autoplay,
-                'volume': self.volume_effetti,
+                'volume': volume,
                 'balance': 0
             }
             default_kwargs.update(kwargs)
             
             audio = fa.Audio(src=src, **default_kwargs)
             
+            # Crea un ID unico per identificare questo audio
+            audio_id = f"audio-{nome.replace(' ', '-').lower()}-{id(self)}"
+            
+            # Aggiungi proprietà personalizzate per il nostro wrapper
+            audio.audio_id = audio_id
+            audio.is_raw_audio = True  # Flag per identificare che deve usare il wrapper JavaScript
+            
             # Assicura che il volume sia sempre impostato correttamente
             if hasattr(audio, 'volume'):
-                volume = default_kwargs.get('volume', self.volume_effetti)
-                audio.volume = max(0.0, min(1.0, volume))  # Clamp tra 0 e 1
+                audio.volume = volume
                 
-            self.log_audio(f"Audio {nome} creato con successo: {src} (volume: {audio.volume if hasattr(audio, 'volume') else 'N/A'}, autoplay: {default_kwargs['autoplay']})")
+            self.log_audio(f"Audio wrapper {nome} creato con successo: {src} (volume: {volume}, autoplay: {default_autoplay})")
             return audio
         except Exception as e:
             self.log_error(f"Errore creazione audio {nome} ({src}): {e}")
@@ -1667,13 +1746,11 @@ class AvventuraEpica:
         should_autoplay = self.should_autoplay_audio()
         
         try:
-            print(f"🎵 Creazione Audio object con: {file_musica}")
-            self.musica_sottofondo = fa.Audio(
-                src=file_musica,
-                autoplay=should_autoplay,
+            print(f"🎵 Creazione HtmlElement Audio con: {file_musica}")
+            self.musica_sottofondo = self.crea_audio_sicuro(
+                "musica_area", 
+                file_musica,
                 volume=self.volume_musica,
-                balance=0,
-                playback_rate=1.0,
                 on_state_changed=self.on_musica_state_changed
             )
             
@@ -1693,13 +1770,11 @@ class AvventuraEpica:
                 should_autoplay = self.should_autoplay_audio()
                 percorso_completo = os.path.abspath(file_musica)
                 
-                self.musica_sottofondo = fa.Audio(
-                    src=f"file://{percorso_completo}",
-                    autoplay=should_autoplay,
+                self.musica_sottofondo = self.crea_audio_sicuro(
+                    "musica_area_fallback", 
+                    f"file://{percorso_completo}",
                     volume=self.volume_musica,
-                    balance=0,
-                    on_state_changed=self.on_musica_state_changed,
-                    on_loaded=lambda _: print(f"🎵 Caricato con file://: {percorso_completo}")
+                    on_state_changed=self.on_musica_state_changed
                 )
                 
                 self.page.overlay.append(self.musica_sottofondo)
@@ -2389,12 +2464,10 @@ class AvventuraEpica:
             # Fix iOS: Solo autoplay se l'audio è stato attivato dall'utente
             should_autoplay = self.should_autoplay_audio()
             
-            self.musica_sottofondo = fa.Audio(
-                src=file_musica,
-                autoplay=should_autoplay,
+            self.musica_sottofondo = self.crea_audio_sicuro(
+                "musica_battaglia", 
+                file_musica,
                 volume=self.volume_musica,
-                balance=0,
-                playback_rate=1.0,
                 on_state_changed=self.on_musica_state_changed
             )
             
