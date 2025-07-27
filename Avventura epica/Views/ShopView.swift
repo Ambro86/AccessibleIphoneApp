@@ -16,7 +16,7 @@ struct ShopView: View {
     @State private var showingMessage = false
     
     var body: some View {
-        return VStack(spacing: 20) {
+        VStack(spacing: 20) {
             // Title - exactly as main.py
             Text("Negozio")
                 .font(.title)
@@ -41,6 +41,7 @@ struct ShopView: View {
                                 attemptPurchase(shopItem)
                             }
                         )
+                    }
                 }
                 .padding()
             }
@@ -405,8 +406,6 @@ struct ShopItemCard: View {
         )
         .opacity(canAfford || isOwned ? 1.0 : 0.6)
     }
-}
-
 }
 
 // Preview removed due to circular reference

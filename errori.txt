@@ -1,77 +1,65 @@
-2025-07-27T13:59:11.4133750Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/ShopView.swift:95:5: error: attribute 'private' can only be used in a non-local scope
-2025-07-27T13:59:11.4142500Z     private var shopItems: [ShopItem] {
-2025-07-27T13:59:11.4142800Z     ^
-2025-07-27T13:59:11.4143970Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/ShopView.swift:103:5: error: attribute 'private' can only be used in a non-local scope
-2025-07-27T13:59:11.4145190Z     private var filteredShopItems: [ShopItem] {
-2025-07-27T13:59:11.4145660Z     ^
-2025-07-27T13:59:11.4146210Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/ShopView.swift:107:5: error: attribute 'private' can only be used in a non-local scope
-2025-07-27T13:59:11.4146930Z     private func attemptPurchase(_ shopItem: ShopItem) {
-2025-07-27T13:59:11.4147200Z     ^
-2025-07-27T13:59:11.4147890Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/ShopView.swift:112:5: error: attribute 'private' can only be used in a non-local scope
-2025-07-27T13:59:11.4148590Z     private func completePurchase(_ shopItem: ShopItem) {
-2025-07-27T13:59:11.4148870Z     ^
-2025-07-27T13:59:11.4149430Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/ShopView.swift:132:5: error: attribute 'private' can only be used in a non-local scope
-2025-07-27T13:59:11.4150300Z     private func showMessage(_ message: String) {
-2025-07-27T13:59:11.4150540Z     ^
-2025-07-27T13:59:11.4151180Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/ShopView.swift:141:5: error: attribute 'private' can only be used in a non-local scope
-2025-07-27T13:59:11.4156350Z     private func getAreaShopName() -> String {
-2025-07-27T13:59:11.4156890Z     ^
-2025-07-27T13:59:11.4157460Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/ShopView.swift:164:5: error: attribute 'private' can only be used in a non-local scope
-2025-07-27T13:59:11.4158310Z     private func getAreaMaterial() -> String {
-2025-07-27T13:59:11.4158690Z     ^
-2025-07-27T13:59:11.4159200Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/ShopView.swift:410:45: error: expected '}' in struct
-2025-07-27T13:59:11.4159850Z // Preview removed due to circular reference
-2025-07-27T13:59:11.4167810Z                                             ^
-2025-07-27T13:59:11.4168570Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/ShopView.swift:10:23: note: to match this opening '{'
-2025-07-27T13:59:11.4169100Z struct ShopView: View {
-2025-07-27T13:59:11.4169300Z                       ^
-2025-07-27T13:59:11.4169930Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/ShopView.swift:19:9: warning: result of 'VStack<Content>' initializer is unused
-2025-07-27T13:59:11.4170510Z         VStack(spacing: 20) {
-2025-07-27T13:59:11.4170720Z         ^     ~~~~~~~~~~~~~~~
-2025-07-27T13:59:11.4171420Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/ShopView.swift:18:25: error: function declares an opaque return type, but has no return statements in its body from which to infer an underlying type
-2025-07-27T13:59:11.4172600Z     var body: some View {
-2025-07-27T13:59:11.4172820Z                         ^
-2025-07-27T13:59:11.4172960Z 
-2025-07-27T13:59:11.4308960Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica.xcodeproj: warning: The iOS deployment target 'IPHONEOS_DEPLOYMENT_TARGET' is set to 18.5, but the range of supported deployment target versions is 12.0 to 18.2.99. (in target 'Avventura epica' from project 'Avventura epica')
-2025-07-27T13:59:11.4316230Z ** ARCHIVE FAILED **
-2025-07-27T13:59:11.4316820Z note: Disabling previews because SWIFT_VERSION is set and SWIFT_OPTIMIZATION_LEVEL=-O, expected -Onone (in target 'Avventura epica' from project 'Avventura epica')
-2025-07-27T13:59:11.4317750Z 
-2025-07-27T13:59:11.4318040Z 
-2025-07-27T13:59:11.4318290Z The following build commands failed:
-2025-07-27T13:59:11.4318960Z 	CompileSwift normal arm64 (in target 'Avventura epica' from project 'Avventura epica')
-2025-07-27T13:59:11.4325860Z 	SwiftCompile normal arm64 Compiling\ AreasView.swift,\ BossNotificationView.swift,\ CatsView.swift,\ CombatView.swift,\ GameView.swift,\ InfoView.swift,\ InventoryView.swift,\ MainMenuView.swift,\ SettingsView.swift,\ ShopView.swift,\ AudioManager.swift,\ Avventura_epicaApp.swift,\ ContentView.swift,\ GameData.swift,\ GameManager.swift,\ GameModels.swift,\ InventoryModels.swift,\ ShopData.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/Views/AreasView.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/Views/BossNotificationView.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/Views/CatsView.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/Views/CombatView.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/Views/GameView.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/Views/InfoView.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/Views/InventoryView.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/Views/MainMenuView.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/Views/SettingsView.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/Views/ShopView.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/AudioManager.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/Avventura_epicaApp.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/ContentView.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/GameData.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/GameManager.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/GameModels.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/InventoryModels.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/ShopData.swift (in target 'Avventura epica' from project 'Avventura epica')
-2025-07-27T13:59:11.4359420Z 	Archiving project Avventura epica with scheme Avventura epica
-2025-07-27T13:59:11.4359980Z (3 failures)
-2025-07-27T13:59:11.4825950Z ##[error]Process completed with exit code 65.
-2025-07-27T13:59:11.4991560Z ##[group]Run actions/upload-artifact@v4
-2025-07-27T13:59:11.4991840Z with:
-2025-07-27T13:59:11.4992000Z   name: build-logs
-2025-07-27T13:59:11.4992180Z   path: build/
+2025-07-27T14:05:06.5037560Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/ShopView.swift:95:5: error: attribute 'private' can only be used in a non-local scope
+2025-07-27T14:05:06.5042590Z     private var shopItems: [ShopItem] {
+2025-07-27T14:05:06.5043190Z     ^
+2025-07-27T14:05:06.5043970Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/ShopView.swift:103:5: error: attribute 'private' can only be used in a non-local scope
+2025-07-27T14:05:06.5044710Z     private var filteredShopItems: [ShopItem] {
+2025-07-27T14:05:06.5045110Z     ^
+2025-07-27T14:05:06.5045760Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/ShopView.swift:107:5: error: attribute 'private' can only be used in a non-local scope
+2025-07-27T14:05:06.5046540Z     private func attemptPurchase(_ shopItem: ShopItem) {
+2025-07-27T14:05:06.5046960Z     ^
+2025-07-27T14:05:06.5047550Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/ShopView.swift:112:5: error: attribute 'private' can only be used in a non-local scope
+2025-07-27T14:05:06.5048260Z     private func completePurchase(_ shopItem: ShopItem) {
+2025-07-27T14:05:06.5048550Z     ^
+2025-07-27T14:05:06.5049080Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/ShopView.swift:132:5: error: attribute 'private' can only be used in a non-local scope
+2025-07-27T14:05:06.5049780Z     private func showMessage(_ message: String) {
+2025-07-27T14:05:06.5050000Z     ^
+2025-07-27T14:05:06.5050540Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/ShopView.swift:141:5: error: attribute 'private' can only be used in a non-local scope
+2025-07-27T14:05:06.5052410Z     private func getAreaShopName() -> String {
+2025-07-27T14:05:06.5052680Z     ^
+2025-07-27T14:05:06.5053190Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/ShopView.swift:164:5: error: attribute 'private' can only be used in a non-local scope
+2025-07-27T14:05:06.5053780Z     private func getAreaMaterial() -> String {
+2025-07-27T14:05:06.5054030Z     ^
+2025-07-27T14:05:06.5054090Z 
+2025-07-27T14:05:06.5253440Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica.xcodeproj: warning: The iOS deployment target 'IPHONEOS_DEPLOYMENT_TARGET' is set to 18.5, but the range of supported deployment target versions is 12.0 to 18.2.99. (in target 'Avventura epica' from project 'Avventura epica')
+2025-07-27T14:05:06.5256420Z note: Disabling previews because SWIFT_VERSION is set and SWIFT_OPTIMIZATION_LEVEL=-O, expected -Onone (in target 'Avventura epica' from project 'Avventura epica')
+2025-07-27T14:05:06.5270240Z ** ARCHIVE FAILED **
+2025-07-27T14:05:06.5270490Z 
+2025-07-27T14:05:06.5270490Z 
+2025-07-27T14:05:06.5270580Z The following build commands failed:
+2025-07-27T14:05:06.5271060Z 	CompileSwift normal arm64 (in target 'Avventura epica' from project 'Avventura epica')
+2025-07-27T14:05:06.5277710Z 	SwiftCompile normal arm64 Compiling\ AreasView.swift,\ BossNotificationView.swift,\ CatsView.swift,\ CombatView.swift,\ GameView.swift,\ InfoView.swift,\ InventoryView.swift,\ MainMenuView.swift,\ SettingsView.swift,\ ShopView.swift,\ AudioManager.swift,\ Avventura_epicaApp.swift,\ ContentView.swift,\ GameData.swift,\ GameManager.swift,\ GameModels.swift,\ InventoryModels.swift,\ ShopData.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/Views/AreasView.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/Views/BossNotificationView.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/Views/CatsView.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/Views/CombatView.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/Views/GameView.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/Views/InfoView.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/Views/InventoryView.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/Views/MainMenuView.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/Views/SettingsView.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/Views/ShopView.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/AudioManager.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/Avventura_epicaApp.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/ContentView.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/GameData.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/GameManager.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/GameModels.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/InventoryModels.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/ShopData.swift (in target 'Avventura epica' from project 'Avventura epica')
+2025-07-27T14:05:06.5290590Z 	Archiving project Avventura epica with scheme Avventura epica
+2025-07-27T14:05:06.5291190Z (3 failures)
+2025-07-27T14:05:06.5657420Z ##[error]Process completed with exit code 65.
+2025-07-27T14:05:06.5757550Z ##[group]Run actions/upload-artifact@v4
+2025-07-27T14:05:06.5757790Z with:
+2025-07-27T14:05:06.5757970Z   name: build-logs
+2025-07-27T14:05:06.5758140Z   path: build/
 DerivedData/
 
-2025-07-27T13:59:11.4992490Z   retention-days: 7
-2025-07-27T13:59:11.4992670Z   if-no-files-found: warn
-2025-07-27T13:59:11.4992860Z   compression-level: 6
-2025-07-27T13:59:11.4993090Z   overwrite: false
-2025-07-27T13:59:11.4993260Z   include-hidden-files: false
-2025-07-27T13:59:11.4993460Z env:
-2025-07-27T13:59:11.4993640Z   MD_APPLE_SDK_ROOT: /Applications/Xcode_16.2.app
-2025-07-27T13:59:11.4993940Z ##[endgroup]
-2025-07-27T13:59:11.8765630Z Multiple search paths detected. Calculating the least common ancestor of all paths
-2025-07-27T13:59:11.8768780Z The least common ancestor is /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp. This will be the root directory of the artifact
-2025-07-27T13:59:11.8782390Z ##[warning]No files were found with the provided path: build/
+2025-07-27T14:05:06.5758370Z   retention-days: 7
+2025-07-27T14:05:06.5758730Z   if-no-files-found: warn
+2025-07-27T14:05:06.5758910Z   compression-level: 6
+2025-07-27T14:05:06.5759100Z   overwrite: false
+2025-07-27T14:05:06.5759260Z   include-hidden-files: false
+2025-07-27T14:05:06.5759480Z env:
+2025-07-27T14:05:06.5759660Z   MD_APPLE_SDK_ROOT: /Applications/Xcode_16.2.app
+2025-07-27T14:05:06.5759900Z ##[endgroup]
+2025-07-27T14:05:06.8741980Z Multiple search paths detected. Calculating the least common ancestor of all paths
+2025-07-27T14:05:06.8744300Z The least common ancestor is /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp. This will be the root directory of the artifact
+2025-07-27T14:05:06.8756330Z ##[warning]No files were found with the provided path: build/
 DerivedData/. No artifacts will be uploaded.
-2025-07-27T13:59:11.9040370Z Post job cleanup.
-2025-07-27T13:59:12.0454900Z [command]/opt/homebrew/bin/git version
-2025-07-27T13:59:12.0710760Z git version 2.50.1
-2025-07-27T13:59:12.0797130Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/253011ff-db8d-4b5f-b8ce-ec35222319b1/.gitconfig'
-2025-07-27T13:59:12.0797960Z Temporarily overriding HOME='/Users/runner/work/_temp/253011ff-db8d-4b5f-b8ce-ec35222319b1' before making global git config changes
-2025-07-27T13:59:12.0798620Z Adding repository directory to the temporary git global config as a safe directory
-2025-07-27T13:59:12.0799690Z [command]/opt/homebrew/bin/git config --global --add safe.directory /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp
-2025-07-27T13:59:12.0885260Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
-2025-07-27T13:59:12.0966380Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
-2025-07-27T13:59:12.1781910Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
-2025-07-27T13:59:12.1800920Z http.https://github.com/.extraheader
-2025-07-27T13:59:12.1821650Z [command]/opt/homebrew/bin/git config --local --unset-all http.https://github.com/.extraheader
-2025-07-27T13:59:12.1877610Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
-2025-07-27T13:59:12.2502870Z Cleaning up orphan processes
+2025-07-27T14:05:06.8954880Z Post job cleanup.
+2025-07-27T14:05:06.9750990Z [command]/opt/homebrew/bin/git version
+2025-07-27T14:05:06.9943320Z git version 2.50.1
+2025-07-27T14:05:06.9970890Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/5273fb65-67d1-49ae-ac88-b89c47450792/.gitconfig'
+2025-07-27T14:05:06.9978000Z Temporarily overriding HOME='/Users/runner/work/_temp/5273fb65-67d1-49ae-ac88-b89c47450792' before making global git config changes
+2025-07-27T14:05:06.9978570Z Adding repository directory to the temporary git global config as a safe directory
+2025-07-27T14:05:06.9985740Z [command]/opt/homebrew/bin/git config --global --add safe.directory /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp
+2025-07-27T14:05:07.0058460Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-07-27T14:05:07.0100610Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-07-27T14:05:07.0758090Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-07-27T14:05:07.0794840Z http.https://github.com/.extraheader
+2025-07-27T14:05:07.0802690Z [command]/opt/homebrew/bin/git config --local --unset-all http.https://github.com/.extraheader
+2025-07-27T14:05:07.0850170Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-07-27T14:05:07.1426390Z Cleaning up orphan processes
