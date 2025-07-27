@@ -605,6 +605,7 @@ class GameManager: ObservableObject {
     }
     
     // MARK: - Combat Items
+    @discardableResult
     func useCombatPotion() -> Bool {
         guard isInCombat,
               gameState.risorse.pozioni > 0,

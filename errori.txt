@@ -1,380 +1,130 @@
-2025-07-27T13:41:38.4540090Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/ShopView.swift:95:5: error: attribute 'private' can only be used in a non-local scope
-2025-07-27T13:41:38.4540890Z     private var shopItems: [ShopItem] {
-2025-07-27T13:41:38.4541070Z     ^
-2025-07-27T13:41:38.4541560Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/ShopView.swift:103:5: error: attribute 'private' can only be used in a non-local scope
-2025-07-27T13:41:38.4542200Z     private var filteredShopItems: [ShopItem] {
-2025-07-27T13:41:38.4542410Z     ^
-2025-07-27T13:41:38.4542930Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/ShopView.swift:107:5: error: attribute 'private' can only be used in a non-local scope
-2025-07-27T13:41:38.4543500Z     private func attemptPurchase(_ shopItem: ShopItem) {
-2025-07-27T13:41:38.4543700Z     ^
-2025-07-27T13:41:38.4544190Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/ShopView.swift:112:5: error: attribute 'private' can only be used in a non-local scope
-2025-07-27T13:41:38.4544790Z     private func completePurchase(_ shopItem: ShopItem) {
-2025-07-27T13:41:38.4545000Z     ^
-2025-07-27T13:41:38.4545490Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/ShopView.swift:132:5: error: attribute 'private' can only be used in a non-local scope
-2025-07-27T13:41:38.4546130Z     private func showMessage(_ message: String) {
-2025-07-27T13:41:38.4546310Z     ^
-2025-07-27T13:41:38.4546790Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/ShopView.swift:141:5: error: attribute 'private' can only be used in a non-local scope
-2025-07-27T13:41:38.4547700Z     private func getAreaShopName() -> String {
-2025-07-27T13:41:38.4547880Z     ^
-2025-07-27T13:41:38.4548420Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/ShopView.swift:164:5: error: attribute 'private' can only be used in a non-local scope
-2025-07-27T13:41:38.4548980Z     private func getAreaMaterial() -> String {
-2025-07-27T13:41:38.4549150Z     ^
-2025-07-27T13:41:38.4549540Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/ShopView.swift:412:2: error: expected '}' in struct
-2025-07-27T13:41:38.4550020Z }
-2025-07-27T13:41:38.4550160Z  ^
-2025-07-27T13:41:38.4555900Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/ShopView.swift:10:23: note: to match this opening '{'
-2025-07-27T13:41:38.4556490Z struct ShopView: View {
-2025-07-27T13:41:38.4556670Z                       ^
-2025-07-27T13:41:38.4557170Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/GameModels.swift:160:8: error: type 'GameState' does not conform to protocol 'Decodable'
-2025-07-27T13:41:38.4557740Z struct GameState: Codable {
-2025-07-27T13:41:38.4557930Z        ^
-2025-07-27T13:41:38.4558170Z Swift.Decodable:2:5: note: protocol requires initializer 'init(from:)' with type 'Decodable'
-2025-07-27T13:41:38.4558680Z     init(from decoder: any Decoder) throws
-2025-07-27T13:41:38.4558860Z     ^
-2025-07-27T13:41:38.4559420Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/GameModels.swift:180:9: note: cannot automatically synthesize 'Decodable' because 'GameScreen' does not conform to 'Decodable'
-2025-07-27T13:41:38.4560060Z     var schermataCorrente: GameScreen = .mainMenu
-2025-07-27T13:41:38.4560330Z         ^
-2025-07-27T13:41:38.4561020Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/GameModels.swift:181:9: note: cannot automatically synthesize 'Decodable' because '[GameScreen]' does not conform to 'Decodable'
-2025-07-27T13:41:38.4561650Z     var stackSchermate: [GameScreen] = []
-2025-07-27T13:41:38.4561820Z         ^
-2025-07-27T13:41:38.4562270Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/GameModels.swift:160:8: error: type 'GameState' does not conform to protocol 'Decodable'
-2025-07-27T13:41:38.4562780Z struct GameState: Codable {
-2025-07-27T13:41:38.4562960Z        ^
-2025-07-27T13:41:38.4563250Z Swift.Decodable:2:5: note: protocol requires initializer 'init(from:)' with type 'Decodable'
-2025-07-27T13:41:38.4563600Z     init(from decoder: any Decoder) throws
-2025-07-27T13:41:38.4563770Z     ^
-2025-07-27T13:41:38.4564410Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/GameModels.swift:180:9: note: cannot automatically synthesize 'Decodable' because 'GameScreen' does not conform to 'Decodable'
-2025-07-27T13:41:38.4565050Z     var schermataCorrente: GameScreen = .mainMenu
-2025-07-27T13:41:38.4565250Z         ^
-2025-07-27T13:41:38.4565950Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/GameModels.swift:181:9: note: cannot automatically synthesize 'Decodable' because '[GameScreen]' does not conform to 'Decodable'
-2025-07-27T13:41:38.4566570Z     var stackSchermate: [GameScreen] = []
-2025-07-27T13:41:38.4566740Z         ^
-2025-07-27T13:41:38.4567540Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/GameView.swift:149:10: warning: 'onChange(of:perform:)' was deprecated in iOS 17.0: Use `onChange` with a two or zero parameter action closure instead.
-2025-07-27T13:41:38.4568440Z         .onChange(of: gameManager.isInCombat) { isInCombat in
-2025-07-27T13:41:38.4568690Z          ^
-2025-07-27T13:41:38.4569140Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/InventoryView.swift:153:46: warning: result of call to 'unequip' is unused
-2025-07-27T13:41:38.4569740Z             gameManager.gameState.inventario.unequip(item.equipment.nome)
-2025-07-27T13:41:38.4570250Z                                              ^      ~~~~~~~~~~~~~~~~~~~~~
-2025-07-27T13:41:38.4570780Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/InventoryView.swift:155:46: warning: result of call to 'equip' is unused
-2025-07-27T13:41:38.4571420Z             gameManager.gameState.inventario.equip(item.equipment.nome)
-2025-07-27T13:41:38.4571700Z                                              ^    ~~~~~~~~~~~~~~~~~~~~~
-2025-07-27T13:41:38.4572360Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/InventoryView.swift:376:58: warning: result of call to 'sellItem' is unused
-2025-07-27T13:41:38.4573090Z                         gameManager.gameState.inventario.sellItem(item.equipment.nome)
-2025-07-27T13:41:38.4573490Z                                                          ^       ~~~~~~~~~~~~~~~~~~~~~
-2025-07-27T13:41:38.4574100Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/InventoryView.swift:364:62: warning: result of call to 'equip' is unused
-2025-07-27T13:41:38.4574690Z                             gameManager.gameState.inventario.equip(item.equipment.nome)
-2025-07-27T13:41:38.4574970Z                                                              ^    ~~~~~~~~~~~~~~~~~~~~~
-2025-07-27T13:41:38.4575570Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/InventoryView.swift:353:62: warning: result of call to 'unequip' is unused
-2025-07-27T13:41:38.4576240Z                             gameManager.gameState.inventario.unequip(item.equipment.nome)
-2025-07-27T13:41:38.4576520Z                                                              ^      ~~~~~~~~~~~~~~~~~~~~~
-2025-07-27T13:41:38.4577210Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/SettingsView.swift:24:26: warning: 'onChange(of:perform:)' was deprecated in iOS 17.0: Use `onChange` with a two or zero parameter action closure instead.
-2025-07-27T13:41:38.4578080Z                         .onChange(of: gameManager.audioEnabled) { value in
-2025-07-27T13:41:38.4578300Z                          ^
-2025-07-27T13:41:38.4578960Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/SettingsView.swift:34:30: warning: 'onChange(of:perform:)' was deprecated in iOS 17.0: Use `onChange` with a two or zero parameter action closure instead.
-2025-07-27T13:41:38.4579670Z                             .onChange(of: musicVolume) { value in
-2025-07-27T13:41:38.4579910Z                              ^
-2025-07-27T13:41:38.4580590Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/SettingsView.swift:44:30: warning: 'onChange(of:perform:)' was deprecated in iOS 17.0: Use `onChange` with a two or zero parameter action closure instead.
-2025-07-27T13:41:38.4581370Z                             .onChange(of: effectsVolume) { value in
-2025-07-27T13:41:38.4581570Z                              ^
-2025-07-27T13:41:38.4582260Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/SettingsView.swift:63:26: warning: 'onChange(of:perform:)' was deprecated in iOS 17.0: Use `onChange` with a two or zero parameter action closure instead.
-2025-07-27T13:41:38.4583000Z                         .onChange(of: gameManager.hapticEnabled) { value in
-2025-07-27T13:41:38.4583220Z                          ^
-2025-07-27T13:41:38.4583790Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/ShopView.swift:410:1: error: circular reference expanding freestanding macro 'Preview'
-2025-07-27T13:41:38.4584360Z #Preview {
-2025-07-27T13:41:38.4584460Z ^
-2025-07-27T13:41:38.4584990Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/ShopView.swift:10:8: note: through reference here
-2025-07-27T13:41:38.4585450Z struct ShopView: View {
-2025-07-27T13:41:38.4585580Z        ^
-2025-07-27T13:41:38.4585960Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/ShopView.swift:10:8: note: through reference here
-2025-07-27T13:41:38.4586570Z struct ShopView: View {
-2025-07-27T13:41:38.4586700Z        ^
-2025-07-27T13:41:38.4587120Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/ShopView.swift:10:8: note: through reference here
-2025-07-27T13:41:38.4587570Z struct ShopView: View {
-2025-07-27T13:41:38.4587700Z        ^
-2025-07-27T13:41:38.4588100Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/ShopView.swift:10:8: note: through reference here
-2025-07-27T13:41:38.4588540Z struct ShopView: View {
-2025-07-27T13:41:38.4588670Z        ^
-2025-07-27T13:41:38.4589220Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/ShopView.swift:410:1: note: while resolving freestanding macro 'Preview'
-2025-07-27T13:41:38.4589730Z #Preview {
-2025-07-27T13:41:38.4589870Z ^
-2025-07-27T13:41:38.4590340Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/ShopView.swift:19:9: warning: result of 'VStack<Content>' initializer is unused
-2025-07-27T13:41:38.4590860Z         VStack(spacing: 20) {
-2025-07-27T13:41:38.4591010Z         ^     ~~~~~~~~~~~~~~~
-2025-07-27T13:41:38.4591520Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/ShopView.swift:121:33: error: value of type 'AudioManager' has no member 'playErrorSound'
-2025-07-27T13:41:38.4592240Z             AudioManager.shared.playErrorSound()
-2025-07-27T13:41:38.4592440Z             ~~~~~~~~~~~~~~~~~~~ ^~~~~~~~~~~~~~
-2025-07-27T13:41:38.4593120Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/ShopView.swift:18:25: error: function declares an opaque return type, but has no return statements in its body from which to infer an underlying type
-2025-07-27T13:41:38.4593820Z     var body: some View {
-2025-07-27T13:41:38.4593960Z                         ^
-2025-07-27T13:41:38.4594550Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/GameModels.swift:137:8: error: type 'Relic' does not conform to protocol 'Decodable'
-2025-07-27T13:41:38.4595070Z struct Relic: Identifiable, Codable {
-2025-07-27T13:41:38.4595230Z        ^
-2025-07-27T13:41:38.4595460Z Swift.Decodable:2:5: note: protocol requires initializer 'init(from:)' with type 'Decodable'
-2025-07-27T13:41:38.4595770Z     init(from decoder: any Decoder) throws
-2025-07-27T13:41:38.4595940Z     ^
-2025-07-27T13:41:38.4596480Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/GameModels.swift:140:9: note: cannot automatically synthesize 'Decodable' because 'RelicType' does not conform to 'Decodable'
-2025-07-27T13:41:38.4597110Z     let tipo: RelicType
-2025-07-27T13:41:38.4597250Z         ^
-2025-07-27T13:41:38.4597800Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/GameModels.swift:144:9: note: cannot automatically synthesize 'Decodable' because 'RelicRarity' does not conform to 'Decodable'
-2025-07-27T13:41:38.4598410Z     let rarita: RelicRarity
-2025-07-27T13:41:38.4598550Z         ^
-2025-07-27T13:41:38.4598990Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/GameModels.swift:137:8: error: type 'Relic' does not conform to protocol 'Decodable'
-2025-07-27T13:41:38.4599500Z struct Relic: Identifiable, Codable {
-2025-07-27T13:41:38.4599680Z        ^
-2025-07-27T13:41:38.4599930Z Swift.Decodable:2:5: note: protocol requires initializer 'init(from:)' with type 'Decodable'
-2025-07-27T13:41:38.4600260Z     init(from decoder: any Decoder) throws
-2025-07-27T13:41:38.4600440Z     ^
-2025-07-27T13:41:38.4601000Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/GameModels.swift:140:9: note: cannot automatically synthesize 'Decodable' because 'RelicType' does not conform to 'Decodable'
-2025-07-27T13:41:38.4601600Z     let tipo: RelicType
-2025-07-27T13:41:38.4601730Z         ^
-2025-07-27T13:41:38.4602280Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/GameModels.swift:144:9: note: cannot automatically synthesize 'Decodable' because 'RelicRarity' does not conform to 'Decodable'
-2025-07-27T13:41:38.4603040Z     let rarita: RelicRarity
-2025-07-27T13:41:38.4603180Z         ^
-2025-07-27T13:41:38.4603620Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/GameManager.swift:592:26: warning: result of call to 'useCombatPotion()' is unused
-2025-07-27T13:41:38.4604130Z                     self.useCombatPotion()
-2025-07-27T13:41:38.4604400Z                          ^              ~~
-2025-07-27T13:41:38.4604960Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/GameManager.swift:768:15: error: initializer for conditional binding must have Optional type, not 'String'
-2025-07-27T13:41:38.4605540Z         guard let activeCatId = gameState.gattoAttivo,
-2025-07-27T13:41:38.4605880Z               ^                 ~~~~~~~~~~~~~~~~~~~~~
-2025-07-27T13:41:38.4606560Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/GameManager.swift:803:13: warning: initialization of immutable value 'ciboNecessario' was never used; consider replacing with assignment to '_' or removing it
-2025-07-27T13:41:38.4607340Z         let ciboNecessario = gameState.risorse.cibo >= 5 ? 5 : gameState.risorse.cibo
-2025-07-27T13:41:38.4607600Z         ~~~~^~~~~~~~~~~~~~
-2025-07-27T13:41:38.4607730Z         _
-2025-07-27T13:41:38.4608220Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/GameManager.swift:847:15: error: initializer for conditional binding must have Optional type, not 'String'
-2025-07-27T13:41:38.4608790Z         guard let activeCatId = gameState.gattoAttivo,
-2025-07-27T13:41:38.4608990Z               ^                 ~~~~~~~~~~~~~~~~~~~~~
-2025-07-27T13:41:38.4609540Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/GameManager.swift:887:15: error: initializer for conditional binding must have Optional type, not 'String'
-2025-07-27T13:41:38.4610120Z         guard let activeCatId = gameState.gattoAttivo,
-2025-07-27T13:41:38.4610320Z               ^                 ~~~~~~~~~~~~~~~~~~~~~
-2025-07-27T13:41:38.4610810Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/GameModels.swift:53:8: error: type 'Cat' does not conform to protocol 'Decodable'
-2025-07-27T13:41:38.4611290Z struct Cat: Identifiable, Codable {
-2025-07-27T13:41:38.4611520Z        ^
-2025-07-27T13:41:38.4611850Z Swift.Decodable:2:5: note: protocol requires initializer 'init(from:)' with type 'Decodable'
-2025-07-27T13:41:38.4612180Z     init(from decoder: any Decoder) throws
-2025-07-27T13:41:38.4612350Z     ^
-2025-07-27T13:41:38.4612880Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/GameModels.swift:59:9: note: cannot automatically synthesize 'Decodable' because 'CatAbility' does not conform to 'Decodable'
-2025-07-27T13:41:38.4613460Z     var abilita: CatAbility
-2025-07-27T13:41:38.4613600Z         ^
-2025-07-27T13:41:38.4614030Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/GameModels.swift:53:8: error: type 'Cat' does not conform to protocol 'Encodable'
-2025-07-27T13:41:38.4614550Z struct Cat: Identifiable, Codable {
-2025-07-27T13:41:38.4614700Z        ^
-2025-07-27T13:41:38.4614930Z Swift.Encodable:2:10: note: protocol requires function 'encode(to:)' with type 'Encodable'
-2025-07-27T13:41:38.4615250Z     func encode(to encoder: any Encoder) throws
-2025-07-27T13:41:38.4615420Z          ^
-2025-07-27T13:41:38.4615970Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/GameModels.swift:59:9: note: cannot automatically synthesize 'Encodable' because 'CatAbility' does not conform to 'Encodable'
-2025-07-27T13:41:38.4616580Z     var abilita: CatAbility
-2025-07-27T13:41:38.4616720Z         ^
-2025-07-27T13:41:38.4617170Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/GameModels.swift:137:8: error: type 'Relic' does not conform to protocol 'Encodable'
-2025-07-27T13:41:38.4617690Z struct Relic: Identifiable, Codable {
-2025-07-27T13:41:38.4618010Z        ^
-2025-07-27T13:41:38.4618240Z Swift.Encodable:2:10: note: protocol requires function 'encode(to:)' with type 'Encodable'
-2025-07-27T13:41:38.4618550Z     func encode(to encoder: any Encoder) throws
-2025-07-27T13:41:38.4618810Z          ^
-2025-07-27T13:41:38.4619400Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/GameModels.swift:140:9: note: cannot automatically synthesize 'Encodable' because 'RelicType' does not conform to 'Encodable'
-2025-07-27T13:41:38.4619990Z     let tipo: RelicType
-2025-07-27T13:41:38.4620170Z         ^
-2025-07-27T13:41:38.4620740Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/GameModels.swift:144:9: note: cannot automatically synthesize 'Encodable' because 'RelicRarity' does not conform to 'Encodable'
-2025-07-27T13:41:38.4621440Z     let rarita: RelicRarity
-2025-07-27T13:41:38.4621580Z         ^
-2025-07-27T13:41:38.4622060Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/InventoryModels.swift:128:8: error: type 'PlayerInventory' does not conform to protocol 'Decodable'
-2025-07-27T13:41:38.4622710Z struct PlayerInventory: Codable {
-2025-07-27T13:41:38.4622920Z        ^
-2025-07-27T13:41:38.4623170Z Swift.Decodable:2:5: note: protocol requires initializer 'init(from:)' with type 'Decodable'
-2025-07-27T13:41:38.4623500Z     init(from decoder: any Decoder) throws
-2025-07-27T13:41:38.4623670Z     ^
-2025-07-27T13:41:38.4624290Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/InventoryModels.swift:130:9: note: cannot automatically synthesize 'Decodable' because '[EquipmentType : String]' does not conform to 'Decodable'
-2025-07-27T13:41:38.4624970Z     var equipped: [EquipmentType: String] = [:]
-2025-07-27T13:41:38.4625150Z         ^
-2025-07-27T13:41:38.4625680Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/InventoryModels.swift:128:8: error: type 'PlayerInventory' does not conform to protocol 'Decodable'
-2025-07-27T13:41:38.4626290Z struct PlayerInventory: Codable {
-2025-07-27T13:41:38.4626530Z        ^
-2025-07-27T13:41:38.4626820Z Swift.Decodable:2:5: note: protocol requires initializer 'init(from:)' with type 'Decodable'
-2025-07-27T13:41:38.4627170Z     init(from decoder: any Decoder) throws
-2025-07-27T13:41:38.4627340Z     ^
-2025-07-27T13:41:38.4628080Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/InventoryModels.swift:130:9: note: cannot automatically synthesize 'Decodable' because '[EquipmentType : String]' does not conform to 'Decodable'
-2025-07-27T13:41:38.4628850Z     var equipped: [EquipmentType: String] = [:]
-2025-07-27T13:41:38.4629050Z         ^
-2025-07-27T13:41:38.4629570Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/GameModels.swift:160:8: error: type 'GameState' does not conform to protocol 'Encodable'
-2025-07-27T13:41:38.4630090Z struct GameState: Codable {
-2025-07-27T13:41:38.4630280Z        ^
-2025-07-27T13:41:38.4630560Z Swift.Encodable:2:10: note: protocol requires function 'encode(to:)' with type 'Encodable'
-2025-07-27T13:41:38.4630970Z     func encode(to encoder: any Encoder) throws
-2025-07-27T13:41:38.4631170Z          ^
-2025-07-27T13:41:38.4631760Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/GameModels.swift:180:9: note: cannot automatically synthesize 'Encodable' because 'GameScreen' does not conform to 'Encodable'
-2025-07-27T13:41:38.4632410Z     var schermataCorrente: GameScreen = .mainMenu
-2025-07-27T13:41:38.4632590Z         ^
-2025-07-27T13:41:38.4633180Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/GameModels.swift:181:9: note: cannot automatically synthesize 'Encodable' because '[GameScreen]' does not conform to 'Encodable'
-2025-07-27T13:41:38.4633840Z     var stackSchermate: [GameScreen] = []
-2025-07-27T13:41:38.4634080Z         ^
-2025-07-27T13:41:38.4634580Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/GameModels.swift:53:8: error: type 'Cat' does not conform to protocol 'Decodable'
-2025-07-27T13:41:38.4635430Z struct Cat: Identifiable, Codable {
-2025-07-27T13:41:38.4635630Z        ^
-2025-07-27T13:41:38.4635870Z Swift.Decodable:2:5: note: protocol requires initializer 'init(from:)' with type 'Decodable'
-2025-07-27T13:41:38.4636260Z     init(from decoder: any Decoder) throws
-2025-07-27T13:41:38.4636490Z     ^
-2025-07-27T13:41:38.4648710Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/GameModels.swift:59:9: note: cannot automatically synthesize 'Decodable' because 'CatAbility' does not conform to 'Decodable'
-2025-07-27T13:41:38.4649340Z     var abilita: CatAbility
-2025-07-27T13:41:38.4649500Z         ^
-2025-07-27T13:41:38.4650180Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/InventoryModels.swift:37:8: error: type 'EquipmentItem' does not conform to protocol 'Decodable'
-2025-07-27T13:41:38.4650820Z struct EquipmentItem: Identifiable, Codable {
-2025-07-27T13:41:38.4651000Z        ^
-2025-07-27T13:41:38.4651240Z Swift.Decodable:2:5: note: protocol requires initializer 'init(from:)' with type 'Decodable'
-2025-07-27T13:41:38.4651570Z     init(from decoder: any Decoder) throws
-2025-07-27T13:41:38.4651730Z     ^
-2025-07-27T13:41:38.4652280Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/InventoryModels.swift:40:9: note: cannot automatically synthesize 'Decodable' because 'EquipmentType' does not conform to 'Decodable'
-2025-07-27T13:41:38.4652950Z     let tipo: EquipmentType
-2025-07-27T13:41:38.4653180Z         ^
-2025-07-27T13:41:38.4653650Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/InventoryModels.swift:37:8: error: type 'EquipmentItem' does not conform to protocol 'Encodable'
-2025-07-27T13:41:38.4654190Z struct EquipmentItem: Identifiable, Codable {
-2025-07-27T13:41:38.4654400Z        ^
-2025-07-27T13:41:38.4654620Z Swift.Encodable:2:10: note: protocol requires function 'encode(to:)' with type 'Encodable'
-2025-07-27T13:41:38.4654920Z     func encode(to encoder: any Encoder) throws
-2025-07-27T13:41:38.4655090Z          ^
-2025-07-27T13:41:38.4655740Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/InventoryModels.swift:40:9: note: cannot automatically synthesize 'Encodable' because 'EquipmentType' does not conform to 'Encodable'
-2025-07-27T13:41:38.4656420Z     let tipo: EquipmentType
-2025-07-27T13:41:38.4656550Z         ^
-2025-07-27T13:41:38.4657030Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/InventoryModels.swift:128:8: error: type 'PlayerInventory' does not conform to protocol 'Encodable'
-2025-07-27T13:41:38.4657560Z struct PlayerInventory: Codable {
-2025-07-27T13:41:38.4657710Z        ^
-2025-07-27T13:41:38.4657920Z Swift.Encodable:2:10: note: protocol requires function 'encode(to:)' with type 'Encodable'
-2025-07-27T13:41:38.4658260Z     func encode(to encoder: any Encoder) throws
-2025-07-27T13:41:38.4658440Z          ^
-2025-07-27T13:41:38.4659020Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/InventoryModels.swift:130:9: note: cannot automatically synthesize 'Encodable' because '[EquipmentType : String]' does not conform to 'Encodable'
-2025-07-27T13:41:38.4659700Z     var equipped: [EquipmentType: String] = [:]
-2025-07-27T13:41:38.4659880Z         ^
-2025-07-27T13:41:38.4660300Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/InventoryModels.swift:62:29: error: cannot find 'separator' in scope
-2025-07-27T13:41:38.4660780Z         return stats.joined(separator(", "))
-2025-07-27T13:41:38.4661000Z                             ^~~~~~~~~
-2025-07-27T13:41:38.4661500Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/InventoryModels.swift:62:29: error: missing argument label 'separator:' in call
-2025-07-27T13:41:38.4662010Z         return stats.joined(separator(", "))
-2025-07-27T13:41:38.4662200Z                             ^
-2025-07-27T13:41:38.4662350Z                             separator: 
-2025-07-27T13:41:38.4662960Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/InventoryModels.swift:62:22: error: cannot convert return expression of type 'JoinedSequence<[String]>' to return type 'String'
-2025-07-27T13:41:38.4663700Z         return stats.joined(separator(", "))
-2025-07-27T13:41:38.4663880Z                ~~~~~~^~~~~~~~~~~~~~~~~~~~~~~
-2025-07-27T13:41:38.4664530Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/InventoryModels.swift:72:9: warning: immutable property will not be decoded because it is declared with an initial value which cannot be overwritten
-2025-07-27T13:41:38.4665150Z     let id = UUID()
-2025-07-27T13:41:38.4665270Z         ^
-2025-07-27T13:41:38.4666400Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/InventoryModels.swift:72:9: note: set the initial value via the initializer or explicitly define a CodingKeys enum including a 'id' case to silence this warning
-2025-07-27T13:41:38.4667240Z     let id = UUID()
-2025-07-27T13:41:38.4667370Z         ^
-2025-07-27T13:41:38.4667810Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/InventoryModels.swift:72:9: note: make the property mutable instead
-2025-07-27T13:41:38.4668290Z     let id = UUID()
-2025-07-27T13:41:38.4668450Z     ~~~ ^
-2025-07-27T13:41:38.4668550Z     var
-2025-07-27T13:41:38.4668990Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/InventoryModels.swift:143:13: warning: result of call to 'unequip' is unused
-2025-07-27T13:41:38.4669490Z             unequip(currentEquipped)
-2025-07-27T13:41:38.4669660Z             ^      ~~~~~~~~~~~~~~~~~
-2025-07-27T13:41:38.4670270Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/InventoryModels.swift:168:16: warning: value 'existingItem' was defined but never used; consider replacing with boolean test
-2025-07-27T13:41:38.4670900Z         if let existingItem = items[equipment.nome] {
-2025-07-27T13:41:38.4671100Z            ~~~~^~~~~~~~~~~~~~~
-2025-07-27T13:41:38.4671260Z                                                     != nil
-2025-07-27T13:41:38.4671780Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/InventoryModels.swift:180:13: warning: result of call to 'unequip' is unused
-2025-07-27T13:41:38.4672270Z             unequip(itemName)
-2025-07-27T13:41:38.4672420Z             ^      ~~~~~~~~~~
-2025-07-27T13:41:38.4672910Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/InventoryModels.swift:206:13: warning: result of call to 'unequip' is unused
-2025-07-27T13:41:38.4673400Z             unequip(itemName)
-2025-07-27T13:41:38.4673550Z             ^      ~~~~~~~~~~
-2025-07-27T13:41:38.4674070Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/InventoryModels.swift:37:8: error: type 'EquipmentItem' does not conform to protocol 'Decodable'
-2025-07-27T13:41:38.4674640Z struct EquipmentItem: Identifiable, Codable {
-2025-07-27T13:41:38.4674820Z        ^
-2025-07-27T13:41:38.4675060Z Swift.Decodable:2:5: note: protocol requires initializer 'init(from:)' with type 'Decodable'
-2025-07-27T13:41:38.4675370Z     init(from decoder: any Decoder) throws
-2025-07-27T13:41:38.4675540Z     ^
-2025-07-27T13:41:38.4676100Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/InventoryModels.swift:40:9: note: cannot automatically synthesize 'Decodable' because 'EquipmentType' does not conform to 'Decodable'
-2025-07-27T13:41:38.4676730Z     let tipo: EquipmentType
-2025-07-27T13:41:38.4676870Z         ^
-2025-07-27T13:41:38.4677300Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/ShopData.swift:25:76: error: type 'EquipmentType' has no member 'consumabile'
-2025-07-27T13:41:38.4677970Z                 "Pozione Vita": EquipmentItem(nome: "Pozione Vita", tipo: .consumabile, prezzo: 60, descrizione: "Ripristina 15 HP")
-2025-07-27T13:41:38.4678340Z                                                                           ~^~~~~~~~~~~
-2025-07-27T13:41:38.4678860Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/ShopData.swift:34:66: error: type 'EquipmentType' has no member 'consumabile'
-2025-07-27T13:41:38.4679650Z                 "Sardina": EquipmentItem(nome: "Sardina", tipo: .consumabile, prezzo: 90, descrizione: "Ripristina 25 HP")
-2025-07-27T13:41:38.4680080Z                                                                 ~^~~~~~~~~~~
-2025-07-27T13:41:38.4680610Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/ShopData.swift:43:76: error: type 'EquipmentType' has no member 'consumabile'
-2025-07-27T13:41:38.4681280Z                 "Pesce Dorato": EquipmentItem(nome: "Pesce Dorato", tipo: .consumabile, prezzo: 120, descrizione: "Ripristina 35 HP")
-2025-07-27T13:41:38.4681810Z                                                                           ~^~~~~~~~~~~
-2025-07-27T13:41:38.4682400Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/ShopData.swift:70:86: error: type 'EquipmentType' has no member 'consumabile'
-2025-07-27T13:41:38.4683130Z                 "Antidoto Naturale": EquipmentItem(nome: "Antidoto Naturale", tipo: .consumabile, prezzo: 180, descrizione: "Cura veleni e +45 HP")
-2025-07-27T13:41:38.4683540Z                                                                                     ~^~~~~~~~~~~
-2025-07-27T13:41:38.4684050Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/ShopData.swift:79:92: error: type 'EquipmentType' has no member 'consumabile'
-2025-07-27T13:41:38.4684790Z                 "Elisir della Foresta": EquipmentItem(nome: "Elisir della Foresta", tipo: .consumabile, prezzo: 220, descrizione: "Ripristina 55 HP e +10 energia")
-2025-07-27T13:41:38.4685230Z                                                                                           ~^~~~~~~~~~~
-2025-07-27T13:41:38.4685750Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/ShopData.swift:88:74: error: type 'EquipmentType' has no member 'consumabile'
-2025-07-27T13:41:38.4686420Z                 "Acqua Santa": EquipmentItem(nome: "Acqua Santa", tipo: .consumabile, prezzo: 300, descrizione: "Anti-non morti +65 HP")
-2025-07-27T13:41:38.4686800Z                                                                         ~^~~~~~~~~~~
-2025-07-27T13:41:38.4687330Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/ShopData.swift:97:92: error: type 'EquipmentType' has no member 'consumabile'
-2025-07-27T13:41:38.4689830Z                 "Pozione del Coraggio": EquipmentItem(nome: "Pozione del Coraggio", tipo: .consumabile, prezzo: 350, descrizione: "Immunità paura +75 HP")
-2025-07-27T13:41:38.4690670Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/ShopData.swift:106:92: error: type 'EquipmentType' has no member 'consumabile'
-2025-07-27T13:41:38.4691470Z                 "Stimolante Sintetico": EquipmentItem(nome: "Stimolante Sintetico", tipo: .consumabile, prezzo: 400, descrizione: "Boost energia +85 HP")
-2025-07-27T13:41:38.4691920Z                                                                                           ~^~~~~~~~~~~
-2025-07-27T13:41:38.4692480Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/ShopData.swift:115:90: error: type 'EquipmentType' has no member 'consumabile'
-2025-07-27T13:41:38.4693510Z                 "Minerale Energetico": EquipmentItem(nome: "Minerale Energetico", tipo: .consumabile, prezzo: 450, descrizione: "Energia pura +95 HP")
-2025-07-27T13:41:38.4694010Z                                                                                         ~^~~~~~~~~~~
-2025-07-27T13:41:38.4694590Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/ShopData.swift:124:82: error: type 'EquipmentType' has no member 'consumabile'
-2025-07-27T13:41:38.4695300Z                 "Sangue di Drago": EquipmentItem(nome: "Sangue di Drago", tipo: .consumabile, prezzo: 550, descrizione: "Rigenerazione +120 HP")
-2025-07-27T13:41:38.4695700Z                                                                                 ~^~~~~~~~~~~
-2025-07-27T13:41:38.4696450Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/ShopData.swift:133:80: error: type 'EquipmentType' has no member 'consumabile'
-2025-07-27T13:41:38.4697160Z                 "Perla Curativa": EquipmentItem(nome: "Perla Curativa", tipo: .consumabile, prezzo: 650, descrizione: "Cura magica +140 HP")
-2025-07-27T13:41:38.4697560Z                                                                               ~^~~~~~~~~~~
-2025-07-27T13:41:38.4698090Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/ShopData.swift:142:80: error: type 'EquipmentType' has no member 'consumabile'
-2025-07-27T13:41:38.4698890Z                 "Nettare Divino": EquipmentItem(nome: "Nettare Divino", tipo: .consumabile, prezzo: 750, descrizione: "Cura divina +160 HP")
-2025-07-27T13:41:38.4699310Z                                                                               ~^~~~~~~~~~~
-2025-07-27T13:41:38.4699830Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/ShopData.swift:151:84: error: type 'EquipmentType' has no member 'consumabile'
-2025-07-27T13:41:38.4700830Z                 "Elisir Vulcanico": EquipmentItem(nome: "Elisir Vulcanico", tipo: .consumabile, prezzo: 850, descrizione: "Potere del fuoco +180 HP")
-2025-07-27T13:41:38.4701290Z                                                                                   ~^~~~~~~~~~~
-2025-07-27T13:41:38.4701830Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/ShopData.swift:160:84: error: type 'EquipmentType' has no member 'consumabile'
-2025-07-27T13:41:38.4702580Z                 "Elisir Imperiale": EquipmentItem(nome: "Elisir Imperiale", tipo: .consumabile, prezzo: 1000, descrizione: "Cura suprema +200 HP")
-2025-07-27T13:41:38.4703020Z                                                                                   ~^~~~~~~~~~~
-2025-07-27T13:41:38.4703540Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/ShopData.swift:169:90: error: type 'EquipmentType' has no member 'consumabile'
-2025-07-27T13:41:38.4704320Z                 "Essenza Primordiale": EquipmentItem(nome: "Essenza Primordiale", tipo: .consumabile, prezzo: 2000, descrizione: "Cura assoluta +500 HP")
-2025-07-27T13:41:38.4704770Z                                                                                         ~^~~~~~~~~~~
-2025-07-27T13:41:38.4705330Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/ShopData.swift:177:76: error: type 'EquipmentType' has no member 'consumabile'
-2025-07-27T13:41:38.4706060Z                 "Pozione Vita": EquipmentItem(nome: "Pozione Vita", tipo: .consumabile, prezzo: 50, descrizione: "Ripristina 30 HP")
-2025-07-27T13:41:38.4706440Z                                                                           ~^~~~~~~~~~~
-2025-07-27T13:41:38.4706960Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/ShopData.swift:484:17: error: argument 'danno' must precede argument 'difesa'
-2025-07-27T13:41:38.4707450Z                 danno: 5,
-2025-07-27T13:41:38.4707600Z ~~~~~~~~~~~~~~~~^~~~~~~~
-2025-07-27T13:41:38.4707700Z 
-2025-07-27T13:41:38.4707770Z ** ARCHIVE FAILED **
-2025-07-27T13:41:38.4707850Z 
-2025-07-27T13:41:38.4707860Z 
-2025-07-27T13:41:38.4707920Z The following build commands failed:
-2025-07-27T13:41:38.4708220Z 	CompileSwift normal arm64 (in target 'Avventura epica' from project 'Avventura epica')
-2025-07-27T13:41:38.4728440Z 	SwiftCompile normal arm64 Compiling\ AreasView.swift,\ BossNotificationView.swift,\ CatsView.swift,\ CombatView.swift,\ GameView.swift,\ InfoView.swift,\ InventoryView.swift,\ MainMenuView.swift,\ SettingsView.swift,\ ShopView.swift,\ AudioManager.swift,\ Avventura_epicaApp.swift,\ ContentView.swift,\ GameData.swift,\ GameManager.swift,\ GameModels.swift,\ InventoryModels.swift,\ ShopData.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/Views/AreasView.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/Views/BossNotificationView.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/Views/CatsView.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/Views/CombatView.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/Views/GameView.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/Views/InfoView.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/Views/InventoryView.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/Views/MainMenuView.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/Views/SettingsView.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/Views/ShopView.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/AudioManager.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/Avventura_epicaApp.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/ContentView.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/GameData.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/GameManager.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/GameModels.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/InventoryModels.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/ShopData.swift (in target 'Avventura epica' from project 'Avventura epica')
-2025-07-27T13:41:38.4735570Z 	Archiving project Avventura epica with scheme Avventura epica
-2025-07-27T13:41:38.4735810Z (3 failures)
-2025-07-27T13:41:38.4736580Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica.xcodeproj: warning: The iOS deployment target 'IPHONEOS_DEPLOYMENT_TARGET' is set to 18.5, but the range of supported deployment target versions is 12.0 to 18.2.99. (in target 'Avventura epica' from project 'Avventura epica')
-2025-07-27T13:41:38.4737780Z note: Disabling previews because SWIFT_VERSION is set and SWIFT_OPTIMIZATION_LEVEL=-O, expected -Onone (in target 'Avventura epica' from project 'Avventura epica')
-2025-07-27T13:41:38.4973930Z ##[error]Process completed with exit code 65.
-2025-07-27T13:41:38.5041170Z ##[group]Run actions/upload-artifact@v4
-2025-07-27T13:41:38.5041360Z with:
-2025-07-27T13:41:38.5041460Z   name: build-logs
-2025-07-27T13:41:38.5041580Z   path: build/
+2025-07-27T13:53:04.4616690Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/ShopView.swift:95:5: error: attribute 'private' can only be used in a non-local scope
+2025-07-27T13:53:04.4619960Z     private var shopItems: [ShopItem] {
+2025-07-27T13:53:04.4620630Z     ^
+2025-07-27T13:53:04.4624630Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/ShopView.swift:103:5: error: attribute 'private' can only be used in a non-local scope
+2025-07-27T13:53:04.4626190Z     private var filteredShopItems: [ShopItem] {
+2025-07-27T13:53:04.4627180Z     ^
+2025-07-27T13:53:04.4627810Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/ShopView.swift:107:5: error: attribute 'private' can only be used in a non-local scope
+2025-07-27T13:53:04.4630010Z     private func attemptPurchase(_ shopItem: ShopItem) {
+2025-07-27T13:53:04.4630430Z     ^
+2025-07-27T13:53:04.4631210Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/ShopView.swift:112:5: error: attribute 'private' can only be used in a non-local scope
+2025-07-27T13:53:04.4632020Z     private func completePurchase(_ shopItem: ShopItem) {
+2025-07-27T13:53:04.4632420Z     ^
+2025-07-27T13:53:04.4633040Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/ShopView.swift:132:5: error: attribute 'private' can only be used in a non-local scope
+2025-07-27T13:53:04.4633640Z     private func showMessage(_ message: String) {
+2025-07-27T13:53:04.4633980Z     ^
+2025-07-27T13:53:04.4634500Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/ShopView.swift:141:5: error: attribute 'private' can only be used in a non-local scope
+2025-07-27T13:53:04.4636650Z     private func getAreaShopName() -> String {
+2025-07-27T13:53:04.4637020Z     ^
+2025-07-27T13:53:04.4637620Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/ShopView.swift:164:5: error: attribute 'private' can only be used in a non-local scope
+2025-07-27T13:53:04.4638310Z     private func getAreaMaterial() -> String {
+2025-07-27T13:53:04.4638550Z     ^
+2025-07-27T13:53:04.4639010Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/ShopView.swift:412:2: error: expected '}' in struct
+2025-07-27T13:53:04.4639600Z }
+2025-07-27T13:53:04.4639780Z  ^
+2025-07-27T13:53:04.4643390Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/ShopView.swift:10:23: note: to match this opening '{'
+2025-07-27T13:53:04.4643950Z struct ShopView: View {
+2025-07-27T13:53:04.4644210Z                       ^
+2025-07-27T13:53:04.4644750Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/InventoryView.swift:153:46: warning: result of call to 'unequip' is unused
+2025-07-27T13:53:04.4645450Z             gameManager.gameState.inventario.unequip(item.equipment.nome)
+2025-07-27T13:53:04.4645880Z                                              ^      ~~~~~~~~~~~~~~~~~~~~~
+2025-07-27T13:53:04.4646460Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/InventoryView.swift:155:46: warning: result of call to 'equip' is unused
+2025-07-27T13:53:04.4647250Z             gameManager.gameState.inventario.equip(item.equipment.nome)
+2025-07-27T13:53:04.4647570Z                                              ^    ~~~~~~~~~~~~~~~~~~~~~
+2025-07-27T13:53:04.4648280Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/InventoryView.swift:376:58: warning: result of call to 'sellItem' is unused
+2025-07-27T13:53:04.4649090Z                         gameManager.gameState.inventario.sellItem(item.equipment.nome)
+2025-07-27T13:53:04.4649480Z                                                          ^       ~~~~~~~~~~~~~~~~~~~~~
+2025-07-27T13:53:04.4650090Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/InventoryView.swift:364:62: warning: result of call to 'equip' is unused
+2025-07-27T13:53:04.4650750Z                             gameManager.gameState.inventario.equip(item.equipment.nome)
+2025-07-27T13:53:04.4651170Z                                                              ^    ~~~~~~~~~~~~~~~~~~~~~
+2025-07-27T13:53:04.4651870Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/InventoryView.swift:353:62: warning: result of call to 'unequip' is unused
+2025-07-27T13:53:04.4652570Z                             gameManager.gameState.inventario.unequip(item.equipment.nome)
+2025-07-27T13:53:04.4652910Z                                                              ^      ~~~~~~~~~~~~~~~~~~~~~
+2025-07-27T13:53:04.4653540Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/ShopView.swift:410:1: error: circular reference expanding freestanding macro 'Preview'
+2025-07-27T13:53:04.4654230Z #Preview {
+2025-07-27T13:53:04.4654390Z ^
+2025-07-27T13:53:04.4655070Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/ShopView.swift:10:8: note: through reference here
+2025-07-27T13:53:04.4655660Z struct ShopView: View {
+2025-07-27T13:53:04.4655860Z        ^
+2025-07-27T13:53:04.4656330Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/ShopView.swift:10:8: note: through reference here
+2025-07-27T13:53:04.4656870Z struct ShopView: View {
+2025-07-27T13:53:04.4657160Z        ^
+2025-07-27T13:53:04.4657670Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/ShopView.swift:10:8: note: through reference here
+2025-07-27T13:53:04.4658220Z struct ShopView: View {
+2025-07-27T13:53:04.4658430Z        ^
+2025-07-27T13:53:04.4659110Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/ShopView.swift:10:8: note: through reference here
+2025-07-27T13:53:04.4659650Z struct ShopView: View {
+2025-07-27T13:53:04.4659840Z        ^
+2025-07-27T13:53:04.4660450Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/Views/ShopView.swift:410:1: note: while resolving freestanding macro 'Preview'
+2025-07-27T13:53:04.4661100Z #Preview {
+2025-07-27T13:53:04.4661290Z ^
+2025-07-27T13:53:04.4661860Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/GameManager.swift:592:26: warning: result of call to 'useCombatPotion()' is unused
+2025-07-27T13:53:04.4662470Z                     self.useCombatPotion()
+2025-07-27T13:53:04.4662940Z                          ^              ~~
+2025-07-27T13:53:04.4663650Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/GameModels.swift:138:9: warning: immutable property will not be decoded because it is declared with an initial value which cannot be overwritten
+2025-07-27T13:53:04.4664390Z     let id = UUID()
+2025-07-27T13:53:04.4664550Z         ^
+2025-07-27T13:53:04.4665220Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/GameModels.swift:138:9: note: set the initial value via the initializer or explicitly define a CodingKeys enum including a 'id' case to silence this warning
+2025-07-27T13:53:04.4666540Z     let id = UUID()
+2025-07-27T13:53:04.4666700Z         ^
+2025-07-27T13:53:04.4667210Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/GameModels.swift:138:9: note: make the property mutable instead
+2025-07-27T13:53:04.4667790Z     let id = UUID()
+2025-07-27T13:53:04.4668050Z     ~~~ ^
+2025-07-27T13:53:04.4668260Z     var
+2025-07-27T13:53:04.4668860Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/InventoryModels.swift:146:13: warning: result of call to 'unequip' is unused
+2025-07-27T13:53:04.4669570Z             unequip(currentEquipped)
+2025-07-27T13:53:04.4669830Z             ^      ~~~~~~~~~~~~~~~~~
+2025-07-27T13:53:04.4670500Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/InventoryModels.swift:171:16: warning: value 'existingItem' was defined but never used; consider replacing with boolean test
+2025-07-27T13:53:04.4671220Z         if let existingItem = items[equipment.nome] {
+2025-07-27T13:53:04.4671460Z            ~~~~^~~~~~~~~~~~~~~
+2025-07-27T13:53:04.4671700Z                                                     != nil
+2025-07-27T13:53:04.4672260Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/InventoryModels.swift:183:13: warning: result of call to 'unequip' is unused
+2025-07-27T13:53:04.4672910Z             unequip(itemName)
+2025-07-27T13:53:04.4673160Z             ^      ~~~~~~~~~~
+2025-07-27T13:53:04.4673680Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica/InventoryModels.swift:209:13: warning: result of call to 'unequip' is unused
+2025-07-27T13:53:04.4674290Z             unequip(itemName)
+2025-07-27T13:53:04.4674480Z             ^      ~~~~~~~~~~
+2025-07-27T13:53:04.4674680Z 
+2025-07-27T13:53:04.4755030Z /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura epica.xcodeproj: warning: The iOS deployment target 'IPHONEOS_DEPLOYMENT_TARGET' is set to 18.5, but the range of supported deployment target versions is 12.0 to 18.2.99. (in target 'Avventura epica' from project 'Avventura epica')
+2025-07-27T13:53:04.4757540Z note: Disabling previews because SWIFT_VERSION is set and SWIFT_OPTIMIZATION_LEVEL=-O, expected -Onone (in target 'Avventura epica' from project 'Avventura epica')
+2025-07-27T13:53:04.4761250Z ** ARCHIVE FAILED **
+2025-07-27T13:53:04.4761410Z 
+2025-07-27T13:53:04.4761410Z 
+2025-07-27T13:53:04.4761550Z The following build commands failed:
+2025-07-27T13:53:04.4761950Z 	CompileSwift normal arm64 (in target 'Avventura epica' from project 'Avventura epica')
+2025-07-27T13:53:04.4768980Z 	SwiftCompile normal arm64 Compiling\ AreasView.swift,\ BossNotificationView.swift,\ CatsView.swift,\ CombatView.swift,\ GameView.swift,\ InfoView.swift,\ InventoryView.swift,\ MainMenuView.swift,\ SettingsView.swift,\ ShopView.swift,\ AudioManager.swift,\ Avventura_epicaApp.swift,\ ContentView.swift,\ GameData.swift,\ GameManager.swift,\ GameModels.swift,\ InventoryModels.swift,\ ShopData.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/Views/AreasView.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/Views/BossNotificationView.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/Views/CatsView.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/Views/CombatView.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/Views/GameView.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/Views/InfoView.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/Views/InventoryView.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/Views/MainMenuView.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/Views/SettingsView.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/Views/ShopView.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/AudioManager.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/Avventura_epicaApp.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/ContentView.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/GameData.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/GameManager.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/GameModels.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/InventoryModels.swift /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp/Avventura\ epica/ShopData.swift (in target 'Avventura epica' from project 'Avventura epica')
+2025-07-27T13:53:04.4777080Z 	Archiving project Avventura epica with scheme Avventura epica
+2025-07-27T13:53:04.4780580Z (3 failures)
+2025-07-27T13:53:04.5161060Z ##[error]Process completed with exit code 65.
+2025-07-27T13:53:04.5252920Z ##[group]Run actions/upload-artifact@v4
+2025-07-27T13:53:04.5253140Z with:
+2025-07-27T13:53:04.5253300Z   name: build-logs
+2025-07-27T13:53:04.5253470Z   path: build/
 DerivedData/
 
-2025-07-27T13:41:38.5041730Z   retention-days: 7
-2025-07-27T13:41:38.5041850Z   if-no-files-found: warn
-2025-07-27T13:41:38.5041980Z   compression-level: 6
-2025-07-27T13:41:38.5042110Z   overwrite: false
-2025-07-27T13:41:38.5042230Z   include-hidden-files: false
-2025-07-27T13:41:38.5042360Z env:
-2025-07-27T13:41:38.5042490Z   MD_APPLE_SDK_ROOT: /Applications/Xcode_16.2.app
-2025-07-27T13:41:38.5042660Z ##[endgroup]
-2025-07-27T13:41:38.7880730Z Multiple search paths detected. Calculating the least common ancestor of all paths
-2025-07-27T13:41:38.7883020Z The least common ancestor is /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp. This will be the root directory of the artifact
-2025-07-27T13:41:38.7893570Z ##[warning]No files were found with the provided path: build/
+2025-07-27T13:53:04.5253760Z   retention-days: 7
+2025-07-27T13:53:04.5253960Z   if-no-files-found: warn
+2025-07-27T13:53:04.5254150Z   compression-level: 6
+2025-07-27T13:53:04.5254400Z   overwrite: false
+2025-07-27T13:53:04.5254570Z   include-hidden-files: false
+2025-07-27T13:53:04.5254750Z env:
+2025-07-27T13:53:04.5254950Z   MD_APPLE_SDK_ROOT: /Applications/Xcode_16.2.app
+2025-07-27T13:53:04.5255250Z ##[endgroup]
+2025-07-27T13:53:04.8495230Z Multiple search paths detected. Calculating the least common ancestor of all paths
+2025-07-27T13:53:04.8497520Z The least common ancestor is /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp. This will be the root directory of the artifact
+2025-07-27T13:53:04.8508780Z ##[warning]No files were found with the provided path: build/
 DerivedData/. No artifacts will be uploaded.
-2025-07-27T13:41:38.8069650Z Post job cleanup.
-2025-07-27T13:41:38.8821150Z [command]/opt/homebrew/bin/git version
-2025-07-27T13:41:38.9020130Z git version 2.50.1
-2025-07-27T13:41:38.9050750Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/3834ca78-1f9c-46cb-887a-1c12728e7b84/.gitconfig'
-2025-07-27T13:41:38.9057740Z Temporarily overriding HOME='/Users/runner/work/_temp/3834ca78-1f9c-46cb-887a-1c12728e7b84' before making global git config changes
-2025-07-27T13:41:38.9058290Z Adding repository directory to the temporary git global config as a safe directory
-2025-07-27T13:41:38.9065110Z [command]/opt/homebrew/bin/git config --global --add safe.directory /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp
-2025-07-27T13:41:38.9133780Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
-2025-07-27T13:41:38.9171410Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
-2025-07-27T13:41:38.9711680Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
-2025-07-27T13:41:38.9742120Z http.https://github.com/.extraheader
-2025-07-27T13:41:38.9750080Z [command]/opt/homebrew/bin/git config --local --unset-all http.https://github.com/.extraheader
-2025-07-27T13:41:38.9788120Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
-2025-07-27T13:41:39.0304130Z Cleaning up orphan processes
+2025-07-27T13:53:04.8723990Z Post job cleanup.
+2025-07-27T13:53:04.9508450Z [command]/opt/homebrew/bin/git version
+2025-07-27T13:53:04.9723110Z git version 2.50.1
+2025-07-27T13:53:04.9755670Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/b2ac92ef-527b-4b48-9be2-5be62c90dd13/.gitconfig'
+2025-07-27T13:53:04.9762430Z Temporarily overriding HOME='/Users/runner/work/_temp/b2ac92ef-527b-4b48-9be2-5be62c90dd13' before making global git config changes
+2025-07-27T13:53:04.9763020Z Adding repository directory to the temporary git global config as a safe directory
+2025-07-27T13:53:04.9766770Z [command]/opt/homebrew/bin/git config --global --add safe.directory /Users/runner/work/AccessibleIphoneApp/AccessibleIphoneApp
+2025-07-27T13:53:04.9840930Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-07-27T13:53:04.9882670Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-07-27T13:53:05.0538610Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-07-27T13:53:05.0575710Z http.https://github.com/.extraheader
+2025-07-27T13:53:05.0584040Z [command]/opt/homebrew/bin/git config --local --unset-all http.https://github.com/.extraheader
+2025-07-27T13:53:05.0630430Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-07-27T13:53:05.1221200Z Cleaning up orphan processes

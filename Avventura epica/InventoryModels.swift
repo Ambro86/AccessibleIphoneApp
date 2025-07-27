@@ -135,6 +135,7 @@ struct PlayerInventory: Codable {
     var money: Int = 1000 // Soldi per comprare nel negozio
     
     // MARK: - Equipment Management
+    @discardableResult
     mutating func equip(_ itemName: String) -> Bool {
         guard let inventoryItem = items[itemName],
               !inventoryItem.isEquipped else { return false }
@@ -154,6 +155,7 @@ struct PlayerInventory: Codable {
         return true
     }
     
+    @discardableResult
     mutating func unequip(_ itemName: String) -> Bool {
         guard let inventoryItem = items[itemName],
               inventoryItem.isEquipped else { return false }
@@ -168,7 +170,7 @@ struct PlayerInventory: Codable {
     }
     
     mutating func addItem(_ equipment: EquipmentItem, quantity: Int = 1) {
-        if let existingItem = items[equipment.nome] {
+        if items[equipment.nome] != nil {
             items[equipment.nome]?.quantity += quantity
         } else {
             items[equipment.nome] = InventoryItem(equipment: equipment, quantity: quantity)
@@ -200,6 +202,7 @@ struct PlayerInventory: Codable {
         return true
     }
     
+    @discardableResult
     mutating func sellItem(_ itemName: String) -> Bool {
         guard let item = items[itemName] else { return false }
         

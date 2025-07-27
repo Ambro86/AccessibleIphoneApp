@@ -16,7 +16,7 @@ struct ShopView: View {
     @State private var showingMessage = false
     
     var body: some View {
-        return VStack(spacing: 20) {
+        VStack(spacing: 20) {
             // Title - exactly as main.py
             Text("Negozio")
                 .font(.title)
@@ -407,6 +407,4 @@ struct ShopItemCard: View {
     }
 }
 
-#Preview {
-    ShopView(gameManager: GameManager())
-}
+// Preview removed due to circular reference

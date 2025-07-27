@@ -135,7 +135,7 @@ struct Monster: Codable {
 
 // MARK: - Relic Model
 struct Relic: Identifiable, Codable {
-    let id = UUID()
+    var id = UUID()
     let nome: String
     let tipo: RelicType
     let effetto: String
